@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.model.dao.RoleInfoMapper">
+
+<!-- Result Map-->
+<resultMap id="RoleInfoResultMap" type="com.jing.system.model.entity.RoleInfo">
+	<id column="role_id" property="roleId"/>
+	<result column="role_name" property="roleName"/>
+	<result column="role_title" property="roleTitle"/>
+	<result column="parent_id" property="parentId"/>
+	<result column="role_type" property="roleType"/>
+	<result column="is_global" property="isGlobal"/>
+	<result column="enabled" property="enabled"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_roleInfo_item">
+	role_id, role_name, role_title, parent_id, role_type, is_global, enabled, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_roleInfo_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="roleInfo.roleId != null">AND role_id = #{roleInfo.roleId} </if>
+		<if test="roleInfo.roleName != null">AND role_name like concat(#{roleInfo.roleName}, '%') </if>
+		<if test="roleInfo.roleTitle != null">AND role_title like concat(#{roleInfo.roleTitle}, '%') </if>
+		<if test="roleInfo.parentId != null">AND parent_id = #{roleInfo.parentId} </if>
+		<if test="roleInfo.roleType != null">AND role_type like concat(#{roleInfo.roleType}, '%') </if>
+		<if test="roleInfo.isGlobal != null">AND is_global = #{roleInfo.isGlobal} </if>
+		<if test="roleInfo.enabled != null">AND enabled = #{roleInfo.enabled} </if>
+		<if test="roleInfo.createdBy != null">AND created_by like concat(#{roleInfo.createdBy}, '%') </if>
+		<if test="roleInfo.updatedBy != null">AND updated_by like concat(#{roleInfo.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 角色 -->
+<insert id="addRoleInfo" parameterType="com.jing.system.model.entity.RoleInfo" >
+	<selectKey keyProperty="roleId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO ts_role_info 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="roleId != null"> role_id,</if>
+		<if test="roleName != null"> role_name,</if>
+		<if test="roleTitle != null"> role_title,</if>
+		<if test="parentId != null"> parent_id,</if>
+		<if test="roleType != null"> role_type,</if>
+		<if test="isGlobal != null"> is_global,</if>
+		<if test="enabled != null"> enabled,</if>
+		<if test="createdBy != null"> created_by,</if>
+		<if test="createdDate != null"> created_date,</if>
+		<if test="updatedBy != null"> updated_by,</if>
+		<if test="updatedDate != null"> updated_date,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="roleId != null"> #{roleId},</if>	
+		<if test="roleName != null"> #{roleName},</if>	
+		<if test="roleTitle != null"> #{roleTitle},</if>	
+		<if test="parentId != null"> #{parentId},</if>	
+		<if test="roleType != null"> #{roleType},</if>	
+		<if test="isGlobal != null"> #{isGlobal},</if>	
+		<if test="enabled != null"> #{enabled},</if>	
+		<if test="createdBy != null"> #{createdBy},</if>	
+		<if test="createdDate != null"> #{createdDate},</if>	
+		<if test="updatedBy != null"> #{updatedBy},</if>	
+		<if test="updatedDate != null"> #{updatedDate},</if>	
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 角色 -->  
+<update id="modifyRoleInfo" parameterType="com.jing.system.model.entity.RoleInfo" >
+  	UPDATE ts_role_info SET
+	<trim suffixOverrides=",">
+		<if test="roleName != null"> role_name = #{roleName},</if>
+		<if test="roleTitle != null"> role_title = #{roleTitle},</if>
+		<if test="parentId != null"> parent_id = #{parentId},</if>
+		<if test="roleType != null"> role_type = #{roleType},</if>
+		<if test="isGlobal != null"> is_global = #{isGlobal},</if>
+		<if test="enabled != null"> enabled = #{enabled},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="createdDate != null"> created_date = #{createdDate},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+	</trim>
+	WHERE role_id = #{roleId}
+</update>
+ 
+<!-- 删除 角色 -->
+<delete id="dropRoleInfoByRoleId" parameterType="java.lang.Integer">
+	DELETE FROM ts_role_info WHERE role_id = #{roleId}
+</delete> 
+
+<!-- 根据标识查询 角色 -->
+<select id="queryRoleInfoByRoleId"  resultMap="RoleInfoResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_roleInfo_item"/>
+	FROM ts_role_info WHERE role_id = #{roleId}
+</select>
+
+<!-- 根据属性查询角色 -->
+<select id="queryRoleInfoByProperty"  resultMap="RoleInfoResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_roleInfo_item"/>
+	FROM ts_role_info 
+	<where>
+		<include refid="sql_roleInfo_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据角色属性与分页信息分页查询角色信息 -->
+<select id="queryRoleInfoForPage"  resultMap="RoleInfoResultMap" > 
+	SELECT 
+	<include refid="sql_roleInfo_item"/>
+	FROM ts_role_info 
+	<where>
+		<include refid="sql_roleInfo_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

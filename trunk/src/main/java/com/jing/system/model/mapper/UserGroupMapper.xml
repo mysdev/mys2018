@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.model.dao.UserGroupMapper">
+
+<!-- Result Map-->
+<resultMap id="UserGroupResultMap" type="com.jing.system.model.entity.UserGroup">
+	<id column="team_id" property="teamId"/>
+	<result column="team_name" property="teamName"/>
+	<result column="parent_team" property="parentTeam"/>
+	<result column="status" property="status"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_userGroup_item">
+	team_id, team_name, parent_team, status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_userGroup_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="userGroup.teamId != null">AND team_id = #{userGroup.teamId} </if>
+		<if test="userGroup.teamName != null">AND team_name like concat(#{userGroup.teamName}, '%') </if>
+		<if test="userGroup.parentTeam != null">AND parent_team = #{userGroup.parentTeam} </if>
+		<if test="userGroup.status != null">AND status = #{userGroup.status} </if>
+		<if test="userGroup.createdBy != null">AND created_by like concat(#{userGroup.createdBy}, '%') </if>
+		<if test="userGroup.updatedBy != null">AND updated_by like concat(#{userGroup.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 用户组 -->
+<insert id="addUserGroup" parameterType="com.jing.system.model.entity.UserGroup" >
+	<selectKey keyProperty="teamId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO ts_user_group 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="teamId != null"> team_id,</if>
+		<if test="teamName != null"> team_name,</if>
+		<if test="parentTeam != null"> parent_team,</if>
+		<if test="status != null"> status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		<if test="createdDate != null"> created_date,</if>
+		<if test="updatedBy != null"> updated_by,</if>
+		<if test="updatedDate != null"> updated_date,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="teamId != null"> #{teamId},</if>	
+		<if test="teamName != null"> #{teamName},</if>	
+		<if test="parentTeam != null"> #{parentTeam},</if>	
+		<if test="status != null"> #{status},</if>	
+		<if test="createdBy != null"> #{createdBy},</if>	
+		<if test="createdDate != null"> #{createdDate},</if>	
+		<if test="updatedBy != null"> #{updatedBy},</if>	
+		<if test="updatedDate != null"> #{updatedDate},</if>	
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 用户组 -->  
+<update id="modifyUserGroup" parameterType="com.jing.system.model.entity.UserGroup" >
+  	UPDATE ts_user_group SET
+	<trim suffixOverrides=",">
+		<if test="teamName != null"> team_name = #{teamName},</if>
+		<if test="parentTeam != null"> parent_team = #{parentTeam},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="createdDate != null"> created_date = #{createdDate},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+	</trim>
+	WHERE team_id = #{teamId}
+</update>
+ 
+<!-- 删除 用户组 -->
+<delete id="dropUserGroupByTeamId" parameterType="java.lang.Integer">
+	DELETE FROM ts_user_group WHERE team_id = #{teamId}
+</delete> 
+
+<!-- 根据标识查询 用户组 -->
+<select id="queryUserGroupByTeamId"  resultMap="UserGroupResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_userGroup_item"/>
+	FROM ts_user_group WHERE team_id = #{teamId}
+</select>
+
+<!-- 根据属性查询用户组 -->
+<select id="queryUserGroupByProperty"  resultMap="UserGroupResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_userGroup_item"/>
+	FROM ts_user_group 
+	<where>
+		<include refid="sql_userGroup_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据用户组属性与分页信息分页查询用户组信息 -->
+<select id="queryUserGroupForPage"  resultMap="UserGroupResultMap" > 
+	SELECT 
+	<include refid="sql_userGroup_item"/>
+	FROM ts_user_group 
+	<where>
+		<include refid="sql_userGroup_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

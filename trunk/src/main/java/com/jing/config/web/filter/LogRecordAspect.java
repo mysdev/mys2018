@@ -40,12 +40,12 @@ private static final Logger logger = LoggerFactory.getLogger(LogRecordAspect.cla
         String uri = request.getRequestURI();
         String queryString = request.getQueryString();
         String str, wholeStr = "";
-        if(request.getContentLength()>0){
-        	 BufferedReader br = request.getReader();
-    	     while((str = br.readLine()) != null){
-    	     wholeStr += str;
-    	     }
-        }
+//        if(request.getContentLength()>0){
+//        	 BufferedReader br = request.getReader();
+//    	     while((str = br.readLine()) != null){
+//    	     wholeStr += str;
+//    	     }
+//        }
 		
         logger.info("请求开始, 各个参数, url: {}, method: {}, uri: {}, params: {}, body:{}", url, method, uri, queryString,wholeStr);
         // result的值就是被拦截方法的返回值

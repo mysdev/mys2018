@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-02 10:41:51
+Date: 2018-01-02 11:42:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_config`;
 CREATE TABLE `ts_config` (
-  `property_id` int(11) NOT NULL COMMENT '属性标识',
+  `property_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '属性标识',
   `property_code` varchar(16) NOT NULL COMMENT '属性代码',
   `property_value` varchar(512) NOT NULL COMMENT '属性值',
   `property_note` varchar(32) DEFAULT NULL COMMENT '属性描述',
@@ -29,14 +29,20 @@ CREATE TABLE `ts_config` (
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
   `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间',
   PRIMARY KEY (`property_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统配置';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='系统配置';
+
+-- ----------------------------
+-- Records of ts_config
+-- ----------------------------
+INSERT INTO `ts_config` VALUES ('1', 'cmpname', '深圳市优迈斯网络技术有限公司', '公司名称', null, '2018-01-02 03:37:06', null, '2018-01-02 03:37:06');
+INSERT INTO `ts_config` VALUES ('2', 'cmpname', '深圳市优迈斯网络技术有限公司', null, null, '2018-01-02 03:41:00', null, '2018-01-02 03:41:00');
 
 -- ----------------------------
 -- Table structure for ts_dictionary
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_dictionary`;
 CREATE TABLE `ts_dictionary` (
-  `id` int(11) NOT NULL COMMENT '字典标识',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '字典标识',
   `code` varchar(32) NOT NULL COMMENT '字典编码',
   `value` varchar(128) NOT NULL COMMENT '字典值',
   `group_code` varchar(32) NOT NULL COMMENT '归属字典分组',
@@ -51,11 +57,15 @@ CREATE TABLE `ts_dictionary` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典值';
 
 -- ----------------------------
+-- Records of ts_dictionary
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_dictionary_group
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_dictionary_group`;
 CREATE TABLE `ts_dictionary_group` (
-  `group_id` int(11) NOT NULL COMMENT '分组标识',
+  `group_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '分组标识',
   `group_code` varchar(32) NOT NULL COMMENT '分组代码',
   `group_name` varchar(64) NOT NULL COMMENT '分组名称',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
@@ -64,6 +74,10 @@ CREATE TABLE `ts_dictionary_group` (
   `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间',
   PRIMARY KEY (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典分组';
+
+-- ----------------------------
+-- Records of ts_dictionary_group
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ts_document_info
@@ -86,11 +100,15 @@ CREATE TABLE `ts_document_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档';
 
 -- ----------------------------
+-- Records of ts_document_info
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_log
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_log`;
 CREATE TABLE `ts_log` (
-  `log_id` int(11) NOT NULL COMMENT '日志标识',
+  `log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '日志标识',
   `user_id` varchar(64) DEFAULT NULL COMMENT '用户名',
   `user_ip` varchar(32) DEFAULT NULL COMMENT '访问IP',
   `oper` varchar(64) DEFAULT NULL COMMENT '操作名称',
@@ -106,11 +124,15 @@ CREATE TABLE `ts_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志';
 
 -- ----------------------------
+-- Records of ts_log
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_resource_info
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_resource_info`;
 CREATE TABLE `ts_resource_info` (
-  `resource_id` int(11) NOT NULL COMMENT '资源标识',
+  `resource_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '资源标识',
   `title` varchar(64) NOT NULL COMMENT '资源名称',
   `type` varchar(16) NOT NULL COMMENT '资源类型',
   `url` varchar(8) DEFAULT NULL COMMENT '资源地址',
@@ -128,11 +150,15 @@ CREATE TABLE `ts_resource_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源菜单';
 
 -- ----------------------------
+-- Records of ts_resource_info
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_role_info
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_role_info`;
 CREATE TABLE `ts_role_info` (
-  `role_id` int(11) NOT NULL COMMENT '角色标识',
+  `role_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色标识',
   `role_name` varchar(64) NOT NULL COMMENT '角色名称',
   `role_title` varchar(64) DEFAULT NULL COMMENT '角色标题',
   `parent_id` int(11) DEFAULT NULL COMMENT '父级角色',
@@ -145,6 +171,10 @@ CREATE TABLE `ts_role_info` (
   `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色';
+
+-- ----------------------------
+-- Records of ts_role_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ts_role_permission
@@ -160,11 +190,15 @@ CREATE TABLE `ts_role_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色权限';
 
 -- ----------------------------
+-- Records of ts_role_permission
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_user
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_user`;
 CREATE TABLE `ts_user` (
-  `user_id` int(11) NOT NULL COMMENT '用户标识',
+  `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户标识',
   `user_name` varchar(64) NOT NULL COMMENT '用户姓名',
   `team_id` int(11) DEFAULT NULL COMMENT '用户组',
   `nick_name` varchar(64) NOT NULL COMMENT '呢称',
@@ -186,19 +220,28 @@ CREATE TABLE `ts_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户';
 
 -- ----------------------------
+-- Records of ts_user
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ts_user_group
 -- ----------------------------
 DROP TABLE IF EXISTS `ts_user_group`;
 CREATE TABLE `ts_user_group` (
-  `team_id` int(11) NOT NULL COMMENT '用户组标识',
+  `team_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户组标识',
   `team_name` varchar(128) NOT NULL COMMENT '用户组名称',
   `parent_team` int(11) DEFAULT NULL COMMENT '父级组标识',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
-  `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间'
+  `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间',
+  PRIMARY KEY (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组';
+
+-- ----------------------------
+-- Records of ts_user_group
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ts_user_role
@@ -212,3 +255,7 @@ CREATE TABLE `ts_user_role` (
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
   `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修订时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户权限';
+
+-- ----------------------------
+-- Records of ts_user_role
+-- ----------------------------

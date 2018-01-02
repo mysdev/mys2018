@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.model.dao.UserRoleMapper">
+
+<!-- Result Map-->
+<resultMap id="UserRoleResultMap" type="com.jing.system.model.entity.UserRole">
+	<id column="user_id" property="userId"/>
+	<result column="role_id" property="roleId"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_userRole_item">
+	user_id, role_id, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_userRole_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="userRole.userId != null">AND user_id = #{userRole.userId} </if>
+		<if test="userRole.roleId != null">AND role_id = #{userRole.roleId} </if>
+		<if test="userRole.createdBy != null">AND created_by like concat(#{userRole.createdBy}, '%') </if>
+		<if test="userRole.updatedBy != null">AND updated_by like concat(#{userRole.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 用户权限 -->
+<insert id="addUserRole" parameterType="com.jing.system.model.entity.UserRole" >
+	<selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO ts_user_role 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="userId != null"> user_id,</if>
+		<if test="roleId != null"> role_id,</if>
+		<if test="createdBy != null"> created_by,</if>
+		<if test="createdDate != null"> created_date,</if>
+		<if test="updatedBy != null"> updated_by,</if>
+		<if test="updatedDate != null"> updated_date,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="userId != null"> #{userId},</if>	
+		<if test="roleId != null"> #{roleId},</if>	
+		<if test="createdBy != null"> #{createdBy},</if>	
+		<if test="createdDate != null"> #{createdDate},</if>	
+		<if test="updatedBy != null"> #{updatedBy},</if>	
+		<if test="updatedDate != null"> #{updatedDate},</if>	
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 用户权限 -->  
+<update id="modifyUserRole" parameterType="com.jing.system.model.entity.UserRole" >
+  	UPDATE ts_user_role SET
+	<trim suffixOverrides=",">
+		<if test="roleId != null"> role_id = #{roleId},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="createdDate != null"> created_date = #{createdDate},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+	</trim>
+	WHERE user_id = #{userId}
+</update>
+ 
+<!-- 删除 用户权限 -->
+<delete id="dropUserRoleByUserId" parameterType="java.lang.Integer">
+	DELETE FROM ts_user_role WHERE user_id = #{userId}
+</delete> 
+
+<!-- 根据标识查询 用户权限 -->
+<select id="queryUserRoleByUserId"  resultMap="UserRoleResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_userRole_item"/>
+	FROM ts_user_role WHERE user_id = #{userId}
+</select>
+
+<!-- 根据属性查询用户权限 -->
+<select id="queryUserRoleByProperty"  resultMap="UserRoleResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_userRole_item"/>
+	FROM ts_user_role 
+	<where>
+		<include refid="sql_userRole_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据用户权限属性与分页信息分页查询用户权限信息 -->
+<select id="queryUserRoleForPage"  resultMap="UserRoleResultMap" > 
+	SELECT 
+	<include refid="sql_userRole_item"/>
+	FROM ts_user_role 
+	<where>
+		<include refid="sql_userRole_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

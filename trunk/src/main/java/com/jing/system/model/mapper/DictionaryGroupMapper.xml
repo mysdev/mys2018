@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.model.dao.DictionaryGroupMapper">
+
+<!-- Result Map-->
+<resultMap id="DictionaryGroupResultMap" type="com.jing.system.model.entity.DictionaryGroup">
+	<id column="group_id" property="groupId"/>
+	<result column="group_code" property="groupCode"/>
+	<result column="group_name" property="groupName"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_dictionaryGroup_item">
+	group_id, group_code, group_name, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_dictionaryGroup_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="dictionaryGroup.groupId != null">AND group_id = #{dictionaryGroup.groupId} </if>
+		<if test="dictionaryGroup.groupCode != null">AND group_code like concat(#{dictionaryGroup.groupCode}, '%') </if>
+		<if test="dictionaryGroup.groupName != null">AND group_name like concat(#{dictionaryGroup.groupName}, '%') </if>
+		<if test="dictionaryGroup.createdBy != null">AND created_by like concat(#{dictionaryGroup.createdBy}, '%') </if>
+		<if test="dictionaryGroup.updatedBy != null">AND updated_by like concat(#{dictionaryGroup.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 字典分组 -->
+<insert id="addDictionaryGroup" parameterType="com.jing.system.model.entity.DictionaryGroup" >
+	<selectKey keyProperty="groupId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO ts_dictionary_group 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="groupId != null"> group_id,</if>
+		<if test="groupCode != null"> group_code,</if>
+		<if test="groupName != null"> group_name,</if>
+		<if test="createdBy != null"> created_by,</if>
+		<if test="createdDate != null"> created_date,</if>
+		<if test="updatedBy != null"> updated_by,</if>
+		<if test="updatedDate != null"> updated_date,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="groupId != null"> #{groupId},</if>	
+		<if test="groupCode != null"> #{groupCode},</if>	
+		<if test="groupName != null"> #{groupName},</if>	
+		<if test="createdBy != null"> #{createdBy},</if>	
+		<if test="createdDate != null"> #{createdDate},</if>	
+		<if test="updatedBy != null"> #{updatedBy},</if>	
+		<if test="updatedDate != null"> #{updatedDate},</if>	
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 字典分组 -->  
+<update id="modifyDictionaryGroup" parameterType="com.jing.system.model.entity.DictionaryGroup" >
+  	UPDATE ts_dictionary_group SET
+	<trim suffixOverrides=",">
+		<if test="groupCode != null"> group_code = #{groupCode},</if>
+		<if test="groupName != null"> group_name = #{groupName},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="createdDate != null"> created_date = #{createdDate},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+	</trim>
+	WHERE group_id = #{groupId}
+</update>
+ 
+<!-- 删除 字典分组 -->
+<delete id="dropDictionaryGroupByGroupId" parameterType="java.lang.Integer">
+	DELETE FROM ts_dictionary_group WHERE group_id = #{groupId}
+</delete> 
+
+<!-- 根据标识查询 字典分组 -->
+<select id="queryDictionaryGroupByGroupId"  resultMap="DictionaryGroupResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_dictionaryGroup_item"/>
+	FROM ts_dictionary_group WHERE group_id = #{groupId}
+</select>
+
+<!-- 根据属性查询字典分组 -->
+<select id="queryDictionaryGroupByProperty"  resultMap="DictionaryGroupResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_dictionaryGroup_item"/>
+	FROM ts_dictionary_group 
+	<where>
+		<include refid="sql_dictionaryGroup_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据字典分组属性与分页信息分页查询字典分组信息 -->
+<select id="queryDictionaryGroupForPage"  resultMap="DictionaryGroupResultMap" > 
+	SELECT 
+	<include refid="sql_dictionaryGroup_item"/>
+	FROM ts_dictionary_group 
+	<where>
+		<include refid="sql_dictionaryGroup_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   
