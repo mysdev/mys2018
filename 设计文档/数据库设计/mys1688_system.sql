@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-02 11:42:57
+Date: 2018-01-02 16:22:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -202,16 +202,11 @@ CREATE TABLE `ts_user` (
   `user_name` varchar(64) NOT NULL COMMENT '用户姓名',
   `team_id` int(11) DEFAULT NULL COMMENT '用户组',
   `nick_name` varchar(64) NOT NULL COMMENT '呢称',
-  `birthday` date DEFAULT NULL COMMENT '生日',
-  `id_card` varchar(18) DEFAULT NULL COMMENT '证件号',
-  `sex` int(11) DEFAULT NULL COMMENT '性别',
-  `address` varchar(128) DEFAULT NULL COMMENT '地址',
   `mobile` varchar(16) NOT NULL COMMENT '手机号',
   `email` varchar(64) DEFAULT NULL COMMENT '邮件地址',
   `password` varchar(64) NOT NULL COMMENT '密码',
   `repassword_date` date DEFAULT NULL COMMENT '下次修改密码时间',
-  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态',
-  `enabled` int(11) NOT NULL DEFAULT '0' COMMENT '是否启用 0正常',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
