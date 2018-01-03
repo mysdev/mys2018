@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Range;
  * @Description: 用户实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -33,16 +33,6 @@ public class User implements Serializable {
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String nickName;	//ts_user:nick_name  呢称  
-
-	private Date birthday;	//ts_user:birthday  生日  
-
-	@Length(min=0, max=18, message="{org.hibernate.validator.constraints.Length.message}")
-	private String idCard;	//ts_user:id_card  证件号  
-
-	private Integer sex;	//ts_user:sex  性别  
-
-	@Length(min=0, max=128, message="{org.hibernate.validator.constraints.Length.message}")
-	private String address;	//ts_user:address  地址  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=16, message="{org.hibernate.validator.constraints.Length.message}")
@@ -60,10 +50,7 @@ public class User implements Serializable {
 	private Date repasswordDate;	//ts_user:repassword_date  下次修改密码时间  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer status;	//ts_user:status  状态  
-
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer enabled;	//ts_user:enabled  是否启用 0正常  
+	private Integer status;	//ts_user:status  状态 0正常  
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String createdBy;	//ts_user:created_by  创建人员  
@@ -148,78 +135,6 @@ public class User implements Serializable {
 	}
 	
 	/**
-	* @DatabasetableColumnName: ts_user:birthday
-	* @Description: 获取属性        生日
-	* @return: Date
-	*/
-	public Date getBirthday(){
-		return birthday;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:birthday
-	* @Description: 设置属性        生日
-	* @return: Date
-	*/
-	public void setBirthday(Date birthday){
-		this.birthday = birthday;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:id_card
-	* @Description: 获取属性        证件号
-	* @return: String
-	*/
-	public String getIdCard(){
-		return idCard;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:id_card
-	* @Description: 设置属性        证件号
-	* @return: String
-	*/
-	public void setIdCard(String idCard){
-		this.idCard = idCard;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:sex
-	* @Description: 获取属性        性别
-	* @return: Integer
-	*/
-	public Integer getSex(){
-		return sex;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:sex
-	* @Description: 设置属性        性别
-	* @return: Integer
-	*/
-	public void setSex(Integer sex){
-		this.sex = sex;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:address
-	* @Description: 获取属性        地址
-	* @return: String
-	*/
-	public String getAddress(){
-		return address;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:address
-	* @Description: 设置属性        地址
-	* @return: String
-	*/
-	public void setAddress(String address){
-		this.address = address;	
-	}
-	
-	/**
 	* @DatabasetableColumnName: ts_user:mobile
 	* @Description: 获取属性        手机号
 	* @return: String
@@ -293,7 +208,7 @@ public class User implements Serializable {
 	
 	/**
 	* @DatabasetableColumnName: ts_user:status
-	* @Description: 获取属性        状态
+	* @Description: 获取属性        状态 0正常
 	* @return: Integer
 	*/
 	public Integer getStatus(){
@@ -302,29 +217,11 @@ public class User implements Serializable {
 	
 	/**
 	* @DatabasetableColumnName: ts_user:status
-	* @Description: 设置属性        状态
+	* @Description: 设置属性        状态 0正常
 	* @return: Integer
 	*/
 	public void setStatus(Integer status){
 		this.status = status;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:enabled
-	* @Description: 获取属性        是否启用 0正常
-	* @return: Integer
-	*/
-	public Integer getEnabled(){
-		return enabled;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:enabled
-	* @Description: 设置属性        是否启用 0正常
-	* @return: Integer
-	*/
-	public void setEnabled(Integer enabled){
-		this.enabled = enabled;	
 	}
 	
 	/**

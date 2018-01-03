@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Range;
  * @Description: 字典分组实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 public class DictionaryGroup implements Serializable {
 	private static final long serialVersionUID = 1L;

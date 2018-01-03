@@ -11,7 +11,7 @@ import com.jing.system.model.entity.UserGroup;
  * @Description: 用户组服务接口
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 public interface UserGroupService {
 

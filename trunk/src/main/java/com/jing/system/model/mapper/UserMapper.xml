@@ -8,16 +8,11 @@
 	<result column="user_name" property="userName"/>
 	<result column="team_id" property="teamId"/>
 	<result column="nick_name" property="nickName"/>
-	<result column="birthday" property="birthday"/>
-	<result column="id_card" property="idCard"/>
-	<result column="sex" property="sex"/>
-	<result column="address" property="address"/>
 	<result column="mobile" property="mobile"/>
 	<result column="email" property="email"/>
 	<result column="password" property="password"/>
 	<result column="repassword_date" property="repasswordDate"/>
 	<result column="status" property="status"/>
-	<result column="enabled" property="enabled"/>
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
 	<result column="updated_by" property="updatedBy"/>
@@ -25,7 +20,7 @@
 </resultMap>
 
 <sql id="sql_user_item">
-	user_id, user_name, team_id, nick_name, birthday, id_card, sex, address, mobile, email, password, repassword_date, status, enabled, created_by, created_date, updated_by, updated_date
+	user_id, user_name, team_id, nick_name, mobile, email, password, repassword_date, status, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -35,14 +30,10 @@
 		<if test="user.userName != null">AND user_name like concat(#{user.userName}, '%') </if>
 		<if test="user.teamId != null">AND team_id = #{user.teamId} </if>
 		<if test="user.nickName != null">AND nick_name like concat(#{user.nickName}, '%') </if>
-		<if test="user.idCard != null">AND id_card like concat(#{user.idCard}, '%') </if>
-		<if test="user.sex != null">AND sex = #{user.sex} </if>
-		<if test="user.address != null">AND address like concat(#{user.address}, '%') </if>
 		<if test="user.mobile != null">AND mobile like concat(#{user.mobile}, '%') </if>
 		<if test="user.email != null">AND email like concat(#{user.email}, '%') </if>
 		<if test="user.password != null">AND password like concat(#{user.password}, '%') </if>
 		<if test="user.status != null">AND status = #{user.status} </if>
-		<if test="user.enabled != null">AND enabled = #{user.enabled} </if>
 		<if test="user.createdBy != null">AND created_by like concat(#{user.createdBy}, '%') </if>
 		<if test="user.updatedBy != null">AND updated_by like concat(#{user.updatedBy}, '%') </if>
 	</trim>
@@ -59,16 +50,11 @@
 		<if test="userName != null"> user_name,</if>
 		<if test="teamId != null"> team_id,</if>
 		<if test="nickName != null"> nick_name,</if>
-		<if test="birthday != null"> birthday,</if>
-		<if test="idCard != null"> id_card,</if>
-		<if test="sex != null"> sex,</if>
-		<if test="address != null"> address,</if>
 		<if test="mobile != null"> mobile,</if>
 		<if test="email != null"> email,</if>
 		<if test="password != null"> password,</if>
 		<if test="repasswordDate != null"> repassword_date,</if>
 		<if test="status != null"> status,</if>
-		<if test="enabled != null"> enabled,</if>
 		<if test="createdBy != null"> created_by,</if>
 		<if test="createdDate != null"> created_date,</if>
 		<if test="updatedBy != null"> updated_by,</if>
@@ -79,16 +65,11 @@
 		<if test="userName != null"> #{userName},</if>	
 		<if test="teamId != null"> #{teamId},</if>	
 		<if test="nickName != null"> #{nickName},</if>	
-		<if test="birthday != null"> #{birthday},</if>	
-		<if test="idCard != null"> #{idCard},</if>	
-		<if test="sex != null"> #{sex},</if>	
-		<if test="address != null"> #{address},</if>	
 		<if test="mobile != null"> #{mobile},</if>	
 		<if test="email != null"> #{email},</if>	
 		<if test="password != null"> #{password},</if>	
 		<if test="repasswordDate != null"> #{repasswordDate},</if>	
 		<if test="status != null"> #{status},</if>	
-		<if test="enabled != null"> #{enabled},</if>	
 		<if test="createdBy != null"> #{createdBy},</if>	
 		<if test="createdDate != null"> #{createdDate},</if>	
 		<if test="updatedBy != null"> #{updatedBy},</if>	
@@ -103,16 +84,11 @@
 		<if test="userName != null"> user_name = #{userName},</if>
 		<if test="teamId != null"> team_id = #{teamId},</if>
 		<if test="nickName != null"> nick_name = #{nickName},</if>
-		<if test="birthday != null"> birthday = #{birthday},</if>
-		<if test="idCard != null"> id_card = #{idCard},</if>
-		<if test="sex != null"> sex = #{sex},</if>
-		<if test="address != null"> address = #{address},</if>
 		<if test="mobile != null"> mobile = #{mobile},</if>
 		<if test="email != null"> email = #{email},</if>
 		<if test="password != null"> password = #{password},</if>
 		<if test="repasswordDate != null"> repassword_date = #{repasswordDate},</if>
 		<if test="status != null"> status = #{status},</if>
-		<if test="enabled != null"> enabled = #{enabled},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>

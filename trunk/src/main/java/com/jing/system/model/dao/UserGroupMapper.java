@@ -15,7 +15,7 @@ import com.jing.system.model.entity.UserGroup;
  * @Description: 用户组映射
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 @Mapper
 public interface UserGroupMapper {
@@ -68,12 +68,6 @@ public interface UserGroupMapper {
 	  */
 	 List<UserGroup> queryUserGroupByProperty(@Param("userGroup") Map<String, Object> map);
 	 
-	 /**
-	 * @Title: clearTableData
-	 * @Description: 清空表信息
-	 * @return 
-	 */
-	 void clearTableData();
 	 
 	 
 }

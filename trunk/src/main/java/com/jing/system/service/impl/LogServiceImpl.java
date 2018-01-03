@@ -23,7 +23,7 @@ import com.jing.system.service.LogService;
  * @Description: 日志服务实现类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 @Service("logService")
 @Transactional(readOnly=true)

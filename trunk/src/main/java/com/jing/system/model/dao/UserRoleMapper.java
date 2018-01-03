@@ -15,7 +15,7 @@ import com.jing.system.model.entity.UserRole;
  * @Description: 用户权限映射
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月02日 11时16分
+ * @date: 2018年01月03日 16时26分
  */
 @Mapper
 public interface UserRoleMapper {
@@ -68,12 +68,6 @@ public interface UserRoleMapper {
 	  */
 	 List<UserRole> queryUserRoleByProperty(@Param("userRole") Map<String, Object> map);
 	 
-	 /**
-	 * @Title: clearTableData
-	 * @Description: 清空表信息
-	 * @return 
-	 */
-	 void clearTableData();
 	 
 	 
 }
