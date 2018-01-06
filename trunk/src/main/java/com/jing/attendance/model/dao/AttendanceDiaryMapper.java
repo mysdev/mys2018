@@ -66,7 +66,31 @@ public interface AttendanceDiaryMapper {
 	  * @Description:根据属性查询打卡记录
 	  * @return List<AttendanceDiary>
 	  */
-	 List<AttendanceDiary> queryAttendanceDiaryByProperty(@Param("attendanceDiary") Map<String, Object> map);
+	List<AttendanceDiary> queryAttendanceDiaryByProperty(@Param("attendanceDiary") Map<String, Object> map);
+	
+	/** 
+	* @Title: initEmployeeBindingData 
+	* @Description: 生成当日已绑定规则的员工考勤信息
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer initEmployeeBindingData();
+	
+	/** 
+	* @Title: initEmployeeNotBindingData 
+	* @Description: 生成当日已未绑定规则的员工考勤信息
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer initEmployeeNotBindingData();
+	
+	/** 
+	* @Title: queryEmployeeCountsToday 
+	* @Description: 查询当日考勤员工数
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer queryEmployeeCountsToday();
 	 
 	 
 	 

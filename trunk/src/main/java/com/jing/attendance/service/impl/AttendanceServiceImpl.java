@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jing.attendance.controller.vo.AttendanceBo;
 import com.jing.attendance.model.dao.AttendanceDetailMapper;
+import com.jing.attendance.model.dao.AttendanceDiaryMapper;
 import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.dao.AttendanceMapper;
 import com.jing.attendance.model.dao.AttendanceTimeMapper;
 import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceTime;
+import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
@@ -42,10 +44,16 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	private AttendanceDetailMapper attendanceDetailMapper;
 	
 	@Autowired
+	private AttendanceDetailService attendanceDetailService;
+	
+	@Autowired
 	private AttendanceEmployeeMapper employeeAttendanceMapper;
 	
 	@Autowired
 	private AttendanceTimeMapper attendanceTimeMapper;
+	
+	@Autowired
+	private AttendanceDiaryMapper attendanceDiaryMapper;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -158,6 +166,31 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public List<Attendance> queryAttendanceByProperty(Map<String, Object> map){
 		return attendanceMapper.queryAttendanceByProperty(map);
+	}
+
+	/*
+	 * @Title: initAttendanceDayWork
+	 * @Description: 
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceService#initAttendanceDayWork()
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Boolean initAttendanceDayWork() {
+		//查询、生成所有考勤规则当月数据		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Attendance> attList = attendanceMapper.queryAttendanceByProperty(map );
+		for(Attendance att : attList) {
+			attendanceDetailService.queryAttendanceDetail(att.getAttendanceId(), null);
+		}
+		attendanceDetailMapper.disableDetailEditable(); //锁定当日考勤详情
+		if(attendanceDiaryMapper.queryEmployeeCountsToday().intValue()==0) {
+			attendanceDiaryMapper.initEmployeeBindingData(); //生成当日绑定规则员工考勤详情
+			attendanceDiaryMapper.initEmployeeNotBindingData();//生成当日未绑定规则员工考勤详情
+		}
+		return null;
 	}
 
 

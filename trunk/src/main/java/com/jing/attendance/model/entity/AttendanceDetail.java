@@ -26,7 +26,7 @@ public class AttendanceDetail extends BaseEntity {
 
 	private Integer attId;	//tw_attendance_detail:att_id  详情标识  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@NotNull(message="{javax.validation.constraints.NotNull.message}")	
 	private Integer attendanceId;	//tw_attendance_detail:attendance_id  考勤标识  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")

@@ -85,6 +85,14 @@ public interface AttendanceDetailMapper {
 		* @throws 
 		*/
 	List<String> queryAttendanceDetailHistory(Integer attendanceId);
+	
+	/** 
+	* @Title: disableDetailEditable 
+	* @Description: 锁定当天考勤详情
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer disableDetailEditable();
 	 
 	 
 	 

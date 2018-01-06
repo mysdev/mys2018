@@ -26,7 +26,11 @@ public class AttendanceDiary implements Serializable {
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String employeeId;	//tw_attendance_diary:employee_id  员工号  
+	private String employeeId;	//tw_attendance_diary:employee_id  员工号 
+	
+	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer attendance;	//tw_attendance_diary:attendance  是否考勤 0考勤
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Date attTime;	//tw_attendance_diary:att_time  打卡时间  
@@ -160,6 +164,20 @@ public class AttendanceDiary implements Serializable {
 	*/
 	public void setOutTime(Date outTime){
 		this.outTime = outTime;	
+	}
+
+	/**
+	 * @return the attendance
+	 */
+	public Integer getAttendance() {
+		return attendance;
+	}
+
+	/**
+	 * @param attendance the attendance to set
+	 */
+	public void setAttendance(Integer attendance) {
+		this.attendance = attendance;
 	}	
 	
 	

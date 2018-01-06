@@ -11,6 +11,7 @@
 	<result column="sign_time" property="signTime"/>
 	<result column="sys_out" property="sysOut"/>
 	<result column="out_time" property="outTime"/>
+	<result column="attendance" property="attendance"/>
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
 	<result column="updated_by" property="updatedBy"/>
@@ -18,13 +19,14 @@
 </resultMap>
 
 <sql id="sql_attendanceDiary_item">
-	att_id, employee_id, att_time, sys_sign, sign_time, sys_out, out_time, created_by, created_date, updated_by, updated_date
+	att_id, employee_id, attendance, att_time, sys_sign, sign_time, sys_out, out_time, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
 <sql id="sql_attendanceDiary_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="attendanceDiary.attId != null">AND att_id = #{attendanceDiary.attId} </if>
+		<if test="attendanceDiary.attendance != null">AND attendance = #{attendanceDiary.attendance} </if>
 		<if test="attendanceDiary.employeeId != null">AND employee_id like concat(#{attendanceDiary.employeeId}, '%') </if>
 		<if test="attendanceDiary.createdBy != null">AND created_by like concat(#{attendanceDiary.createdBy}, '%') </if>
 		<if test="attendanceDiary.updatedBy != null">AND updated_by like concat(#{attendanceDiary.updatedBy}, '%') </if>
@@ -40,6 +42,7 @@
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="attId != null"> att_id,</if>
 		<if test="employeeId != null"> employee_id,</if>
+		<if test="attendance != null"> attendance,</if>
 		<if test="attTime != null"> att_time,</if>
 		<if test="sysSign != null"> sys_sign,</if>
 		<if test="signTime != null"> sign_time,</if>
@@ -53,6 +56,7 @@
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="attId != null"> #{attId},</if>
 		<if test="employeeId != null"> #{employeeId},</if>
+		<if test="attendance != null"> #{attendance},</if>
 		<if test="attTime != null"> #{attTime},</if>
 		<if test="sysSign != null"> #{sysSign},</if>
 		<if test="signTime != null"> #{signTime},</if>
@@ -70,6 +74,7 @@
   	UPDATE tw_attendance_diary SET
 	<trim suffixOverrides=",">
 		<if test="employeeId != null"> employee_id = #{employeeId},</if>
+		<if test="attendance != null"> attendance = #{attendance},</if>
 		<if test="attTime != null"> att_time = #{attTime},</if>
 		<if test="sysSign != null"> sys_sign = #{sysSign},</if>
 		<if test="signTime != null"> sign_time = #{signTime},</if>
@@ -112,6 +117,29 @@
 	<where>
 		<include refid="sql_attendanceDiary_query_nowhere"/>
 	</where>
+</select>
+
+<!-- 查询当日考勤员工数 -->
+<select id="queryEmployeeCountsToday" resultType="java.lang.Integer">
+	select count(1) as counts from tw_attendance_diary where att_time = DATE_FORMAT(NOW(),'%Y-%m-%d')
+</select>
+
+<!-- 生成当日已绑定规则的员工考勤信息 -->
+<select id="initEmployeeBindingData">
+insert into tw_attendance_diary (employee_id, attendance, att_time, sys_sign, sys_out)  
+select e.emp_id, d.attendance ,d.att_date, d.sign_time, d.out_time from tw_attendance_employee e
+left outer join (
+SELECT * from tw_attendance_detail where att_date=DATE_FORMAT(NOW(),'%Y-%m-%d')
+) d on e.attendance_id=d.attendance_id
+</select>
+<!-- 生成当日已未绑定规则的员工考勤信息 -->
+<select id="initEmployeeNotBindingData">
+insert into tw_attendance_diary (employee_id, attendance, att_time, sys_sign, sys_out)  
+select e1.emp_id, d.attendance, d.att_date, d.sign_time, d.out_time from (
+select emp_id from (
+select e.emp_id, l.attendance_id from tb_employee e LEFT OUTER JOIN tw_attendance_employee l on e.emp_id= l.emp_id
+) e1 where attendance_id is null
+) e1 CROSS JOIN (select * from tw_attendance_detail where att_date=DATE_FORMAT(NOW(),'%Y-%m-%d') and attendance_id=1) d
 </select>
 
 </mapper>   

@@ -22,6 +22,8 @@ import com.jing.attendance.service.AttendanceTimeService;
 import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
+import com.jing.core.model.entity.Store;
+import com.jing.core.service.StoreService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,16 +49,26 @@ public class AttendanceController{
 	@Autowired
 	private AttendanceTimeService attendanceTimeService;
 	
+	@Autowired
+	private StoreService storeService;
+	
 	private static final Integer MAX_TIME_PER_ATT = 3;
 	
 	
 	@ApiOperation(value = "新增 添加门店考勤信息", notes = "添加门店考勤信息 暂时只支持type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
-			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {	
+			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		attendance.setTypes(2); //暂时只支持2
 		attendance.setStatus(0);
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);
+		Store store = storeService.queryStoreByStoreId(attendance.getStoreId());
+		if(store==null) {
+			Map<String, String> e = new HashMap<String, String>();
+			e.put("field", "storeId");
+			e.put("message", "无法找到相应的门店。");
+			errors.add(e);
+		}		
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
@@ -72,6 +84,7 @@ public class AttendanceController{
 			e.put("message", "每考勤规则限定最多"+MAX_TIME_PER_ATT+"个时间段。");
 			errors.add(e);
 		}
+		errors.addAll(beanValidator.validateClassAuto(attendance.getAttTime(), true));
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}			
@@ -79,6 +92,8 @@ public class AttendanceController{
 			throw new ParameterException("attendance","类型为0休天数或1考勤天数时，对应天数必传且不能为零。");
 		}
 		attendance.setAttendanceId(null);
+		attendance.setOutCt(null);
+		attendance.setSignCt(null);
 		attendanceService.addAttendance(attendance);
 		return attendance;
 	}
@@ -90,12 +105,15 @@ public class AttendanceController{
 			@PathVariable Integer attendanceId,
 			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		attendance.setStoreId(null);//不允许变更门店
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);		
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
 			e.put("field", "attTime");
 			e.put("message", "每考勤规则限定最多"+MAX_TIME_PER_ATT+"个时间段。");
-			errors.add(e);
+			errors.add(e);			
+		}
+		if(attendance.getAttTime()!=null && attendance.getAttTime().size()!=0) {
 			errors.addAll(beanValidator.validateClassAuto(attendance.getAttTime(), true));
 		}
 		if(!errors.isEmpty()){
@@ -106,9 +124,11 @@ public class AttendanceController{
 			throw new NotFoundException("门店考勤");
 		}
 		if(attendance.getTypes()!=null && attendance.getTypes().intValue()!=tempAttendance.getTypes().intValue()){
-			throw new ParameterException("types","门店考勤类型不允许变更。");
+			throw new ParameterException("types","考勤类型不允许变更。");
 		}
 		attendance.setAttendanceId(attendanceId);
+		attendance.setOutCt(null);
+		attendance.setSignCt(null);
 		return attendanceService.modifyAttendance(attendance);
 	}
 

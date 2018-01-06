@@ -102,6 +102,11 @@
 	</trim>
 	WHERE att_id = #{attId}
 </update>
+
+<!-- 锁定当天考勤详情，不允许更改 -->
+<update id="disableDetailEditable">
+	update tw_attendance_detail set editable=1 where att_date=DATE_FORMAT(NOW(),'%Y-%m-%d')
+</update>
  
 <!-- 删除 门店考勤详情 -->
 <delete id="dropAttendanceDetailByAttId" parameterType="java.lang.Integer">
