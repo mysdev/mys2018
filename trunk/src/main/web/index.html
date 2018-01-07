@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>首页</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="./css/bootstrap.min.css" />
+		<link rel="stylesheet" href="./font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="./css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="./css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="./css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="./css/ace-skins.min.css" />
+		<link rel="stylesheet" href="./css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="./css/jqPaginator.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="./css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="./js/html5shiv.min.js"></script>
+		<script src="./js/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body class="no-skin">
+		<div id="navbar" class="navbar navbar-default  ace-save-state">
+			
+			<!--加载初始化数据开始-->
+			<script type="text/javascript">
+				var data = [{ "id":1,"name": "思涵", "sex":"男","job":"工人","birthday":"1978-10-10","statu":"在职" },{ "id":2,"name": "可涵", "sex":"女","job":"农民","birthday":"1998-10-10","statu":"在职" }];
+    			var totalPage = 3;
+    			var currentPage = 1;
+			</script>
+			<!--加载初始化数据结束-->
+			
+			<!--页面头部开始-->
+			<div class="navbar-container ace-save-state" id="navbar-container">
+				<!--LOGO开始-->
+				<div class="navbar-header pull-left">
+					<a href="index.html" class="navbar-brand">
+						<small>
+							<i class="fa fa-leaf"></i>
+							管理后台
+						</small>
+					</a>
+				</div>
+				<!--LOGO结束-->
+				<!--右侧下来菜单开始-->
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+
+						<li class="light-blue dropdown-modal">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="./images/avatars/user.jpg" alt="Jason's Photo" />
+								<span class="user-info">
+									<small>欢迎,</small>
+									光头强
+								</span>
+
+								<i class="ace-icon fa fa-caret-down"></i>
+							</a>
+
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-cog"></i> 设置
+									</a>
+								</li>
+
+								<li>
+									<a href="profile.html">
+										<i class="ace-icon fa fa-user"></i> 个人中心
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-power-off"></i> 退出
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!--右侧下来菜单结束-->
+			</div>
+			<!--页面头部结束-->
+		</div>
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try {
+					ace.settings.loadState('main-container')
+				} catch(e) {}
+			</script>
+
+			<div id="sidebar" class="sidebar responsive ace-save-state">
+				<!--左上快捷菜单开始-->
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<!--大图-->
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-success" title="快捷功能1">
+							<i class="ace-icon fa fa-signal"></i>
+						</button>
+
+						<button class="btn btn-info" title="快捷功能2">
+							<i class="ace-icon fa fa-pencil"></i>
+						</button>
+
+						<button class="btn btn-warning" title="快捷功能3">
+							<i class="ace-icon fa fa-users"></i>
+						</button>
+
+						<button class="btn btn-danger" title="快捷功能4">
+							<i class="ace-icon fa fa-cogs"></i>
+						</button>
+					</div>
+					<!--小图-->
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success" title="快捷功能1"></span>
+
+						<span class="btn btn-info" title="快捷功能2"></span>
+
+						<span class="btn btn-warning" title="快捷功能3"></span>
+
+						<span class="btn btn-danger" title="快捷功能4"></span>
+					</div>
+				</div>
+				<!--左上快捷菜单结束-->
+				<!--左菜单开始-->
+				<ul class="nav nav-list">
+					<li class="active">
+						<a href="index.html">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text"> 人员管理 </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+				</ul>
+				<!--左菜单结束-->
+				<!--菜单缩进弹出按钮开始-->
+				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+				</div>
+				<!--菜单缩进弹出按钮结束-->
+			</div>
+			<!--右内容开始-->
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon"></i>
+								<a href="index.html">首页</a>
+							</li>
+							<li class="active">人员管理</li>
+						</ul>
+						<!--快速搜索开始-->
+						<div class="nav-search" id="nav-search">
+							<form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+							</form>
+						</div>
+						<!--快速搜索结束-->
+					</div>
+
+					<div class="page-content">
+
+						<div class="page-header">
+							<button class="btn btn-xs btn-primary" id="btAdd">
+								<i class="ace-icon fa fa-check"></i>
+								新 增
+							</button>
+							<button class="btn btn-xs btn-danger" id="btDelete">
+								<i class="ace-icon fa fa-trash-o bigger-110"></i>
+								删 除
+							</button>
+
+
+						</div>
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<div class="col-xs-12">
+										<table id="simple-table" class="table  table-bordered table-hover">
+											<thead>
+												<tr>
+													<th class="center">
+														<label class="pos-rel">
+															<input type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th>名称</th>
+													<th>性别</th>
+													<th>职务</th>
+													<th>生日 </th>
+													<th class="hidden-480">状态</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody data-bind="foreach: { data: deptlist, as: 'deps' }">
+												<tr>
+													<td class="center">
+														<label class="pos-rel">
+															<input type="checkbox" class="ace" data-bind="attr: { data: id }" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+													<td data-bind="text: deps.name"></td>
+													<td data-bind="text: deps.sex"></td>
+													<td data-bind="text: deps.job"></td>
+													<td data-bind="text: deps.birthday"></td>
+													<td class="hidden-480">
+														<span class="label label-sm label-warning" data-bind="text: deps.statu"></span>
+													</td>
+													<td>
+														<div class="hidden-sm hidden-xs btn-group">
+															<button class="btn btn-xs btn-info" data-bind="click:$root.edit">
+																<i class="ace-icon fa fa-pencil bigger-120"></i>
+															</button>
+															<button class="btn btn-xs btn-danger" data-bind="click:$root.remove">
+																<i class="ace-icon fa fa-trash-o bigger-120"></i>
+															</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+								<!-- PAGE CONTENT ENDS -->
+								<!--分页开始-->
+								<div class="row" style="text-align: center;">
+									<ul class="pagination" id="personPagination"></ul>
+								</div>
+								<!--分页结束-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--右内容结束-->
+			<!--底部开始-->
+			<div class="footer">
+				<div class="footer-inner">
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">XXX</span> XXXXX &copy; 2016-2017
+						</span>
+					</div>
+				</div>
+			</div>
+			<!--底部结束-->
+			<!--返回页头开始-->
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+			<!--返回页头结束-->
+		</div>
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="./js/jquery-2.1.4.min.js"></script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+        <script src="./js/jquery-1.11.3.min.js"></script>
+        <![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='./js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+
+		</script>
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/knockout-3.4.2.js"></script>
+		<script src="./js/jqPaginator.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<script src="./js/jquery.dataTables.min.js"></script>
+		<script src="./js/jquery.dataTables.bootstrap.min.js"></script>
+		<script src="./js/dataTables.buttons.min.js"></script>
+		<script src="./js/dataTables.select.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="./js/ace-elements.min.js"></script>
+		<script src="./js/ace.min.js"></script>
+		
+		
+		<!--列表数据绑定开始-->
+		<script src="./viewModel/department.js"></script>
+		<!--列表数据绑定结束-->
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+
+				//复选框事件处理
+				var active_class = 'active';
+				$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function() {
+					var th_checked = this.checked; //checkbox inside "TH" table header
+					$(this).closest('table').find('tbody > tr').each(function() {
+						var row = this;
+						if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+						else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+					});
+				});
+
+				//选中非选中样式变化
+				$('#simple-table').on('click', 'td input[type=checkbox]', function() {
+					var $row = $(this).closest('tr');
+					if($row.is('.detail-row ')) return;
+					if(this.checked) $row.addClass(active_class);
+					else $row.removeClass(active_class);
+				});
+
+				/********************************/
+				//菜单小按钮提示
+				$('[data-rel="tooltip"]').tooltip({
+					placement: tooltip_placement
+				});
+
+				//提示位置处理
+				function tooltip_placement(context, source) {
+					var $source = $(source);
+					var $parent = $source.closest('table')
+					var off1 = $parent.offset();
+					var w1 = $parent.width();
+
+					var off2 = $source.offset();
+					//var w2 = $source.width();
+
+					if(parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+					return 'left';
+				}
+
+                //列表上的新增按钮事件
+				$("#btAdd").bind("click",function(){
+					window.location.href="addDept.html";
+				});
+				$("#btDelete").bind("click",function(){
+					$('#simple-table > tbody > tr > td input[type=checkbox]').each(function(){
+						if(this.checked)
+						{
+							//调接口批量删除
+						}
+					});
+				});
+			})
+		</script>
+	</body>
+
+</html>
