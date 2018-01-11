@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.settlement.model.dao.GoodsMaterialMapper">
+
+<!-- Result Map-->
+<resultMap id="GoodsMaterialResultMap" type="com.jing.settlement.model.entity.GoodsMaterial">
+	<id column="material_id" property="materialId"/>
+	<result column="store_id" property="storeId"/>
+	<result column="material_name" property="materialName"/>
+	<result column="material_no" property="materialNo"/>
+	<result column="material_types" property="materialTypes"/>
+	<result column="material_ct" property="materialCt"/>
+	<result column="pinyin" property="pinyin"/>
+	<result column="cost" property="cost"/>
+	<result column="cost_all" property="costAll"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_goodsMaterial_item">
+	material_id, store_id, material_name, material_no, material_types, material_ct, pinyin, cost, cost_all, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_goodsMaterial_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="goodsMaterial.materialId != null">AND material_id = #{goodsMaterial.materialId} </if>
+		<if test="goodsMaterial.storeId != null">AND store_id like concat(#{goodsMaterial.storeId}, '%') </if>
+		<if test="goodsMaterial.materialName != null">AND material_name like concat(#{goodsMaterial.materialName}, '%') </if>
+		<if test="goodsMaterial.materialNo != null">AND material_no like concat(#{goodsMaterial.materialNo}, '%') </if>
+		<if test="goodsMaterial.materialTypes != null">AND material_types = #{goodsMaterial.materialTypes} </if>
+		<if test="goodsMaterial.materialCt != null">AND material_ct = #{goodsMaterial.materialCt} </if>
+		<if test="goodsMaterial.pinyin != null">AND pinyin like concat(#{goodsMaterial.pinyin}, '%') </if>
+		<if test="goodsMaterial.createdBy != null">AND created_by like concat(#{goodsMaterial.createdBy}, '%') </if>
+		<if test="goodsMaterial.updatedBy != null">AND updated_by like concat(#{goodsMaterial.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 基本原料 -->
+<insert id="addGoodsMaterial" parameterType="com.jing.settlement.model.entity.GoodsMaterial" >
+	<selectKey keyProperty="materialId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO to_goods_material 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="materialId != null"> material_id,</if>
+		<if test="storeId != null"> store_id,</if>
+		<if test="materialName != null"> material_name,</if>
+		<if test="materialNo != null"> material_no,</if>
+		<if test="materialTypes != null"> material_types,</if>
+		<if test="materialCt != null"> material_ct,</if>
+		<if test="pinyin != null"> pinyin,</if>
+		<if test="cost != null"> cost,</if>
+		<if test="costAll != null"> cost_all,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="materialId != null"> #{materialId},</if>
+		<if test="storeId != null"> #{storeId},</if>
+		<if test="materialName != null"> #{materialName},</if>
+		<if test="materialNo != null"> #{materialNo},</if>
+		<if test="materialTypes != null"> #{materialTypes},</if>
+		<if test="materialCt != null"> #{materialCt},</if>
+		<if test="pinyin != null"> #{pinyin},</if>
+		<if test="cost != null"> #{cost},</if>
+		<if test="costAll != null"> #{costAll},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 基本原料 -->  
+<update id="modifyGoodsMaterial" parameterType="com.jing.settlement.model.entity.GoodsMaterial" >
+  	UPDATE to_goods_material SET
+	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
+		<if test="materialName != null"> material_name = #{materialName},</if>
+		<if test="materialNo != null"> material_no = #{materialNo},</if>
+		<if test="materialTypes != null"> material_types = #{materialTypes},</if>
+		<if test="materialCt != null"> material_ct = #{materialCt},</if>
+		<if test="pinyin != null"> pinyin = #{pinyin},</if>
+		<if test="cost != null"> cost = #{cost},</if>
+		<if test="costAll != null"> cost_all = #{costAll},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE material_id = #{materialId}
+</update>
+ 
+<!-- 删除 基本原料 -->
+<delete id="dropGoodsMaterialByMaterialId" parameterType="java.lang.Integer">
+	DELETE FROM to_goods_material WHERE material_id = #{materialId}
+</delete> 
+
+<!-- 根据标识查询 基本原料 -->
+<select id="queryGoodsMaterialByMaterialId"  resultMap="GoodsMaterialResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_goodsMaterial_item"/>
+	FROM to_goods_material WHERE material_id = #{materialId}
+</select>
+
+<!-- 根据属性查询基本原料 -->
+<select id="queryGoodsMaterialByProperty"  resultMap="GoodsMaterialResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_goodsMaterial_item"/>
+	FROM to_goods_material 
+	<where>
+		<include refid="sql_goodsMaterial_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据基本原料属性与分页信息分页查询基本原料信息 -->
+<select id="queryGoodsMaterialForPage"  resultMap="GoodsMaterialResultMap" > 
+	SELECT 
+	<include refid="sql_goodsMaterial_item"/>
+	FROM to_goods_material 
+	<where>
+		<include refid="sql_goodsMaterial_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

@@ -54,23 +54,23 @@
 		<if test="operStatus != null"> oper_status,</if>
 		<if test="request != null"> request,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="logId != null"> #{logId},</if>	
-		<if test="userId != null"> #{userId},</if>	
-		<if test="userIp != null"> #{userIp},</if>	
-		<if test="oper != null"> #{oper},</if>	
-		<if test="operUa != null"> #{operUa},</if>	
-		<if test="operType != null"> #{operType},</if>	
-		<if test="operStatus != null"> #{operStatus},</if>	
-		<if test="request != null"> #{request},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="logId != null"> #{logId},</if>
+		<if test="userId != null"> #{userId},</if>
+		<if test="userIp != null"> #{userIp},</if>
+		<if test="oper != null"> #{oper},</if>
+		<if test="operUa != null"> #{operUa},</if>
+		<if test="operType != null"> #{operType},</if>
+		<if test="operStatus != null"> #{operStatus},</if>
+		<if test="request != null"> #{request},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -86,9 +86,8 @@
 		<if test="operStatus != null"> oper_status = #{operStatus},</if>
 		<if test="request != null"> request = #{request},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE log_id = #{logId}
 </update>

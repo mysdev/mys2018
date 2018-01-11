@@ -42,19 +42,19 @@
 		<if test="propertyValue != null"> property_value,</if>
 		<if test="propertyNote != null"> property_note,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="propertyId != null"> #{propertyId},</if>	
-		<if test="propertyCode != null"> #{propertyCode},</if>	
-		<if test="propertyValue != null"> #{propertyValue},</if>	
-		<if test="propertyNote != null"> #{propertyNote},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="propertyId != null"> #{propertyId},</if>
+		<if test="propertyCode != null"> #{propertyCode},</if>
+		<if test="propertyValue != null"> #{propertyValue},</if>
+		<if test="propertyNote != null"> #{propertyNote},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -66,9 +66,8 @@
 		<if test="propertyValue != null"> property_value = #{propertyValue},</if>
 		<if test="propertyNote != null"> property_note = #{propertyNote},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE property_id = #{propertyId}
 </update>

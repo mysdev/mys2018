@@ -15,7 +15,7 @@ import com.jing.system.model.entity.UserGroup;
  * @Description: 用户组映射
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月03日 16时26分
+ * @date: 2018年01月11日 15时04分
  */
 @Mapper
 public interface UserGroupMapper {

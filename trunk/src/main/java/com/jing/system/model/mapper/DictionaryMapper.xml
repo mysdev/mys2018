@@ -51,22 +51,22 @@
 		<if test="sequence != null"> sequence,</if>
 		<if test="flag != null"> flag,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="id != null"> #{id},</if>	
-		<if test="code != null"> #{code},</if>	
-		<if test="value != null"> #{value},</if>	
-		<if test="groupCode != null"> #{groupCode},</if>	
-		<if test="parentCode != null"> #{parentCode},</if>	
-		<if test="sequence != null"> #{sequence},</if>	
-		<if test="flag != null"> #{flag},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="id != null"> #{id},</if>
+		<if test="code != null"> #{code},</if>
+		<if test="value != null"> #{value},</if>
+		<if test="groupCode != null"> #{groupCode},</if>
+		<if test="parentCode != null"> #{parentCode},</if>
+		<if test="sequence != null"> #{sequence},</if>
+		<if test="flag != null"> #{flag},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -81,9 +81,8 @@
 		<if test="sequence != null"> sequence = #{sequence},</if>
 		<if test="flag != null"> flag = #{flag},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE id = #{id}
 </update>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.MemberPriceMapper">
+
+<!-- Result Map-->
+<resultMap id="MemberPriceResultMap" type="com.jing.trade.model.entity.MemberPrice">
+	<id column="price_id" property="priceId"/>
+	<result column="level_id" property="levelId"/>
+	<result column="object_type" property="objectType"/>
+	<result column="object_id" property="objectId"/>
+	<result column="price" property="price"/>
+	<result column="discount" property="discount"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_memberPrice_item">
+	price_id, level_id, object_type, object_id, price, discount, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_memberPrice_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="memberPrice.priceId != null">AND price_id = #{memberPrice.priceId} </if>
+		<if test="memberPrice.levelId != null">AND level_id = #{memberPrice.levelId} </if>
+		<if test="memberPrice.objectType != null">AND object_type = #{memberPrice.objectType} </if>
+		<if test="memberPrice.objectId != null">AND object_id like concat(#{memberPrice.objectId}, '%') </if>
+		<if test="memberPrice.createdBy != null">AND created_by like concat(#{memberPrice.createdBy}, '%') </if>
+		<if test="memberPrice.updatedBy != null">AND updated_by like concat(#{memberPrice.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 会员价格 -->
+<insert id="addMemberPrice" parameterType="com.jing.trade.model.entity.MemberPrice" >
+	<selectKey keyProperty="priceId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_member_price 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="priceId != null"> price_id,</if>
+		<if test="levelId != null"> level_id,</if>
+		<if test="objectType != null"> object_type,</if>
+		<if test="objectId != null"> object_id,</if>
+		<if test="price != null"> price,</if>
+		<if test="discount != null"> discount,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="priceId != null"> #{priceId},</if>
+		<if test="levelId != null"> #{levelId},</if>
+		<if test="objectType != null"> #{objectType},</if>
+		<if test="objectId != null"> #{objectId},</if>
+		<if test="price != null"> #{price},</if>
+		<if test="discount != null"> #{discount},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 会员价格 -->  
+<update id="modifyMemberPrice" parameterType="com.jing.trade.model.entity.MemberPrice" >
+  	UPDATE tt_member_price SET
+	<trim suffixOverrides=",">
+		<if test="levelId != null"> level_id = #{levelId},</if>
+		<if test="objectType != null"> object_type = #{objectType},</if>
+		<if test="objectId != null"> object_id = #{objectId},</if>
+		<if test="price != null"> price = #{price},</if>
+		<if test="discount != null"> discount = #{discount},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE price_id = #{priceId}
+</update>
+ 
+<!-- 删除 会员价格 -->
+<delete id="dropMemberPriceByPriceId" parameterType="java.lang.Integer">
+	DELETE FROM tt_member_price WHERE price_id = #{priceId}
+</delete> 
+
+<!-- 根据标识查询 会员价格 -->
+<select id="queryMemberPriceByPriceId"  resultMap="MemberPriceResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_memberPrice_item"/>
+	FROM tt_member_price WHERE price_id = #{priceId}
+</select>
+
+<!-- 根据属性查询会员价格 -->
+<select id="queryMemberPriceByProperty"  resultMap="MemberPriceResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_memberPrice_item"/>
+	FROM tt_member_price 
+	<where>
+		<include refid="sql_memberPrice_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据会员价格属性与分页信息分页查询会员价格信息 -->
+<select id="queryMemberPriceForPage"  resultMap="MemberPriceResultMap" > 
+	SELECT 
+	<include refid="sql_memberPrice_item"/>
+	FROM tt_member_price 
+	<where>
+		<include refid="sql_memberPrice_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

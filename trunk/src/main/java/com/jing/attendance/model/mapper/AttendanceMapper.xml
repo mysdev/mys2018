@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceResultMap" type="com.jing.attendance.model.entity.Attendance">
+	<id column="attendance_id" property="attendanceId"/>
+	<result column="store_id" property="storeId"/>
+	<result column="attendance_name" property="attendanceName"/>
+	<result column="status" property="status"/>
+	<result column="types" property="types"/>
+	<result column="attendance" property="attendance"/>
+	<result column="sign_time" property="signTime"/>
+	<result column="out_time" property="outTime"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_attendance_item">
+	attendance_id, store_id, attendance_name, status, types, attendance, sign_time, out_time, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendance_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendance.attendanceId != null">AND attendance_id = #{attendance.attendanceId} </if>
+		<if test="attendance.storeId != null">AND store_id like concat(#{attendance.storeId}, '%') </if>
+		<if test="attendance.attendanceName != null">AND attendance_name like concat(#{attendance.attendanceName}, '%') </if>
+		<if test="attendance.status != null">AND status = #{attendance.status} </if>
+		<if test="attendance.types != null">AND types = #{attendance.types} </if>
+		<if test="attendance.attendance != null">AND attendance = #{attendance.attendance} </if>
+		<if test="attendance.createdBy != null">AND created_by like concat(#{attendance.createdBy}, '%') </if>
+		<if test="attendance.updatedBy != null">AND updated_by like concat(#{attendance.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 门店考勤 -->
+<insert id="addAttendance" parameterType="com.jing.attendance.model.entity.Attendance" >
+	<selectKey keyProperty="attendanceId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="attendanceId != null"> attendance_id,</if>
+		<if test="storeId != null"> store_id,</if>
+		<if test="attendanceName != null"> attendance_name,</if>
+		<if test="status != null"> status,</if>
+		<if test="types != null"> types,</if>
+		<if test="attendance != null"> attendance,</if>
+		<if test="signTime != null"> sign_time,</if>
+		<if test="outTime != null"> out_time,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="attendanceId != null"> #{attendanceId},</if>
+		<if test="storeId != null"> #{storeId},</if>
+		<if test="attendanceName != null"> #{attendanceName},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="types != null"> #{types},</if>
+		<if test="attendance != null"> #{attendance},</if>
+		<if test="signTime != null"> #{signTime},</if>
+		<if test="outTime != null"> #{outTime},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 门店考勤 -->  
+<update id="modifyAttendance" parameterType="com.jing.attendance.model.entity.Attendance" >
+  	UPDATE tw_attendance SET
+	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
+		<if test="attendanceName != null"> attendance_name = #{attendanceName},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="types != null"> types = #{types},</if>
+		<if test="attendance != null"> attendance = #{attendance},</if>
+		<if test="signTime != null"> sign_time = #{signTime},</if>
+		<if test="outTime != null"> out_time = #{outTime},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE attendance_id = #{attendanceId}
+</update>
+ 
+<!-- 删除 门店考勤 -->
+<delete id="dropAttendanceByAttendanceId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance WHERE attendance_id = #{attendanceId}
+</delete> 
+
+<!-- 根据标识查询 门店考勤 -->
+<select id="queryAttendanceByAttendanceId"  resultMap="AttendanceResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendance_item"/>
+	FROM tw_attendance WHERE attendance_id = #{attendanceId}
+</select>
+
+<!-- 根据属性查询门店考勤 -->
+<select id="queryAttendanceByProperty"  resultMap="AttendanceResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendance_item"/>
+	FROM tw_attendance 
+	<where>
+		<include refid="sql_attendance_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据门店考勤属性与分页信息分页查询门店考勤信息 -->
+<select id="queryAttendanceForPage"  resultMap="AttendanceResultMap" > 
+	SELECT 
+	<include refid="sql_attendance_item"/>
+	FROM tw_attendance 
+	<where>
+		<include refid="sql_attendance_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

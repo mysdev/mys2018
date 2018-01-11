@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.CouponMapper">
+
+<!-- Result Map-->
+<resultMap id="CouponResultMap" type="com.jing.trade.model.entity.Coupon">
+	<id column="coupon_id" property="couponId"/>
+	<result column="coupon_name" property="couponName"/>
+	<result column="types" property="types"/>
+	<result column="total_count" property="totalCount"/>
+	<result column="allowance" property="allowance"/>
+	<result column="total_price" property="totalPrice"/>
+	<result column="from_time" property="fromTime"/>
+	<result column="to_time" property="toTime"/>
+	<result column="status" property="status"/>
+	<result column="is_stack" property="isStack"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_coupon_item">
+	coupon_id, coupon_name, types, total_count, allowance, total_price, from_time, to_time, status, is_stack, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_coupon_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="coupon.couponId != null">AND coupon_id = #{coupon.couponId} </if>
+		<if test="coupon.couponName != null">AND coupon_name like concat(#{coupon.couponName}, '%') </if>
+		<if test="coupon.types != null">AND types = #{coupon.types} </if>
+		<if test="coupon.totalCount != null">AND total_count = #{coupon.totalCount} </if>
+		<if test="coupon.allowance != null">AND allowance = #{coupon.allowance} </if>
+		<if test="coupon.status != null">AND status = #{coupon.status} </if>
+		<if test="coupon.isStack != null">AND is_stack = #{coupon.isStack} </if>
+		<if test="coupon.createdBy != null">AND created_by like concat(#{coupon.createdBy}, '%') </if>
+		<if test="coupon.updatedBy != null">AND updated_by like concat(#{coupon.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 优惠卷组 -->
+<insert id="addCoupon" parameterType="com.jing.trade.model.entity.Coupon" >
+	<selectKey keyProperty="couponId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_coupon 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="couponId != null"> coupon_id,</if>
+		<if test="couponName != null"> coupon_name,</if>
+		<if test="types != null"> types,</if>
+		<if test="totalCount != null"> total_count,</if>
+		<if test="allowance != null"> allowance,</if>
+		<if test="totalPrice != null"> total_price,</if>
+		<if test="fromTime != null"> from_time,</if>
+		<if test="toTime != null"> to_time,</if>
+		<if test="status != null"> status,</if>
+		<if test="isStack != null"> is_stack,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="couponId != null"> #{couponId},</if>
+		<if test="couponName != null"> #{couponName},</if>
+		<if test="types != null"> #{types},</if>
+		<if test="totalCount != null"> #{totalCount},</if>
+		<if test="allowance != null"> #{allowance},</if>
+		<if test="totalPrice != null"> #{totalPrice},</if>
+		<if test="fromTime != null"> #{fromTime},</if>
+		<if test="toTime != null"> #{toTime},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="isStack != null"> #{isStack},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 优惠卷组 -->  
+<update id="modifyCoupon" parameterType="com.jing.trade.model.entity.Coupon" >
+  	UPDATE tt_coupon SET
+	<trim suffixOverrides=",">
+		<if test="couponName != null"> coupon_name = #{couponName},</if>
+		<if test="types != null"> types = #{types},</if>
+		<if test="totalCount != null"> total_count = #{totalCount},</if>
+		<if test="allowance != null"> allowance = #{allowance},</if>
+		<if test="totalPrice != null"> total_price = #{totalPrice},</if>
+		<if test="fromTime != null"> from_time = #{fromTime},</if>
+		<if test="toTime != null"> to_time = #{toTime},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="isStack != null"> is_stack = #{isStack},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE coupon_id = #{couponId}
+</update>
+ 
+<!-- 删除 优惠卷组 -->
+<delete id="dropCouponByCouponId" parameterType="java.lang.Integer">
+	DELETE FROM tt_coupon WHERE coupon_id = #{couponId}
+</delete> 
+
+<!-- 根据标识查询 优惠卷组 -->
+<select id="queryCouponByCouponId"  resultMap="CouponResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_coupon_item"/>
+	FROM tt_coupon WHERE coupon_id = #{couponId}
+</select>
+
+<!-- 根据属性查询优惠卷组 -->
+<select id="queryCouponByProperty"  resultMap="CouponResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_coupon_item"/>
+	FROM tt_coupon 
+	<where>
+		<include refid="sql_coupon_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据优惠卷组属性与分页信息分页查询优惠卷组信息 -->
+<select id="queryCouponForPage"  resultMap="CouponResultMap" > 
+	SELECT 
+	<include refid="sql_coupon_item"/>
+	FROM tt_coupon 
+	<where>
+		<include refid="sql_coupon_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

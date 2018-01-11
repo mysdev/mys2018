@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.settlement.model.dao.AuthorizationMapper">
+
+<!-- Result Map-->
+<resultMap id="AuthorizationResultMap" type="com.jing.settlement.model.entity.Authorization">
+	<id column="authorization_id" property="authorizationId"/>
+	<result column="customer_id" property="customerId"/>
+	<result column="types" property="types"/>
+	<result column="device_id" property="deviceId"/>
+	<result column="status" property="status"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_authorization_item">
+	authorization_id, customer_id, types, device_id, status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_authorization_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="authorization.authorizationId != null">AND authorization_id like concat(#{authorization.authorizationId}, '%') </if>
+		<if test="authorization.customerId != null">AND customer_id = #{authorization.customerId} </if>
+		<if test="authorization.types != null">AND types = #{authorization.types} </if>
+		<if test="authorization.deviceId != null">AND device_id like concat(#{authorization.deviceId}, '%') </if>
+		<if test="authorization.status != null">AND status = #{authorization.status} </if>
+		<if test="authorization.createdBy != null">AND created_by like concat(#{authorization.createdBy}, '%') </if>
+		<if test="authorization.updatedBy != null">AND updated_by like concat(#{authorization.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 消费授权 -->
+<insert id="addAuthorization" parameterType="com.jing.settlement.model.entity.Authorization" >
+ 	INSERT INTO to_authorization 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="authorizationId != null"> authorization_id,</if>
+		<if test="customerId != null"> customer_id,</if>
+		<if test="types != null"> types,</if>
+		<if test="deviceId != null"> device_id,</if>
+		<if test="status != null"> status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="authorizationId != null"> #{authorizationId},</if>
+		<if test="customerId != null"> #{customerId},</if>
+		<if test="types != null"> #{types},</if>
+		<if test="deviceId != null"> #{deviceId},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 消费授权 -->  
+<update id="modifyAuthorization" parameterType="com.jing.settlement.model.entity.Authorization" >
+  	UPDATE to_authorization SET
+	<trim suffixOverrides=",">
+		<if test="customerId != null"> customer_id = #{customerId},</if>
+		<if test="types != null"> types = #{types},</if>
+		<if test="deviceId != null"> device_id = #{deviceId},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE authorization_id = #{authorizationId}
+</update>
+ 
+<!-- 删除 消费授权 -->
+<delete id="dropAuthorizationByAuthorizationId" parameterType="java.lang.String">
+	DELETE FROM to_authorization WHERE authorization_id = #{authorizationId}
+</delete> 
+
+<!-- 根据标识查询 消费授权 -->
+<select id="queryAuthorizationByAuthorizationId"  resultMap="AuthorizationResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_authorization_item"/>
+	FROM to_authorization WHERE authorization_id = #{authorizationId}
+</select>
+
+<!-- 根据属性查询消费授权 -->
+<select id="queryAuthorizationByProperty"  resultMap="AuthorizationResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_authorization_item"/>
+	FROM to_authorization 
+	<where>
+		<include refid="sql_authorization_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据消费授权属性与分页信息分页查询消费授权信息 -->
+<select id="queryAuthorizationForPage"  resultMap="AuthorizationResultMap" > 
+	SELECT 
+	<include refid="sql_authorization_item"/>
+	FROM to_authorization 
+	<where>
+		<include refid="sql_authorization_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

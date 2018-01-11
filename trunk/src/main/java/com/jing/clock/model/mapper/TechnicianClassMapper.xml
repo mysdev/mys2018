@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.clock.model.dao.TechnicianClassMapper">
+
+<!-- Result Map-->
+<resultMap id="TechnicianClassResultMap" type="com.jing.clock.model.entity.TechnicianClass">
+	<id column="detail_id" property="detailId"/>
+	<result column="class_id" property="classId"/>
+	<result column="technician_id" property="technicianId"/>
+	<result column="clock_ct" property="clockCt"/>
+	<result column="is_work" property="isWork"/>
+	<result column="technician_level" property="technicianLevel"/>
+	<result column="priority" property="priority"/>
+	<result column="seqencing" property="seqencing"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_technicianClass_item">
+	detail_id, class_id, technician_id, clock_ct, is_work, technician_level, priority, seqencing, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_technicianClass_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="technicianClass.detailId != null">AND detail_id = #{technicianClass.detailId} </if>
+		<if test="technicianClass.classId != null">AND class_id = #{technicianClass.classId} </if>
+		<if test="technicianClass.technicianId != null">AND technician_id = #{technicianClass.technicianId} </if>
+		<if test="technicianClass.clockCt != null">AND clock_ct = #{technicianClass.clockCt} </if>
+		<if test="technicianClass.isWork != null">AND is_work = #{technicianClass.isWork} </if>
+		<if test="technicianClass.technicianLevel != null">AND technician_level = #{technicianClass.technicianLevel} </if>
+		<if test="technicianClass.priority != null">AND priority = #{technicianClass.priority} </if>
+		<if test="technicianClass.seqencing != null">AND seqencing = #{technicianClass.seqencing} </if>
+		<if test="technicianClass.createdBy != null">AND created_by like concat(#{technicianClass.createdBy}, '%') </if>
+		<if test="technicianClass.updatedBy != null">AND updated_by like concat(#{technicianClass.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 轮班详情 -->
+<insert id="addTechnicianClass" parameterType="com.jing.clock.model.entity.TechnicianClass" >
+	<selectKey keyProperty="detailId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tc_technician_class 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="detailId != null"> detail_id,</if>
+		<if test="classId != null"> class_id,</if>
+		<if test="technicianId != null"> technician_id,</if>
+		<if test="clockCt != null"> clock_ct,</if>
+		<if test="isWork != null"> is_work,</if>
+		<if test="technicianLevel != null"> technician_level,</if>
+		<if test="priority != null"> priority,</if>
+		<if test="seqencing != null"> seqencing,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="detailId != null"> #{detailId},</if>
+		<if test="classId != null"> #{classId},</if>
+		<if test="technicianId != null"> #{technicianId},</if>
+		<if test="clockCt != null"> #{clockCt},</if>
+		<if test="isWork != null"> #{isWork},</if>
+		<if test="technicianLevel != null"> #{technicianLevel},</if>
+		<if test="priority != null"> #{priority},</if>
+		<if test="seqencing != null"> #{seqencing},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 轮班详情 -->  
+<update id="modifyTechnicianClass" parameterType="com.jing.clock.model.entity.TechnicianClass" >
+  	UPDATE tc_technician_class SET
+	<trim suffixOverrides=",">
+		<if test="classId != null"> class_id = #{classId},</if>
+		<if test="technicianId != null"> technician_id = #{technicianId},</if>
+		<if test="clockCt != null"> clock_ct = #{clockCt},</if>
+		<if test="isWork != null"> is_work = #{isWork},</if>
+		<if test="technicianLevel != null"> technician_level = #{technicianLevel},</if>
+		<if test="priority != null"> priority = #{priority},</if>
+		<if test="seqencing != null"> seqencing = #{seqencing},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE detail_id = #{detailId}
+</update>
+ 
+<!-- 删除 轮班详情 -->
+<delete id="dropTechnicianClassByDetailId" parameterType="java.lang.Integer">
+	DELETE FROM tc_technician_class WHERE detail_id = #{detailId}
+</delete> 
+
+<!-- 根据标识查询 轮班详情 -->
+<select id="queryTechnicianClassByDetailId"  resultMap="TechnicianClassResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_technicianClass_item"/>
+	FROM tc_technician_class WHERE detail_id = #{detailId}
+</select>
+
+<!-- 根据属性查询轮班详情 -->
+<select id="queryTechnicianClassByProperty"  resultMap="TechnicianClassResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_technicianClass_item"/>
+	FROM tc_technician_class 
+	<where>
+		<include refid="sql_technicianClass_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据轮班详情属性与分页信息分页查询轮班详情信息 -->
+<select id="queryTechnicianClassForPage"  resultMap="TechnicianClassResultMap" > 
+	SELECT 
+	<include refid="sql_technicianClass_item"/>
+	FROM tc_technician_class 
+	<where>
+		<include refid="sql_technicianClass_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.clock.model.dao.SkillClassMapper">
+
+<!-- Result Map-->
+<resultMap id="SkillClassResultMap" type="com.jing.clock.model.entity.SkillClass">
+	<id column="class_id" property="classId"/>
+	<result column="class_name" property="className"/>
+	<result column="status" property="status"/>
+	<result column="clock_flag" property="clockFlag"/>
+	<result column="flag" property="flag"/>
+	<result column="types" property="types"/>
+	<result column="is_priority" property="isPriority"/>
+	<result column="priority_accumulate" property="priorityAccumulate"/>
+	<result column="arrive_warn" property="arriveWarn"/>
+	<result column="arrive_remind" property="arriveRemind"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_skillClass_item">
+	class_id, class_name, status, clock_flag, flag, types, is_priority, priority_accumulate, arrive_warn, arrive_remind, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_skillClass_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="skillClass.classId != null">AND class_id = #{skillClass.classId} </if>
+		<if test="skillClass.className != null">AND class_name like concat(#{skillClass.className}, '%') </if>
+		<if test="skillClass.status != null">AND status = #{skillClass.status} </if>
+		<if test="skillClass.clockFlag != null">AND clock_flag = #{skillClass.clockFlag} </if>
+		<if test="skillClass.flag != null">AND flag = #{skillClass.flag} </if>
+		<if test="skillClass.types != null">AND types = #{skillClass.types} </if>
+		<if test="skillClass.isPriority != null">AND is_priority = #{skillClass.isPriority} </if>
+		<if test="skillClass.priorityAccumulate != null">AND priority_accumulate = #{skillClass.priorityAccumulate} </if>
+		<if test="skillClass.arriveWarn != null">AND arrive_warn = #{skillClass.arriveWarn} </if>
+		<if test="skillClass.arriveRemind != null">AND arrive_remind = #{skillClass.arriveRemind} </if>
+		<if test="skillClass.createdBy != null">AND created_by like concat(#{skillClass.createdBy}, '%') </if>
+		<if test="skillClass.updatedBy != null">AND updated_by like concat(#{skillClass.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 轮班 -->
+<insert id="addSkillClass" parameterType="com.jing.clock.model.entity.SkillClass" >
+	<selectKey keyProperty="classId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tc_skill_class 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="classId != null"> class_id,</if>
+		<if test="className != null"> class_name,</if>
+		<if test="status != null"> status,</if>
+		<if test="clockFlag != null"> clock_flag,</if>
+		<if test="flag != null"> flag,</if>
+		<if test="types != null"> types,</if>
+		<if test="isPriority != null"> is_priority,</if>
+		<if test="priorityAccumulate != null"> priority_accumulate,</if>
+		<if test="arriveWarn != null"> arrive_warn,</if>
+		<if test="arriveRemind != null"> arrive_remind,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="classId != null"> #{classId},</if>
+		<if test="className != null"> #{className},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="clockFlag != null"> #{clockFlag},</if>
+		<if test="flag != null"> #{flag},</if>
+		<if test="types != null"> #{types},</if>
+		<if test="isPriority != null"> #{isPriority},</if>
+		<if test="priorityAccumulate != null"> #{priorityAccumulate},</if>
+		<if test="arriveWarn != null"> #{arriveWarn},</if>
+		<if test="arriveRemind != null"> #{arriveRemind},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 轮班 -->  
+<update id="modifySkillClass" parameterType="com.jing.clock.model.entity.SkillClass" >
+  	UPDATE tc_skill_class SET
+	<trim suffixOverrides=",">
+		<if test="className != null"> class_name = #{className},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="clockFlag != null"> clock_flag = #{clockFlag},</if>
+		<if test="flag != null"> flag = #{flag},</if>
+		<if test="types != null"> types = #{types},</if>
+		<if test="isPriority != null"> is_priority = #{isPriority},</if>
+		<if test="priorityAccumulate != null"> priority_accumulate = #{priorityAccumulate},</if>
+		<if test="arriveWarn != null"> arrive_warn = #{arriveWarn},</if>
+		<if test="arriveRemind != null"> arrive_remind = #{arriveRemind},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE class_id = #{classId}
+</update>
+ 
+<!-- 删除 轮班 -->
+<delete id="dropSkillClassByClassId" parameterType="java.lang.Integer">
+	DELETE FROM tc_skill_class WHERE class_id = #{classId}
+</delete> 
+
+<!-- 根据标识查询 轮班 -->
+<select id="querySkillClassByClassId"  resultMap="SkillClassResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_skillClass_item"/>
+	FROM tc_skill_class WHERE class_id = #{classId}
+</select>
+
+<!-- 根据属性查询轮班 -->
+<select id="querySkillClassByProperty"  resultMap="SkillClassResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_skillClass_item"/>
+	FROM tc_skill_class 
+	<where>
+		<include refid="sql_skillClass_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据轮班属性与分页信息分页查询轮班信息 -->
+<select id="querySkillClassForPage"  resultMap="SkillClassResultMap" > 
+	SELECT 
+	<include refid="sql_skillClass_item"/>
+	FROM tc_skill_class 
+	<where>
+		<include refid="sql_skillClass_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

@@ -51,23 +51,23 @@
 		<if test="url != null"> url,</if>
 		<if test="note != null"> note,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="docId != null"> #{docId},</if>	
-		<if test="docName != null"> #{docName},</if>	
-		<if test="actualName != null"> #{actualName},</if>	
-		<if test="suffixName != null"> #{suffixName},</if>	
-		<if test="fileSize != null"> #{fileSize},</if>	
-		<if test="status != null"> #{status},</if>	
-		<if test="url != null"> #{url},</if>	
-		<if test="note != null"> #{note},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="docId != null"> #{docId},</if>
+		<if test="docName != null"> #{docName},</if>
+		<if test="actualName != null"> #{actualName},</if>
+		<if test="suffixName != null"> #{suffixName},</if>
+		<if test="fileSize != null"> #{fileSize},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="url != null"> #{url},</if>
+		<if test="note != null"> #{note},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -83,9 +83,8 @@
 		<if test="url != null"> url = #{url},</if>
 		<if test="note != null"> note = #{note},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE doc_id = #{docId}
 </update>

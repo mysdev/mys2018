@@ -51,22 +51,22 @@
 		<if test="isGlobal != null"> is_global,</if>
 		<if test="enabled != null"> enabled,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="roleId != null"> #{roleId},</if>	
-		<if test="roleName != null"> #{roleName},</if>	
-		<if test="roleTitle != null"> #{roleTitle},</if>	
-		<if test="parentId != null"> #{parentId},</if>	
-		<if test="roleType != null"> #{roleType},</if>	
-		<if test="isGlobal != null"> #{isGlobal},</if>	
-		<if test="enabled != null"> #{enabled},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="roleId != null"> #{roleId},</if>
+		<if test="roleName != null"> #{roleName},</if>
+		<if test="roleTitle != null"> #{roleTitle},</if>
+		<if test="parentId != null"> #{parentId},</if>
+		<if test="roleType != null"> #{roleType},</if>
+		<if test="isGlobal != null"> #{isGlobal},</if>
+		<if test="enabled != null"> #{enabled},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -81,9 +81,8 @@
 		<if test="isGlobal != null"> is_global = #{isGlobal},</if>
 		<if test="enabled != null"> enabled = #{enabled},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE role_id = #{roleId}
 </update>

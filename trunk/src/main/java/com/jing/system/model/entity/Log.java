@@ -1,6 +1,5 @@
 package com.jing.system.model.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -11,16 +10,18 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
+import com.jing.utils.BaseEntity;
 
 /**
  * @ClassName: Log
  * @Description: 日志实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月03日 16时26分
+ * @date: 2018年01月11日 15时04分
  */
-public class Log implements Serializable {
+public class Log extends BaseEntity {
 	private static final long serialVersionUID = 1L;
+	
 
 	private Integer logId;	//ts_log:log_id  日志标识  
 
@@ -44,15 +45,6 @@ public class Log implements Serializable {
 	@Length(min=0, max=65535, message="{org.hibernate.validator.constraints.Length.message}")
 	private String request;	//ts_log:request  请求全文  
 
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String createdBy;	//ts_log:created_by  创建人员  
-
-	private Date createdDate;	//ts_log:created_date  创建时间  
-
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String updatedBy;	//ts_log:updated_by  修订人员  
-
-	private Date updatedDate;	//ts_log:updated_date  修订时间  
 
 	/**
 	* @DatabasetableColumnName: ts_log:log_id
@@ -70,8 +62,7 @@ public class Log implements Serializable {
 	*/
 	public void setLogId(Integer logId){
 		this.logId = logId;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:user_id
 	* @Description: 获取属性        用户名
@@ -88,8 +79,7 @@ public class Log implements Serializable {
 	*/
 	public void setUserId(String userId){
 		this.userId = userId;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:user_ip
 	* @Description: 获取属性        访问IP
@@ -106,8 +96,7 @@ public class Log implements Serializable {
 	*/
 	public void setUserIp(String userIp){
 		this.userIp = userIp;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:oper
 	* @Description: 获取属性        操作名称
@@ -124,8 +113,7 @@ public class Log implements Serializable {
 	*/
 	public void setOper(String oper){
 		this.oper = oper;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:oper_ua
 	* @Description: 获取属性        来源UA
@@ -142,8 +130,7 @@ public class Log implements Serializable {
 	*/
 	public void setOperUa(String operUa){
 		this.operUa = operUa;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:oper_type
 	* @Description: 获取属性        来源类型
@@ -160,8 +147,7 @@ public class Log implements Serializable {
 	*/
 	public void setOperType(String operType){
 		this.operType = operType;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:oper_status
 	* @Description: 获取属性        来源状态
@@ -178,8 +164,7 @@ public class Log implements Serializable {
 	*/
 	public void setOperStatus(Integer operStatus){
 		this.operStatus = operStatus;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_log:request
 	* @Description: 获取属性        请求全文
@@ -196,80 +181,7 @@ public class Log implements Serializable {
 	*/
 	public void setRequest(String request){
 		this.request = request;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:created_by
-	* @Description: 获取属性        创建人员
-	* @return: String
-	*/
-	public String getCreatedBy(){
-		return createdBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:created_by
-	* @Description: 设置属性        创建人员
-	* @return: String
-	*/
-	public void setCreatedBy(String createdBy){
-		this.createdBy = createdBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:created_date
-	* @Description: 获取属性        创建时间
-	* @return: Date
-	*/
-	public Date getCreatedDate(){
-		return createdDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:created_date
-	* @Description: 设置属性        创建时间
-	* @return: Date
-	*/
-	public void setCreatedDate(Date createdDate){
-		this.createdDate = createdDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:updated_by
-	* @Description: 获取属性        修订人员
-	* @return: String
-	*/
-	public String getUpdatedBy(){
-		return updatedBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:updated_by
-	* @Description: 设置属性        修订人员
-	* @return: String
-	*/
-	public void setUpdatedBy(String updatedBy){
-		this.updatedBy = updatedBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:updated_date
-	* @Description: 获取属性        修订时间
-	* @return: Date
-	*/
-	public Date getUpdatedDate(){
-		return updatedDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_log:updated_date
-	* @Description: 设置属性        修订时间
-	* @return: Date
-	*/
-	public void setUpdatedDate(Date updatedDate){
-		this.updatedDate = updatedDate;	
-	}
-	
+	}	
 	
 	
 	

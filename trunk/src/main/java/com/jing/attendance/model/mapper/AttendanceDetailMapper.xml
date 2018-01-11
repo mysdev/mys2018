@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceDetailMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceDetailResultMap" type="com.jing.attendance.model.entity.AttendanceDetail">
+	<id column="att_id" property="attId"/>
+	<result column="attendance_id" property="attendanceId"/>
+	<result column="att_date" property="attDate"/>
+	<result column="attendance" property="attendance"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_attendanceDetail_item">
+	att_id, attendance_id, att_date, attendance, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendanceDetail_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendanceDetail.attId != null">AND att_id = #{attendanceDetail.attId} </if>
+		<if test="attendanceDetail.attendanceId != null">AND attendance_id = #{attendanceDetail.attendanceId} </if>
+		<if test="attendanceDetail.attendance != null">AND attendance = #{attendanceDetail.attendance} </if>
+		<if test="attendanceDetail.createdBy != null">AND created_by like concat(#{attendanceDetail.createdBy}, '%') </if>
+		<if test="attendanceDetail.updatedBy != null">AND updated_by like concat(#{attendanceDetail.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 门店考勤详情 -->
+<insert id="addAttendanceDetail" parameterType="com.jing.attendance.model.entity.AttendanceDetail" >
+	<selectKey keyProperty="attId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance_detail 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="attId != null"> att_id,</if>
+		<if test="attendanceId != null"> attendance_id,</if>
+		<if test="attDate != null"> att_date,</if>
+		<if test="attendance != null"> attendance,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="attId != null"> #{attId},</if>
+		<if test="attendanceId != null"> #{attendanceId},</if>
+		<if test="attDate != null"> #{attDate},</if>
+		<if test="attendance != null"> #{attendance},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 门店考勤详情 -->  
+<update id="modifyAttendanceDetail" parameterType="com.jing.attendance.model.entity.AttendanceDetail" >
+  	UPDATE tw_attendance_detail SET
+	<trim suffixOverrides=",">
+		<if test="attendanceId != null"> attendance_id = #{attendanceId},</if>
+		<if test="attDate != null"> att_date = #{attDate},</if>
+		<if test="attendance != null"> attendance = #{attendance},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE att_id = #{attId}
+</update>
+ 
+<!-- 删除 门店考勤详情 -->
+<delete id="dropAttendanceDetailByAttId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_detail WHERE att_id = #{attId}
+</delete> 
+
+<!-- 根据标识查询 门店考勤详情 -->
+<select id="queryAttendanceDetailByAttId"  resultMap="AttendanceDetailResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendanceDetail_item"/>
+	FROM tw_attendance_detail WHERE att_id = #{attId}
+</select>
+
+<!-- 根据属性查询门店考勤详情 -->
+<select id="queryAttendanceDetailByProperty"  resultMap="AttendanceDetailResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendanceDetail_item"/>
+	FROM tw_attendance_detail 
+	<where>
+		<include refid="sql_attendanceDetail_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据门店考勤详情属性与分页信息分页查询门店考勤详情信息 -->
+<select id="queryAttendanceDetailForPage"  resultMap="AttendanceDetailResultMap" > 
+	SELECT 
+	<include refid="sql_attendanceDetail_item"/>
+	FROM tw_attendance_detail 
+	<where>
+		<include refid="sql_attendanceDetail_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

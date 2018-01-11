@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,13 @@ import com.jing.system.service.ConfigService;
  * @Description: 系统配置服务实现类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月03日 16时26分
+ * @date: 2018年01月11日 15时04分
  */
 @Service("configService")
 @Transactional(readOnly=true)
-public class  ConfigServiceImpl implements ConfigService {
-
+public class  ConfigServiceImpl implements ConfigService {	
+	private static final Logger logger = LoggerFactory.getLogger(ConfigServiceImpl.class);
+	
 	@Autowired
     private ConfigMapper configMapper;   
     

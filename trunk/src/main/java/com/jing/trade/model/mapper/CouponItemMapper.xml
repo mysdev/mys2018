@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.CouponItemMapper">
+
+<!-- Result Map-->
+<resultMap id="CouponItemResultMap" type="com.jing.trade.model.entity.CouponItem">
+	<id column="item_id" property="itemId"/>
+	<result column="coupon_id" property="couponId"/>
+	<result column="object_type" property="objectType"/>
+	<result column="object_id" property="objectId"/>
+	<result column="status" property="status"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_couponItem_item">
+	item_id, coupon_id, object_type, object_id, status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_couponItem_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="couponItem.itemId != null">AND item_id = #{couponItem.itemId} </if>
+		<if test="couponItem.couponId != null">AND coupon_id = #{couponItem.couponId} </if>
+		<if test="couponItem.objectType != null">AND object_type = #{couponItem.objectType} </if>
+		<if test="couponItem.objectId != null">AND object_id like concat(#{couponItem.objectId}, '%') </if>
+		<if test="couponItem.status != null">AND status = #{couponItem.status} </if>
+		<if test="couponItem.createdBy != null">AND created_by like concat(#{couponItem.createdBy}, '%') </if>
+		<if test="couponItem.updatedBy != null">AND updated_by like concat(#{couponItem.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 优惠项目 -->
+<insert id="addCouponItem" parameterType="com.jing.trade.model.entity.CouponItem" >
+	<selectKey keyProperty="itemId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_coupon_item 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="itemId != null"> item_id,</if>
+		<if test="couponId != null"> coupon_id,</if>
+		<if test="objectType != null"> object_type,</if>
+		<if test="objectId != null"> object_id,</if>
+		<if test="status != null"> status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="itemId != null"> #{itemId},</if>
+		<if test="couponId != null"> #{couponId},</if>
+		<if test="objectType != null"> #{objectType},</if>
+		<if test="objectId != null"> #{objectId},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 优惠项目 -->  
+<update id="modifyCouponItem" parameterType="com.jing.trade.model.entity.CouponItem" >
+  	UPDATE tt_coupon_item SET
+	<trim suffixOverrides=",">
+		<if test="couponId != null"> coupon_id = #{couponId},</if>
+		<if test="objectType != null"> object_type = #{objectType},</if>
+		<if test="objectId != null"> object_id = #{objectId},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE item_id = #{itemId}
+</update>
+ 
+<!-- 删除 优惠项目 -->
+<delete id="dropCouponItemByItemId" parameterType="java.lang.Integer">
+	DELETE FROM tt_coupon_item WHERE item_id = #{itemId}
+</delete> 
+
+<!-- 根据标识查询 优惠项目 -->
+<select id="queryCouponItemByItemId"  resultMap="CouponItemResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_couponItem_item"/>
+	FROM tt_coupon_item WHERE item_id = #{itemId}
+</select>
+
+<!-- 根据属性查询优惠项目 -->
+<select id="queryCouponItemByProperty"  resultMap="CouponItemResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_couponItem_item"/>
+	FROM tt_coupon_item 
+	<where>
+		<include refid="sql_couponItem_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据优惠项目属性与分页信息分页查询优惠项目信息 -->
+<select id="queryCouponItemForPage"  resultMap="CouponItemResultMap" > 
+	SELECT 
+	<include refid="sql_couponItem_item"/>
+	FROM tt_coupon_item 
+	<where>
+		<include refid="sql_couponItem_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

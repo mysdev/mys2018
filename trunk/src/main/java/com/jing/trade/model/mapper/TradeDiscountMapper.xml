@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.TradeDiscountMapper">
+
+<!-- Result Map-->
+<resultMap id="TradeDiscountResultMap" type="com.jing.trade.model.entity.TradeDiscount">
+	<id column="discount_id" property="discountId"/>
+	<result column="serial_number" property="serialNumber"/>
+	<result column="coupon_id" property="couponId"/>
+	<result column="volume_id" property="volumeId"/>
+	<result column="discount_price" property="discountPrice"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_tradeDiscount_item">
+	discount_id, serial_number, coupon_id, volume_id, discount_price, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_tradeDiscount_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="tradeDiscount.discountId != null">AND discount_id = #{tradeDiscount.discountId} </if>
+		<if test="tradeDiscount.serialNumber != null">AND serial_number like concat(#{tradeDiscount.serialNumber}, '%') </if>
+		<if test="tradeDiscount.couponId != null">AND coupon_id = #{tradeDiscount.couponId} </if>
+		<if test="tradeDiscount.volumeId != null">AND volume_id = #{tradeDiscount.volumeId} </if>
+		<if test="tradeDiscount.createdBy != null">AND created_by like concat(#{tradeDiscount.createdBy}, '%') </if>
+		<if test="tradeDiscount.updatedBy != null">AND updated_by like concat(#{tradeDiscount.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 结算优惠项 -->
+<insert id="addTradeDiscount" parameterType="com.jing.trade.model.entity.TradeDiscount" >
+	<selectKey keyProperty="discountId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_trade_discount 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="discountId != null"> discount_id,</if>
+		<if test="serialNumber != null"> serial_number,</if>
+		<if test="couponId != null"> coupon_id,</if>
+		<if test="volumeId != null"> volume_id,</if>
+		<if test="discountPrice != null"> discount_price,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="discountId != null"> #{discountId},</if>
+		<if test="serialNumber != null"> #{serialNumber},</if>
+		<if test="couponId != null"> #{couponId},</if>
+		<if test="volumeId != null"> #{volumeId},</if>
+		<if test="discountPrice != null"> #{discountPrice},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 结算优惠项 -->  
+<update id="modifyTradeDiscount" parameterType="com.jing.trade.model.entity.TradeDiscount" >
+  	UPDATE tt_trade_discount SET
+	<trim suffixOverrides=",">
+		<if test="serialNumber != null"> serial_number = #{serialNumber},</if>
+		<if test="couponId != null"> coupon_id = #{couponId},</if>
+		<if test="volumeId != null"> volume_id = #{volumeId},</if>
+		<if test="discountPrice != null"> discount_price = #{discountPrice},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE discount_id = #{discountId}
+</update>
+ 
+<!-- 删除 结算优惠项 -->
+<delete id="dropTradeDiscountByDiscountId" parameterType="java.lang.Integer">
+	DELETE FROM tt_trade_discount WHERE discount_id = #{discountId}
+</delete> 
+
+<!-- 根据标识查询 结算优惠项 -->
+<select id="queryTradeDiscountByDiscountId"  resultMap="TradeDiscountResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_tradeDiscount_item"/>
+	FROM tt_trade_discount WHERE discount_id = #{discountId}
+</select>
+
+<!-- 根据属性查询结算优惠项 -->
+<select id="queryTradeDiscountByProperty"  resultMap="TradeDiscountResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_tradeDiscount_item"/>
+	FROM tt_trade_discount 
+	<where>
+		<include refid="sql_tradeDiscount_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据结算优惠项属性与分页信息分页查询结算优惠项信息 -->
+<select id="queryTradeDiscountForPage"  resultMap="TradeDiscountResultMap" > 
+	SELECT 
+	<include refid="sql_tradeDiscount_item"/>
+	FROM tt_trade_discount 
+	<where>
+		<include refid="sql_tradeDiscount_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

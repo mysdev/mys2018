@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.EmployeeJournalMapper">
+
+<!-- Result Map-->
+<resultMap id="EmployeeJournalResultMap" type="com.jing.attendance.model.entity.EmployeeJournal">
+	<id column="journal_id" property="journalId"/>
+	<result column="emp_id" property="empId"/>
+	<result column="attendance_date" property="attendanceDate"/>
+	<result column="sign_time" property="signTime"/>
+	<result column="out_time" property="outTime"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_employeeJournal_item">
+	journal_id, emp_id, attendance_date, sign_time, out_time, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_employeeJournal_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="employeeJournal.journalId != null">AND journal_id = #{employeeJournal.journalId} </if>
+		<if test="employeeJournal.empId != null">AND emp_id like concat(#{employeeJournal.empId}, '%') </if>
+		<if test="employeeJournal.createdBy != null">AND created_by like concat(#{employeeJournal.createdBy}, '%') </if>
+		<if test="employeeJournal.updatedBy != null">AND updated_by like concat(#{employeeJournal.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 员工考勤日志 -->
+<insert id="addEmployeeJournal" parameterType="com.jing.attendance.model.entity.EmployeeJournal" >
+	<selectKey keyProperty="journalId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_employee_journal 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="journalId != null"> journal_id,</if>
+		<if test="empId != null"> emp_id,</if>
+		<if test="attendanceDate != null"> attendance_date,</if>
+		<if test="signTime != null"> sign_time,</if>
+		<if test="outTime != null"> out_time,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="journalId != null"> #{journalId},</if>
+		<if test="empId != null"> #{empId},</if>
+		<if test="attendanceDate != null"> #{attendanceDate},</if>
+		<if test="signTime != null"> #{signTime},</if>
+		<if test="outTime != null"> #{outTime},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 员工考勤日志 -->  
+<update id="modifyEmployeeJournal" parameterType="com.jing.attendance.model.entity.EmployeeJournal" >
+  	UPDATE tw_employee_journal SET
+	<trim suffixOverrides=",">
+		<if test="empId != null"> emp_id = #{empId},</if>
+		<if test="attendanceDate != null"> attendance_date = #{attendanceDate},</if>
+		<if test="signTime != null"> sign_time = #{signTime},</if>
+		<if test="outTime != null"> out_time = #{outTime},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE journal_id = #{journalId}
+</update>
+ 
+<!-- 删除 员工考勤日志 -->
+<delete id="dropEmployeeJournalByJournalId" parameterType="java.lang.Integer">
+	DELETE FROM tw_employee_journal WHERE journal_id = #{journalId}
+</delete> 
+
+<!-- 根据标识查询 员工考勤日志 -->
+<select id="queryEmployeeJournalByJournalId"  resultMap="EmployeeJournalResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_employeeJournal_item"/>
+	FROM tw_employee_journal WHERE journal_id = #{journalId}
+</select>
+
+<!-- 根据属性查询员工考勤日志 -->
+<select id="queryEmployeeJournalByProperty"  resultMap="EmployeeJournalResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_employeeJournal_item"/>
+	FROM tw_employee_journal 
+	<where>
+		<include refid="sql_employeeJournal_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤日志属性与分页信息分页查询员工考勤日志信息 -->
+<select id="queryEmployeeJournalForPage"  resultMap="EmployeeJournalResultMap" > 
+	SELECT 
+	<include refid="sql_employeeJournal_item"/>
+	FROM tw_employee_journal 
+	<where>
+		<include refid="sql_employeeJournal_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

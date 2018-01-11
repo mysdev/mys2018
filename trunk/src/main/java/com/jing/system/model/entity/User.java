@@ -1,6 +1,5 @@
 package com.jing.system.model.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -11,16 +10,18 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
+import com.jing.utils.BaseEntity;
 
 /**
  * @ClassName: User
  * @Description: 用户实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月03日 16时26分
+ * @date: 2018年01月11日 15时04分
  */
-public class User implements Serializable {
+public class User extends BaseEntity {
 	private static final long serialVersionUID = 1L;
+	
 
 	private Integer userId;	//ts_user:user_id  用户标识  
 
@@ -52,15 +53,6 @@ public class User implements Serializable {
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer status;	//ts_user:status  状态 0正常  
 
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String createdBy;	//ts_user:created_by  创建人员  
-
-	private Date createdDate;	//ts_user:created_date  创建时间  
-
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String updatedBy;	//ts_user:updated_by  修订人员  
-
-	private Date updatedDate;	//ts_user:updated_date  修订时间  
 
 	/**
 	* @DatabasetableColumnName: ts_user:user_id
@@ -78,8 +70,7 @@ public class User implements Serializable {
 	*/
 	public void setUserId(Integer userId){
 		this.userId = userId;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:user_name
 	* @Description: 获取属性        用户姓名
@@ -96,8 +87,7 @@ public class User implements Serializable {
 	*/
 	public void setUserName(String userName){
 		this.userName = userName;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:team_id
 	* @Description: 获取属性        用户组
@@ -114,8 +104,7 @@ public class User implements Serializable {
 	*/
 	public void setTeamId(Integer teamId){
 		this.teamId = teamId;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:nick_name
 	* @Description: 获取属性        呢称
@@ -132,8 +121,7 @@ public class User implements Serializable {
 	*/
 	public void setNickName(String nickName){
 		this.nickName = nickName;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:mobile
 	* @Description: 获取属性        手机号
@@ -150,8 +138,7 @@ public class User implements Serializable {
 	*/
 	public void setMobile(String mobile){
 		this.mobile = mobile;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:email
 	* @Description: 获取属性        邮件地址
@@ -168,8 +155,7 @@ public class User implements Serializable {
 	*/
 	public void setEmail(String email){
 		this.email = email;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:password
 	* @Description: 获取属性        密码
@@ -186,8 +172,7 @@ public class User implements Serializable {
 	*/
 	public void setPassword(String password){
 		this.password = password;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:repassword_date
 	* @Description: 获取属性        下次修改密码时间
@@ -204,8 +189,7 @@ public class User implements Serializable {
 	*/
 	public void setRepasswordDate(Date repasswordDate){
 		this.repasswordDate = repasswordDate;	
-	}
-	
+	}	
 	/**
 	* @DatabasetableColumnName: ts_user:status
 	* @Description: 获取属性        状态 0正常
@@ -222,80 +206,7 @@ public class User implements Serializable {
 	*/
 	public void setStatus(Integer status){
 		this.status = status;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:created_by
-	* @Description: 获取属性        创建人员
-	* @return: String
-	*/
-	public String getCreatedBy(){
-		return createdBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:created_by
-	* @Description: 设置属性        创建人员
-	* @return: String
-	*/
-	public void setCreatedBy(String createdBy){
-		this.createdBy = createdBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:created_date
-	* @Description: 获取属性        创建时间
-	* @return: Date
-	*/
-	public Date getCreatedDate(){
-		return createdDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:created_date
-	* @Description: 设置属性        创建时间
-	* @return: Date
-	*/
-	public void setCreatedDate(Date createdDate){
-		this.createdDate = createdDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:updated_by
-	* @Description: 获取属性        修订人员
-	* @return: String
-	*/
-	public String getUpdatedBy(){
-		return updatedBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:updated_by
-	* @Description: 设置属性        修订人员
-	* @return: String
-	*/
-	public void setUpdatedBy(String updatedBy){
-		this.updatedBy = updatedBy;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:updated_date
-	* @Description: 获取属性        修订时间
-	* @return: Date
-	*/
-	public Date getUpdatedDate(){
-		return updatedDate;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: ts_user:updated_date
-	* @Description: 设置属性        修订时间
-	* @return: Date
-	*/
-	public void setUpdatedDate(Date updatedDate){
-		this.updatedDate = updatedDate;	
-	}
-	
+	}	
 	
 	
 	

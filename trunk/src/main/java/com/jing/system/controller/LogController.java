@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiParam;
  * @Description: 日志HTTP接口
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月03日 16时26分
+ * @date: 2018年01月11日 15时04分
  */
 @RestController
 @Api(description="日志")

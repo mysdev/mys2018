@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.EmployeeMapper">
+
+<!-- Result Map-->
+<resultMap id="EmployeeResultMap" type="com.jing.core.model.entity.Employee">
+	<id column="emp_id" property="empId"/>
+	<result column="emp_name" property="empName"/>
+	<result column="pinyin" property="pinyin"/>
+	<result column="emp_no" property="empNo"/>
+	<result column="user_id" property="userId"/>
+	<result column="store_id" property="storeId"/>
+	<result column="dpt_id" property="dptId"/>
+	<result column="entry_date" property="entryDate"/>
+	<result column="quit_date" property="quitDate"/>
+	<result column="status" property="status"/>
+	<result column="is_manager" property="isManager"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_employee_item">
+	emp_id, emp_name, pinyin, emp_no, user_id, store_id, dpt_id, entry_date, quit_date, status, is_manager, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_employee_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="employee.empId != null">AND emp_id like concat(#{employee.empId}, '%') </if>
+		<if test="employee.empName != null">AND emp_name like concat(#{employee.empName}, '%') </if>
+		<if test="employee.pinyin != null">AND pinyin like concat(#{employee.pinyin}, '%') </if>
+		<if test="employee.empNo != null">AND emp_no like concat(#{employee.empNo}, '%') </if>
+		<if test="employee.userId != null">AND user_id like concat(#{employee.userId}, '%') </if>
+		<if test="employee.storeId != null">AND store_id like concat(#{employee.storeId}, '%') </if>
+		<if test="employee.dptId != null">AND dpt_id like concat(#{employee.dptId}, '%') </if>
+		<if test="employee.status != null">AND status = #{employee.status} </if>
+		<if test="employee.isManager != null">AND is_manager = #{employee.isManager} </if>
+		<if test="employee.createdBy != null">AND created_by like concat(#{employee.createdBy}, '%') </if>
+		<if test="employee.updatedBy != null">AND updated_by like concat(#{employee.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 员工 -->
+<insert id="addEmployee" parameterType="com.jing.core.model.entity.Employee" >
+ 	INSERT INTO tb_employee 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="empId != null"> emp_id,</if>
+		<if test="empName != null"> emp_name,</if>
+		<if test="pinyin != null"> pinyin,</if>
+		<if test="empNo != null"> emp_no,</if>
+		<if test="userId != null"> user_id,</if>
+		<if test="storeId != null"> store_id,</if>
+		<if test="dptId != null"> dpt_id,</if>
+		<if test="entryDate != null"> entry_date,</if>
+		<if test="quitDate != null"> quit_date,</if>
+		<if test="status != null"> status,</if>
+		<if test="isManager != null"> is_manager,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="empId != null"> #{empId},</if>
+		<if test="empName != null"> #{empName},</if>
+		<if test="pinyin != null"> #{pinyin},</if>
+		<if test="empNo != null"> #{empNo},</if>
+		<if test="userId != null"> #{userId},</if>
+		<if test="storeId != null"> #{storeId},</if>
+		<if test="dptId != null"> #{dptId},</if>
+		<if test="entryDate != null"> #{entryDate},</if>
+		<if test="quitDate != null"> #{quitDate},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="isManager != null"> #{isManager},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 员工 -->  
+<update id="modifyEmployee" parameterType="com.jing.core.model.entity.Employee" >
+  	UPDATE tb_employee SET
+	<trim suffixOverrides=",">
+		<if test="empName != null"> emp_name = #{empName},</if>
+		<if test="pinyin != null"> pinyin = #{pinyin},</if>
+		<if test="empNo != null"> emp_no = #{empNo},</if>
+		<if test="userId != null"> user_id = #{userId},</if>
+		<if test="storeId != null"> store_id = #{storeId},</if>
+		<if test="dptId != null"> dpt_id = #{dptId},</if>
+		<if test="entryDate != null"> entry_date = #{entryDate},</if>
+		<if test="quitDate != null"> quit_date = #{quitDate},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="isManager != null"> is_manager = #{isManager},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE emp_id = #{empId}
+</update>
+ 
+<!-- 删除 员工 -->
+<delete id="dropEmployeeByEmpId" parameterType="java.lang.String">
+	DELETE FROM tb_employee WHERE emp_id = #{empId}
+</delete> 
+
+<!-- 根据标识查询 员工 -->
+<select id="queryEmployeeByEmpId"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_employee_item"/>
+	FROM tb_employee WHERE emp_id = #{empId}
+</select>
+
+<!-- 根据属性查询员工 -->
+<select id="queryEmployeeByProperty"  resultMap="EmployeeResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_employee_item"/>
+	FROM tb_employee 
+	<where>
+		<include refid="sql_employee_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工属性与分页信息分页查询员工信息 -->
+<select id="queryEmployeeForPage"  resultMap="EmployeeResultMap" > 
+	SELECT 
+	<include refid="sql_employee_item"/>
+	FROM tb_employee 
+	<where>
+		<include refid="sql_employee_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

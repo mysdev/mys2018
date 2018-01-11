@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.StrapMapper">
+
+<!-- Result Map-->
+<resultMap id="StrapResultMap" type="com.jing.core.model.entity.Strap">
+	<id column="strap_id" property="strapId"/>
+	<result column="store_id" property="storeId"/>
+	<result column="strap_serial" property="strapSerial"/>
+	<result column="strap_no" property="strapNo"/>
+	<result column="types" property="types"/>
+	<result column="status" property="status"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_strap_item">
+	strap_id, store_id, strap_serial, strap_no, types, status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_strap_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="strap.strapId != null">AND strap_id like concat(#{strap.strapId}, '%') </if>
+		<if test="strap.storeId != null">AND store_id like concat(#{strap.storeId}, '%') </if>
+		<if test="strap.strapSerial != null">AND strap_serial like concat(#{strap.strapSerial}, '%') </if>
+		<if test="strap.strapNo != null">AND strap_no like concat(#{strap.strapNo}, '%') </if>
+		<if test="strap.types != null">AND types = #{strap.types} </if>
+		<if test="strap.status != null">AND status = #{strap.status} </if>
+		<if test="strap.createdBy != null">AND created_by like concat(#{strap.createdBy}, '%') </if>
+		<if test="strap.updatedBy != null">AND updated_by like concat(#{strap.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 手牌 -->
+<insert id="addStrap" parameterType="com.jing.core.model.entity.Strap" >
+ 	INSERT INTO tb_strap 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="strapId != null"> strap_id,</if>
+		<if test="storeId != null"> store_id,</if>
+		<if test="strapSerial != null"> strap_serial,</if>
+		<if test="strapNo != null"> strap_no,</if>
+		<if test="types != null"> types,</if>
+		<if test="status != null"> status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="strapId != null"> #{strapId},</if>
+		<if test="storeId != null"> #{storeId},</if>
+		<if test="strapSerial != null"> #{strapSerial},</if>
+		<if test="strapNo != null"> #{strapNo},</if>
+		<if test="types != null"> #{types},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 手牌 -->  
+<update id="modifyStrap" parameterType="com.jing.core.model.entity.Strap" >
+  	UPDATE tb_strap SET
+	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
+		<if test="strapSerial != null"> strap_serial = #{strapSerial},</if>
+		<if test="strapNo != null"> strap_no = #{strapNo},</if>
+		<if test="types != null"> types = #{types},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE strap_id = #{strapId}
+</update>
+ 
+<!-- 删除 手牌 -->
+<delete id="dropStrapByStrapId" parameterType="java.lang.String">
+	DELETE FROM tb_strap WHERE strap_id = #{strapId}
+</delete> 
+
+<!-- 根据标识查询 手牌 -->
+<select id="queryStrapByStrapId"  resultMap="StrapResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_strap_item"/>
+	FROM tb_strap WHERE strap_id = #{strapId}
+</select>
+
+<!-- 根据属性查询手牌 -->
+<select id="queryStrapByProperty"  resultMap="StrapResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_strap_item"/>
+	FROM tb_strap 
+	<where>
+		<include refid="sql_strap_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据手牌属性与分页信息分页查询手牌信息 -->
+<select id="queryStrapForPage"  resultMap="StrapResultMap" > 
+	SELECT 
+	<include refid="sql_strap_item"/>
+	FROM tb_strap 
+	<where>
+		<include refid="sql_strap_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

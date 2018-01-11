@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.clock.model.dao.TechnicianMapper">
+
+<!-- Result Map-->
+<resultMap id="TechnicianResultMap" type="com.jing.clock.model.entity.Technician">
+	<id column="technician_id" property="technicianId"/>
+	<result column="emp_id" property="empId"/>
+	<result column="tech_no" property="techNo"/>
+	<result column="tech_card" property="techCard"/>
+	<result column="tech_name" property="techName"/>
+	<result column="sex" property="sex"/>
+	<result column="shift_id" property="shiftId"/>
+	<result column="status" property="status"/>
+	<result column="shift_status" property="shiftStatus"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_technician_item">
+	technician_id, emp_id, tech_no, tech_card, tech_name, sex, shift_id, status, shift_status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_technician_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="technician.technicianId != null">AND technician_id = #{technician.technicianId} </if>
+		<if test="technician.empId != null">AND emp_id like concat(#{technician.empId}, '%') </if>
+		<if test="technician.techNo != null">AND tech_no like concat(#{technician.techNo}, '%') </if>
+		<if test="technician.techCard != null">AND tech_card like concat(#{technician.techCard}, '%') </if>
+		<if test="technician.techName != null">AND tech_name like concat(#{technician.techName}, '%') </if>
+		<if test="technician.sex != null">AND sex = #{technician.sex} </if>
+		<if test="technician.shiftId != null">AND shift_id = #{technician.shiftId} </if>
+		<if test="technician.status != null">AND status = #{technician.status} </if>
+		<if test="technician.shiftStatus != null">AND shift_status = #{technician.shiftStatus} </if>
+		<if test="technician.createdBy != null">AND created_by like concat(#{technician.createdBy}, '%') </if>
+		<if test="technician.updatedBy != null">AND updated_by like concat(#{technician.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 技师 -->
+<insert id="addTechnician" parameterType="com.jing.clock.model.entity.Technician" >
+	<selectKey keyProperty="technicianId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tc_technician 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="technicianId != null"> technician_id,</if>
+		<if test="empId != null"> emp_id,</if>
+		<if test="techNo != null"> tech_no,</if>
+		<if test="techCard != null"> tech_card,</if>
+		<if test="techName != null"> tech_name,</if>
+		<if test="sex != null"> sex,</if>
+		<if test="shiftId != null"> shift_id,</if>
+		<if test="status != null"> status,</if>
+		<if test="shiftStatus != null"> shift_status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="technicianId != null"> #{technicianId},</if>
+		<if test="empId != null"> #{empId},</if>
+		<if test="techNo != null"> #{techNo},</if>
+		<if test="techCard != null"> #{techCard},</if>
+		<if test="techName != null"> #{techName},</if>
+		<if test="sex != null"> #{sex},</if>
+		<if test="shiftId != null"> #{shiftId},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="shiftStatus != null"> #{shiftStatus},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 技师 -->  
+<update id="modifyTechnician" parameterType="com.jing.clock.model.entity.Technician" >
+  	UPDATE tc_technician SET
+	<trim suffixOverrides=",">
+		<if test="empId != null"> emp_id = #{empId},</if>
+		<if test="techNo != null"> tech_no = #{techNo},</if>
+		<if test="techCard != null"> tech_card = #{techCard},</if>
+		<if test="techName != null"> tech_name = #{techName},</if>
+		<if test="sex != null"> sex = #{sex},</if>
+		<if test="shiftId != null"> shift_id = #{shiftId},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="shiftStatus != null"> shift_status = #{shiftStatus},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE technician_id = #{technicianId}
+</update>
+ 
+<!-- 删除 技师 -->
+<delete id="dropTechnicianByTechnicianId" parameterType="java.lang.Integer">
+	DELETE FROM tc_technician WHERE technician_id = #{technicianId}
+</delete> 
+
+<!-- 根据标识查询 技师 -->
+<select id="queryTechnicianByTechnicianId"  resultMap="TechnicianResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_technician_item"/>
+	FROM tc_technician WHERE technician_id = #{technicianId}
+</select>
+
+<!-- 根据属性查询技师 -->
+<select id="queryTechnicianByProperty"  resultMap="TechnicianResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_technician_item"/>
+	FROM tc_technician 
+	<where>
+		<include refid="sql_technician_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据技师属性与分页信息分页查询技师信息 -->
+<select id="queryTechnicianForPage"  resultMap="TechnicianResultMap" > 
+	SELECT 
+	<include refid="sql_technician_item"/>
+	FROM tc_technician 
+	<where>
+		<include refid="sql_technician_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

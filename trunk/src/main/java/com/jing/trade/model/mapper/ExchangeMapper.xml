@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.ExchangeMapper">
+
+<!-- Result Map-->
+<resultMap id="ExchangeResultMap" type="com.jing.trade.model.entity.Exchange">
+	<id column="exchange_id" property="exchangeId"/>
+	<result column="exchange_name" property="exchangeName"/>
+	<result column="exchange_rate" property="exchangeRate"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_exchange_item">
+	exchange_id, exchange_name, exchange_rate, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_exchange_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="exchange.exchangeId != null">AND exchange_id = #{exchange.exchangeId} </if>
+		<if test="exchange.exchangeName != null">AND exchange_name like concat(#{exchange.exchangeName}, '%') </if>
+		<if test="exchange.createdBy != null">AND created_by like concat(#{exchange.createdBy}, '%') </if>
+		<if test="exchange.updatedBy != null">AND updated_by like concat(#{exchange.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 结算币种 -->
+<insert id="addExchange" parameterType="com.jing.trade.model.entity.Exchange" >
+	<selectKey keyProperty="exchangeId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_exchange 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="exchangeId != null"> exchange_id,</if>
+		<if test="exchangeName != null"> exchange_name,</if>
+		<if test="exchangeRate != null"> exchange_rate,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="exchangeId != null"> #{exchangeId},</if>
+		<if test="exchangeName != null"> #{exchangeName},</if>
+		<if test="exchangeRate != null"> #{exchangeRate},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 结算币种 -->  
+<update id="modifyExchange" parameterType="com.jing.trade.model.entity.Exchange" >
+  	UPDATE tt_exchange SET
+	<trim suffixOverrides=",">
+		<if test="exchangeName != null"> exchange_name = #{exchangeName},</if>
+		<if test="exchangeRate != null"> exchange_rate = #{exchangeRate},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE exchange_id = #{exchangeId}
+</update>
+ 
+<!-- 删除 结算币种 -->
+<delete id="dropExchangeByExchangeId" parameterType="java.lang.Integer">
+	DELETE FROM tt_exchange WHERE exchange_id = #{exchangeId}
+</delete> 
+
+<!-- 根据标识查询 结算币种 -->
+<select id="queryExchangeByExchangeId"  resultMap="ExchangeResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_exchange_item"/>
+	FROM tt_exchange WHERE exchange_id = #{exchangeId}
+</select>
+
+<!-- 根据属性查询结算币种 -->
+<select id="queryExchangeByProperty"  resultMap="ExchangeResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_exchange_item"/>
+	FROM tt_exchange 
+	<where>
+		<include refid="sql_exchange_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据结算币种属性与分页信息分页查询结算币种信息 -->
+<select id="queryExchangeForPage"  resultMap="ExchangeResultMap" > 
+	SELECT 
+	<include refid="sql_exchange_item"/>
+	FROM tt_exchange 
+	<where>
+		<include refid="sql_exchange_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

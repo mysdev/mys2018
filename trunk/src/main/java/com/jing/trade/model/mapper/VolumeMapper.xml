@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.trade.model.dao.VolumeMapper">
+
+<!-- Result Map-->
+<resultMap id="VolumeResultMap" type="com.jing.trade.model.entity.Volume">
+	<id column="volume_id" property="volumeId"/>
+	<result column="volume_code" property="volumeCode"/>
+	<result column="coupon_id" property="couponId"/>
+	<result column="status" property="status"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_volume_item">
+	volume_id, volume_code, coupon_id, status, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_volume_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="volume.volumeId != null">AND volume_id = #{volume.volumeId} </if>
+		<if test="volume.volumeCode != null">AND volume_code like concat(#{volume.volumeCode}, '%') </if>
+		<if test="volume.couponId != null">AND coupon_id = #{volume.couponId} </if>
+		<if test="volume.status != null">AND status = #{volume.status} </if>
+		<if test="volume.createdBy != null">AND created_by like concat(#{volume.createdBy}, '%') </if>
+		<if test="volume.updatedBy != null">AND updated_by like concat(#{volume.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 优惠券 -->
+<insert id="addVolume" parameterType="com.jing.trade.model.entity.Volume" >
+	<selectKey keyProperty="volumeId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tt_volume 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="volumeId != null"> volume_id,</if>
+		<if test="volumeCode != null"> volume_code,</if>
+		<if test="couponId != null"> coupon_id,</if>
+		<if test="status != null"> status,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="volumeId != null"> #{volumeId},</if>
+		<if test="volumeCode != null"> #{volumeCode},</if>
+		<if test="couponId != null"> #{couponId},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 优惠券 -->  
+<update id="modifyVolume" parameterType="com.jing.trade.model.entity.Volume" >
+  	UPDATE tt_volume SET
+	<trim suffixOverrides=",">
+		<if test="volumeCode != null"> volume_code = #{volumeCode},</if>
+		<if test="couponId != null"> coupon_id = #{couponId},</if>
+		<if test="status != null"> status = #{status},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE volume_id = #{volumeId}
+</update>
+ 
+<!-- 删除 优惠券 -->
+<delete id="dropVolumeByVolumeId" parameterType="java.lang.Integer">
+	DELETE FROM tt_volume WHERE volume_id = #{volumeId}
+</delete> 
+
+<!-- 根据标识查询 优惠券 -->
+<select id="queryVolumeByVolumeId"  resultMap="VolumeResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_volume_item"/>
+	FROM tt_volume WHERE volume_id = #{volumeId}
+</select>
+
+<!-- 根据属性查询优惠券 -->
+<select id="queryVolumeByProperty"  resultMap="VolumeResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_volume_item"/>
+	FROM tt_volume 
+	<where>
+		<include refid="sql_volume_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据优惠券属性与分页信息分页查询优惠券信息 -->
+<select id="queryVolumeForPage"  resultMap="VolumeResultMap" > 
+	SELECT 
+	<include refid="sql_volume_item"/>
+	FROM tt_volume 
+	<where>
+		<include refid="sql_volume_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

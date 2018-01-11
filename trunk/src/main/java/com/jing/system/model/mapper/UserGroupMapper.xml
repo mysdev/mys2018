@@ -42,19 +42,19 @@
 		<if test="parentTeam != null"> parent_team,</if>
 		<if test="status != null"> status,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="teamId != null"> #{teamId},</if>	
-		<if test="teamName != null"> #{teamName},</if>	
-		<if test="parentTeam != null"> #{parentTeam},</if>	
-		<if test="status != null"> #{status},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="teamId != null"> #{teamId},</if>
+		<if test="teamName != null"> #{teamName},</if>
+		<if test="parentTeam != null"> #{parentTeam},</if>
+		<if test="status != null"> #{status},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -66,9 +66,8 @@
 		<if test="parentTeam != null"> parent_team = #{parentTeam},</if>
 		<if test="status != null"> status = #{status},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE team_id = #{teamId}
 </update>

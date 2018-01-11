@@ -60,25 +60,25 @@
 		<if test="enabled != null"> enabled,</if>
 		<if test="note != null"> note,</if>
 		<if test="createdBy != null"> created_by,</if>
-		<if test="createdDate != null"> created_date,</if>
+		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
-		<if test="updatedDate != null"> updated_date,</if>
+		updated_date,
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="resourceId != null"> #{resourceId},</if>	
-		<if test="title != null"> #{title},</if>	
-		<if test="type != null"> #{type},</if>	
-		<if test="url != null"> #{url},</if>	
-		<if test="image != null"> #{image},</if>	
-		<if test="parentId != null"> #{parentId},</if>	
-		<if test="isDisplay != null"> #{isDisplay},</if>	
-		<if test="sequence != null"> #{sequence},</if>	
-		<if test="enabled != null"> #{enabled},</if>	
-		<if test="note != null"> #{note},</if>	
-		<if test="createdBy != null"> #{createdBy},</if>	
-		<if test="createdDate != null"> #{createdDate},</if>	
-		<if test="updatedBy != null"> #{updatedBy},</if>	
-		<if test="updatedDate != null"> #{updatedDate},</if>	
+		<if test="resourceId != null"> #{resourceId},</if>
+		<if test="title != null"> #{title},</if>
+		<if test="type != null"> #{type},</if>
+		<if test="url != null"> #{url},</if>
+		<if test="image != null"> #{image},</if>
+		<if test="parentId != null"> #{parentId},</if>
+		<if test="isDisplay != null"> #{isDisplay},</if>
+		<if test="sequence != null"> #{sequence},</if>
+		<if test="enabled != null"> #{enabled},</if>
+		<if test="note != null"> #{note},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
 	</trim>
 </insert>
 
@@ -96,9 +96,8 @@
 		<if test="enabled != null"> enabled = #{enabled},</if>
 		<if test="note != null"> note = #{note},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="createdDate != null"> created_date = #{createdDate},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		<if test="updatedDate != null"> updated_date = #{updatedDate},</if>
+		updated_date = now(),
 	</trim>
 	WHERE resource_id = #{resourceId}
 </update>
