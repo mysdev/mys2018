@@ -16,10 +16,10 @@ Date: 2018-01-10 11:37:29
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for tb_authorization
+-- Table structure for to_authorization
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_authorization`;
-CREATE TABLE `tb_authorization` (
+DROP TABLE IF EXISTS `to_authorization`;
+CREATE TABLE `to_authorization` (
   `authorization_id` varchar(32) NOT NULL COMMENT '授权码',
   `customer_id` int(11) NOT NULL COMMENT '归属客户',
   `types` int(2) NOT NULL COMMENT '终端类型 0房间 1手环',
@@ -32,13 +32,13 @@ CREATE TABLE `tb_authorization` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消费授权';
 
 -- ----------------------------
--- Table structure for tb_customer
+-- Table structure for to_customer
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_customer`;
-CREATE TABLE `tb_customer` (
+DROP TABLE IF EXISTS `to_customer`;
+CREATE TABLE `to_customer` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户标识',
   `customer_name` varchar(32) NOT NULL COMMENT '客户名称',
-  `advance` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '押金',
+  `advance` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '押金',
   `note` varchar(64) DEFAULT NULL COMMENT '备注',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -97,8 +97,8 @@ DROP TABLE IF EXISTS `tb_employee_special`;
 CREATE TABLE `tb_employee_special` (
   `emp_id` varchar(32) NOT NULL COMMENT '员工标识',
   `emp_pwd` varchar(16) NOT NULL COMMENT '授权码',
-  `credit_mount` decimal(8,2) DEFAULT NULL COMMENT '授信额度',
-  `credit_left` decimal(8,2) DEFAULT NULL COMMENT '授信余额',
+  `credit_mount` decimal(10,2) DEFAULT NULL COMMENT '授信额度',
+  `credit_left` decimal(10,2) DEFAULT NULL COMMENT '授信余额',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
@@ -106,14 +106,14 @@ CREATE TABLE `tb_employee_special` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='员工特殊权限(扩)';
 
 -- ----------------------------
--- Table structure for tb_goods
+-- Table structure for to_goods
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_goods`;
-CREATE TABLE `tb_goods` (
+DROP TABLE IF EXISTS `to_goods`;
+CREATE TABLE `to_goods` (
   `goods_id` varchar(32) NOT NULL COMMENT '商品标识',
   `store_id` varchar(32) NOT NULL COMMENT '归属门店',
   `goods_name` varchar(128) NOT NULL COMMENT '商品名称',
-  `price` decimal(8,2) DEFAULT NULL COMMENT '商品售价',
+  `price` decimal(10,2) DEFAULT NULL COMMENT '商品售价',
   `unit_id` int(11) NOT NULL COMMENT '商品单位',
   `goods_time` int(11) DEFAULT NULL COMMENT '服务时长 分',
   `classify` int(11) DEFAULT NULL COMMENT '商品小类',
@@ -133,10 +133,10 @@ CREATE TABLE `tb_goods` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品服务';
 
 -- ----------------------------
--- Table structure for tb_goods_ext
+-- Table structure for to_goods_ext
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_goods_ext`;
-CREATE TABLE `tb_goods_ext` (
+DROP TABLE IF EXISTS `to_goods_ext`;
+CREATE TABLE `to_goods_ext` (
   `goods_id` varchar(32) NOT NULL COMMENT '商品标识',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -145,10 +145,10 @@ CREATE TABLE `tb_goods_ext` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品服务扩展';
 
 -- ----------------------------
--- Table structure for tb_goods_material
+-- Table structure for to_goods_material
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_goods_material`;
-CREATE TABLE `tb_goods_material` (
+DROP TABLE IF EXISTS `to_goods_material`;
+CREATE TABLE `to_goods_material` (
   `material_id` int(11) DEFAULT NULL COMMENT '原料标识',
   `store_id` varchar(32) DEFAULT NULL COMMENT '归属门店',
   `material_name` varchar(128) DEFAULT NULL COMMENT '原料名称',
@@ -156,8 +156,8 @@ CREATE TABLE `tb_goods_material` (
   `material_types` int(11) DEFAULT NULL COMMENT '原料类型 0物品1服务',
   `material_ct` int(11) DEFAULT NULL COMMENT '原料库存',
   `pinyin` varchar(64) DEFAULT NULL COMMENT '拼音',
-  `cost` decimal(8,2) DEFAULT NULL COMMENT '纯成本',
-  `cost_all` decimal(8,2) DEFAULT NULL COMMENT '核算成本',
+  `cost` decimal(10,2) DEFAULT NULL COMMENT '纯成本',
+  `cost_all` decimal(10,2) DEFAULT NULL COMMENT '核算成本',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
@@ -165,10 +165,10 @@ CREATE TABLE `tb_goods_material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='基本原料';
 
 -- ----------------------------
--- Table structure for tb_goods_unit
+-- Table structure for to_goods_unit
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_goods_unit`;
-CREATE TABLE `tb_goods_unit` (
+DROP TABLE IF EXISTS `to_goods_unit`;
+CREATE TABLE `to_goods_unit` (
   `unit_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '单位标识',
   `unit_name` varchar(64) NOT NULL COMMENT '单位名称',
   `base_unit` int(11) DEFAULT NULL COMMENT '基准单位',
@@ -236,7 +236,7 @@ CREATE TABLE `tb_member_plus` (
   `plus_name` varchar(128) NOT NULL COMMENT '活动名称',
   `plus_money` decimal(10,2) NOT NULL COMMENT '充值金额',
   `gift_money` decimal(10,2) NOT NULL COMMENT '赠送金额',
-  `money` decimal(8,2) NOT NULL COMMENT '提成金额',
+  `money` decimal(10,2) NOT NULL COMMENT '提成金额',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '活动状态 0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -256,7 +256,7 @@ CREATE TABLE `tb_member_record` (
   `plus_money` decimal(10,2) NOT NULL COMMENT '充值金额',
   `gift_money` decimal(10,2) DEFAULT NULL COMMENT '赠送金额',
   `employee_id` varchar(32) DEFAULT NULL COMMENT '员工标识',
-  `money` decimal(8,2) DEFAULT NULL COMMENT '员工提成',
+  `money` decimal(10,2) DEFAULT NULL COMMENT '员工提成',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
@@ -265,15 +265,15 @@ CREATE TABLE `tb_member_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员充值记录';
 
 -- ----------------------------
--- Table structure for tb_package
+-- Table structure for to_packages
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_package`;
-CREATE TABLE `tb_package` (
+DROP TABLE IF EXISTS `to_packages`;
+CREATE TABLE `to_packages` (
   `package_id` varchar(32) NOT NULL COMMENT '套餐标识',
   `store_id` int(11) NOT NULL COMMENT '归属门店',
   `package_name` varchar(64) NOT NULL COMMENT '套餐名称',
   `pinyin` varchar(64) NOT NULL COMMENT '套餐拼音',
-  `price` decimal(8,2) NOT NULL COMMENT '售价',
+  `price` decimal(10,2) NOT NULL COMMENT '售价',
   `valid_date` date DEFAULT NULL COMMENT '有效日期',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '套餐状态 0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
@@ -284,10 +284,10 @@ CREATE TABLE `tb_package` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消费套餐';
 
 -- ----------------------------
--- Table structure for tb_package_detail
+-- Table structure for to_packages_detail
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_package_detail`;
-CREATE TABLE `tb_package_detail` (
+DROP TABLE IF EXISTS `to_packages_detail`;
+CREATE TABLE `to_packages_detail` (
   `detail_id` int(11) NOT NULL COMMENT '详情标识',
   `package_id` varchar(32) NOT NULL COMMENT '归属套餐',
   `goods_id` varchar(32) NOT NULL COMMENT '商品标识',
@@ -403,12 +403,12 @@ CREATE TABLE `tb_strap` (
 -- ----------------------------
 -- Table structure for tb_type
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_type`;
-CREATE TABLE `tb_type` (
+DROP TABLE IF EXISTS `tb_types`;
+CREATE TABLE `tb_types` (
   `type_id` int(4) NOT NULL COMMENT '类型标识',
   `ass` int(11) NOT NULL COMMENT '归属分类 0房1手环',
   `type_name` varchar(64) NOT NULL COMMENT '类型名称',
-  `low_consumption` decimal(8,2) DEFAULT NULL COMMENT '最低消费',
+  `low_consumption` decimal(10,2) DEFAULT NULL COMMENT '最低消费',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '类型状态 0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -423,8 +423,8 @@ CREATE TABLE `tb_type` (
 -- ----------------------------
 -- Table structure for tb_type_bind
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_type_bind`;
-CREATE TABLE `tb_type_bind` (
+DROP TABLE IF EXISTS `tb_types_bind`;
+CREATE TABLE `tb_types_bind` (
   `bind_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '绑定标识',
   `type_id` int(11) NOT NULL COMMENT '类型标识 0商品1套餐',
   `object_id` varchar(32) NOT NULL COMMENT '物品标识 商品 套餐',
@@ -505,7 +505,7 @@ CREATE TABLE `tc_clock_skill` (
   `skill_name` varchar(64) NOT NULL COMMENT '技能名称',
   `material_id` int(11) NOT NULL COMMENT '服务标识',
   `is_clock` int(11) NOT NULL DEFAULT '0' COMMENT '是否计钟 0是',
-  `class` int(11) DEFAULT NULL COMMENT '归属轮班',
+  `classs` int(11) DEFAULT NULL COMMENT '归属轮班',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '技能状态 0正常',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -814,7 +814,7 @@ CREATE TABLE `tt_coupon` (
   `types` int(11) NOT NULL COMMENT '类型 0卷 1减 2送',
   `total_count` int(11) DEFAULT NULL COMMENT '总量',
   `allowance` int(11) DEFAULT NULL COMMENT '余量',
-  `total_price` decimal(8,2) DEFAULT NULL COMMENT '价值',
+  `total_price` decimal(10,2) DEFAULT NULL COMMENT '价值',
   `from_time` datetime NOT NULL COMMENT '生效日期',
   `to_time` datetime NOT NULL COMMENT '失效日期',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '当前状态 0正常',
@@ -850,7 +850,7 @@ DROP TABLE IF EXISTS `tt_exchange`;
 CREATE TABLE `tt_exchange` (
   `exchange_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '汇率标识',
   `exchange_name` varchar(32) NOT NULL COMMENT '汇率币种',
-  `exchange_rate` decimal(8,2) NOT NULL COMMENT '汇率',
+  `exchange_rate` decimal(10,2) NOT NULL COMMENT '汇率',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
@@ -867,8 +867,8 @@ CREATE TABLE `tt_member_price` (
   `level_id` int(11) NOT NULL COMMENT '会员等级标识',
   `object_type` int(11) NOT NULL COMMENT '估价类型1商品服务2套餐',
   `object_id` varchar(32) NOT NULL COMMENT '对象标识',
-  `price` decimal(8,2) NOT NULL COMMENT '会员价格',
-  `discount` decimal(8,2) NOT NULL COMMENT '优惠金额',
+  `price` decimal(10,2) NOT NULL COMMENT '会员价格',
+  `discount` decimal(10,2) NOT NULL COMMENT '优惠金额',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
@@ -884,12 +884,12 @@ CREATE TABLE `tt_settlement` (
   `settlement_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '结算标识',
   `serial_number` varchar(16) NOT NULL COMMENT '流水号',
   `settlement_time` date NOT NULL COMMENT '结算时间',
-  `marked_price` decimal(8,2) NOT NULL COMMENT '原价',
-  `discount_price` decimal(8,2) DEFAULT NULL COMMENT '优惠总计',
-  `reduction_price` decimal(8,2) DEFAULT NULL COMMENT '折扣',
-  `deal_price` decimal(8,2) NOT NULL COMMENT '成交价',
+  `marked_price` decimal(10,2) NOT NULL COMMENT '原价',
+  `discount_price` decimal(10,2) DEFAULT NULL COMMENT '优惠总计',
+  `reduction_price` decimal(10,2) DEFAULT NULL COMMENT '折扣',
+  `deal_price` decimal(10,2) NOT NULL COMMENT '成交价',
   `exchange_id` int(11) NOT NULL COMMENT '支付方式 0本币',
-  `pay_price` decimal(8,2) NOT NULL COMMENT '支付数量',
+  `pay_price` decimal(10,2) NOT NULL COMMENT '支付数量',
   `emp_id` varchar(32) DEFAULT NULL COMMENT '折扣授权员工',
   `member_id` varchar(32) DEFAULT NULL COMMENT '会员',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
@@ -914,9 +914,9 @@ CREATE TABLE `tt_trade` (
   `object_ct` int(11) NOT NULL COMMENT '交易数量',
   `status` int(11) NOT NULL COMMENT '清单状态 0正常',
   `note` varchar(128) DEFAULT NULL COMMENT '交易说明',
-  `marked_price` decimal(8,2) NOT NULL COMMENT '原价',
-  `discount_price` decimal(8,2) DEFAULT NULL COMMENT '优惠金额',
-  `deal_price` decimal(8,2) NOT NULL COMMENT '成交价',
+  `marked_price` decimal(10,2) NOT NULL COMMENT '原价',
+  `discount_price` decimal(10,2) DEFAULT NULL COMMENT '优惠金额',
+  `deal_price` decimal(10,2) NOT NULL COMMENT '成交价',
   `coupon_id` int(11) DEFAULT NULL COMMENT '活动标识',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -934,7 +934,7 @@ CREATE TABLE `tt_trade_discount` (
   `serial_number` varchar(16) NOT NULL COMMENT '流水号',
   `coupon_id` int(11) NOT NULL COMMENT '优惠卷组',
   `volume_id` int(11) NOT NULL COMMENT '卡券标识',
-  `discount_price` decimal(8,2) NOT NULL COMMENT '折扣金额',
+  `discount_price` decimal(10,2) NOT NULL COMMENT '折扣金额',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',
