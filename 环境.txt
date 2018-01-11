@@ -3,8 +3,11 @@ git : https://github.com/mysdev/mys2018.git
 用户名：root
 密码：123456
 
+ 6580-6589端口都可以用
+远程桌面：www.szrobot.net:6589   administrator 密码：12345678 
 
-远程桌面：www.szrobot.net:6589   administrator 密码：12345678  6580-6589端口都可以用
-
-
+mysql
 www.szrobot.net 6588 root 123456
+
+web
+www.szrobot.net:6580
