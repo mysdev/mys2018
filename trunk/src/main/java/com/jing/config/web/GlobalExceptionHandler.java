@@ -1,5 +1,7 @@
 package com.jing.config.web;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.List;
 import java.util.Map;
 
@@ -59,14 +61,7 @@ public class GlobalExceptionHandler {
 		response.setStatus(HttpCodeEnum.HTTP_NOT_FOUND.getCode());
 		returnMap.put("code", HttpCodeEnum.HTTP_NOT_FOUND.getCode());
 		returnMap.put("message","资源不存在");
-		
-		Object list = null;
-		try {			
-			list = JsonUtil.json2object(e.getMessage(), List.class);
-			returnMap.put("errors", list);
-		} catch (Exception e2) {
-			returnMap.put("errors", JsonUtil.json2object(e.getMessage()));
-		}
+		returnMap.put("errors", e.getMessage());
 		return returnMap;
 	}
 
