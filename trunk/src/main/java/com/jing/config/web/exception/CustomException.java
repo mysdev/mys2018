@@ -22,25 +22,13 @@ public class CustomException extends RuntimeException {
 	
 	private List<Map<String, String>> errors;	
 	
-//	public CustomException(Integer code, String message, Object obj){
-//		super();
-//		this.code = code;
-//		this.message = message;
-//		if(obj instanceof List){
-//			errors.addAll((List<?>)obj);
-//		}
-//		errors = new ArrayList<Object>();
-//		if(obj instanceof String){
-//			errors.add((String)obj);
-//		}else if(obj instanceof Map){
-//			errors.add((Map<?, ?>)obj);
-//		}else if(obj instanceof Set){
-//			errors.addAll((Set<?>)obj);
-//		}else{
-//			errors.add(obj);
-//		}	
-//	}
-	
+	/**
+	 * @Title:CustomException
+	 * @Description:不带下标的错误信息
+	 * @param code
+	 * @param message
+	 * @param obj
+	 */
 	public CustomException(Integer code, String message, String... obj){
 		super();
 		this.code = code;
@@ -51,6 +39,33 @@ public class CustomException extends RuntimeException {
 				Map<String, String> item = new HashMap<String, String>();
 				item.put("field", obj[i]);
 				if(i+1<obj.length){					
+					item.put("message", obj[++i]);
+				}
+				errors.add(item);
+			}
+		}
+	}
+	
+	/**
+	 * @Title:CustomException
+	 * @Description:带下标的错误信息
+	 * @param message
+	 * @param code
+	 * @param obj
+	 */
+	public CustomException(String message, Integer code, String... obj){
+		super();
+		this.code = code;
+		this.message = message;
+		this.errors = new ArrayList<Map<String, String>>();  
+		if(obj!=null && obj.length>0){
+			for(int i=0; i<obj.length; i++){
+				Map<String, String> item = new HashMap<String, String>();
+				item.put("index", obj[i]);
+				if(i+1<obj.length){					
+					item.put("field", obj[++i]);
+				}
+				if(i+2<obj.length){					
 					item.put("message", obj[++i]);
 				}
 				errors.add(item);
