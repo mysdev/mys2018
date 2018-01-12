@@ -128,14 +128,15 @@ public class  UserServiceImpl implements UserService {
 
 	@Override
 	public User login(String userName, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = new User();
+		user.setUserName(userName);
+		user.setPassword(password);
+		return userMapper.userLogin(user);
 	}
 
 	@Override
 	public User getUserByUsername(String userName) {
-		// TODO Auto-generated method stub
-		return null;
+		return userMapper.queryUserByUsername(userName);
 	}
 
 

@@ -135,8 +135,7 @@
 	FROM ts_user 
 	WHERE  user_name = #{userName}
 	and password = #{password}
-	and enabled=1
-	and status=1
+	and status=0
 </select>
 
 <!-- 根据账户查询 用户 -->
