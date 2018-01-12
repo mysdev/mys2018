@@ -129,7 +129,7 @@
 </select>
 
 
-<select id="userLogin"  resultMap="UserResultMap" parameterType="com.jing.system.user.model.entity.User">
+<select id="userLogin"  resultMap="UserResultMap" parameterType="com.jing.system.model.entity.User">
 	SELECT 
 	<include refid="sql_user_item"/>
 	FROM ts_user 
