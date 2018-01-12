@@ -126,5 +126,17 @@ public class  UserServiceImpl implements UserService {
 		return userMapper.queryUserByProperty(map);
 	}
 
+	@Override
+	public User login(String userName, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User getUserByUsername(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
