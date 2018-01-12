@@ -28,7 +28,7 @@ public class LoginController {
         return "redirect:/static/index.html";  
     }
 	
-	@RequestMapping(value="/login/auth",method=RequestMethod.POST)
+	@RequestMapping(value="/login/user",method=RequestMethod.POST)
 	public Object queryLoginUser(HttpServletRequest request){  
 		
 		
