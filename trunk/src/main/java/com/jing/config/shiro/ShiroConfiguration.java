@@ -39,14 +39,17 @@ public class ShiroConfiguration {
 		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		// filterChainDefinitionMap.put("/security/logoff", "logout");
 		// 不拦截的URL
-		filterChainDefinitionMap.put("*/resources/**", "anon");// 静态资源权限不校验
+		filterChainDefinitionMap.put("*/script/**", "anon");// 静态资源权限不校验
+		filterChainDefinitionMap.put("*/images/**", "anon");// 静态资源权限不校验
+		filterChainDefinitionMap.put("*/css/**", "anon");// 静态资源权限不校验
+		
 		filterChainDefinitionMap.put("/login/auth", "anon");// 登录接口权限不校验
 		filterChainDefinitionMap.put("/public/**", "anon");// 开放接口权限不校验
 		// 拦截的URL
 		filterChainDefinitionMap.put("/**", "user");// 其他资源统统校验
 		// 登录
-		shiroFilterFactoryBean.setLoginUrl("/login.html");
-		shiroFilterFactoryBean.setSuccessUrl("/index.html");
+		shiroFilterFactoryBean.setLoginUrl("/webapge/login.html");
+		shiroFilterFactoryBean.setSuccessUrl("webpage/index.html");
 		// 未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403.html");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

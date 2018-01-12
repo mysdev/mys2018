@@ -1,7 +1,5 @@
 package com.jing.config.web;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.util.List;
 import java.util.Map;
 

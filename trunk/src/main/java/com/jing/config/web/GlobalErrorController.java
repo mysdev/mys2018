@@ -51,7 +51,8 @@ public class GlobalErrorController implements ErrorController {
     @RequestMapping(value = ERROR_PATH)
     @ResponseBody
     public Map<String, Object> error(HttpServletRequest request,HttpServletResponse response) {
-          //Map<String, Object> body = getErrorAttributes(request, getTraceParameter(request));
+          Map<String, Object> body = getErrorAttributes(request, getTraceParameter(request));
+          String path=(String)body.get("path");
           //HttpStatus status = getStatus(request);
           //return new ResponseEntity<Map<String, Object>>(body, status);
     	Map<String, Object> map =  Maps.newHashMap();
@@ -65,7 +66,7 @@ public class GlobalErrorController implements ErrorController {
     		map.put("errors", Maps.newHashMap());
     	}else if(404 == response.getStatus()){
     		map.put("code", "404");
-    		map.put("message", "资源不存在");
+    		map.put("message", "资源"+path+"不存在");
     		map.put("errors", Maps.newHashMap());
     	}else if(405 == response.getStatus()){
     		map.put("code", "405");
@@ -90,12 +91,10 @@ public class GlobalErrorController implements ErrorController {
         return !"false".equals(parameter.toLowerCase());
     }
 
-    @SuppressWarnings("unused")
 	private Map<String, Object> getErrorAttributes(HttpServletRequest request,
                                                    boolean includeStackTrace) {     
         RequestAttributes requestAttributes = new ServletRequestAttributes(request);  
-        System.out.println(errorAttributes.getError(requestAttributes));
-        Map<String, Object> map = this.errorAttributes.getErrorAttributes(requestAttributes,includeStackTrace);
+        Map<String, Object> map = errorAttributes.getErrorAttributes(requestAttributes,includeStackTrace);
         String URL = request.getRequestURL().toString();
         map.put("URL", URL);        
         return map;
@@ -113,7 +112,6 @@ public class GlobalErrorController implements ErrorController {
             }
         }
         return HttpStatus.INTERNAL_SERVER_ERROR;
-    }   
-
+    } 
 
 }

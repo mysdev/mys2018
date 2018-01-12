@@ -48,7 +48,7 @@ public class CustomizeAuthorizingRealm extends AuthorizingRealm {
 		logger.debug("登录操作进行登录认证......");
 		UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 		User user = SpringContextUtils.getBean(UserService.class).login(token.getUsername(),
-				token.getPassword().toString());
+				new String(token.getPassword()));
 		if (user == null) {
 			// 没找到帐号
 			throw new UnknownAccountException("用户名或者密码错误.");
