@@ -2,6 +2,7 @@ package com.jing.core.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 
 import com.jing.core.model.entity.Member;
+import com.jing.config.web.exception.CustomException;
 import com.jing.core.model.dao.MemberMapper;
 import com.jing.core.service.MemberService;
 
@@ -128,5 +130,70 @@ public class  MemberServiceImpl implements MemberService {
 		return memberMapper.queryMemberByProperty(map);
 	}
 
+	
+	/**
+	 * 消费
+	 */
+	@Override
+	public synchronized void consumption(String memberId, Integer amount) {
+		BigDecimal a = new BigDecimal(amount);
+		Member member = this.queryMemberByMemberId(memberId);
+		if(member==null) {
+			throw new CustomException(-1, "会员不存在");
+		}
+		BigDecimal ye = member.getBalance();
+		BigDecimal totalFee = member.getTotalFee();
+		if(ye.intValue() < amount) {
+			throw new CustomException(-1, "余额不足");
+		}
+		//计算余额
+		ye = ye.subtract(a);
+		//计算总消费
+		totalFee = totalFee.add(a);
+		//计算成长值
+		//计算积分
+		member.setBalance(ye);
+		member.setTotalFee(totalFee);
+		this.modifyMember(member);
+	}
+	
+	@Override
+	public void recharge(String memberId, Integer amount) {
+		BigDecimal a = new BigDecimal(amount);
+		Member member = this.queryMemberByMemberId(memberId);
+		if(member==null) {
+			throw new CustomException(-1, "会员不存在");
+		}
+		//计算金额是否达标赠送金额[会员充值活动]
+		
+		
+		BigDecimal balance = member.getBalance();
+		member.setBalance(balance.add(a));
+		this.modifyMember(member);
+	}
+
+	@Override
+	public Member findMemberByPhone(String phone) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mobile", phone);
+		List<Member> list = queryMemberByProperty(map);
+		if(list !=null && !list.isEmpty()) {
+			return list.get(0);
+		}else {
+			return null;
+		}
+	}
+
+	@Override
+	public Member findMemberByCard(String cardNo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberCard", cardNo);
+		List<Member> list = queryMemberByProperty(map);
+		if(list !=null && !list.isEmpty()) {
+			return list.get(0);
+		}else {
+			return null;
+		}
+	}
 
 }

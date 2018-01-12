@@ -65,4 +65,31 @@ public interface MemberService {
 	 */
 	 List<Member> queryMemberByProperty(Map<String, Object> map);	 
 	 
+	 /**
+	  * 会员消费-减余额
+	  * @param memberId 会员号
+	  * @param amount 实际消费金额
+	  */
+	 void consumption(String memberId,Integer amount);
+	 
+	 /**
+	  * 会员充值
+	  * @param memberId 会员号
+	  * @param amount 实际充值金额
+	  */
+	 void recharge(String memberId,Integer amount);
+	 
+	 /**
+	  * 根据电话号码查询会员信息
+	  * @param phone
+	  * @return
+	  */
+	 Member findMemberByPhone(String phone);
+	 
+	 /**
+	  * 根据会员卡查询会员信息
+	  * @param phone
+	  * @return
+	  */
+	 Member findMemberByCard(String cardNo);
 }

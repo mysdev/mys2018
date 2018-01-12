@@ -63,6 +63,13 @@ public interface MemberPlusService {
 	 * @Description:根据属性查询会员充值活动
 	 * @return List<MemberPlus>
 	 */
-	 List<MemberPlus> queryMemberPlusByProperty(Map<String, Object> map);	 
+	 List<MemberPlus> queryMemberPlusByProperty(Map<String, Object> map);	
+	 
+	 /**
+	  * 根据金额查询匹配的活动,没匹配到返回空值，匹配到返回活动记录
+	  * @param amount
+	  * @return
+	  */
+	 MemberPlus queryMemberPlusByAmount(Integer amount);
 	 
 }
