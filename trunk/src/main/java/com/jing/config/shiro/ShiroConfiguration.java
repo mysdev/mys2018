@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.Filter;
+
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
@@ -31,6 +33,8 @@ public class ShiroConfiguration {
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+		Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
+		filters.put("myanuc", new MyAccessControlFilter());
 		// 必须设置 SecurityManager
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		// 拦截器.
@@ -39,17 +43,14 @@ public class ShiroConfiguration {
 		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		// filterChainDefinitionMap.put("/security/logoff", "logout");
 		// 不拦截的URL
-		filterChainDefinitionMap.put("*/script/**", "anon");// 静态资源权限不校验
-		filterChainDefinitionMap.put("*/images/**", "anon");// 静态资源权限不校验
 		filterChainDefinitionMap.put("*/css/**", "anon");// 静态资源权限不校验
-		
 		filterChainDefinitionMap.put("/login/auth", "anon");// 登录接口权限不校验
 		filterChainDefinitionMap.put("/public/**", "anon");// 开放接口权限不校验
 		// 拦截的URL
-		filterChainDefinitionMap.put("/**", "user");// 其他资源统统校验
+		filterChainDefinitionMap.put("/**", "user,myanuc");// 其他资源统统校验
 		// 登录
-		shiroFilterFactoryBean.setLoginUrl("/webapge/login.html");
-		shiroFilterFactoryBean.setSuccessUrl("webpage/index.html");
+		shiroFilterFactoryBean.setLoginUrl("/webpage/login.html");
+		shiroFilterFactoryBean.setSuccessUrl("/webpage/index.html");
 		// 未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403.html");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
