@@ -131,7 +131,11 @@ public class EmployeeAttendanceController{
 		}
 		List<EmployeeAttendance> eaList = employeeAttendanceService.queryEmployeeAttendanceByProperty(query);
 		if(eaList!=null && eaList.size()>0){
-			
+			String empIds = "";
+			for(EmployeeAttendance ea: eaList){
+				empIds += (ea.getEmpId()+",");
+			}
+			return employeeService.queryEmployeeByEmpIds(empIds);
 		}
 		return new ArrayList();
 	}

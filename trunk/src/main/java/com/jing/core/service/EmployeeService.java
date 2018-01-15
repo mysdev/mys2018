@@ -63,6 +63,15 @@ public interface EmployeeService {
 	 * @Description:根据属性查询员工
 	 * @return List<Employee>
 	 */
-	 List<Employee> queryEmployeeByProperty(Map<String, Object> map);	 
+	 List<Employee> queryEmployeeByProperty(Map<String, Object> map);	
+	 
+	 /** 
+	* @Title: queryEmployeeByEmpIds 
+	* @Description: 根据员工标识查询员工信息
+	* @param empIds 员工标识
+	* @return  List<Employee>    返回类型 
+	* @throws 
+	*/
+	List<Employee> queryEmployeeByEmpIds(String empIds);
 	 
 }

@@ -107,6 +107,17 @@
 	DELETE FROM tb_employee WHERE emp_id = #{empId}
 </delete> 
 
+
+<!-- 根据多标识查询员工 -->
+<select id="queryEmployeeByEmpIds"  resultMap="EmployeeResultMap" parameterType="java.util.List">
+	SELECT 
+	<include refid="sql_employee_item"/>
+	FROM tb_employee WHERE 
+	<foreach collection="empIds" index="index" item="item" open="(" separator=" or " close=")">
+		emp_id = #{item}   
+	</foreach>    
+</select>
+
 <!-- 根据标识查询 员工 -->
 <select id="queryEmployeeByEmpId"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
 	SELECT 

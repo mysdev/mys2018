@@ -1,25 +1,24 @@
 package com.jing.core.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.core.model.dao.EmployeeMapper;
+import com.jing.core.model.entity.Employee;
+import com.jing.core.service.EmployeeService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.core.model.entity.Employee;
-import com.jing.core.model.dao.EmployeeMapper;
-import com.jing.core.service.EmployeeService;
 
 /**
  * @ClassName: Employee
@@ -126,6 +125,25 @@ public class  EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<Employee> queryEmployeeByProperty(Map<String, Object> map){
 		return employeeMapper.queryEmployeeByProperty(map);
+	}
+
+	@Override
+	public List<Employee> queryEmployeeByEmpIds(String empIds) {
+		if(empIds==null || empIds.length()==0){
+			return new ArrayList<Employee>();
+		}
+		empIds = empIds.replaceAll("，", ",");
+		String[] temp = empIds.split(",");
+		List<String> query = new ArrayList<String>();
+		for(int i=0; i<temp.length; i++){
+			if(temp[i]!=null && temp[i].trim().length()>0){
+				query.add(temp[i]);
+			}
+		}
+		if(query.size()==0){
+			return new ArrayList<Employee>();
+		}
+		return employeeMapper.queryEmployeeByEmpIds(query);
 	}
 
 
