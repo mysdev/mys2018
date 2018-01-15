@@ -126,5 +126,17 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 		return employeeAttendanceMapper.queryEmployeeAttendanceByProperty(map);
 	}
 
+	@Override
+	public EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId) {
+		return employeeAttendanceMapper.queryEmployeeAttendanceByEmpId(empId);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public Integer dropEmployeeAttendanceByEmpId(String empId) {
+		EmployeeAttendance employeeAttendance = queryEmployeeAttendanceByEmpId(empId);
+		return employeeAttendance==null?0:dropEmployeeAttendanceByLinkId(employeeAttendance.getLinkId());
+	}
+
 
 }

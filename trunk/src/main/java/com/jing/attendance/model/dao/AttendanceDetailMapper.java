@@ -15,7 +15,7 @@ import com.jing.attendance.model.entity.AttendanceDetail;
  * @Description: 门店考勤详情映射
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * @date: 2018年01月15日 09时43分
  */
 @Mapper
 public interface AttendanceDetailMapper {

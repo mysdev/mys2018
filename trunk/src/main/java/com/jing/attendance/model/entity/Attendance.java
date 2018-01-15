@@ -1,11 +1,7 @@
 package com.jing.attendance.model.entity;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -33,19 +29,21 @@ public class Attendance extends BaseEntity {
 	private String attendanceName;	//tw_attendance:attendance_name  考勤方案名称  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer status;	//tw_attendance:status  考勤方案状态 0正常  
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer status;	//tw_attendance:status  考勤方案状态 0正常 1停用
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer types;	//tw_attendance:types  考勤方案方案 0休天数 1详情  
+	@Range(min=0, max=2, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer types;	//tw_attendance:types  考勤方案方案 0休天数 1考勤天数 2详情  
 
-	private Integer attendance;	//tw_attendance:attendance  休息天数 类型0时有效  
+	@Range(min=0, max=31, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer attendance;	//tw_attendance:attendance  休息天数 类型0休天数 1考勤天数时有效  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.sql.Timestamp signTime;	//tw_attendance:sign_time  上班时间  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.sql.Timestamp outTime;	//tw_attendance:out_time  下班时间  
-
 
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance_id
@@ -109,7 +107,7 @@ public class Attendance extends BaseEntity {
 	
 	/**
 	* @DatabasetableColumnName: tw_attendance:status
-	* @Description: 设置属性        考勤方案状态 0正常
+	* @Description: 设置属性        考勤方案状态 0正常 1停用
 	* @return: Integer
 	*/
 	public void setStatus(Integer status){
@@ -117,7 +115,7 @@ public class Attendance extends BaseEntity {
 	}	
 	/**
 	* @DatabasetableColumnName: tw_attendance:types
-	* @Description: 获取属性        考勤方案方案 0休天数 1详情
+	* @Description: 获取属性        考勤方案方案 0休天数 1考勤天数 2详情  
 	* @return: Integer
 	*/
 	public Integer getTypes(){
@@ -126,7 +124,7 @@ public class Attendance extends BaseEntity {
 	
 	/**
 	* @DatabasetableColumnName: tw_attendance:types
-	* @Description: 设置属性        考勤方案方案 0休天数 1详情
+	* @Description: 设置属性        考勤方案方案 0休天数 1考勤天数 2详情
 	* @return: Integer
 	*/
 	public void setTypes(Integer types){
@@ -134,7 +132,7 @@ public class Attendance extends BaseEntity {
 	}	
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance
-	* @Description: 获取属性        休息天数 类型0时有效
+	* @Description: 获取属性        休息天数 类型0休天数 1考勤天数时有效
 	* @return: Integer
 	*/
 	public Integer getAttendance(){
@@ -143,7 +141,7 @@ public class Attendance extends BaseEntity {
 	
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance
-	* @Description: 设置属性        休息天数 类型0时有效
+	* @Description: 设置属性        休息天数 类型0休天数 1考勤天数时有效
 	* @return: Integer
 	*/
 	public void setAttendance(Integer attendance){

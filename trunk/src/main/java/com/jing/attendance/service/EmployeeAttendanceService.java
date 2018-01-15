@@ -40,12 +40,28 @@ public interface EmployeeAttendanceService {
 	Integer dropEmployeeAttendanceByLinkId(Integer linkId);
 	
 	/**
+	 * @Title: dropEmployeeAttendanceByLinkId
+	 * @Description:删除员工考勤关系
+	 * @param empId 员工标识
+	 * @return Integer
+	 */
+	Integer dropEmployeeAttendanceByEmpId(String empId);
+	
+	/**
 	 * @Title: queryEmployeeAttendanceByLinkId
 	 * @Description:根据实体标识查询员工考勤关系
 	 * @param linkId 实体标识
 	 * @return EmployeeAttendance
 	 */
 	EmployeeAttendance queryEmployeeAttendanceByLinkId(Integer linkId);
+	
+	/** 
+	* @Title: queryEmployeeAttendanceByEmpId
+	 * @Description:根据员工标识查询员工考勤关系
+	 * @param empId 员工标识
+	 * @return EmployeeAttendance
+	*/
+	EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId);
 	 
 	/**
 	 * @Title: queryEmployeeAttendanceForPage

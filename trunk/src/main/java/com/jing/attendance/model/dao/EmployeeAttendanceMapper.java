@@ -51,6 +51,14 @@ public interface EmployeeAttendanceMapper {
 	 * @return EmployeeAttendance
 	 */
 	EmployeeAttendance queryEmployeeAttendanceByLinkId(Integer linkId);
+	
+	/** 
+	* @Title: queryEmployeeAttendanceByEmpId
+	 * @Description:根据员工标识查询员工考勤关系
+	 * @param empId 员工标识
+	 * @return EmployeeAttendance
+	*/
+	EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId);
 	 
 	/**
 	 * @Title: queryEmployeeAttendanceForPage

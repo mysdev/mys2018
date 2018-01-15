@@ -79,6 +79,13 @@
 	FROM tw_employee_attendance WHERE link_id = #{linkId}
 </select>
 
+<!-- 根据标识查询 员工考勤关系 -->
+<select id="queryEmployeeAttendanceByEmpId"  resultMap="EmployeeAttendanceResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_employeeAttendance_item"/>
+	FROM tw_employee_attendance WHERE emp_id = #{empId}
+</select>
+
 <!-- 根据属性查询员工考勤关系 -->
 <select id="queryEmployeeAttendanceByProperty"  resultMap="EmployeeAttendanceResultMap" parameterType="java.util.Map">
 	SELECT 

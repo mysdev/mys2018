@@ -11,9 +11,29 @@ import com.jing.attendance.model.entity.AttendanceDetail;
  * @Description: 门店考勤详情服务接口
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * @date: 2018年01月15日 09时43分
  */
 public interface AttendanceDetailService {
+	
+	/** 
+	* @Title: createAttendanceDetail 
+	* @Description: 生成考勤详情
+	* @param attendanceId 考勤标识
+	* @param yearMonth 待生成月份
+	* @return  List<AttendanceDetail>    返回类型 
+	* @throws 
+	*/
+	List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth);
+	
+	/** 
+	* @Title: queryAttendanceDetail 
+	* @Description: 查询考勤详情
+	* @param attendanceId 考勤标识
+	* @param yearMonth 月份
+	* @return  List<AttendanceDetail>    返回类型 
+	* @throws 
+	*/
+	List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth);
 
     /**
 	 * @Title: addAttendanceDetail
@@ -21,7 +41,7 @@ public interface AttendanceDetailService {
 	 * @param attendanceDetail 实体
 	 * @return Integer
 	 */
-	AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail);
+	AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail);	
 	
 	/**
 	 * @Title modifyAttendanceDetail

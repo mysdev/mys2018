@@ -18,6 +18,7 @@ import com.jing.utils.paginator.domain.PageService;
 
 import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.dao.AttendanceMapper;
+import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
 
 /**
@@ -33,7 +34,10 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	private static final Logger logger = LoggerFactory.getLogger(AttendanceServiceImpl.class);
 	
 	@Autowired
-    private AttendanceMapper attendanceMapper;   
+    private AttendanceMapper attendanceMapper;  
+	
+	@Autowired
+	private AttendanceDetailService attendanceDetailService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -50,6 +54,9 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	public Attendance addAttendance(Attendance attendance){
 		int ret = attendanceMapper.addAttendance(attendance);
 		if(ret>0){
+			if(attendance.getTypes().intValue()==2){
+				attendanceDetailService.createAttendanceDetail(attendance.getAttendanceId(), null);
+			}
 			return attendance;
 		}
 		return null;
