@@ -79,7 +79,7 @@ public interface EmployeeAttendanceMapper {
 	 List<EmployeeAttendance> queryEmployeeAttendanceByProperty(@Param("employeeAttendance") Map<String, Object> map);
 
 	/** 
-	* @Title: queryEmployeeAttendanceForPage 
+	* @Title: queryEmployeeAttendanceAllForPage 
 	* @Description: 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息
 	* @param pageBounds
 	* @param attendanceId
@@ -87,7 +87,7 @@ public interface EmployeeAttendanceMapper {
 	* @return  List<EmployeeAttendanceBo>    返回类型 
 	* @throws 
 	*/
-	List<EmployeeAttendanceBo> queryEmployeeAttendanceForPage(PageBounds pageBounds, @Param("attendanceId") Integer attendanceId,
+	List<EmployeeAttendanceBo> queryEmployeeAttendanceAllForPage(PageBounds pageBounds, @Param("attendanceId") Integer attendanceId,
 			@Param("employee") Employee employee);
 	 
 	 

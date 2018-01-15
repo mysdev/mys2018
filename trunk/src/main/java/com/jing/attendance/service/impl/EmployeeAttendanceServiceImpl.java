@@ -145,10 +145,10 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 			Integer attendanceId, Employee employee) {
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
-		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceForPage(pageBounds, attendanceId, employee);
+		pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
+		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceAllForPage(pageBounds, attendanceId, employee);
 		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
+			pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
 		}
 //		if (!entityList.isEmpty()) {
 			PageList<EmployeeAttendanceBo> pagelist = (PageList<EmployeeAttendanceBo>) entityList;

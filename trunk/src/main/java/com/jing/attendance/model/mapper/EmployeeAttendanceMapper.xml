@@ -115,16 +115,6 @@
 	</where>
 </select>
 
-<!-- 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息 -->
-<select id="queryEmployeeAttendanceForPage"  resultMap="EmployeeAttendanceResultMap" > 
-	SELECT 
-	<include refid="sql_employeeAttendance_item"/>
-	FROM tw_employee_attendance 
-	<where>
-		<include refid="sql_employeeAttendance_query_nowhere"/>
-	</where>
-</select>
-
 <!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
 <select id="queryEmployeeAttendanceAllForPage"  resultMap="EmployeeAttendanceLinkResult" > 
 	select * from (
