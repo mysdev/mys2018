@@ -65,4 +65,18 @@ public interface UserService {
 	 */
 	 List<User> queryUserByProperty(Map<String, Object> map);	 
 	 
+	 /**
+	  * 登录
+	  * @param userName
+	  * @param password
+	  * @return
+	  */
+	 User login(String userName,String password);
+	 
+	 /**
+	  * 根据账号查用户
+	  * @param userName
+	  * @return
+	  */
+	 User getUserByUsername(String userName);
 }

@@ -1,6 +1,7 @@
 package com.jing.system.model.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -8,7 +9,6 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
 
 import com.jing.utils.BaseEntity;
 
@@ -53,6 +53,16 @@ public class User extends BaseEntity {
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer status;	//ts_user:status  状态 0正常  
 
+	
+	private List<UserRole> userRoleList;
+
+	public List<UserRole> getUserRoleList() {
+		return userRoleList;
+	}
+
+	public void setUserRoleList(List<UserRole> userRoleList) {
+		this.userRoleList = userRoleList;
+	}
 
 	/**
 	* @DatabasetableColumnName: ts_user:user_id

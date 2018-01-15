@@ -35,6 +35,9 @@ public class ResourceInfo extends BaseEntity {
 
 	@Length(min=0, max=8, message="{org.hibernate.validator.constraints.Length.message}")
 	private String url;	//ts_resource_info:url  资源地址  
+	
+	@Length(min=0, max=8, message="{org.hibernate.validator.constraints.Length.message}")
+	private String method;	//ts_resource_info:url  访问方式
 
 	@Length(min=0, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String image;	//ts_resource_info:image  资源图片  
@@ -120,6 +123,16 @@ public class ResourceInfo extends BaseEntity {
 	public void setUrl(String url){
 		this.url = url;	
 	}	
+	
+	
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
 	/**
 	* @DatabasetableColumnName: ts_resource_info:image
 	* @Description: 获取属性        资源图片

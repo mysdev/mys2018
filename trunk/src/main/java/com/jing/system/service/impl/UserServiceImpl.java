@@ -126,5 +126,18 @@ public class  UserServiceImpl implements UserService {
 		return userMapper.queryUserByProperty(map);
 	}
 
+	@Override
+	public User login(String userName, String password) {
+		User user = new User();
+		user.setUserName(userName);
+		user.setPassword(password);
+		return userMapper.userLogin(user);
+	}
+
+	@Override
+	public User getUserByUsername(String userName) {
+		return userMapper.queryUserByUsername(userName);
+	}
+
 
 }

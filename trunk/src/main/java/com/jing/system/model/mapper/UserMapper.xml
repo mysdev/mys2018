@@ -128,4 +128,21 @@
 	</where>
 </select>
 
+
+<select id="userLogin"  resultMap="UserResultMap" parameterType="com.jing.system.model.entity.User">
+	SELECT 
+	<include refid="sql_user_item"/>
+	FROM ts_user 
+	WHERE  user_name = #{userName}
+	and password = #{password}
+	and status=0
+</select>
+
+<!-- 根据账户查询 用户 -->
+<select id="queryUserByUsername"  resultMap="UserResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_user_item"/>
+	FROM ts_user WHERE user_name = #{user_name}
+</select>
+
 </mapper>   
