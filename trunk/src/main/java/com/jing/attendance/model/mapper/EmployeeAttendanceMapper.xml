@@ -133,9 +133,9 @@
 		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
 		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
 		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
-		<if test="employee.namePYJob != null">AND (emp_name like concat('%', #{employee.namePYJob}, '%') 
-													or pinyin like concat('%', #{employee.namePYJob}, '%')
-													or emp_no like concat('%', #{employee.namePYJob}, '%')
+		<if test="namePYJob != null">AND (emp_name like concat('%', #{namePYJob}, '%') 
+													or pinyin like concat('%', #{namePYJob}, '%')
+													or emp_no like concat('%', #{namePYJob}, '%')
 													) </if>
 	</where>
 </select>

@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Lifeng
  *
  */
-@Configuration
+//@Configuration
 public class ShiroConfiguration {
 
 	/**

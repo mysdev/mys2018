@@ -92,10 +92,11 @@ public interface EmployeeAttendanceService {
 	* @param sort
 	* @param attendanceId 考勤标识
 	* @param employee 员工属性
+	* @param namePYJob 员工姓名、拼音、工号
 	* @return  List<EmployeeAttendanceBo>    返回类型 
 	* @throws 
 	*/
 	HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort, Integer attendanceId,
-			Employee employee);	 
+			Employee employee, String namePYJob);	 
 	 
 }

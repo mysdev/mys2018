@@ -88,7 +88,7 @@ public interface EmployeeAttendanceMapper {
 	* @throws 
 	*/
 	List<EmployeeAttendanceBo> queryEmployeeAttendanceAllForPage(PageBounds pageBounds, @Param("attendanceId") Integer attendanceId,
-			@Param("employee") Employee employee);
+			@Param("employee") Employee employee, @Param("namePYJob") String namePYJob);
 	 
 	 
 	 

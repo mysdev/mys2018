@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,11 +143,11 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 
 	@Override
 	public HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort,
-			Integer attendanceId, Employee employee) {
+			Integer attendanceId, Employee employee, String namePYJob) {
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
-		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceAllForPage(pageBounds, attendanceId, employee);
+		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceAllForPage(pageBounds, attendanceId, employee, namePYJob);
 		if(null!=sort && sort.length()>0){
 			pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
 		}
