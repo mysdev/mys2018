@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.attendance.model.entity.EmployeeAttendance;
+import com.jing.attendance.service.bo.EmployeeAttendanceBo;
+import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: EmployeeAttendanceMapper
@@ -51,6 +53,14 @@ public interface EmployeeAttendanceMapper {
 	 * @return EmployeeAttendance
 	 */
 	EmployeeAttendance queryEmployeeAttendanceByLinkId(Integer linkId);
+	
+	/** 
+	* @Title: queryEmployeeAttendanceByEmpId
+	 * @Description:根据员工标识查询员工考勤关系
+	 * @param empId 员工标识
+	 * @return EmployeeAttendance
+	*/
+	EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId);
 	 
 	/**
 	 * @Title: queryEmployeeAttendanceForPage
@@ -67,6 +77,18 @@ public interface EmployeeAttendanceMapper {
 	  * @return List<EmployeeAttendance>
 	  */
 	 List<EmployeeAttendance> queryEmployeeAttendanceByProperty(@Param("employeeAttendance") Map<String, Object> map);
+
+	/** 
+	* @Title: queryEmployeeAttendanceAllForPage 
+	* @Description: 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息
+	* @param pageBounds
+	* @param attendanceId
+	* @param employee
+	* @return  List<EmployeeAttendanceBo>    返回类型 
+	* @throws 
+	*/
+	List<EmployeeAttendanceBo> queryEmployeeAttendanceAllForPage(PageBounds pageBounds, @Param("attendanceId") Integer attendanceId,
+			@Param("employee") Employee employee, @Param("namePYJob") String namePYJob);
 	 
 	 
 	 

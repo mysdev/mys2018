@@ -2,10 +2,10 @@ package com.jing.attendance.model.entity;
 
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -17,7 +17,7 @@ import com.jing.utils.BaseEntity;
  * @Description: 门店考勤详情实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * @date: 2018年01月15日 09时43分
  */
 public class AttendanceDetail extends BaseEntity {
 	private static final long serialVersionUID = 1L;
@@ -29,9 +29,22 @@ public class AttendanceDetail extends BaseEntity {
 	private Integer attendanceId;	//tw_attendance_detail:attendance_id  考勤标识  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=1, max=7, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer weekday;	//tw_attendance_detail:weekday  星期  
+
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=7, message="{org.hibernate.validator.constraints.Length.message}")
+	private String attMonth;	//tw_attendance_detail:att_month  归属月份  
+
+	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=1, max=31, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer attDay;		//tw_attendance_detail:att_day 考勤日-排序  	
+
+	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Date attDate;	//tw_attendance_detail:att_date  考勤日期  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer attendance;	//tw_attendance_detail:attendance  是否考勤 0考勤  
 
 
@@ -70,6 +83,40 @@ public class AttendanceDetail extends BaseEntity {
 		this.attendanceId = attendanceId;	
 	}	
 	/**
+	* @DatabasetableColumnName: tw_attendance_detail:weekday
+	* @Description: 获取属性        星期
+	* @return: Integer
+	*/
+	public Integer getWeekday(){
+		return weekday;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tw_attendance_detail:weekday
+	* @Description: 设置属性        星期
+	* @return: Integer
+	*/
+	public void setWeekday(Integer weekday){
+		this.weekday = weekday;	
+	}	
+	/**
+	* @DatabasetableColumnName: tw_attendance_detail:att_month
+	* @Description: 获取属性        归属月份
+	* @return: String
+	*/
+	public String getAttMonth(){
+		return attMonth;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tw_attendance_detail:att_month
+	* @Description: 设置属性        归属月份
+	* @return: String
+	*/
+	public void setAttMonth(String attMonth){
+		this.attMonth = attMonth;	
+	}	
+	/**
 	* @DatabasetableColumnName: tw_attendance_detail:att_date
 	* @Description: 获取属性        考勤日期
 	* @return: Date
@@ -104,7 +151,13 @@ public class AttendanceDetail extends BaseEntity {
 		this.attendance = attendance;	
 	}	
 	
-	
+	public Integer getAttDay() {
+		return attDay;
+	}
+
+	public void setAttDay(Integer attDay) {
+		this.attDay = attDay;
+	}
 	
 	
 }

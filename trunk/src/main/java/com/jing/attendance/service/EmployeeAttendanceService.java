@@ -1,10 +1,13 @@
 package com.jing.attendance.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 import com.jing.attendance.model.entity.EmployeeAttendance;
+import com.jing.attendance.service.bo.EmployeeAttendanceBo;
+import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: EmployeeAttendance
@@ -40,12 +43,28 @@ public interface EmployeeAttendanceService {
 	Integer dropEmployeeAttendanceByLinkId(Integer linkId);
 	
 	/**
+	 * @Title: dropEmployeeAttendanceByLinkId
+	 * @Description:删除员工考勤关系
+	 * @param empId 员工标识
+	 * @return Integer
+	 */
+	Integer dropEmployeeAttendanceByEmpId(String empId);
+	
+	/**
 	 * @Title: queryEmployeeAttendanceByLinkId
 	 * @Description:根据实体标识查询员工考勤关系
 	 * @param linkId 实体标识
 	 * @return EmployeeAttendance
 	 */
 	EmployeeAttendance queryEmployeeAttendanceByLinkId(Integer linkId);
+	
+	/** 
+	* @Title: queryEmployeeAttendanceByEmpId
+	 * @Description:根据员工标识查询员工考勤关系
+	 * @param empId 员工标识
+	 * @return EmployeeAttendance
+	*/
+	EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId);
 	 
 	/**
 	 * @Title: queryEmployeeAttendanceForPage
@@ -63,6 +82,21 @@ public interface EmployeeAttendanceService {
 	 * @Description:根据属性查询员工考勤关系
 	 * @return List<EmployeeAttendance>
 	 */
-	 List<EmployeeAttendance> queryEmployeeAttendanceByProperty(Map<String, Object> map);	 
+	List<EmployeeAttendance> queryEmployeeAttendanceByProperty(Map<String, Object> map);
+
+	/** 
+	* @Title: queryEmployeeAttendanceForPage 
+	* @Description: 根据考勤或员工属性查询信息
+	* @param pagenum
+	* @param pagesize
+	* @param sort
+	* @param attendanceId 考勤标识
+	* @param employee 员工属性
+	* @param namePYJob 员工姓名、拼音、工号
+	* @return  List<EmployeeAttendanceBo>    返回类型 
+	* @throws 
+	*/
+	HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort, Integer attendanceId,
+			Employee employee, String namePYJob);	 
 	 
 }

@@ -1,14 +1,7 @@
 package com.jing.system.model.entity;
 
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
 
 import com.jing.utils.BaseEntity;
 
@@ -33,6 +26,8 @@ public class DictionaryGroup extends BaseEntity {
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String groupName;	//ts_dictionary_group:group_name  分组名称  
 
+	@Length(min=1, max=255, message="{org.hibernate.validator.constraints.Length.message}")
+	private String remark;
 
 	/**
 	* @DatabasetableColumnName: ts_dictionary_group:group_id
@@ -84,9 +79,15 @@ public class DictionaryGroup extends BaseEntity {
 	*/
 	public void setGroupName(String groupName){
 		this.groupName = groupName;	
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}	
-	
-	
 	
 	
 }

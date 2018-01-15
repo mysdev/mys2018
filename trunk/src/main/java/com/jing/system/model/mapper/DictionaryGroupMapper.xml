@@ -7,6 +7,7 @@
 	<id column="group_id" property="groupId"/>
 	<result column="group_code" property="groupCode"/>
 	<result column="group_name" property="groupName"/>
+	<result column="remark" property="remark"/>
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
 	<result column="updated_by" property="updatedBy"/>
@@ -14,7 +15,7 @@
 </resultMap>
 
 <sql id="sql_dictionaryGroup_item">
-	group_id, group_code, group_name, created_by, created_date, updated_by, updated_date
+	group_id, group_code, group_name,remark, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -23,6 +24,7 @@
 		<if test="dictionaryGroup.groupId != null">AND group_id = #{dictionaryGroup.groupId} </if>
 		<if test="dictionaryGroup.groupCode != null">AND group_code like concat(#{dictionaryGroup.groupCode}, '%') </if>
 		<if test="dictionaryGroup.groupName != null">AND group_name like concat(#{dictionaryGroup.groupName}, '%') </if>
+		<if test="dictionaryGroup.remark != null">AND remark like concat(#{dictionaryGroup.remark}, '%') </if>
 		<if test="dictionaryGroup.createdBy != null">AND created_by like concat(#{dictionaryGroup.createdBy}, '%') </if>
 		<if test="dictionaryGroup.updatedBy != null">AND updated_by like concat(#{dictionaryGroup.updatedBy}, '%') </if>
 	</trim>
@@ -38,6 +40,7 @@
 		<if test="groupId != null"> group_id,</if>
 		<if test="groupCode != null"> group_code,</if>
 		<if test="groupName != null"> group_name,</if>
+		<if test="remark != null"> remark,</if>
 		<if test="createdBy != null"> created_by,</if>
 		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
@@ -47,6 +50,7 @@
 		<if test="groupId != null"> #{groupId},</if>
 		<if test="groupCode != null"> #{groupCode},</if>
 		<if test="groupName != null"> #{groupName},</if>
+		<if test="remark != null"> #{remark},</if>
 		<if test="createdBy != null"> #{createdBy},</if>
 		now(),
 		<if test="updatedBy != null"> #{updatedBy},</if>
@@ -60,6 +64,7 @@
 	<trim suffixOverrides=",">
 		<if test="groupCode != null"> group_code = #{groupCode},</if>
 		<if test="groupName != null"> group_name = #{groupName},</if>
+		<if test="remark != null"> remark = #{remark},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
 		updated_date = now(),

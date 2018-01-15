@@ -23,7 +23,7 @@ public class EmployeeAttend extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	
 
-	private Integer attId;	//tw_employee_attend:att_id    
+	private Integer attId;	//tw_employee_attend:att_id
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")

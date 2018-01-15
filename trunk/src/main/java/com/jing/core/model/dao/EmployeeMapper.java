@@ -67,6 +67,15 @@ public interface EmployeeMapper {
 	  * @return List<Employee>
 	  */
 	 List<Employee> queryEmployeeByProperty(@Param("employee") Map<String, Object> map);
+
+	/** 
+	* @Title: queryEmployeeByEmpIds 
+	* @Description: 根据员工标识查询员工信息
+	* @param empIds 员工标识
+	* @return  List<Employee>    返回类型 
+	* @throws 
+	*/
+	List<Employee> queryEmployeeByEmpIds(@Param("empIds") List<String> empIds);
 	 
 	 
 	 

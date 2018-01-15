@@ -653,6 +653,7 @@ CREATE TABLE `ts_dictionary_group` (
   `group_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '分组标识',
   `group_code` varchar(32) NOT NULL COMMENT '分组代码',
   `group_name` varchar(64) NOT NULL COMMENT '分组名称',
+  `remark` varchar(255) COMMENT '备注',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_by` varchar(32) DEFAULT NULL COMMENT '修订人员',

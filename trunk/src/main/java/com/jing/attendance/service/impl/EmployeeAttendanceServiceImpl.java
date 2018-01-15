@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ import com.jing.utils.paginator.domain.PageService;
 import com.jing.attendance.model.entity.EmployeeAttendance;
 import com.jing.attendance.model.dao.EmployeeAttendanceMapper;
 import com.jing.attendance.service.EmployeeAttendanceService;
+import com.jing.attendance.service.bo.EmployeeAttendanceBo;
+import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: EmployeeAttendance
@@ -124,6 +127,36 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 	@Override
 	public List<EmployeeAttendance> queryEmployeeAttendanceByProperty(Map<String, Object> map){
 		return employeeAttendanceMapper.queryEmployeeAttendanceByProperty(map);
+	}
+
+	@Override
+	public EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId) {
+		return employeeAttendanceMapper.queryEmployeeAttendanceByEmpId(empId);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public Integer dropEmployeeAttendanceByEmpId(String empId) {
+		EmployeeAttendance employeeAttendance = queryEmployeeAttendanceByEmpId(empId);
+		return employeeAttendance==null?0:dropEmployeeAttendanceByLinkId(employeeAttendance.getLinkId());
+	}
+
+	@Override
+	public HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort,
+			Integer attendanceId, Employee employee, String namePYJob) {
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
+		pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
+		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceAllForPage(pageBounds, attendanceId, employee, namePYJob);
+		if(null!=sort && sort.length()>0){
+			pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
+		}
+//		if (!entityList.isEmpty()) {
+			PageList<EmployeeAttendanceBo> pagelist = (PageList<EmployeeAttendanceBo>) entityList;
+			returnMap.put(Constant.PAGELIST, entityList);
+			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+//		}
+		return returnMap;
 	}
 
 

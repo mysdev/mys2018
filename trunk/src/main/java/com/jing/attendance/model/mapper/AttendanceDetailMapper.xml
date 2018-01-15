@@ -6,6 +6,9 @@
 <resultMap id="AttendanceDetailResultMap" type="com.jing.attendance.model.entity.AttendanceDetail">
 	<id column="att_id" property="attId"/>
 	<result column="attendance_id" property="attendanceId"/>
+	<result column="weekday" property="weekday"/>
+	<result column="att_month" property="attMonth"/>
+	<result column="att_day" property="attDay"/>	
 	<result column="att_date" property="attDate"/>
 	<result column="attendance" property="attendance"/>
 	<result column="created_by" property="createdBy"/>
@@ -15,7 +18,7 @@
 </resultMap>
 
 <sql id="sql_attendanceDetail_item">
-	att_id, attendance_id, att_date, attendance, created_by, created_date, updated_by, updated_date
+	att_id, attendance_id, weekday, att_month, att_day, att_date, attendance, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -23,6 +26,9 @@
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="attendanceDetail.attId != null">AND att_id = #{attendanceDetail.attId} </if>
 		<if test="attendanceDetail.attendanceId != null">AND attendance_id = #{attendanceDetail.attendanceId} </if>
+		<if test="attendanceDetail.weekday != null">AND weekday = #{attendanceDetail.weekday} </if>
+		<if test="attendanceDetail.attMonth != null">AND att_month = #{attendanceDetail.attMonth} </if>
+		<if test="attendanceDetail.attDay != null">AND att_day = #{attendanceDetail.attDay} </if>
 		<if test="attendanceDetail.attendance != null">AND attendance = #{attendanceDetail.attendance} </if>
 		<if test="attendanceDetail.createdBy != null">AND created_by like concat(#{attendanceDetail.createdBy}, '%') </if>
 		<if test="attendanceDetail.updatedBy != null">AND updated_by like concat(#{attendanceDetail.updatedBy}, '%') </if>
@@ -38,6 +44,9 @@
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="attId != null"> att_id,</if>
 		<if test="attendanceId != null"> attendance_id,</if>
+		<if test="weekday != null"> weekday,</if>
+		<if test="attMonth != null"> att_month,</if>
+		<if test="attDay != null"> att_day,</if>
 		<if test="attDate != null"> att_date,</if>
 		<if test="attendance != null"> attendance,</if>
 		<if test="createdBy != null"> created_by,</if>
@@ -48,6 +57,9 @@
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="attId != null"> #{attId},</if>
 		<if test="attendanceId != null"> #{attendanceId},</if>
+		<if test="weekday != null"> #{weekday},</if>
+		<if test="attMonth != null"> #{attMonth},</if>
+		<if test="attDay != null"> #{attDay},</if>
 		<if test="attDate != null"> #{attDate},</if>
 		<if test="attendance != null"> #{attendance},</if>
 		<if test="createdBy != null"> #{createdBy},</if>
@@ -62,6 +74,9 @@
   	UPDATE tw_attendance_detail SET
 	<trim suffixOverrides=",">
 		<if test="attendanceId != null"> attendance_id = #{attendanceId},</if>
+		<if test="weekday != null"> weekday = #{weekday},</if>
+		<if test="attMonth != null"> att_month = #{attMonth},</if>
+		<if test="attDay != null"> att_day = #{attDay},</if>
 		<if test="attDate != null"> att_date = #{attDate},</if>
 		<if test="attendance != null"> attendance = #{attendance},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
@@ -91,6 +106,7 @@
 	<where>
 		<include refid="sql_attendanceDetail_query_nowhere"/>
 	</where>
+	order by attendance_id desc, att_date asc
 </select>
 
 <!-- 根据门店考勤详情属性与分页信息分页查询门店考勤详情信息 -->
