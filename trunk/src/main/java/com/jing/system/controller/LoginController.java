@@ -29,7 +29,7 @@ public class LoginController {
         Subject currentUser = SecurityUtils.getSubject();   
         currentUser.login(token);    
         System.out.println(currentUser);
-        return "/webpage/index.html";  
+        return "redirect:/webpage/index.html";  
     }
 	
 	@RequestMapping(value="/login/user",method=RequestMethod.POST)

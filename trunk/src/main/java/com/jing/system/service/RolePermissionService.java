@@ -63,6 +63,15 @@ public interface RolePermissionService {
 	 * @Description:根据属性查询角色权限
 	 * @return List<RolePermission>
 	 */
-	 List<RolePermission> queryRolePermissionByProperty(Map<String, Object> map);	 
+	 List<RolePermission> queryRolePermissionByProperty(Map<String, Object> map);	
+	 
+	/**
+	 * 判断用户是否有资源的操作权限  
+	 * @param url
+	 * @param method
+	 * @param userName
+	 * @return
+	 */
+	 boolean havePermission(String url ,String method,String userName);
 	 
 }

@@ -127,4 +127,9 @@ public class  RolePermissionServiceImpl implements RolePermissionService {
 	}
 
 
+	@Override
+	public boolean havePermission(String url, String method, String userName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
