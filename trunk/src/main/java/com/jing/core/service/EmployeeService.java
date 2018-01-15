@@ -68,7 +68,7 @@ public interface EmployeeService {
 	 /** 
 	* @Title: queryEmployeeByEmpIds 
 	* @Description: 根据员工标识查询员工信息
-	* @param empIds 员工标识
+	* @param empIds 员工标识,多个员工号之间以逗号分隔
 	* @return  List<Employee>    返回类型 
 	* @throws 
 	*/
