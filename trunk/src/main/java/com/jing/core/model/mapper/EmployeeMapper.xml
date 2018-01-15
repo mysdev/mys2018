@@ -28,13 +28,13 @@
 <!-- 查询条件 无WHERE -->
 <sql id="sql_employee_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="employee.empId != null">AND emp_id like concat(#{employee.empId}, '%') </if>
+		<if test="employee.empId != null">AND emp_id = #{employee.empId} </if>
 		<if test="employee.empName != null">AND emp_name like concat(#{employee.empName}, '%') </if>
 		<if test="employee.pinyin != null">AND pinyin like concat(#{employee.pinyin}, '%') </if>
 		<if test="employee.empNo != null">AND emp_no like concat(#{employee.empNo}, '%') </if>
-		<if test="employee.userId != null">AND user_id like concat(#{employee.userId}, '%') </if>
-		<if test="employee.storeId != null">AND store_id like concat(#{employee.storeId}, '%') </if>
-		<if test="employee.dptId != null">AND dpt_id like concat(#{employee.dptId}, '%') </if>
+		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
+		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
+		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
 		<if test="employee.status != null">AND status = #{employee.status} </if>
 		<if test="employee.isManager != null">AND is_manager = #{employee.isManager} </if>
 		<if test="employee.createdBy != null">AND created_by like concat(#{employee.createdBy}, '%') </if>

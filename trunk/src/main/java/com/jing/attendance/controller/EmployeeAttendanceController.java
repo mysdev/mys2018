@@ -145,8 +145,8 @@ public class EmployeeAttendanceController{
 	public Object queryEmployeeAttendancePage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, EmployeeAttendance employeeAttendance) {				
-		return employeeAttendanceService.queryEmployeeAttendanceForPage(pagenum, pagesize, sort, employeeAttendance);
+			@RequestParam(value = "sort", required = false) String sort, Integer attendanceId, Employee employee) {				
+		return employeeAttendanceService.queryEmployeeAttendanceForPage(pagenum, pagesize, sort, attendanceId, employee);
 	}
 
 }

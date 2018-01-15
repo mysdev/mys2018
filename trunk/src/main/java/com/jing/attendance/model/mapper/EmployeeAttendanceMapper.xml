@@ -13,6 +13,15 @@
 	<result column="updated_date" property="updatedDate"/>
 </resultMap>
 
+<!-- 员工、考勤规则、关联关系联合 -->
+<resultMap id="EmployeeAttendanceLinkResult" 
+		type="com.jing.attendance.service.bo.EmployeeAttendanceBo"
+		extends="com.jing.core.model.dao.EmployeeMapper.EmployeeResultMap">	
+	<result column="link_id" property="linkId"/>
+	<result column="attendance_name" property="attendanceName"/>
+	<result column="attendance_id" property="attendanceId"/>
+</resultMap>
+
 <sql id="sql_employeeAttendance_item">
 	link_id, emp_id, attendance_id, created_by, created_date, updated_by, updated_date
 </sql>
@@ -103,6 +112,41 @@
 	FROM tw_employee_attendance 
 	<where>
 		<include refid="sql_employeeAttendance_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息 -->
+<select id="queryEmployeeAttendanceForPage"  resultMap="EmployeeAttendanceResultMap" > 
+	SELECT 
+	<include refid="sql_employeeAttendance_item"/>
+	FROM tw_employee_attendance 
+	<where>
+		<include refid="sql_employeeAttendance_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
+<select id="queryEmployeeAttendanceAllForPage"  resultMap="EmployeeAttendanceLinkResult" > 
+	select * from (
+		select l.link_id, l.attendance_id, a.attendance_name, e.* from 
+		(select * from tw_employee_attendance 
+			<where> 
+				<if test="attendanceId != null"> attendance_id = #{attendanceId}</if>
+			</where>) l
+		left OUTER join tw_attendance a on l.attendance_id=a.attendance_id
+		left outer join tb_employee e on l.emp_id=e.emp_id
+	) t 
+	<where>
+		<if test="employee.empName != null">AND emp_name like concat('%', #{employee.empName}, '%') </if>
+		<if test="employee.pinyin != null">AND pinyin like concat('%', #{employee.pinyin}, '%') </if>
+		<if test="employee.empNo != null">AND emp_no like concat('%', #{employee.empNo}, '%') </if>
+		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
+		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
+		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
+		<if test="employee.namePYJob != null">AND (emp_name like concat('%', #{employee.namePYJob}, '%') 
+													or pinyin like concat('%', #{employee.namePYJob}, '%')
+													or emp_no like concat('%', #{employee.namePYJob}, '%')
+													) </if>
 	</where>
 </select>
 

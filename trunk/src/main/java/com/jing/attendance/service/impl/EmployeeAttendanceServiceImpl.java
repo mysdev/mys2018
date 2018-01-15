@@ -19,6 +19,8 @@ import com.jing.utils.paginator.domain.PageService;
 import com.jing.attendance.model.entity.EmployeeAttendance;
 import com.jing.attendance.model.dao.EmployeeAttendanceMapper;
 import com.jing.attendance.service.EmployeeAttendanceService;
+import com.jing.attendance.service.bo.EmployeeAttendanceBo;
+import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: EmployeeAttendance
@@ -136,6 +138,24 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 	public Integer dropEmployeeAttendanceByEmpId(String empId) {
 		EmployeeAttendance employeeAttendance = queryEmployeeAttendanceByEmpId(empId);
 		return employeeAttendance==null?0:dropEmployeeAttendanceByLinkId(employeeAttendance.getLinkId());
+	}
+
+	@Override
+	public HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort,
+			Integer attendanceId, Employee employee) {
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
+		pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
+		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceForPage(pageBounds, attendanceId, employee);
+		if(null!=sort && sort.length()>0){
+			pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
+		}
+//		if (!entityList.isEmpty()) {
+			PageList<EmployeeAttendanceBo> pagelist = (PageList<EmployeeAttendanceBo>) entityList;
+			returnMap.put(Constant.PAGELIST, entityList);
+			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+//		}
+		return returnMap;
 	}
 
 
