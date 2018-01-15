@@ -43,7 +43,8 @@ public class ShiroConfiguration {
 		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		// filterChainDefinitionMap.put("/security/logoff", "logout");
 		// 不拦截的URL
-		filterChainDefinitionMap.put("*/css/**", "anon");// 静态资源权限不校验
+		filterChainDefinitionMap.put("/webpage/index.html", "anon");// 静态资源权限不校验
+		filterChainDefinitionMap.put("/css/**", "anon");// 静态资源权限不校验
 		filterChainDefinitionMap.put("/login/auth", "anon");// 登录接口权限不校验
 		filterChainDefinitionMap.put("/public/**", "anon");// 开放接口权限不校验
 		// 拦截的URL

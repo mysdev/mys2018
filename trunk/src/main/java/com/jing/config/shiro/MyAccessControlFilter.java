@@ -10,7 +10,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
@@ -40,6 +39,8 @@ public class MyAccessControlFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
+		//判定是否匹配到当前filter
+		
 		ShiroHttpServletRequest hrequest = (ShiroHttpServletRequest) request;
 		ShiroHttpServletResponse hresponse = (ShiroHttpServletResponse) response;
 		// StringBuffer url = hrequest.getRequestURL();
@@ -61,7 +62,7 @@ public class MyAccessControlFilter extends AccessControlFilter {
 							// method
 							// 优先取method的RequestMapping注解的value，然后再取method的class的RequestMapping注解value
 							RequestMapping rm = handler.getMethodAnnotation(RequestMapping.class);
-							String value = rm.value().toString();
+							String value = rm.value()[0];
 							url = value.replaceAll("\\{[^}]*\\}", "{}");
 						} else {
 							url = hrequest.getRequestURI();
@@ -72,8 +73,12 @@ public class MyAccessControlFilter extends AccessControlFilter {
 				}
 			}
 		}
-		return this.checkUrl(url.toString(), method, hresponse);
-
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			return this.checkUrl(url.toString(), method, hresponse);
+		}else {
+			return false;
+		}
+		
 		// throw new UnauthorizedException("no");
 	}
 
@@ -81,8 +86,8 @@ public class MyAccessControlFilter extends AccessControlFilter {
 		if (permission == null) {
 			permission = (RolePermissionService) SpringContextUtils.getBean(RolePermissionService.class);
 		}
-		if (!permission.havePermission(url, method,
-				(String) SecurityUtils.getSubject().getSession().getAttribute("currentUserId"))) {
+		if (!permission.havePermission("/mys"+url, method,
+				 SecurityUtils.getSubject().getPrincipal().toString())) {
 			response.setStatus(403);
 //			throw new UnauthorizedException("没有权限执行" + url + " " + method);
 			return false;
