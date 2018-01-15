@@ -104,7 +104,9 @@ public class BeanValidator {
 		if(null == objects || objects.isEmpty()){
 			return errorMessages;
 		}
+		int i = 0;
 		for (Object object : objects) {
+			i++;
 			List<String> objectown = ClassUtil.getClassFieldName(object, true);		
 			for(String fieldName: objectown){
 				//所有字段遍历
@@ -125,6 +127,7 @@ public class BeanValidator {
 						//NULL也必须校验
 						Map<String, String> map = validateClassFiled(object, fieldName,groups);
 						if (!map.isEmpty()) {
+							map.put("index", i+"");
 							errorMessages.add(map);
 						}
 					}
@@ -133,14 +136,16 @@ public class BeanValidator {
 					if(obj!=null && !obj.equals("")){
 						Map<String, String> map = validateClassFiled(object, fieldName,groups);
 						if (!map.isEmpty()) {
+							map.put("index", i+"");
 							errorMessages.add(map);
 						}
 					}
 				}
 			}
-			if(!errorMessages.isEmpty()){
-				break;
-			}
+			//要求获取所有错误信息，故注解此段20180115
+//			if(!errorMessages.isEmpty()){
+//				break;
+//			}
 		}
 		return errorMessages;
 	}
