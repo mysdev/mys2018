@@ -20,6 +20,8 @@ public class UserMapper {
 
 	private static Map<Integer, String> mapper = new HashMap<Integer, String>();
 	private static Map<Integer, User> objMapper = new HashMap<Integer, User>();
+	
+	private static Map<String, User> namemapper = new HashMap<String, User>();
 
 	static {
 		UserService userService = SpringContextUtils.getBean(UserService.class);
@@ -33,6 +35,7 @@ public class UserMapper {
 				user.setUserRoleList(roles);
 				mapper.put(user.getUserId(), user.getNickName());
 				objMapper.put(user.getUserId(), user);
+				namemapper.put(user.getUserName(), user);
 			}
 		}
 	}
@@ -48,6 +51,7 @@ public class UserMapper {
 	public synchronized static void setValue(User user) {
 		mapper.put(user.getUserId(), user.getNickName());
 		objMapper.put(user.getUserId(), user);
+		namemapper.put(user.getUserName(), user);
 	}
 
 	public static List<User> getAll() {
@@ -71,5 +75,14 @@ public class UserMapper {
 			}
 			return user;
 		}
+	}
+	
+	/**
+	 * 根据账找用户
+	 * @param userName
+	 * @return
+	 */
+	public static User getObj(String userName) {
+		return namemapper.get(userName);
 	}
 }

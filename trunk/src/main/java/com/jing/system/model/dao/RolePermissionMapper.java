@@ -68,6 +68,13 @@ public interface RolePermissionMapper {
 	  */
 	 List<RolePermission> queryRolePermissionByProperty(@Param("rolePermission") Map<String, Object> map);
 	 
-	 
+	 /**
+	  * 查询用户的访问权限
+	  * @param url
+	  * @param method
+	  * @param userId
+	  * @return
+	  */
+	 Integer queryCountPermission(@Param("url") String url,@Param("method") String method,@Param("userId") int userId);
 	 
 }

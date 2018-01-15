@@ -1,24 +1,24 @@
 package com.jing.system.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.system.model.dao.RolePermissionMapper;
+import com.jing.system.model.entity.RolePermission;
+import com.jing.system.model.entity.User;
+import com.jing.system.service.RolePermissionService;
+import com.jing.system.util.UserMapper;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.system.model.entity.RolePermission;
-import com.jing.system.model.dao.RolePermissionMapper;
-import com.jing.system.service.RolePermissionService;
 
 /**
  * @ClassName: RolePermission
@@ -129,7 +129,16 @@ public class  RolePermissionServiceImpl implements RolePermissionService {
 
 	@Override
 	public boolean havePermission(String url, String method, String userName) {
-		// TODO Auto-generated method stub
+		User usr = UserMapper.getObj(userName);
+		return havePermission(url, method, usr.getUserId());
+	}
+	
+	@Override
+	public boolean havePermission(String url, String method, int userId) {
+		Integer s = rolePermissionMapper.queryCountPermission(url, method, userId);
+		if(s>0) {
+			return true;
+		}
 		return false;
 	}
 }
