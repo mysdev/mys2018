@@ -24,7 +24,7 @@ var AttendanceEditViewModel = function () {
     	var opid=getQueryString('id');
     	$.ajax({
 	        type: 'GET',
-	        url: "mys/attendance/"+opid,
+	        url: homeUrl+"mys/attendance/"+opid,
 	        cache: false,
 	        async: false,
 	        dataType: "json",
