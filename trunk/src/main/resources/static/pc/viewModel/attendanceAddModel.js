@@ -22,6 +22,7 @@ var AttendanceEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
+		alert(homeUrl+"mys/attendance/"+opid);
     	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"mys/attendance/"+opid,
