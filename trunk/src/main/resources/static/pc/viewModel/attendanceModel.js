@@ -48,13 +48,13 @@ var AttendanceViewModel = function () {
     };
     
     //修改
-    self.modify=function(){
-    	$("#mainframe", parent.window.document).attr("src",'attendance/add.html?action=Edit&id='+$(event.currentTarget).attr('data'));
+    self.modify=function(obj){
+    	$("#mainframe", parent.window.document).attr("src",'attendance/add.html?action=Edit&id='+obj.attendanceId());
     };
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
+    	var id = obj.attendanceId();
     	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'mys/attendance/'+id,

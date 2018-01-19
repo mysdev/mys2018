@@ -86,7 +86,7 @@
 				<dl>
 					<dt>上报时间</dt>
 					<dd>
-						<input name="txtStartTime" type="text" id="txtStartTime" data-bind="value:ondutyTime" class="input rule-date-input flatpickr " data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
+						<input name="txtStartTime" type="text" id="txtStartTime" data-bind="value:ondutyTime" onChange="xx" class="input rule-date-input flatpickr " data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
 						<span class="Validform_checktip">*选择上报时间</span>
 
 					</dd>
@@ -112,7 +112,7 @@
 			<!--/工具栏-->
 		</form>
 		<!--列表数据绑定开始-->
-		<script src="../viewModel/attendanceAddModel.js?v=1"></script>
+		<script src="../viewModel/attendanceAddModel.js?v=2"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/common.js"></script>
 		<!--列表数据绑定结束-->
 	</body>

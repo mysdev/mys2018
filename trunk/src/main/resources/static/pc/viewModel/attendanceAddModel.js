@@ -15,14 +15,13 @@ var AttendanceEditViewModel = function () {
     self.typeList=ko.observableArray(typeData);
     self.typeSelected = ko.observable(typeData[0].name);
     self.status=ko.observable(1);
-    self.ondutyTime = ko.observable("09:00");
+    self.ondutyTime = ko.observable("9:00");
     self.offworkTime = ko.observable("18:00");
     
     var opFalg=getQueryString('action');
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-		alert(homeUrl+"mys/attendance/"+opid);
     	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"mys/attendance/"+opid,
@@ -43,18 +42,19 @@ var AttendanceEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {
     	
+    	var vStartTime=$("#txtStartTime").val().toString();
+		var vEndTime=$("#txtEndTime").val().toString();
+    		
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"mys/attendance",  //新增接口
 	            dataType: "json",
 	            data: {
 	            	attendanceId:0,
-	                attendanceName: self.attendanceName,
+	                attendanceName: self.attendanceName(),
 	                status: self.status.toString(),
-	                types:self.typeSelected,
+	                types:self.typeSelected(),
 	                storeId:'',
 	                createdBy:'cmc',
 	                outTime:{
@@ -95,9 +95,9 @@ var AttendanceEditViewModel = function () {
 	            url: homeUrl+"mys/attendance/"+opid,  //修改接口
 	            data: {
 	            	attendanceId:opid,
-	                attendanceName: self.attendanceName,
+	                attendanceName: self.attendanceName(),
 	                status: self.status.toString(),
-	                types:self.typeSelected,
+	                types:self.typeSelected(),
 	                storeId:'',
 	                createdBy:'cmc',
 	                outTime:{
@@ -132,5 +132,6 @@ var AttendanceEditViewModel = function () {
 
 $().ready(function(){
 	$("#txtName").focus();
+
     ko.applyBindings(new AttendanceEditViewModel());
 })
