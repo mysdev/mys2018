@@ -53,7 +53,7 @@ var AttendanceEditViewModel = function () {
 	            data: {
 	            	attendanceId:0,
 	                attendanceName: self.attendanceName(),
-	                status: self.status.toString(),
+	                status: self.status().toString(),
 	                types:self.typeSelected(),
 	                storeId:'',
 	                createdBy:'cmc',
@@ -96,7 +96,7 @@ var AttendanceEditViewModel = function () {
 	            data: {
 	            	attendanceId:opid,
 	                attendanceName: self.attendanceName(),
-	                status: self.status.toString(),
+	                status: self.status().toString(),
 	                types:self.typeSelected(),
 	                storeId:'',
 	                createdBy:'cmc',
