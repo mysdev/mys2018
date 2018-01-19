@@ -27,9 +27,6 @@ var AttendanceViewModel = function () {
 	    myPage = result.page;
 	    bindPage();
 	    
-	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'attendance/add.html?action=Edit&id='+$(this).attr('data'));
-	    });
 	});
 	
 	//搜索
