@@ -49,7 +49,7 @@ CREATE TABLE `tb_employee` (
   `emp_name` varchar(64) NOT NULL COMMENT '员工姓名',
   `pinyin` varchar(16) NOT NULL COMMENT '员工拼音',
   `emp_no` varchar(16) DEFAULT NULL COMMENT '员工工号',
-  `user_id` varchar(32) DEFAULT NULL COMMENT '关联用户',
+  `user_id` int DEFAULT NULL COMMENT '关联用户',
   `store_id` varchar(32) DEFAULT NULL COMMENT '所属门店',
   `dpt_id` varchar(32) DEFAULT NULL COMMENT '所属部门',
   `entry_date` date DEFAULT NULL COMMENT '入职时间',
