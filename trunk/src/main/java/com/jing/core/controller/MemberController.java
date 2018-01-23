@@ -111,5 +111,29 @@ public class MemberController{
 			@RequestParam(value = "sort", required = false) String sort, Member member) {				
 		return memberService.queryMemberForPage(pagenum, pagesize, sort, member);
 	}
+	
+	/**
+	 * 会员充值
+	 * @param memberId
+	 * @param amount
+	 * @return
+	 */
+	@ApiOperation(value = "会员充值", notes = "会员充值")
+	@RequestMapping(value = "/member/recharge", method = RequestMethod.POST)
+	public Object recharge(@RequestParam String memberId,@RequestParam Integer amount) {
+		return memberService.recharge(memberId, amount);
+		
+	}
+	
+	@ApiOperation(value = "查询 根据会员标识查询会员信息", notes = "根据会员标识查询会员信息")
+	@RequestMapping(value = "/member/cardNo/{memberId:.+}", method = RequestMethod.GET)
+	public Object findMemberByCard(HttpServletResponse response,
+			@PathVariable String cardNo) {
+		Member member = memberService.findMemberByCard(cardNo);
+		if(null == member){
+			throw new NotFoundException("会员");
+		}
+		return member;
+	}
 
 }

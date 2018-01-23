@@ -38,7 +38,7 @@ public class Employee extends BaseEntity {
 	private String empNo;	//tb_employee:emp_no  员工工号  
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String userId;	//tb_employee:user_id  关联用户  
+	private Integer userId;	//tb_employee:user_id  关联用户  
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String storeId;	//tb_employee:store_id  所属门店  
@@ -129,7 +129,7 @@ public class Employee extends BaseEntity {
 	* @Description: 获取属性        关联用户
 	* @return: String
 	*/
-	public String getUserId(){
+	public Integer getUserId(){
 		return userId;	
 	}
 	
@@ -138,7 +138,7 @@ public class Employee extends BaseEntity {
 	* @Description: 设置属性        关联用户
 	* @return: String
 	*/
-	public void setUserId(String userId){
+	public void setUserId(Integer userId){
 		this.userId = userId;	
 	}	
 	/**

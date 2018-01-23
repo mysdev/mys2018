@@ -26,14 +26,14 @@ public interface EmployUserService {
 	 * @param employee
 	 * @param user
 	 */
-	void employeeToUser(String empId,User user);
+	Integer employeeToUser(String empId,User user);
 	
 	/**
 	 * 修改员工 + 用户
 	 * 1.update user
 	 * 2.update employee
 	 */
-	void updateEmployee(Employee employee,User user);
+	//Integer updateEmployee(Employee employee,User user);
 	
 	/**
 	 * 删除员工 + 用户

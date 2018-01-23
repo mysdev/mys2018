@@ -1,27 +1,28 @@
 package com.jing.core.service.impl;
 
-import java.util.List;
-import java.util.Map;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.exception.NotFoundException;
+import com.jing.core.model.dao.MemberMapper;
+import com.jing.core.model.entity.Member;
+import com.jing.core.model.entity.MemberPlus;
+import com.jing.core.service.MemberPlusService;
+import com.jing.core.service.MemberService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.core.model.entity.Member;
-import com.jing.config.web.exception.CustomException;
-import com.jing.core.model.dao.MemberMapper;
-import com.jing.core.service.MemberService;
 
 /**
  * @ClassName: Member
@@ -37,6 +38,8 @@ public class  MemberServiceImpl implements MemberService {
 	
 	@Autowired
     private MemberMapper memberMapper;   
+	@Autowired
+	private MemberPlusService memberPlusService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -139,7 +142,7 @@ public class  MemberServiceImpl implements MemberService {
 		BigDecimal a = new BigDecimal(amount);
 		Member member = this.queryMemberByMemberId(memberId);
 		if(member==null) {
-			throw new CustomException(-1, "会员不存在");
+			throw new NotFoundException("会员");
 		}
 		BigDecimal ye = member.getBalance();
 		BigDecimal totalFee = member.getTotalFee();
@@ -158,18 +161,23 @@ public class  MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public void recharge(String memberId, Integer amount) {
+	public Integer recharge(String memberId, Integer amount) {
 		BigDecimal a = new BigDecimal(amount);
 		Member member = this.queryMemberByMemberId(memberId);
 		if(member==null) {
-			throw new CustomException(-1, "会员不存在");
+			throw new NotFoundException("会员");
 		}
-		//计算金额是否达标赠送金额[会员充值活动]
-		
-		
 		BigDecimal balance = member.getBalance();
-		member.setBalance(balance.add(a));
-		this.modifyMember(member);
+		//计算金额是否达标赠送金额[会员充值活动]
+		MemberPlus mp = memberPlusService.queryMemberPlusByAmount(amount);
+		if(mp !=null) {
+			balance = balance.add(mp.getGiftMoney());
+			balance = balance.add(a);
+		}else {
+			balance = balance.add(a);
+		}
+		member.setBalance(balance);
+		return this.modifyMember(member);
 	}
 
 	@Override

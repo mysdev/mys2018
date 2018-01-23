@@ -77,7 +77,7 @@ public interface MemberService {
 	  * @param memberId 会员号
 	  * @param amount 实际充值金额
 	  */
-	 void recharge(String memberId,Integer amount);
+	 Integer recharge(String memberId,Integer amount);
 	 
 	 /**
 	  * 根据电话号码查询会员信息

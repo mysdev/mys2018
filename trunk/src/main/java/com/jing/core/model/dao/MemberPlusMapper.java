@@ -68,6 +68,13 @@ public interface MemberPlusMapper {
 	  */
 	 List<MemberPlus> queryMemberPlusByProperty(@Param("memberPlus") Map<String, Object> map);
 	 
+	 /**
+	  * 根据金额查询匹配的活动,没匹配到返回空值，匹配到返回活动记录
+	  * @param amount
+	  * @return
+	  */
+	 MemberPlus queryMemberPlusByAmount(Integer amount);
+	 
 	 
 	 
 }

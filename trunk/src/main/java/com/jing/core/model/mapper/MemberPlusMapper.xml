@@ -111,4 +111,13 @@
 	</where>
 </select>
 
+
+<!-- 根据标识查询 会员充值活动 -->
+<select id="queryMemberPlusByAmount"  resultMap="MemberPlusResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_memberPlus_item"/>
+	FROM tb_member_plus WHERE 
+	plus_money <![CDATA[ <= ]]> #{amount} and `status`=0 order by plus_money desc limit 0,1
+</select>
+
 </mapper>   
