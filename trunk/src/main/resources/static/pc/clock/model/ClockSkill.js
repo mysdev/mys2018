@@ -79,4 +79,4 @@ var ClockSkillEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockSkillEditViewModel());
-})
+});

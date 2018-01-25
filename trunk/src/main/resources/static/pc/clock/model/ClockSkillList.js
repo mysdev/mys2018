@@ -27,7 +27,7 @@ var ClockSkillViewModel = function () {
 	    bindPage();
 	    
 	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
+	    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
 	    });
 	});
 	
@@ -43,12 +43,12 @@ var ClockSkillViewModel = function () {
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockSkill.html?action=Add');
+    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Add');
     };
     
     //修改
-    self.modify=function(){
-    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockSkill.html?action=Edit&id='+$(event.currentTarget).attr('data'));
+    self.modify=function(obj){
+    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Edit&id='+obj.skillId);
     };
     
     //删除
@@ -118,7 +118,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/clockskill/ClockSkillList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clockskill/ClockSkillList.html?page=' + num);
             }
         }
     });
