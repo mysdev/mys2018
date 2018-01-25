@@ -14,7 +14,7 @@ var TechnicianSkillEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/technicianskill/"+opid,
 	        cache: false,
@@ -38,7 +38,7 @@ var TechnicianSkillEditViewModel = function () {
     	if(opFalg=="Add"){
     		var vStartTime=self.ondutyTime.toString();
     		var vEndTime=self.ondutyTime.toString();
-	        $.ajax({
+	        jQuery.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technicianskill",  //新增接口
 	            dataType: "json",
@@ -57,7 +57,7 @@ var TechnicianSkillEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		$.ajax({
+    		jQuery.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianskill/"+opid,  //修改接口
 	            data: {
@@ -72,7 +72,7 @@ var TechnicianSkillEditViewModel = function () {
     };
 };
 
-$$().ready(function(){
+$().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianSkillEditViewModel());
 })

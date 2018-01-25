@@ -14,7 +14,7 @@ var ClockBroadcastEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockbroadcast/"+opid,
 	        cache: false,
@@ -38,7 +38,7 @@ var ClockBroadcastEditViewModel = function () {
     	if(opFalg=="Add"){
     		var vStartTime=self.ondutyTime.toString();
     		var vEndTime=self.ondutyTime.toString();
-	        $.ajax({
+	        jQuery.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockbroadcast",  //新增接口
 	            dataType: "json",
@@ -57,7 +57,7 @@ var ClockBroadcastEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		$.ajax({
+    		jQuery.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockbroadcast/"+opid,  //修改接口
 	            data: {
@@ -72,7 +72,7 @@ var ClockBroadcastEditViewModel = function () {
     };
 };
 
-$$().ready(function(){
+$().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockBroadcastEditViewModel());
 })

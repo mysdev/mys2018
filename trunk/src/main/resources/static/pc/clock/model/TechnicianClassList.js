@@ -19,12 +19,12 @@ function Node(obj) {
 var TechnicianClassViewModel = function () {  
 	var self=this;
     //添加动态监视数组对象
-    self.deptlist = ko.observableArray([]);
+    self.technicianClassList = ko.observableArray([]);
     
     //初始化数据
     $.getJSON(homeUrl+"/technicianclasss",function(result){
-		var mappedTasks = $.map(result, function(item) { return new Node(item) });  
-	    self.deptlist(mappedTasks);
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+	    self.technicianClassList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
 	    
@@ -36,8 +36,8 @@ var TechnicianClassViewModel = function () {
 	//搜索
 	self.search = function(obj) {
 		$.getJSON(homeUrl+"/technicianclasss?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result, function(item) { return new Node(item) });  
-		    self.deptlist(mappedTasks);
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+		    self.technicianClassList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
 		});
@@ -56,7 +56,7 @@ var TechnicianClassViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/technicianclass/'+id,
 	        cache: false,
@@ -86,7 +86,7 @@ var TechnicianClassViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
+	        		jQuery.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/technicianclass/'+$(this).attr('data'),
 				        cache: false,
@@ -114,7 +114,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    $.jqPaginator('#pagination', {
+    jQuery.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

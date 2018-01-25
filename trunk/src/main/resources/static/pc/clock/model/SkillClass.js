@@ -20,7 +20,7 @@ var SkillClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/skillclass/"+opid,
 	        cache: false,
@@ -50,7 +50,7 @@ var SkillClassEditViewModel = function () {
     	if(opFalg=="Add"){
     		var vStartTime=self.ondutyTime.toString();
     		var vEndTime=self.ondutyTime.toString();
-	        $.ajax({
+	        jQuery.ajax({
 	            type: "POST",
 	            url: homeUrl+"/skillclass",  //新增接口
 	            dataType: "json",
@@ -69,7 +69,7 @@ var SkillClassEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		$.ajax({
+    		jQuery.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/skillclass/"+opid,  //修改接口
 	            data: {
@@ -84,7 +84,7 @@ var SkillClassEditViewModel = function () {
     };
 };
 
-$$().ready(function(){
+$().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new SkillClassEditViewModel());
 })

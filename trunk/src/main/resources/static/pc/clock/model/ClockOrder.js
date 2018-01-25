@@ -21,7 +21,7 @@ var ClockOrderEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockorder/"+opid,
 	        cache: false,
@@ -52,7 +52,7 @@ var ClockOrderEditViewModel = function () {
     	if(opFalg=="Add"){
     		var vStartTime=self.ondutyTime.toString();
     		var vEndTime=self.ondutyTime.toString();
-	        $.ajax({
+	        jQuery.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockorder",  //新增接口
 	            dataType: "json",
@@ -71,7 +71,7 @@ var ClockOrderEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		$.ajax({
+    		jQuery.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockorder/"+opid,  //修改接口
 	            data: {
@@ -86,7 +86,7 @@ var ClockOrderEditViewModel = function () {
     };
 };
 
-$$().ready(function(){
+$().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockOrderEditViewModel());
 })

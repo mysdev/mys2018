@@ -15,12 +15,12 @@ function Node(obj) {
 var ClockBroadcastViewModel = function () {  
 	var self=this;
     //添加动态监视数组对象
-    self.deptlist = ko.observableArray([]);
+    self.clockBroadcastList = ko.observableArray([]);
     
     //初始化数据
     $.getJSON(homeUrl+"/clockbroadcasts",function(result){
-		var mappedTasks = $.map(result, function(item) { return new Node(item) });  
-	    self.deptlist(mappedTasks);
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+	    self.clockBroadcastList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
 	    
@@ -32,8 +32,8 @@ var ClockBroadcastViewModel = function () {
 	//搜索
 	self.search = function(obj) {
 		$.getJSON(homeUrl+"/clockbroadcasts?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result, function(item) { return new Node(item) });  
-		    self.deptlist(mappedTasks);
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+		    self.clockBroadcastList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
 		});
@@ -52,7 +52,7 @@ var ClockBroadcastViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
+    	jQuery.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/clockbroadcast/'+id,
 	        cache: false,
@@ -82,7 +82,7 @@ var ClockBroadcastViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
+	        		jQuery.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/clockbroadcast/'+$(this).attr('data'),
 				        cache: false,
@@ -110,7 +110,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    $.jqPaginator('#pagination', {
+    jQuery.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

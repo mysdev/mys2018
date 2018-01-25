@@ -1,1 +1,1 @@
-var homeUrl="/mys/";
+var homeUrl="/mys";
