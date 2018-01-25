@@ -45,8 +45,8 @@ var ClockBroadcastViewModel = function () {
     };
     
     //修改
-    self.modify=function(){
-    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockBroadcast.html?action=Edit&id='+$(event.currentTarget).attr('data'));
+    self.modify=function(obj){
+    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockBroadcast.html?action=Edit&id='+obj.broadcastId());
     };
     
     //删除
