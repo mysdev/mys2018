@@ -10,10 +10,6 @@ var ClockRecordEditViewModel = function () {
 	self.endTime = ko.observable(''); 
 	self.actureTime = ko.observable(''); 
 	self.recordStatus = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -35,10 +31,6 @@ var ClockRecordEditViewModel = function () {
 				self.endTime(result.endTime);
 				self.actureTime(result.actureTime);
 				self.recordStatus(result.recordStatus);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}

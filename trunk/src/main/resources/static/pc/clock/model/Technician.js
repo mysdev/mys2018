@@ -10,10 +10,6 @@ var TechnicianEditViewModel = function () {
 	self.shiftId = ko.observable(''); 
 	self.status = ko.observable(''); 
 	self.shiftStatus = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -35,10 +31,6 @@ var TechnicianEditViewModel = function () {
 				self.shiftId(result.shiftId);
 				self.status(result.status);
 				self.shiftStatus(result.shiftStatus);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}

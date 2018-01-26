@@ -5,10 +5,6 @@ var ClockBroadcastEditViewModel = function () {
 	self.stauts = ko.observable(''); 
 	self.types = ko.observable(''); 
 	self.content = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -25,10 +21,6 @@ var ClockBroadcastEditViewModel = function () {
 				self.stauts(result.stauts);
 				self.types(result.types);
 				self.content(result.content);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
