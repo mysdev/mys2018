@@ -8,9 +8,9 @@ var ClockSkillEditViewModel = function () {
 	self.classs = ko.observable(''); 
 	self.status = ko.observable(''); 
 	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
+	self.createdDate = ko.observable(getCurrentDateTime()); 
 	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
+	self.updatedDate = ko.observable(getCurrentDateTime()); 
 
     var opFalg=getQueryString('action');
     
@@ -40,14 +40,20 @@ var ClockSkillEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
 	        jQuery.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockskill",  //新增接口
 	            dataType: "json",
 	            data: {
-					skillId:self.skillId
+					skillName:self.skillName(),
+					materialId:self.materialId(),
+					isClock:self.isClock(),
+					classs:self.classs(),
+					status:self.status(),
+					createdBy:'cmc',
+					createdDate:'2018-01-26',
+					updatedBy:'cmc',
+					updatedDate:'2018-01-26'
 	            },
 	            success: function (result) {
 	                if(result.code==200){

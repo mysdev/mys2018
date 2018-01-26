@@ -90,6 +90,7 @@ function getCookie(objName) {//获取指定名称的cookie的值
     return "";
 }
 
+//获取URL参数
 function getQueryString(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
     var r = window.location.search.substr(1).match(reg);
@@ -97,6 +98,21 @@ function getQueryString(name) {
         return unescape(r[2]);
     }
     return null;
+}
+
+function getCurrentDateTime(){
+	var myDate = new Date();
+	return myDate.getFullYear()+'-'+myDate.getMonth()+1+'-'+myDate.getDate()+' '+myDate.getHours()+':'+myDate.getMinutes()+':00';
+}
+
+function getCurrentDate(){
+	var myDate = new Date();
+	return myDate.getFullYear()+'-'+myDate.getMonth()+1+'-'+myDate.getDate();
+}
+
+function getCurrentTime(){
+	var myDate = new Date();
+	return myDate.getHours()+':'+myDate.getMinutes();
 }
 
 //========================基于artdialog插件========================
