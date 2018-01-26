@@ -5,10 +5,6 @@ var TechnicianSkillEditViewModel = function () {
 	self.skillId = ko.observable(''); 
 	self.technicianId = ko.observable(''); 
 	self.skillLevel = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -25,10 +21,6 @@ var TechnicianSkillEditViewModel = function () {
 				self.skillId(result.skillId);
 				self.technicianId(result.technicianId);
 				self.skillLevel(result.skillLevel);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -75,4 +67,4 @@ var TechnicianSkillEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianSkillEditViewModel());
-})
+});

@@ -12,10 +12,6 @@ var ClockOrderEditViewModel = function () {
 	self.technicianId = ko.observable(''); 
 	self.customerNote = ko.observable(''); 
 	self.note = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -39,10 +35,6 @@ var ClockOrderEditViewModel = function () {
 				self.technicianId(result.technicianId);
 				self.customerNote(result.customerNote);
 				self.note(result.note);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -89,4 +81,4 @@ var ClockOrderEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockOrderEditViewModel());
-})
+});

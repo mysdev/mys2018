@@ -29,10 +29,6 @@ var ClockSkillEditViewModel = function () {
 				self.isClock(result.isClock);
 				self.classs(result.classs);
 				self.status(result.status);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}

@@ -6,10 +6,6 @@ var TechnicianShiftEditViewModel = function () {
 	self.inTime = ko.observable(''); 
 	self.outTime = ko.observable(''); 
 	self.status = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -27,10 +23,6 @@ var TechnicianShiftEditViewModel = function () {
 				self.inTime(result.inTime);
 				self.outTime(result.outTime);
 				self.status(result.status);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -77,4 +69,4 @@ var TechnicianShiftEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianShiftEditViewModel());
-})
+});

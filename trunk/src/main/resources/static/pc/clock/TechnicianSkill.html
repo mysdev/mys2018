@@ -67,26 +67,6 @@
 					<dt>技能等级</dt>
 					<dd><input name="skillLevel" type="text" id="skillLevel" class="input" datatype="n" sucmsg=" " data-bind="value:skillLevel" /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
-				<dl>
-					<dt>创建人员</dt>
-					<dd><input name="createdBy" type="text" id="createdBy" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:createdBy" />  </dd>
-				</dl>
-				<dl>
-					<dt>创建时间</dt>
-					<dd>
-						<input name="createdDate" type="text" id="createdDate" data-bind="value:createdDate" class="input rule-date-input flatpickr" data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
-											</dd>
-				</dl>
-				<dl>
-					<dt>修订人员</dt>
-					<dd><input name="updatedBy" type="text" id="updatedBy" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:updatedBy" />  </dd>
-				</dl>
-				<dl>
-					<dt>修订时间</dt>
-					<dd>
-						<input name="updatedDate" type="text" id="updatedDate" data-bind="value:updatedDate" class="input rule-date-input flatpickr" data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
-											</dd>
-				</dl>
 			</div>
 			<!--/内容-->
 
@@ -100,7 +80,7 @@
 			<!--/工具栏-->
 		</form>
 		<!--列表数据绑定开始-->
-		<script src="./model/TechnicianSkillModel.js"></script>
+		<script src="./model/TechnicianSkill.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/common.js"></script>
 		<!--列表数据绑定结束-->
 	</body>

@@ -9,10 +9,6 @@ var TechnicianClassEditViewModel = function () {
 	self.technicianLevel = ko.observable(''); 
 	self.priority = ko.observable(''); 
 	self.seqencing = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -33,10 +29,6 @@ var TechnicianClassEditViewModel = function () {
 				self.technicianLevel(result.technicianLevel);
 				self.priority(result.priority);
 				self.seqencing(result.seqencing);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -83,4 +75,4 @@ var TechnicianClassEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianClassEditViewModel());
-})
+});

@@ -11,10 +11,6 @@ var SkillClassEditViewModel = function () {
 	self.priorityAccumulate = ko.observable(''); 
 	self.arriveWarn = ko.observable(''); 
 	self.arriveRemind = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(''); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(''); 
 
     var opFalg=getQueryString('action');
     
@@ -37,10 +33,6 @@ var SkillClassEditViewModel = function () {
 				self.priorityAccumulate(result.priorityAccumulate);
 				self.arriveWarn(result.arriveWarn);
 				self.arriveRemind(result.arriveRemind);
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -87,4 +79,4 @@ var SkillClassEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new SkillClassEditViewModel());
-})
+});
