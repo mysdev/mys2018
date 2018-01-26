@@ -118,7 +118,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clockskill/ClockSkillList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkillList.html?page=' + num);
             }
         }
     });
