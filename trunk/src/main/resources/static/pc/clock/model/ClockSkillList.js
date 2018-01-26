@@ -1,4 +1,5 @@
 var myPage;
+var 
 
 function Node(obj) {
 	this.skillId = ko.observable(obj.skillId); 
@@ -19,8 +20,11 @@ var ClockSkillViewModel = function () {
     //添加动态监视数组对象
     self.clockSkillList = ko.observableArray([]);
     
+    var myurl=homeUrl+"/clockskills";
+    if(getQueryString('page')!=null)
+    	myurl=homeUrl+"/clockskills?pageNo="+getQueryString('page');
     //初始化数据
-    $.getJSON(homeUrl+"/clockskills",function(result){
+    $.getJSON(myurl,function(result){
 		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.clockSkillList(mappedTasks);
 	    myPage = result.page;
