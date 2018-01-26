@@ -87,4 +87,4 @@ var SkillClassEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new SkillClassEditViewModel());
-})
+});

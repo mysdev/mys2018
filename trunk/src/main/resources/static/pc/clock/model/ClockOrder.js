@@ -89,4 +89,4 @@ var ClockOrderEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockOrderEditViewModel());
-})
+});

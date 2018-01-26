@@ -23,21 +23,21 @@ var ClockRecordViewModel = function () {
     self.clockRecordList = ko.observableArray([]);
     
     //初始化数据
-    $.getJSON(homeUrl+"/clockrecords",function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+    ($).getJSON(homeUrl+"/clockrecords",function(result){
+		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 	    self.clockRecordList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
 	    
 	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockRecord.html?action=Edit&id='+$(this).attr('data'));
+	    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecord.html?action=Edit&id='+$(this).attr('data'));
 	    });
 	});
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/clockrecords?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+		($).getJSON(homeUrl+"/clockrecords?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 		    self.clockRecordList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -46,12 +46,12 @@ var ClockRecordViewModel = function () {
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockRecord.html?action=Add');
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecord.html?action=Add');
     };
     
     //修改
-    self.modify=function(){
-    	$("#mainframe", parent.window.document).attr("src",'/clock/ClockRecord.html?action=Edit&id='+$(event.currentTarget).attr('data'));
+    self.modify=function(obj){
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecord.html?action=Edit&id='+obj.recordId);
     };
     
     //删除
@@ -121,7 +121,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/clockrecord/ClockRecordList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecordList.html?page=' + num);
             }
         }
     });

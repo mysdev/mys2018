@@ -75,4 +75,4 @@ var TechnicianSkillEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianSkillEditViewModel());
-})
+});

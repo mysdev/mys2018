@@ -88,8 +88,8 @@
 						<td data-bind="text: obj.updatedBy"></td>
 						<td data-bind="text: obj.updatedDate"></td>
 						<td align="center">
-							<a href="#" data-bind="click:$root.modify,attr:{data: obj.technicianId}" >修改</a>&nbsp;
-							<a href="#" data-bind="click:$root.delete,attr:{data: obj.technicianId}" >删除</a>
+							<a href="#" data-bind="click:$root.modify" >修改</a>&nbsp;
+							<a href="#" data-bind="click:$root.delete" >删除</a>
 						</td>
 					</tr>
 				</tbody>
@@ -108,7 +108,7 @@
 
 		</form>
 		<!--列表数据绑定开始-->
-		<script src="../clock/model/technicianList.js"></script>
+		<script src="./model/technicianList.js"></script>
 		<!--列表数据绑定结束-->
 	</body>
 

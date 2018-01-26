@@ -77,4 +77,4 @@ var TechnicianShiftEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new TechnicianShiftEditViewModel());
-})
+});

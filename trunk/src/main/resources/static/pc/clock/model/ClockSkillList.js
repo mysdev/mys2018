@@ -20,21 +20,21 @@ var ClockSkillViewModel = function () {
     self.clockSkillList = ko.observableArray([]);
     
     //初始化数据
-    $.getJSON(homeUrl+"/clockskills",function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+    ($).getJSON(homeUrl+"/clockskills",function(result){
+		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 	    self.clockSkillList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
 	    
 	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
+	    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
 	    });
 	});
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/clockskills?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+		($).getJSON(homeUrl+"/clockskills?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 		    self.clockSkillList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -43,12 +43,12 @@ var ClockSkillViewModel = function () {
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Add');
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Add');
     };
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkill.html?action=Edit&id='+obj.skillId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+obj.skillId);
     };
     
     //删除
@@ -118,7 +118,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clockskill/ClockSkillList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkillList.html?page=' + num);
             }
         }
     });

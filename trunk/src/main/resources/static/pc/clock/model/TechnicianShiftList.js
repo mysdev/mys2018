@@ -19,21 +19,21 @@ var TechnicianShiftViewModel = function () {
     self.technicianShiftList = ko.observableArray([]);
     
     //初始化数据
-    $.getJSON(homeUrl+"/technicianshifts",function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+    ($).getJSON(homeUrl+"/technicianshifts",function(result){
+		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 	    self.technicianShiftList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
 	    
 	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'/clock/TechnicianShift.html?action=Edit&id='+$(this).attr('data'));
+	    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+$(this).attr('data'));
 	    });
 	});
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/technicianshifts?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
+		($).getJSON(homeUrl+"/technicianshifts?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
 		    self.technicianShiftList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -42,12 +42,12 @@ var TechnicianShiftViewModel = function () {
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'/clock/TechnicianShift.html?action=Add');
+    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Add');
     };
     
     //修改
-    self.modify=function(){
-    	$("#mainframe", parent.window.document).attr("src",'/clock/TechnicianShift.html?action=Edit&id='+$(event.currentTarget).attr('data'));
+    self.modify=function(obj){
+    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+obj.shiftId);
     };
     
     //删除
@@ -117,7 +117,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/technicianshift/TechnicianShiftList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShiftList.html?page=' + num);
             }
         }
     });

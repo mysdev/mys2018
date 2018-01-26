@@ -85,4 +85,4 @@ var ClockRecordEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockRecordEditViewModel());
-})
+});

@@ -75,4 +75,4 @@ var ClockBroadcastEditViewModel = function () {
 $().ready(function(){
 	$("#txtName").focus();
     ko.applyBindings(new ClockBroadcastEditViewModel());
-})
+});
