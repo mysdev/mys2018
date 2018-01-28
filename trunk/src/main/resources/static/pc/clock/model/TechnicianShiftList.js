@@ -18,9 +18,14 @@ var TechnicianShiftViewModel = function () {
     //添加动态监视数组对象
     self.technicianShiftList = ko.observableArray([]);
     
+    var myurl=homeUrl+"/technicianshifts";
+    if(getQueryString('page')!=null){
+    	myurl+="?pageNo="+getQueryString('page');
+    }
+    	
     //初始化数据
-    ($).getJSON(homeUrl+"/technicianshifts",function(result){
-		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+    $.getJSON(myurl,function(result){
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.technicianShiftList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
@@ -32,8 +37,8 @@ var TechnicianShiftViewModel = function () {
 	
 	//搜索
 	self.search = function(obj) {
-		($).getJSON(homeUrl+"/technicianshifts?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+		$.getJSON(homeUrl+"/technicianshifts?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 		    self.technicianShiftList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -53,7 +58,7 @@ var TechnicianShiftViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/technicianshift/'+id,
 	        cache: false,
@@ -83,7 +88,7 @@ var TechnicianShiftViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		jQuery.ajax({
+	        		$.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/technicianshift/'+$(this).attr('data'),
 				        cache: false,
@@ -111,7 +116,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    jQuery.jqPaginator('#pagination', {
+    $.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

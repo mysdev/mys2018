@@ -23,9 +23,14 @@ var SkillClassViewModel = function () {
     //添加动态监视数组对象
     self.skillClassList = ko.observableArray([]);
     
+    var myurl=homeUrl+"/skillclasss";
+    if(getQueryString('page')!=null){
+    	myurl+="?pageNo="+getQueryString('page');
+    }
+    	
     //初始化数据
-    ($).getJSON(homeUrl+"/skillclasss",function(result){
-		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+    $.getJSON(myurl,function(result){
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.skillClassList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
@@ -37,8 +42,8 @@ var SkillClassViewModel = function () {
 	
 	//搜索
 	self.search = function(obj) {
-		($).getJSON(homeUrl+"/skillclasss?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+		$.getJSON(homeUrl+"/skillclasss?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 		    self.skillClassList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -58,7 +63,7 @@ var SkillClassViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/skillclass/'+id,
 	        cache: false,
@@ -88,7 +93,7 @@ var SkillClassViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		jQuery.ajax({
+	        		$.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/skillclass/'+$(this).attr('data'),
 				        cache: false,
@@ -116,7 +121,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    jQuery.jqPaginator('#pagination', {
+    $.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

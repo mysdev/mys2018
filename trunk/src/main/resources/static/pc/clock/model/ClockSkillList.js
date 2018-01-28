@@ -20,9 +20,11 @@ var ClockSkillViewModel = function () {
     self.clockSkillList = ko.observableArray([]);
     
     var myurl=homeUrl+"/clockskills";
-    if(getQueryString('page')!=null)
-    	myurl=homeUrl+"/clockskills?pageNo="+getQueryString('page');
-
+    if(getQueryString('page')!=null){
+    	myurl+="?pageNo="+getQueryString('page');
+    }
+    	
+    //初始化数据
     $.getJSON(myurl,function(result){
 		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.clockSkillList(mappedTasks);
@@ -36,8 +38,8 @@ var ClockSkillViewModel = function () {
 	
 	//搜索
 	self.search = function(obj) {
-		($).getJSON(homeUrl+"/clockskills?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+		$.getJSON(homeUrl+"/clockskills?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 		    self.clockSkillList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -57,7 +59,7 @@ var ClockSkillViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/clockskill/'+id,
 	        cache: false,
@@ -87,7 +89,7 @@ var ClockSkillViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		jQuery.ajax({
+	        		$.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/clockskill/'+$(this).attr('data'),
 				        cache: false,
@@ -115,16 +117,15 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    jQuery.jqPaginator('#pagination', {
+    $.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'/mys/pc/clock/ClockSkillList.html?page=' + num);
+            	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkillList.html?page=' + num);
             }
         }
     });
 }
-
 

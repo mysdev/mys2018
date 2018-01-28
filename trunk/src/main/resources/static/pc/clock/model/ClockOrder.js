@@ -17,7 +17,7 @@ var ClockOrderEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockorder/"+opid,
 	        cache: false,
@@ -42,14 +42,22 @@ var ClockOrderEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockorder",  //新增接口
 	            dataType: "json",
 	            data: {
-					orderId:self.orderId
+								authorizationId:self.authorizationId(),
+								types:self.types(),
+								objectId:self.objectId(),
+								status:self.status(),
+								materialId:self.materialId(),
+								goodsId:self.goodsId(),
+								goodsTime:self.goodsTime(),
+								technicianId:self.technicianId(),
+								customerNote:self.customerNote(),
+								note:self.note(),
+								orderId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -63,7 +71,7 @@ var ClockOrderEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockorder/"+opid,  //修改接口
 	            data: {

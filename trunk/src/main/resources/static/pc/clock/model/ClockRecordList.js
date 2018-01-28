@@ -22,9 +22,14 @@ var ClockRecordViewModel = function () {
     //添加动态监视数组对象
     self.clockRecordList = ko.observableArray([]);
     
+    var myurl=homeUrl+"/clockrecords";
+    if(getQueryString('page')!=null){
+    	myurl+="?pageNo="+getQueryString('page');
+    }
+    	
     //初始化数据
-    ($).getJSON(homeUrl+"/clockrecords",function(result){
-		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+    $.getJSON(myurl,function(result){
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.clockRecordList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
@@ -36,8 +41,8 @@ var ClockRecordViewModel = function () {
 	
 	//搜索
 	self.search = function(obj) {
-		($).getJSON(homeUrl+"/clockrecords?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+		$.getJSON(homeUrl+"/clockrecords?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 		    self.clockRecordList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -57,7 +62,7 @@ var ClockRecordViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/clockrecord/'+id,
 	        cache: false,
@@ -87,7 +92,7 @@ var ClockRecordViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		jQuery.ajax({
+	        		$.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/clockrecord/'+$(this).attr('data'),
 				        cache: false,
@@ -115,7 +120,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    jQuery.jqPaginator('#pagination', {
+    $.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

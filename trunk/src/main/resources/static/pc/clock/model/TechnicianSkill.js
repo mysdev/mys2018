@@ -10,7 +10,7 @@ var TechnicianSkillEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/technicianskill/"+opid,
 	        cache: false,
@@ -28,14 +28,15 @@ var TechnicianSkillEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technicianskill",  //新增接口
 	            dataType: "json",
 	            data: {
-					tsId:self.tsId
+								skillId:self.skillId(),
+								technicianId:self.technicianId(),
+								skillLevel:self.skillLevel(),
+								tsId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -49,7 +50,7 @@ var TechnicianSkillEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianskill/"+opid,  //修改接口
 	            data: {

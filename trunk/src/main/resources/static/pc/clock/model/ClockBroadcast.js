@@ -10,7 +10,7 @@ var ClockBroadcastEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockbroadcast/"+opid,
 	        cache: false,
@@ -28,14 +28,15 @@ var ClockBroadcastEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockbroadcast",  //新增接口
 	            dataType: "json",
 	            data: {
-					broadcastId:self.broadcastId
+								stauts:self.stauts(),
+								types:self.types(),
+								content:self.content(),
+								broadcastId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -49,7 +50,7 @@ var ClockBroadcastEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockbroadcast/"+opid,  //修改接口
 	            data: {

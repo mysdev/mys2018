@@ -16,7 +16,7 @@ var SkillClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/skillclass/"+opid,
 	        cache: false,
@@ -40,14 +40,21 @@ var SkillClassEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/skillclass",  //新增接口
 	            dataType: "json",
 	            data: {
-					classId:self.classId
+								className:self.className(),
+								status:self.status(),
+								clockFlag:self.clockFlag(),
+								flag:self.flag(),
+								types:self.types(),
+								isPriority:self.isPriority(),
+								priorityAccumulate:self.priorityAccumulate(),
+								arriveWarn:self.arriveWarn(),
+								arriveRemind:self.arriveRemind(),
+								classId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -61,7 +68,7 @@ var SkillClassEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/skillclass/"+opid,  //修改接口
 	            data: {
