@@ -21,8 +21,6 @@
 			$(function() {
 				//初始化表单验证
 				$("#form1").initValidform();
-				$("#createdDate").flatpickr();
-				$("#updatedDate").flatpickr();
 			});
 		</script>
 	</head>
@@ -57,7 +55,7 @@
 			<div class="tab-content">
 				<dl>
 					<dt>技能名称</dt>
-					<dd><input name="skillName" type="text" id="skillName" class="input normal" datatype="*3-20" errormsg="3到20个字符" sucmsg=" " data-bind="value:skillName" /> <span class="Validform_checktip">*</span> </dd>
+					<dd><input name="skillName" type="text" id="skillName" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:skillName" /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
 				<dl>
 					<dt>服务标识</dt>
@@ -75,26 +73,7 @@
 					<dt>技能状态</dt>
 					<dd><input name="status" type="text" id="status" class="input" datatype="n" sucmsg=" " data-bind="value:status" /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
-				<dl>
-					<dt>创建人员</dt>
-					<dd><input name="createdBy" type="text" id="createdBy" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:createdBy" /> </dd>
-				</dl>
-				<dl>
-					<dt>创建时间</dt>
-					<dd>
-						<input name="createdDate" type="text" id="createdDate" data-bind="value:createdDate" class="input rule-date-input flatpickr" data-enable-time="true" data-enable-seconds="true" data-time_24hr="true" datatype="/^\d{4}\-\d{1,2}\-\d{1,2}\s{1}(\d{1,2}:){2}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
-					</dd>
-				</dl>
-				<dl>
-					<dt>修订人员</dt>
-					<dd><input name="updatedBy" type="text" id="updatedBy" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:updatedBy" /> </dd>
-				</dl>
-				<dl>
-					<dt>修订时间</dt>
-					<dd>
-						<input name="updatedDate" type="text" id="updatedDate" data-bind="value:updatedDate" class="input rule-date-input flatpickr" data-enable-time="true" data-enable-seconds="true" data-time_24hr="true" datatype="/^\d{4}\-\d{1,2}\-\d{1,2}\s{1}(\d{1,2}:){2}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" " />
-					</dd>
-				</dl>			</div>
+			</div>
 			<!--/内容-->
 
 			<!--工具栏-->

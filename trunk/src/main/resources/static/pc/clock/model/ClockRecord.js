@@ -15,7 +15,7 @@ var ClockRecordEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockrecord/"+opid,
 	        cache: false,
@@ -38,14 +38,20 @@ var ClockRecordEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockrecord",  //新增接口
 	            dataType: "json",
 	            data: {
-					recordId:self.recordId
+								orderId:self.orderId(),
+								technicianId:self.technicianId(),
+								classId:self.classId(),
+								status:self.status(),
+								beginTime:self.beginTime(),
+								endTime:self.endTime(),
+								actureTime:self.actureTime(),
+								recordStatus:self.recordStatus(),
+								recordId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -59,7 +65,7 @@ var ClockRecordEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockrecord/"+opid,  //修改接口
 	            data: {

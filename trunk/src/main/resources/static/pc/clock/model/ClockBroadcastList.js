@@ -17,9 +17,14 @@ var ClockBroadcastViewModel = function () {
     //添加动态监视数组对象
     self.clockBroadcastList = ko.observableArray([]);
     
+    var myurl=homeUrl+"/clockbroadcasts";
+    if(getQueryString('page')!=null){
+    	myurl+="?pageNo="+getQueryString('page');
+    }
+    	
     //初始化数据
-    ($).getJSON(homeUrl+"/clockbroadcasts",function(result){
-		var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+    $.getJSON(myurl,function(result){
+		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 	    self.clockBroadcastList(mappedTasks);
 	    myPage = result.page;
 	    bindPage();
@@ -31,8 +36,8 @@ var ClockBroadcastViewModel = function () {
 	
 	//搜索
 	self.search = function(obj) {
-		($).getJSON(homeUrl+"/clockbroadcasts?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = ($).map(result.data, function(item) { return new Node(item) });  
+		$.getJSON(homeUrl+"/clockbroadcasts?attendanceName="+$("txtKeywords").val(),function(result){
+			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
 		    self.clockBroadcastList(mappedTasks);
 		    myPage = result.page;
 		    bindPage();
@@ -52,7 +57,7 @@ var ClockBroadcastViewModel = function () {
     //删除
     self.delete=function(obj){
     	var id = $(event.currentTarget).attr('data');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/clockbroadcast/'+id,
 	        cache: false,
@@ -82,7 +87,7 @@ var ClockBroadcastViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		jQuery.ajax({
+	        		$.ajax({
 				        type: 'DELETE',
 				        url: homeUrl+'/clockbroadcast/'+$(this).attr('data'),
 				        cache: false,
@@ -110,7 +115,7 @@ $().ready(function(){
 
 var bindPage =function(){
 	//分页控件加载处理
-    jQuery.jqPaginator('#pagination', {
+    $.jqPaginator('#pagination', {
         totalPages: myPage.totalPages,
         visiblePages: myPage.limit,
         currentPage: myPage.page,

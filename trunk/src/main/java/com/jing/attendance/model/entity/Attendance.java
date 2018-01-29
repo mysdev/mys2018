@@ -1,6 +1,7 @@
 package com.jing.attendance.model.entity;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -40,10 +41,12 @@ public class Attendance extends BaseEntity {
 	private Integer attendance;	//tw_attendance:attendance  休息天数 类型0休天数 1考勤天数时有效  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private java.sql.Timestamp signTime;	//tw_attendance:sign_time  上班时间  
+	@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
+	private String signTime;	//tw_attendance:sign_time  上班时间  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private java.sql.Timestamp outTime;	//tw_attendance:out_time  下班时间  
+	@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
+	private String outTime;	//tw_attendance:out_time  下班时间  
 
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance_id
@@ -152,7 +155,7 @@ public class Attendance extends BaseEntity {
 	* @Description: 获取属性        上班时间
 	* @return: java.sql.Timestamp
 	*/
-	public java.sql.Timestamp getSignTime(){
+	public String getSignTime(){
 		return signTime;	
 	}
 	
@@ -161,7 +164,7 @@ public class Attendance extends BaseEntity {
 	* @Description: 设置属性        上班时间
 	* @return: java.sql.Timestamp
 	*/
-	public void setSignTime(java.sql.Timestamp signTime){
+	public void setSignTime(String signTime){
 		this.signTime = signTime;	
 	}	
 	/**
@@ -169,7 +172,7 @@ public class Attendance extends BaseEntity {
 	* @Description: 获取属性        下班时间
 	* @return: java.sql.Timestamp
 	*/
-	public java.sql.Timestamp getOutTime(){
+	public String getOutTime(){
 		return outTime;	
 	}
 	
@@ -178,7 +181,7 @@ public class Attendance extends BaseEntity {
 	* @Description: 设置属性        下班时间
 	* @return: java.sql.Timestamp
 	*/
-	public void setOutTime(java.sql.Timestamp outTime){
+	public void setOutTime(String outTime){
 		this.outTime = outTime;	
 	}	
 	

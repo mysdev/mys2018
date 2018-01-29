@@ -7,16 +7,12 @@ var ClockSkillEditViewModel = function () {
 	self.isClock = ko.observable(''); 
 	self.classs = ko.observable(''); 
 	self.status = ko.observable(''); 
-	self.createdBy = ko.observable(''); 
-	self.createdDate = ko.observable(getCurrentDateTime()); 
-	self.updatedBy = ko.observable(''); 
-	self.updatedDate = ko.observable(getCurrentDateTime()); 
 
     var opFalg=getQueryString('action');
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/clockskill/"+opid,
 	        cache: false,
@@ -36,20 +32,17 @@ var ClockSkillEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockskill",  //新增接口
 	            dataType: "json",
 	            data: {
-					skillName:self.skillName(),
-					materialId:self.materialId(),
-					isClock:self.isClock(),
-					classs:self.classs(),
-					status:self.status(),
-					createdBy:'cmc',
-					createdDate:'2018-01-26',
-					updatedBy:'cmc',
-					updatedDate:'2018-01-26'
+								skillName:self.skillName(),
+								materialId:self.materialId(),
+								isClock:self.isClock(),
+								classs:self.classs(),
+								status:self.status(),
+								skillId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -63,7 +56,7 @@ var ClockSkillEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockskill/"+opid,  //修改接口
 	            data: {

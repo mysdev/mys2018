@@ -15,7 +15,7 @@ var TechnicianEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	jQuery.ajax({
+    	$.ajax({
 	        type: 'GET',
 	        url: homeUrl+"/technician/"+opid,
 	        cache: false,
@@ -38,14 +38,20 @@ var TechnicianEditViewModel = function () {
 	//【提交】按钮押下处理
     self.Commit = function () {    	
     	if(opFalg=="Add"){
-    		var vStartTime=self.ondutyTime.toString();
-    		var vEndTime=self.ondutyTime.toString();
-	        jQuery.ajax({
+	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technician",  //新增接口
 	            dataType: "json",
 	            data: {
-					technicianId:self.technicianId
+								empId:self.empId(),
+								techNo:self.techNo(),
+								techCard:self.techCard(),
+								techName:self.techName(),
+								sex:self.sex(),
+								shiftId:self.shiftId(),
+								status:self.status(),
+								shiftStatus:self.shiftStatus(),
+								technicianId:null
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -59,7 +65,7 @@ var TechnicianEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		jQuery.ajax({
+    		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technician/"+opid,  //修改接口
 	            data: {
