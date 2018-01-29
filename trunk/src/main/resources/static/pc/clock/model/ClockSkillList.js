@@ -70,8 +70,13 @@ var ClockSkillViewModel = function () {
 			        cache: false,
 			        async: false,
 			        dataType: "json",
-			        success: function (datas) {
-			            location.reload();
+			        success: function (result) {
+			        	if(result.code==200){
+				            location.reload();
+			            }
+		                else{
+		                	parent.dialog(result.message).showModal();
+		                }
 			        }
 			    });
             }
