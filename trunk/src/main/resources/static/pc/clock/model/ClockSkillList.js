@@ -51,7 +51,7 @@ var ClockSkillViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+obj.skillId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+obj.skillId());
     };
     
     //删除
