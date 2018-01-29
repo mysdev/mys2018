@@ -5,6 +5,9 @@ package com.jing.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -91,6 +94,17 @@ public class DateUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");  
 	    Date date1 = sdf.parse(date);
 		return date1;
+	}
+	
+	/**
+	 * 时区转换
+	 * @param changedTime
+	 * @return
+	 */
+	public static final String changedChinaDate(String changedTime){
+		ZonedDateTime zonedDatetime = ZonedDateTime.parse(changedTime);
+		String s = zonedDatetime.toInstant().atZone(ZoneId.of("+08:00")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		return s;
 	}
 	
 }
