@@ -58,7 +58,7 @@ var ClockSkillViewModel = function () {
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
+    	var id = obj.skillId();
     	$.ajax({
 	        type: 'DELETE',
 	        url: homeUrl+'/clockskill/'+id,
