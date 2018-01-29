@@ -50,7 +50,7 @@ var ClockSkillEditViewModel = function () {
 	    		homeUrl+"/clockskill/"+opid,
 	    		submitPar,
 	    		function(result){
-                	parent.dialog(result.message).showModal();
+    			ChangeUrl("./clock/ClockSkillList.html");
 	    		}
 			);
     	}

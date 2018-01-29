@@ -124,7 +124,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
             if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkillList.html?page=' + num);
+            	ChangeUrl('./clock/ClockSkillList.html?page=' + num);
             }
         }
     });

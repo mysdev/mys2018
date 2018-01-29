@@ -117,7 +117,7 @@ function getCurrentTime(){
 
 //========================基于artdialog插件========================
 //可以自动关闭的提示，基于artdialog插件
-function jsprint(msgtitle) {
+function jsprints(msgtitle) {
     var d = dialog({ content: msgtitle }).show();
     setTimeout(function () {
         d.close().remove();
@@ -580,9 +580,13 @@ function MyAjax(requestType, url,submitPar, callback) {
         url: url, 
         dataType: "json",
         contentType : "application/json", 
-        data: JSON.stringify(submitPar),
-        success: function (result) {
-        	callback?callback(result):function(){};	                
+        data: submitPar?JSON.stringify(submitPar):null,
+        success: function (data, textStatus, jqXHR) {
+        	if(jqXHR.status==200){
+        		callback?callback(data):function(){};
+        	}else{
+        		parent.jsprints(data.message);
+    		}
         }
    });
 }
