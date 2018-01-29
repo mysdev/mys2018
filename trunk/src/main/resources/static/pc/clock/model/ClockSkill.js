@@ -30,24 +30,20 @@ var ClockSkillEditViewModel = function () {
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {   
+    	var submitPar ={};
+    	submitPar.skillName=self.skillName();
+    	submitPar.materialId = self.materialId();
+    	submitPar.isClock =self.isClock();
+    	submitPar.classs=self.classs();
+    	submitPar.status=self.status();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockskill",  //新增接口
 	            dataType: "json",
-	            data: {
-					skillId:0,
-	            	skillName:self.skillName(),
-					materialId:self.materialId(),
-					isClock:self.isClock(),
-					classs:self.classs(),
-					status:self.status(),
-					createdBy:'cmc',
-					createdDate:'2018-01-26T14:52:43.940Z',
-					updatedBy:'cmc',
-					updatedDate:'2018-01-26T14:52:43.940Z'
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/ClockSkillList.html");
@@ -60,22 +56,12 @@ var ClockSkillEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
+    		submitPar.skillId = opid;
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockskill/"+opid,  //修改接口
 	            datatype:"JSON",
-	            data: {
-					skillId:opid,
-	            	skillName:self.skillName(),
-					materialId:self.materialId(),
-					isClock:self.isClock(),
-					classs:self.classs(),
-					status:self.status(),
-					createdBy:'cmc',
-					createdDate:'2018-01-26T14:52:43.940Z',
-					updatedBy:'cmc',
-					updatedDate:'2018-01-26T14:52:43.940Z'
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/ClockSkillList.html");
