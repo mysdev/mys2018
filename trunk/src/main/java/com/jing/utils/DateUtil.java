@@ -103,8 +103,7 @@ public class DateUtil {
 	 */
 	public static final String changedChinaDate(String changedTime){
 		ZonedDateTime zonedDatetime = ZonedDateTime.parse(changedTime);
-		String s = zonedDatetime.toInstant().atZone(ZoneId.of("+08:00")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		return s;
+		return zonedDatetime.toInstant().atZone(ZoneId.of("+08:00")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 	
 }
