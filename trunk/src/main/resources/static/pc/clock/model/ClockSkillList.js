@@ -63,7 +63,7 @@ var ClockSkillViewModel = function () {
             content: '确定要删除该记录！',
             okValue: '确定',
             ok: function () {
-            	var id = obj.skillId();
+		    	var id = $(event.currentTarget).attr('data');
 		    	$.ajax({
 			        type: 'DELETE',
 			        url: homeUrl+'/clockskill/'+id,
@@ -79,7 +79,7 @@ var ClockSkillViewModel = function () {
 		                }
 			        }
 			    });
-            }
+			}
         }).showModal();
     }
     

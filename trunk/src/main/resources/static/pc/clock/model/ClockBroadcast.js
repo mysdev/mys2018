@@ -57,8 +57,12 @@ var ClockBroadcastEditViewModel = function () {
 	            contentType : "application/json", 
 	            data: JSON.stringify(submitPar),
 	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/ClockBroadcastList.html");
+	            	if(result.code==200){
+	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockBroadcastList.html");
+	                }
+	                else{
+	                	parent.dialog(result.message).showModal();
+	                }
 	            }
 	        });
     	}

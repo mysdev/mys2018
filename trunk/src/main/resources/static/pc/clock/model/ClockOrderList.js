@@ -63,17 +63,29 @@ var ClockOrderViewModel = function () {
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
-	        type: 'DELETE',
-	        url: homeUrl+'/clockorder/'+id,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (datas) {
-	            parent.dialog(datas.message).showModal();
-	        }
-	    });
+    	parent.dialog({
+            title: '提示',
+            content: '确定要删除该记录！',
+            okValue: '确定',
+            ok: function () {
+		    	var id = $(event.currentTarget).attr('data');
+		    	$.ajax({
+			        type: 'DELETE',
+			        url: homeUrl+'/clockorder/'+id,
+			        cache: false,
+			        async: false,
+			        dataType: "json",
+			        success: function (result) {
+			        	if(result.code==200){
+				            location.reload();
+			            }
+		                else{
+		                	parent.dialog(result.message).showModal();
+		                }
+			        }
+			    });
+			}
+        }).showModal();
     }
     
     //批量删除
@@ -105,7 +117,7 @@ var ClockOrderViewModel = function () {
 				        }
 				    });
 	        	});
-	        	document.URL=location.href;
+	        	location.reload();
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
