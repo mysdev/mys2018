@@ -56,7 +56,7 @@ var TechnicianEditViewModel = function () {
 	            data: JSON.stringify(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianList.html");
+	                	$("#mainframe", parent.window.document).attr("src","./clock/TechnicianList.html");
 	                }
 	                else{
 	                	parent.dialog(result.message).showModal();
@@ -73,7 +73,7 @@ var TechnicianEditViewModel = function () {
 	            data: JSON.stringify(submitPar),
 	            success: function (json) {
 	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianList.html");
+	                $("#mainframe", parent.window.document).attr("src","./clock/TechnicianList.html");
 	            }
 	        });
     	}
