@@ -37,7 +37,8 @@ var TechnicianSkillEditViewModel = function () {
 	            type: "POST",
 	            url: homeUrl+"/technicianskill",  //新增接口
 	            dataType: "json",
-	            data: $.toJSON(submitPar),
+	            contentType : "application/json", 
+	            data: JSON.stringify(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianSkillList.html");
@@ -53,7 +54,8 @@ var TechnicianSkillEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianskill/"+opid,  //修改接口
-	            data: $.toJSON(submitPar),
+	            contentType : "application/json", 
+	            data: JSON.stringify(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianSkillList.html");

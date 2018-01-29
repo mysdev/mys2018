@@ -58,7 +58,8 @@ var ClockOrderEditViewModel = function () {
 	            type: "POST",
 	            url: homeUrl+"/clockorder",  //新增接口
 	            dataType: "json",
-	            data: $.toJSON(submitPar),
+	            contentType : "application/json", 
+	            data: JSON.stringify(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/ClockOrderList.html");
@@ -74,7 +75,8 @@ var ClockOrderEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockorder/"+opid,  //修改接口
-	            data: $.toJSON(submitPar),
+	            contentType : "application/json", 
+	            data: JSON.stringify(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/ClockOrderList.html");
