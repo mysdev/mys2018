@@ -22,32 +22,37 @@ var TechnicianEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.technicianId(result.technicianId);
+				self.empId(result.empId);
+				self.techNo(result.techNo);
+				self.techCard(result.techCard);
+				self.techName(result.techName);
+				self.sex(result.sex);
+				self.shiftId(result.shiftId);
+				self.status(result.status);
+				self.shiftStatus(result.shiftStatus);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.empId=self.empId();
+		submitPar.techNo=self.techNo();
+		submitPar.techCard=self.techCard();
+		submitPar.techName=self.techName();
+		submitPar.sex=self.sex();
+		submitPar.shiftId=self.shiftId();
+		submitPar.status=self.status();
+		submitPar.shiftStatus=self.shiftStatus();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technician",  //新增接口
 	            dataType: "json",
-	            data: {
-								empId:self.empId(),
-								techNo:self.techNo(),
-								techCard:self.techCard(),
-								techName:self.techName(),
-								sex:self.sex(),
-								shiftId:self.shiftId(),
-								status:self.status(),
-								shiftStatus:self.shiftStatus(),
-								technicianId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianList.html");
@@ -63,17 +68,7 @@ var TechnicianEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technician/"+opid,  //修改接口
-	            data: {
-								empId:self.empId(),
-								techNo:self.techNo(),
-								techCard:self.techCard(),
-								techName:self.techName(),
-								sex:self.sex(),
-								shiftId:self.shiftId(),
-								status:self.status(),
-								shiftStatus:self.shiftStatus(),
-					technicianId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianList.html");

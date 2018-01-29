@@ -17,27 +17,27 @@ var ClockBroadcastEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.broadcastId(result.broadcastId);
+				self.stauts(result.stauts);
+				self.types(result.types);
+				self.content(result.content);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.stauts=self.stauts();
+		submitPar.types=self.types();
+		submitPar.content=self.content();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockbroadcast",  //新增接口
 	            dataType: "json",
-	            data: {
-								stauts:self.stauts(),
-								types:self.types(),
-								content:self.content(),
-								broadcastId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/ClockBroadcastList.html");
@@ -53,12 +53,7 @@ var ClockBroadcastEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockbroadcast/"+opid,  //修改接口
-	            data: {
-								stauts:self.stauts(),
-								types:self.types(),
-								content:self.content(),
-					broadcastId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/ClockBroadcastList.html");

@@ -24,18 +24,19 @@ var ClockSkillEditViewModel = function () {
 				self.materialId(result.materialId);
 				self.isClock(result.isClock);
 				self.classs(result.classs);
+				self.status(result.status);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {   
+    self.Commit = function () {    
     	var submitPar ={};
-    	submitPar.skillName=self.skillName();
-    	submitPar.materialId = self.materialId();
-    	submitPar.isClock =self.isClock();
-    	submitPar.classs=self.classs();
-    	submitPar.status=self.status();
+		submitPar.skillName=self.skillName();
+		submitPar.materialId=self.materialId();
+		submitPar.isClock=self.isClock();
+		submitPar.classs=self.classs();
+		submitPar.status=self.status();
     	
     	if(opFalg=="Add"){
 	        $.ajax({
@@ -55,11 +56,9 @@ var ClockSkillEditViewModel = function () {
 		}
     	else{
     		var opid=getQueryString('id');
-    		submitPar.skillId = opid;
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockskill/"+opid,  //修改接口
-	            datatype:"JSON",
 	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);

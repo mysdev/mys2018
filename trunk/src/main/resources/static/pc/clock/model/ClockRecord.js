@@ -22,32 +22,37 @@ var ClockRecordEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.recordId(result.recordId);
+				self.orderId(result.orderId);
+				self.technicianId(result.technicianId);
+				self.classId(result.classId);
+				self.status(result.status);
+				self.beginTime(result.beginTime);
+				self.endTime(result.endTime);
+				self.actureTime(result.actureTime);
+				self.recordStatus(result.recordStatus);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.orderId=self.orderId();
+		submitPar.technicianId=self.technicianId();
+		submitPar.classId=self.classId();
+		submitPar.status=self.status();
+		submitPar.beginTime=self.beginTime();
+		submitPar.endTime=self.endTime();
+		submitPar.actureTime=self.actureTime();
+		submitPar.recordStatus=self.recordStatus();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockrecord",  //新增接口
 	            dataType: "json",
-	            data: {
-								orderId:self.orderId(),
-								technicianId:self.technicianId(),
-								classId:self.classId(),
-								status:self.status(),
-								beginTime:self.beginTime(),
-								endTime:self.endTime(),
-								actureTime:self.actureTime(),
-								recordStatus:self.recordStatus(),
-								recordId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/ClockRecordList.html");
@@ -63,17 +68,7 @@ var ClockRecordEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockrecord/"+opid,  //修改接口
-	            data: {
-								orderId:self.orderId(),
-								technicianId:self.technicianId(),
-								classId:self.classId(),
-								status:self.status(),
-								beginTime:self.beginTime(),
-								endTime:self.endTime(),
-								actureTime:self.actureTime(),
-								recordStatus:self.recordStatus(),
-					recordId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/ClockRecordList.html");

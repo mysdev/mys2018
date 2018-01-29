@@ -24,34 +24,41 @@ var ClockOrderEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.orderId(result.orderId);
+				self.authorizationId(result.authorizationId);
+				self.types(result.types);
+				self.objectId(result.objectId);
+				self.status(result.status);
+				self.materialId(result.materialId);
+				self.goodsId(result.goodsId);
+				self.goodsTime(result.goodsTime);
+				self.technicianId(result.technicianId);
+				self.customerNote(result.customerNote);
+				self.note(result.note);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.authorizationId=self.authorizationId();
+		submitPar.types=self.types();
+		submitPar.objectId=self.objectId();
+		submitPar.status=self.status();
+		submitPar.materialId=self.materialId();
+		submitPar.goodsId=self.goodsId();
+		submitPar.goodsTime=self.goodsTime();
+		submitPar.technicianId=self.technicianId();
+		submitPar.customerNote=self.customerNote();
+		submitPar.note=self.note();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/clockorder",  //新增接口
 	            dataType: "json",
-	            data: {
-								authorizationId:self.authorizationId(),
-								types:self.types(),
-								objectId:self.objectId(),
-								status:self.status(),
-								materialId:self.materialId(),
-								goodsId:self.goodsId(),
-								goodsTime:self.goodsTime(),
-								technicianId:self.technicianId(),
-								customerNote:self.customerNote(),
-								note:self.note(),
-								orderId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/ClockOrderList.html");
@@ -67,19 +74,7 @@ var ClockOrderEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockorder/"+opid,  //修改接口
-	            data: {
-								authorizationId:self.authorizationId(),
-								types:self.types(),
-								objectId:self.objectId(),
-								status:self.status(),
-								materialId:self.materialId(),
-								goodsId:self.goodsId(),
-								goodsTime:self.goodsTime(),
-								technicianId:self.technicianId(),
-								customerNote:self.customerNote(),
-								note:self.note(),
-					orderId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/ClockOrderList.html");

@@ -21,31 +21,35 @@ var TechnicianClassEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.detailId(result.detailId);
+				self.classId(result.classId);
+				self.technicianId(result.technicianId);
+				self.clockCt(result.clockCt);
+				self.isWork(result.isWork);
+				self.technicianLevel(result.technicianLevel);
+				self.priority(result.priority);
+				self.seqencing(result.seqencing);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.classId=self.classId();
+		submitPar.technicianId=self.technicianId();
+		submitPar.clockCt=self.clockCt();
+		submitPar.isWork=self.isWork();
+		submitPar.technicianLevel=self.technicianLevel();
+		submitPar.priority=self.priority();
+		submitPar.seqencing=self.seqencing();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technicianclass",  //新增接口
 	            dataType: "json",
-	            data: {
-								classId:self.classId(),
-								technicianId:self.technicianId(),
-								clockCt:self.clockCt(),
-								isWork:self.isWork(),
-								technicianLevel:self.technicianLevel(),
-								priority:self.priority(),
-								seqencing:self.seqencing(),
-								detailId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianClassList.html");
@@ -61,16 +65,7 @@ var TechnicianClassEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianclass/"+opid,  //修改接口
-	            data: {
-								classId:self.classId(),
-								technicianId:self.technicianId(),
-								clockCt:self.clockCt(),
-								isWork:self.isWork(),
-								technicianLevel:self.technicianLevel(),
-								priority:self.priority(),
-								seqencing:self.seqencing(),
-					detailId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianClassList.html");

@@ -18,28 +18,29 @@ var TechnicianShiftEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.shiftId(result.shiftId);
+				self.shiftName(result.shiftName);
+				self.inTime(result.inTime);
+				self.outTime(result.outTime);
+				self.status(result.status);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.shiftName=self.shiftName();
+		submitPar.inTime=self.inTime();
+		submitPar.outTime=self.outTime();
+		submitPar.status=self.status();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technicianshift",  //新增接口
 	            dataType: "json",
-	            data: {
-								shiftName:self.shiftName(),
-								inTime:self.inTime(),
-								outTime:self.outTime(),
-								status:self.status(),
-								shiftId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianShiftList.html");
@@ -55,13 +56,7 @@ var TechnicianShiftEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianshift/"+opid,  //修改接口
-	            data: {
-								shiftName:self.shiftName(),
-								inTime:self.inTime(),
-								outTime:self.outTime(),
-								status:self.status(),
-					shiftId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianShiftList.html");

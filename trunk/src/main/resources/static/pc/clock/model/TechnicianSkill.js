@@ -17,27 +17,27 @@ var TechnicianSkillEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.createdBy(result.createdBy);
-				self.createdDate(result.createdDate);
-				self.updatedBy(result.updatedBy);
-				self.updatedDate(result.updatedDate);
+				self.tsId(result.tsId);
+				self.skillId(result.skillId);
+				self.technicianId(result.technicianId);
+				self.skillLevel(result.skillLevel);
 	        }
 	    });
 	}
 
 	//【提交】按钮押下处理
-    self.Commit = function () {    	
+    self.Commit = function () {    
+    	var submitPar ={};
+		submitPar.skillId=self.skillId();
+		submitPar.technicianId=self.technicianId();
+		submitPar.skillLevel=self.skillLevel();
+    	
     	if(opFalg=="Add"){
 	        $.ajax({
 	            type: "POST",
 	            url: homeUrl+"/technicianskill",  //新增接口
 	            dataType: "json",
-	            data: {
-								skillId:self.skillId(),
-								technicianId:self.technicianId(),
-								skillLevel:self.skillLevel(),
-								tsId:null
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
 	                	$("#mainframe", parent.window.document).attr("src","/clock/TechnicianSkillList.html");
@@ -53,12 +53,7 @@ var TechnicianSkillEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/technicianskill/"+opid,  //修改接口
-	            data: {
-								skillId:self.skillId(),
-								technicianId:self.technicianId(),
-								skillLevel:self.skillLevel(),
-					tsId:opid
-	            },
+	            data: $.toJSON(submitPar),
 	            success: function (json) {
 	                alert(json.result);
 	                $("#mainframe", parent.window.document).attr("src","/clock/TechnicianSkillList.html");
