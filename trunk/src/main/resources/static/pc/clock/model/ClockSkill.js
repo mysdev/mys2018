@@ -37,12 +37,16 @@ var ClockSkillEditViewModel = function () {
 	            url: homeUrl+"/clockskill",  //新增接口
 	            dataType: "json",
 	            data: {
-								skillName:self.skillName(),
-								materialId:self.materialId(),
-								isClock:self.isClock(),
-								classs:self.classs(),
-								status:self.status(),
-								skillId:null
+					skillId:0,
+	            	skillName:self.skillName(),
+					materialId:self.materialId(),
+					isClock:self.isClock(),
+					classs:self.classs(),
+					status:self.status(),
+					createdBy:'cmc',
+					createdDate:'2018-01-26T14:52:43.940Z',
+					updatedBy:'cmc',
+					updatedDate:'2018-01-26T14:52:43.940Z'
 	            },
 	            success: function (result) {
 	                if(result.code==200){
@@ -59,8 +63,18 @@ var ClockSkillEditViewModel = function () {
     		$.ajax({
 	            type: "PUT",
 	            url: homeUrl+"/clockskill/"+opid,  //修改接口
+	            datatype:"JSON",
 	            data: {
-					skillId:opid
+					skillId:opid,
+	            	skillName:self.skillName(),
+					materialId:self.materialId(),
+					isClock:self.isClock(),
+					classs:self.classs(),
+					status:self.status(),
+					createdBy:'cmc',
+					createdDate:'2018-01-26T14:52:43.940Z',
+					updatedBy:'cmc',
+					updatedDate:'2018-01-26T14:52:43.940Z'
 	            },
 	            success: function (json) {
 	                alert(json.result);
