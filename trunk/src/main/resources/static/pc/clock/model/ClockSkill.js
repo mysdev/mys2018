@@ -63,8 +63,7 @@ var ClockSkillEditViewModel = function () {
 	            contentType : "application/json", 
 	            data: JSON.stringify(submitPar),
 	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","mys/pc/clock/ClockSkillList.html");
+	                $("#mainframe", parent.window.document).attr("src","/mys/pc/clock/ClockSkillList.html");
 	            }
 	        });
     	}
