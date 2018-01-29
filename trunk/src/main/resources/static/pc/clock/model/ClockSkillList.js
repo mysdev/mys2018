@@ -32,7 +32,7 @@ var ClockSkillViewModel = function () {
 	    bindPage();
 	    
 	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
+	    	ChangeUrl('./clock/ClockSkill.html?action=Edit&id='+$(this).attr('data'));
 	    });
 	});
 	

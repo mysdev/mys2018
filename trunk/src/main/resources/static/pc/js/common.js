@@ -582,7 +582,7 @@ function MyAjax(requestType, url,submitPar, callback) {
         contentType : "application/json", 
         data: JSON.stringify(submitPar),
         success: function (result) {
-        	callback(result);	                
+        	callback?callback(result):function(){};	                
         }
    });
 }
