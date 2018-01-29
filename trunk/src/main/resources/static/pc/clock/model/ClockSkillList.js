@@ -58,17 +58,24 @@ var ClockSkillViewModel = function () {
     
     //删除
     self.delete=function(obj){
-    	var id = obj.skillId();
-    	$.ajax({
-	        type: 'DELETE',
-	        url: homeUrl+'/clockskill/'+id,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (datas) {
-	            parent.dialog(datas.message).showModal();
-	        }
-	    });
+    	parent.dialog({
+            title: '提示',
+            content: '确定要删除该记录！',
+            okValue: '确定',
+            ok: function () {
+            	var id = obj.skillId();
+		    	$.ajax({
+			        type: 'DELETE',
+			        url: homeUrl+'/clockskill/'+id,
+			        cache: false,
+			        async: false,
+			        dataType: "json",
+			        success: function (datas) {
+			            location.reload();
+			        }
+			    });
+            }
+        }).showModal();
     }
     
     //批量删除
@@ -100,7 +107,7 @@ var ClockSkillViewModel = function () {
 				        }
 				    });
 	        	});
-	        	document.URL=location.href;
+	        	location.reload();
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
