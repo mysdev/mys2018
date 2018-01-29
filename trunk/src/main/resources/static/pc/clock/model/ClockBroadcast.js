@@ -17,10 +17,10 @@ var ClockBroadcastEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.broadcastId(result.broadcastId);
-				self.stauts(result.stauts);
-				self.types(result.types);
-				self.content(result.content);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -54,6 +54,9 @@ var ClockBroadcastEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/clockbroadcast/"+opid,  //修改接口
 	            data: {
+								stauts:self.stauts(),
+								types:self.types(),
+								content:self.content(),
 					broadcastId:opid
 	            },
 	            success: function (json) {

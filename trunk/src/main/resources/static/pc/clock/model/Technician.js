@@ -22,15 +22,10 @@ var TechnicianEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.technicianId(result.technicianId);
-				self.empId(result.empId);
-				self.techNo(result.techNo);
-				self.techCard(result.techCard);
-				self.techName(result.techName);
-				self.sex(result.sex);
-				self.shiftId(result.shiftId);
-				self.status(result.status);
-				self.shiftStatus(result.shiftStatus);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -69,6 +64,14 @@ var TechnicianEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/technician/"+opid,  //修改接口
 	            data: {
+								empId:self.empId(),
+								techNo:self.techNo(),
+								techCard:self.techCard(),
+								techName:self.techName(),
+								sex:self.sex(),
+								shiftId:self.shiftId(),
+								status:self.status(),
+								shiftStatus:self.shiftStatus(),
 					technicianId:opid
 	            },
 	            success: function (json) {

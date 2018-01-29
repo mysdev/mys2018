@@ -56,7 +56,7 @@ var TechnicianViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/Technician.html?action=Edit&id='+obj.technicianId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/Technician.html?action=Edit&id='+obj.technicianId());
     };
     
     //删除

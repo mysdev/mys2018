@@ -57,7 +57,7 @@ var SkillClassViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/SkillClass.html?action=Edit&id='+obj.classId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/SkillClass.html?action=Edit&id='+obj.classId());
     };
     
     //删除

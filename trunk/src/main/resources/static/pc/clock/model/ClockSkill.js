@@ -24,7 +24,6 @@ var ClockSkillEditViewModel = function () {
 				self.materialId(result.materialId);
 				self.isClock(result.isClock);
 				self.classs(result.classs);
-				self.status(result.status);
 	        }
 	    });
 	}

@@ -23,16 +23,10 @@ var SkillClassEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.classId(result.classId);
-				self.className(result.className);
-				self.status(result.status);
-				self.clockFlag(result.clockFlag);
-				self.flag(result.flag);
-				self.types(result.types);
-				self.isPriority(result.isPriority);
-				self.priorityAccumulate(result.priorityAccumulate);
-				self.arriveWarn(result.arriveWarn);
-				self.arriveRemind(result.arriveRemind);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -72,6 +66,15 @@ var SkillClassEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/skillclass/"+opid,  //修改接口
 	            data: {
+								className:self.className(),
+								status:self.status(),
+								clockFlag:self.clockFlag(),
+								flag:self.flag(),
+								types:self.types(),
+								isPriority:self.isPriority(),
+								priorityAccumulate:self.priorityAccumulate(),
+								arriveWarn:self.arriveWarn(),
+								arriveRemind:self.arriveRemind(),
 					classId:opid
 	            },
 	            success: function (json) {

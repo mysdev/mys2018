@@ -56,7 +56,7 @@ var ClockRecordViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecord.html?action=Edit&id='+obj.recordId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockRecord.html?action=Edit&id='+obj.recordId());
     };
     
     //删除

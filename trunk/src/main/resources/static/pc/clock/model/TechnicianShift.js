@@ -18,11 +18,10 @@ var TechnicianShiftEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.shiftId(result.shiftId);
-				self.shiftName(result.shiftName);
-				self.inTime(result.inTime);
-				self.outTime(result.outTime);
-				self.status(result.status);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -57,6 +56,10 @@ var TechnicianShiftEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/technicianshift/"+opid,  //修改接口
 	            data: {
+								shiftName:self.shiftName(),
+								inTime:self.inTime(),
+								outTime:self.outTime(),
+								status:self.status(),
 					shiftId:opid
 	            },
 	            success: function (json) {

@@ -21,14 +21,10 @@ var TechnicianClassEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.detailId(result.detailId);
-				self.classId(result.classId);
-				self.technicianId(result.technicianId);
-				self.clockCt(result.clockCt);
-				self.isWork(result.isWork);
-				self.technicianLevel(result.technicianLevel);
-				self.priority(result.priority);
-				self.seqencing(result.seqencing);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -66,6 +62,13 @@ var TechnicianClassEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/technicianclass/"+opid,  //修改接口
 	            data: {
+								classId:self.classId(),
+								technicianId:self.technicianId(),
+								clockCt:self.clockCt(),
+								isWork:self.isWork(),
+								technicianLevel:self.technicianLevel(),
+								priority:self.priority(),
+								seqencing:self.seqencing(),
 					detailId:opid
 	            },
 	            success: function (json) {

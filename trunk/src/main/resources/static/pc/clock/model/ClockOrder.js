@@ -24,17 +24,10 @@ var ClockOrderEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.orderId(result.orderId);
-				self.authorizationId(result.authorizationId);
-				self.types(result.types);
-				self.objectId(result.objectId);
-				self.status(result.status);
-				self.materialId(result.materialId);
-				self.goodsId(result.goodsId);
-				self.goodsTime(result.goodsTime);
-				self.technicianId(result.technicianId);
-				self.customerNote(result.customerNote);
-				self.note(result.note);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -75,6 +68,16 @@ var ClockOrderEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/clockorder/"+opid,  //修改接口
 	            data: {
+								authorizationId:self.authorizationId(),
+								types:self.types(),
+								objectId:self.objectId(),
+								status:self.status(),
+								materialId:self.materialId(),
+								goodsId:self.goodsId(),
+								goodsTime:self.goodsTime(),
+								technicianId:self.technicianId(),
+								customerNote:self.customerNote(),
+								note:self.note(),
 					orderId:opid
 	            },
 	            success: function (json) {

@@ -52,7 +52,7 @@ var TechnicianShiftViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+obj.shiftId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+obj.shiftId());
     };
     
     //删除

@@ -51,7 +51,7 @@ var TechnicianSkillViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkill.html?action=Edit&id='+obj.tsId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkill.html?action=Edit&id='+obj.tsId());
     };
     
     //删除

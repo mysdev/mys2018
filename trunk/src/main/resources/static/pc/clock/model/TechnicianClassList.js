@@ -55,7 +55,7 @@ var TechnicianClassViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianClass.html?action=Edit&id='+obj.detailId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianClass.html?action=Edit&id='+obj.detailId());
     };
     
     //删除

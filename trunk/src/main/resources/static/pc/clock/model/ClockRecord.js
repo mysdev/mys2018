@@ -22,15 +22,10 @@ var ClockRecordEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.recordId(result.recordId);
-				self.orderId(result.orderId);
-				self.technicianId(result.technicianId);
-				self.classId(result.classId);
-				self.status(result.status);
-				self.beginTime(result.beginTime);
-				self.endTime(result.endTime);
-				self.actureTime(result.actureTime);
-				self.recordStatus(result.recordStatus);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -69,6 +64,14 @@ var ClockRecordEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/clockrecord/"+opid,  //修改接口
 	            data: {
+								orderId:self.orderId(),
+								technicianId:self.technicianId(),
+								classId:self.classId(),
+								status:self.status(),
+								beginTime:self.beginTime(),
+								endTime:self.endTime(),
+								actureTime:self.actureTime(),
+								recordStatus:self.recordStatus(),
 					recordId:opid
 	            },
 	            success: function (json) {

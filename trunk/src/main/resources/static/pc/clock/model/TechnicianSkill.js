@@ -17,10 +17,10 @@ var TechnicianSkillEditViewModel = function () {
 	        async: false,
 	        dataType: "json",
 	        success: function (result) {
-				self.tsId(result.tsId);
-				self.skillId(result.skillId);
-				self.technicianId(result.technicianId);
-				self.skillLevel(result.skillLevel);
+				self.createdBy(result.createdBy);
+				self.createdDate(result.createdDate);
+				self.updatedBy(result.updatedBy);
+				self.updatedDate(result.updatedDate);
 	        }
 	    });
 	}
@@ -54,6 +54,9 @@ var TechnicianSkillEditViewModel = function () {
 	            type: "PUT",
 	            url: homeUrl+"/technicianskill/"+opid,  //修改接口
 	            data: {
+								skillId:self.skillId(),
+								technicianId:self.technicianId(),
+								skillLevel:self.skillLevel(),
 					tsId:opid
 	            },
 	            success: function (json) {

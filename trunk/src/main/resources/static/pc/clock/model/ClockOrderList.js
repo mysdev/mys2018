@@ -58,7 +58,7 @@ var ClockOrderViewModel = function () {
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrder.html?action=Edit&id='+obj.orderId);
+    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrder.html?action=Edit&id='+obj.orderId());
     };
     
     //删除
