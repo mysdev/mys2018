@@ -47,7 +47,7 @@ var ClockSkillEditViewModel = function () {
 	            data: JSON.stringify(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./mys/pc/clock/ClockSkillList.html");
+	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockSkillList.html");
 	                }
 	                else{
 	                	parent.dialog(result.message).showModal();

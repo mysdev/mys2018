@@ -59,7 +59,7 @@ var SkillClassEditViewModel = function () {
 	            data: JSON.stringify(submitPar),
 	            success: function (result) {
 	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","/clock/SkillClassList.html");
+	                	$("#mainframe", parent.window.document).attr("src","./clock/SkillClassList.html");
 	                }
 	                else{
 	                	parent.dialog(result.message).showModal();
@@ -76,7 +76,7 @@ var SkillClassEditViewModel = function () {
 	            data: JSON.stringify(submitPar),
 	            success: function (json) {
 	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","/clock/SkillClassList.html");
+	                $("#mainframe", parent.window.document).attr("src","./clock/SkillClassList.html");
 	            }
 	        });
     	}
