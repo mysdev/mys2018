@@ -48,12 +48,12 @@ var ClockSkillViewModel = function () {
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Add');
+    	ChangeUrl('./clock/ClockSkill.html?action=Add');
     };
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockSkill.html?action=Edit&id='+obj.skillId());
+    	ChangeUrl('./clock/ClockSkill.html?action=Edit&id='+obj.skillId());
     };
     
     //删除
@@ -64,21 +64,13 @@ var ClockSkillViewModel = function () {
             okValue: '确定',
             ok: function () {
             	var id = obj.skillId();
-		    	$.ajax({
-			        type: 'DELETE',
-			        url: homeUrl+'/clockskill/'+id,
-			        cache: false,
-			        async: false,
-			        dataType: "json",
-			        success: function (result) {
-			        	if(result.code==200){
-				            location.reload();
-			            }
-		                else{
-		                	parent.dialog(result.message).showModal();
-		                }
-			        }
-			    });
+            	MyAjax("DELETE",
+	            	homeUrl+'/clockskill/'+id,
+	            	null,
+	            	function(result){
+	            		location.reload();
+	            	}
+            	);
             }
         }).showModal();
     }
@@ -101,16 +93,13 @@ var ClockSkillViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
-				        type: 'DELETE',
-				        url: homeUrl+'/clockskill/'+$(this).attr('data'),
-				        cache: false,
-				        async: false,
-				        dataType: "json",
-				        success: function (datas) {
-				            
-				        }
-				    });
+	        		MyAjax("DELETE",
+		        		homeUrl+'/clockskill/'+$(this).attr('data'),
+		        		null,
+		        		function(){
+		        			
+		        		}
+	        		);
 	        	});
 	        	location.reload();
 	        },

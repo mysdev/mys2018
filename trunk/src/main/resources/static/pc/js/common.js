@@ -573,3 +573,19 @@ $.fn.ruleDateInput = function() {
 		dateInput($(this));						 
 	});
 }
+
+function MyAjax(requestType, url,submitPar, callback) {
+	$.ajax({
+        type: requestType,
+        url: url, 
+        dataType: "json",
+        contentType : "application/json", 
+        data: JSON.stringify(submitPar),
+        success: function (result) {
+        	callback(result);	                
+        }
+   });
+}
+function ChangeUrl(url){
+	$("#mainframe", parent.window.document).attr("src",url);
+}

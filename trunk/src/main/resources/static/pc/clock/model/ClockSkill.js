@@ -12,21 +12,18 @@ var ClockSkillEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/clockskill/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.skillId(result.skillId);
+    	MyAjax("GET",
+    		homeUrl+"/clockskill/"+opid,
+    		null,
+    		function(result){
+    			self.skillId(result.skillId);
 				self.skillName(result.skillName);
 				self.materialId(result.materialId);
 				self.isClock(result.isClock);
 				self.classs(result.classs);
 				self.status(result.status);
-	        }
-	    });
+    		}
+		);
 	}
 
 	//【提交】按钮押下处理
@@ -39,38 +36,23 @@ var ClockSkillEditViewModel = function () {
 		submitPar.status=self.status();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/clockskill",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockSkillList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
+    		MyAjax("POST",
+	    		homeUrl+"/clockskill",
+	    		submitPar,
+	    		function(result){
+                	ChangeUrl("./clock/ClockSkillList.html");
+	    		}
+			);
 		}
     	else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/clockskill/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	            	if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockSkillList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }
-	            }
-	        });
+    		MyAjax("PUT",
+	    		homeUrl+"/clockskill/"+opid,
+	    		submitPar,
+	    		function(result){
+                	parent.dialog(result.message).showModal();
+	    		}
+			);
     	}
     };
 };
