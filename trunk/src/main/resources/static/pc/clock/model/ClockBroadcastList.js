@@ -1,4 +1,5 @@
 var myPage;
+var viewMode;
 var query = {};
 query.pageNo=1;
 query.pageSize = 20;
@@ -40,7 +41,7 @@ var ClockBroadcastViewModel = function () {
     
     	
     //初始化数据--如何调用self.reloadData
-    
+    self.reloadData();
 	
 	//搜索
 	self.search = function(obj) {
@@ -103,7 +104,8 @@ var ClockBroadcastViewModel = function () {
 };
 
 $().ready(function(){
-    ko.applyBindings(new ClockBroadcastViewModel());
+	viewMode = new ClockBroadcastViewModel();
+    ko.applyBindings(viewMode);
 });
 
 var bindPage =function(){
@@ -113,8 +115,10 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-        	query.pageNo=num;
-        	//如何触发  self.reloadData
+        	if(query.pageNo!=num){
+        		query.pageNo=num;
+        		viewMode.reloadData();
+        	}  
 //            if (type != 'init') {
 //            	ChangeUrl('./clock/ClockBroadcastList.html?page=' + num);
 //            }

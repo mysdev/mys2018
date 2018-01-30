@@ -1,4 +1,5 @@
 var myPage;
+var viewMode;
 var query = {};
 query.pageNo=1;
 query.pageSize = 20;
@@ -46,7 +47,7 @@ var SkillClassViewModel = function () {
     
     	
     //初始化数据--如何调用self.reloadData
-    
+    self.reloadData();
 	
 	//搜索
 	self.search = function(obj) {
@@ -109,7 +110,8 @@ var SkillClassViewModel = function () {
 };
 
 $().ready(function(){
-    ko.applyBindings(new SkillClassViewModel());
+	viewMode = new SkillClassViewModel();
+    ko.applyBindings(viewMode);
 });
 
 var bindPage =function(){
@@ -119,8 +121,10 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-        	query.pageNo=num;
-        	//如何触发  self.reloadData
+        	if(query.pageNo!=num){
+        		query.pageNo=num;
+        		viewMode.reloadData();
+        	}  
 //            if (type != 'init') {
 //            	ChangeUrl('./clock/SkillClassList.html?page=' + num);
 //            }

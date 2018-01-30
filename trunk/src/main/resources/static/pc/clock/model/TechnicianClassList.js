@@ -1,4 +1,5 @@
 var myPage;
+var viewMode;
 var query = {};
 query.pageNo=1;
 query.pageSize = 20;
@@ -44,7 +45,7 @@ var TechnicianClassViewModel = function () {
     
     	
     //初始化数据--如何调用self.reloadData
-    
+    self.reloadData();
 	
 	//搜索
 	self.search = function(obj) {
@@ -107,7 +108,8 @@ var TechnicianClassViewModel = function () {
 };
 
 $().ready(function(){
-    ko.applyBindings(new TechnicianClassViewModel());
+	viewMode = new TechnicianClassViewModel();
+    ko.applyBindings(viewMode);
 });
 
 var bindPage =function(){
@@ -117,8 +119,10 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-        	query.pageNo=num;
-        	//如何触发  self.reloadData
+        	if(query.pageNo!=num){
+        		query.pageNo=num;
+        		viewMode.reloadData();
+        	}  
 //            if (type != 'init') {
 //            	ChangeUrl('./clock/TechnicianClassList.html?page=' + num);
 //            }

@@ -1,7 +1,8 @@
 var myPage;
+var viewMode;
 var query = {};
 query.pageNo=1;
-query.pageSize = 20;
+query.pageSize = 5;
 if(getQueryString('page')!=undefined){
 	query.pageNo=getQueryString('page');
 }
@@ -42,7 +43,7 @@ var ClockSkillViewModel = function () {
     
     	
     //初始化数据--如何调用self.reloadData
-    
+    self.reloadData();
 	
 	//搜索
 	self.search = function(obj) {
@@ -105,7 +106,8 @@ var ClockSkillViewModel = function () {
 };
 
 $().ready(function(){
-    ko.applyBindings(new ClockSkillViewModel());
+	viewMode = new ClockSkillViewModel();
+    ko.applyBindings(viewMode);
 });
 
 var bindPage =function(){
@@ -115,8 +117,10 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-        	query.pageNo=num;
-        	//如何触发  self.reloadData
+        	if(query.pageNo!=num){
+        		query.pageNo=num;
+        		viewMode.reloadData();
+        	}  
 //            if (type != 'init') {
 //            	ChangeUrl('./clock/ClockSkillList.html?page=' + num);
 //            }
