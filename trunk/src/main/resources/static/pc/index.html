@@ -147,105 +147,322 @@
 					"roleName": "超级管理员"
 				};
 				
-				menuData = [{
-							"block": "基础信息",
-							"abbreviation": "基础",
-							"groups": [{
-									"groupName": "钟房管理",
-									"menuflag": "clock",
-									"menus": [{
-											"menuName": "报钟播报",
-											"url": "/mys/pc/clock/ClockBroadcastList.html",
-											"menuflag": "ClockBroadcastlist"
-											},
-											{
-											"menuName": "订单",
-											"url": "/mys/pc/clock/ClockOrderList.html",
-											"menuflag": "ClockOrderlist"
-											},
-											{
-											"menuName": "应钟记录",
-											"url": "/mys/pc/clock/ClockRecordList.html",
-											"menuflag": "ClockRecordlist"
-											},
-											{
-											"menuName": "技能",
-											"url": "/mys/pc/clock/ClockSkillList.html",
-											"menuflag": "ClockSkilllist"
-											},
-											{
-											"menuName": "轮班",
-											"url": "/mys/pc/clock/SkillClassList.html",
-											"menuflag": "SkillClasslist"
-											},
-											{
-											"menuName": "技师",
-											"url": "/mys/pc/clock/TechnicianList.html",
-											"menuflag": "Technicianlist"
-											},
-											{
-											"menuName": "轮班详情",
-											"url": "/mys/pc/clock/TechnicianClassList.html",
-											"menuflag": "TechnicianClasslist"
-											},
-											{
-											"menuName": "技师班次",
-											"url": "/mys/pc/clock/TechnicianShiftList.html",
-											"menuflag": "TechnicianShiftlist"
-											},
-											{
-											"menuName": "技师技能",
-											"url": "/mys/pc/clock/TechnicianSkillList.html",
-											"menuflag": "TechnicianSkilllist"
-											}
-									]
+				menuData = 
+				[{
+						"block": "基础信息",
+						"abbreviation": "基础",
+						"groups": [{
+								"groupName": "钟房管理",
+								"menuflag": "clock",
+								"menus": [{
+										"menuName": "报钟播报",
+										"url": "/mys/pc/clock/ClockBroadcastList.html",
+										"menuflag": "ClockBroadcastlist"
+									},
+									{
+										"menuName": "订单",
+										"url": "/mys/pc/clock/ClockOrderList.html",
+										"menuflag": "ClockOrderlist"
+									},
+									{
+										"menuName": "应钟记录",
+										"url": "/mys/pc/clock/ClockRecordList.html",
+										"menuflag": "ClockRecordlist"
+									},
+									{
+										"menuName": "技能",
+										"url": "/mys/pc/clock/ClockSkillList.html",
+										"menuflag": "ClockSkilllist"
+									},
+									{
+										"menuName": "轮班",
+										"url": "/mys/pc/clock/SkillClassList.html",
+										"menuflag": "SkillClasslist"
+									},
+									{
+										"menuName": "技师",
+										"url": "/mys/pc/clock/TechnicianList.html",
+										"menuflag": "Technicianlist"
+									},
+									{
+										"menuName": "轮班详情",
+										"url": "/mys/pc/clock/TechnicianClassList.html",
+										"menuflag": "TechnicianClasslist"
+									},
+									{
+										"menuName": "技师班次",
+										"url": "/mys/pc/clock/TechnicianShiftList.html",
+										"menuflag": "TechnicianShiftlist"
+									},
+									{
+										"menuName": "技师技能",
+										"url": "/mys/pc/clock/TechnicianSkillList.html",
+										"menuflag": "TechnicianSkilllist"
+									}
+								]
+							},
+							{
+								"groupName": "核心业务",
+								"menuflag": "core",
+								"menus": [{
+										"menuName": "部门",
+										"url": "/core/DepartmentList.html",
+										"menuflag": "Departmentlist"
+									},
+									{
+										"menuName": "员工",
+										"url": "/core/EmployeeList.html",
+										"menuflag": "Employeelist"
+									},
+									{
+										"menuName": "员工特殊权限(扩)",
+										"url": "/core/EmployeeSpecialList.html",
+										"menuflag": "EmployeeSpeciallist"
+									},
+									{
+										"menuName": "会员",
+										"url": "/core/MemberList.html",
+										"menuflag": "Memberlist"
+									},
+									{
+										"menuName": "会员体系",
+										"url": "/core/MemberLevelList.html",
+										"menuflag": "MemberLevellist"
+									},
+									{
+										"menuName": "会员充值活动",
+										"url": "/core/MemberPlusList.html",
+										"menuflag": "MemberPluslist"
+									},
+									{
+										"menuName": "会员充值记录",
+										"url": "/core/MemberRecordList.html",
+										"menuflag": "MemberRecordlist"
+									},
+									{
+										"menuName": "房间预定",
+										"url": "/core/ReservationList.html",
+										"menuflag": "Reservationlist"
+									},
+									{
+										"menuName": "消费商品详情",
+										"url": "/core/ReservationTradeList.html",
+										"menuflag": "ReservationTradelist"
+									},
+									{
+										"menuName": "房间",
+										"url": "/core/RoomList.html",
+										"menuflag": "Roomlist"
+									},
+									{
+										"menuName": "门店",
+										"url": "/core/StoreList.html",
+										"menuflag": "Storelist"
+									},
+									{
+										"menuName": "手牌",
+										"url": "/core/StrapList.html",
+										"menuflag": "Straplist"
+									},
+									{
+										"menuName": "类型配置",
+										"url": "/core/TypesList.html",
+										"menuflag": "Typeslist"
+									},
+									{
+										"menuName": "类型消费绑定",
+										"url": "/core/TypesBindList.html",
+										"menuflag": "TypesBindlist"
+									}
+								]
+							},
+							{
+								"groupName": "订单管理",
+								"menuflag": "order",
+								"menus": [{
+										"menuName": "消费授权",
+										"url": "/order/AuthorizationList.html",
+										"menuflag": "Authorizationlist"
+									},
+									{
+										"menuName": "客户",
+										"url": "/order/CustomerList.html",
+										"menuflag": "Customerlist"
+									},
+									{
+										"menuName": "商品服务",
+										"url": "/order/GoodsList.html",
+										"menuflag": "Goodslist"
+									},
+									{
+										"menuName": "商品服务扩展",
+										"url": "/order/GoodsExtList.html",
+										"menuflag": "GoodsExtlist"
+									},
+									{
+										"menuName": "基本原料",
+										"url": "/order/GoodsMaterialList.html",
+										"menuflag": "GoodsMateriallist"
+									},
+									{
+										"menuName": "商品单位",
+										"url": "/order/GoodsUnitList.html",
+										"menuflag": "GoodsUnitlist"
+									},
+									{
+										"menuName": "消费套餐",
+										"url": "/order/PackagesList.html",
+										"menuflag": "Packageslist"
+									},
+									{
+										"menuName": "消费套餐详情",
+										"url": "/order/PackagesDetailList.html",
+										"menuflag": "PackagesDetaillist"
+									}
+								]
+							},
+							{
+								"groupName": "交易管理",
+								"menuflag": "trade",
+								"menus": [{
+										"menuName": "优惠卷组",
+										"url": "/trade/CouponList.html",
+										"menuflag": "Couponlist"
+									},
+									{
+										"menuName": "优惠项目",
+										"url": "/trade/CouponItemList.html",
+										"menuflag": "CouponItemlist"
+									},
+									{
+										"menuName": "结算币种",
+										"url": "/trade/ExchangeList.html",
+										"menuflag": "Exchangelist"
+									},
+									{
+										"menuName": "会员价格",
+										"url": "/trade/MemberPriceList.html",
+										"menuflag": "MemberPricelist"
+									},
+									{
+										"menuName": "消费结算",
+										"url": "/trade/SettlementList.html",
+										"menuflag": "Settlementlist"
+									},
+									{
+										"menuName": "消费清单",
+										"url": "/trade/TradeList.html",
+										"menuflag": "Tradelist"
+									},
+									{
+										"menuName": "结算优惠项",
+										"url": "/trade/TradeDiscountList.html",
+										"menuflag": "TradeDiscountlist"
+									},
+									{
+										"menuName": "优惠券",
+										"url": "/trade/VolumeList.html",
+										"menuflag": "Volumelist"
+									}
+								]
+							},
+							{
+								"groupName": "考勤管理",
+								"menuflag": "attendance",
+								"menus": [{
+										"menuName": "门店考勤",
+										"url": "/attendance/AttendanceList.html",
+										"menuflag": "Attendancelist"
+									},
+									{
+										"menuName": "门店考勤详情",
+										"url": "/attendance/AttendanceDetailList.html",
+										"menuflag": "AttendanceDetaillist"
+									},
+									{
+										"menuName": "打卡记录",
+										"url": "/attendance/EmployeeAttendList.html",
+										"menuflag": "EmployeeAttendlist"
+									},
+									{
+										"menuName": "员工考勤关系",
+										"url": "/attendance/EmployeeAttendanceList.html",
+										"menuflag": "EmployeeAttendancelist"
+									},
+									{
+										"menuName": "员工考勤日志",
+										"url": "/attendance/EmployeeJournalList.html",
+										"menuflag": "EmployeeJournallist"
+									}
+								]
+							}
+						]
+					},
+					{
+						"block": "控制面板",
+						"abbreviation": "控制面板",
+						"groups": [{
+							"groupName": "系统管理",
+							"menuflag": "system",
+							"menus": [{
+									"menuName": "系统配置",
+									"url": "/system/ConfigList.html",
+									"menuflag": "Configlist"
 								},
 								{
-									"groupName": "部门管理",
-									"menuflag": "dept",
-									"menus": [{
-											"menuName": "部门列表",
-											"url": "dept/list.html",
-											"menuflag": "deptlist"
-										},
-										{
-											"menuName": "新增部门",
-											"url": "dept/add.html",
-											"menuflag": "deptadd"
-										}
-									]
+									"menuName": "字典值",
+									"url": "/system/DictionaryList.html",
+									"menuflag": "Dictionarylist"
 								},
 								{
-									"groupName": "人员管理",
-									"menuflag": "personnel",
-									"menus": [{
-											"menuName": "人员列表",
-											"url": "personnel/list.html",
-											"menuflag": "personnellist"
-										},
-										{
-											"menuName": "新增人员",
-											"url": "personnel/add.html",
-											"menuflag": "personneladd"
-										}
-									]
+									"menuName": "字典分组",
+									"url": "/system/DictionaryGroupList.html",
+									"menuflag": "DictionaryGrouplist"
+								},
+								{
+									"menuName": "文档",
+									"url": "/system/DocumentInfoList.html",
+									"menuflag": "DocumentInfolist"
+								},
+								{
+									"menuName": "日志",
+									"url": "/system/LogList.html",
+									"menuflag": "Loglist"
+								},
+								{
+									"menuName": "资源菜单",
+									"url": "/system/ResourceInfoList.html",
+									"menuflag": "ResourceInfolist"
+								},
+								{
+									"menuName": "角色",
+									"url": "/system/RoleInfoList.html",
+									"menuflag": "RoleInfolist"
+								},
+								{
+									"menuName": "角色权限",
+									"url": "/system/RolePermissionList.html",
+									"menuflag": "RolePermissionlist"
+								},
+								{
+									"menuName": "用户",
+									"url": "/system/UserList.html",
+									"menuflag": "Userlist"
+								},
+								{
+									"menuName": "用户组",
+									"url": "/system/UserGroupList.html",
+									"menuflag": "UserGrouplist"
+								},
+								{
+									"menuName": "用户权限",
+									"url": "/system/UserRoleList.html",
+									"menuflag": "UserRolelist"
 								}
 							]
-						},
-						{
-							"block": "控制面板",
-							"abbreviation": "控制面板",
-							"groups": [{
-								"groupName": "系统管理",
-								"menuflag": "sys",
-								"menus": [{
-									"menuName": "系统设置",
-									"url": "sys/seting.html",
-									"menuflag": "sysseting"
-								}]
-							}]
-						}
-					]
+						}]
+					}
+				]
 			});
 		</script>
 		<!--列表数据绑定开始-->
