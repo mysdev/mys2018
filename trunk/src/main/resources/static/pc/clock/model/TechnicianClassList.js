@@ -1,4 +1,5 @@
 var myPage;
+var self;
 var query = {};
 query.pageNo=1;
 query.pageSize = 20;
@@ -23,7 +24,7 @@ function Node(obj) {
 
 function doQueryActionSuccess(data){
 	var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
-	self.technicianClassList(mappedTasks);
+	if(self){self.technicianClassList(mappedTasks);}
 	myPage = data.page;
 	bindPage();
 	    
@@ -38,7 +39,7 @@ function reloadDate(data){
 
 //定义ViewModel对象
 var TechnicianClassViewModel = function () {  
-	var self=this;
+	self=this;
     //添加动态监视数组对象
     self.technicianClassList = ko.observableArray([]);
     	
