@@ -46,6 +46,14 @@ public interface ConfigService {
 	 * @return Config
 	 */
 	Config queryConfigByPropertyId(Integer propertyId);
+	
+	/**
+	 * @Title: queryConfigByPropertyCode
+	 * @Description:根据实体标识查询系统配置
+	 * @param propertyCode 实体标识
+	 * @return Config
+	 */
+	Config queryConfigByPropertyCode(String propertyCode);
 	 
 	/**
 	 * @Title: queryConfigForPage

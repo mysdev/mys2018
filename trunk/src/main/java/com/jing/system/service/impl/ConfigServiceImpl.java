@@ -88,7 +88,18 @@ public class  ConfigServiceImpl implements ConfigService {
 	@Override
 	public Config queryConfigByPropertyId(Integer propertyId){
 		return configMapper.queryConfigByPropertyId(propertyId);
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	} 
+	/**
+	 * @Title: queryConfigByPropertyCode
+	 * @Description:根据实体标识查询系统配置
+	 * @param propertyCode
+	 *            实体标识
+	 * @return Config
+	 */
+	@Override
+	public Config queryConfigByPropertyCode(String propertyCode) {
+		return configMapper.queryConfigByPropertyCode(propertyCode);
+	}
 	 
 	/**
 	 * @Title: queryConfigForPage

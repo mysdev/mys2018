@@ -84,6 +84,13 @@
 	FROM ts_config WHERE property_id = #{propertyId}
 </select>
 
+<!-- 根据标识查询 系统配置 -->
+<select id="queryConfigByPropertyCode"  resultMap="ConfigResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_config_item"/>
+	FROM ts_config WHERE property_code = #{propertyCode}
+</select>
+
 <!-- 根据属性查询系统配置 -->
 <select id="queryConfigByProperty"  resultMap="ConfigResultMap" parameterType="java.util.Map">
 	SELECT 

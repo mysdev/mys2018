@@ -743,7 +743,7 @@ CREATE TABLE `to_packages_detail` (
 DROP TABLE IF EXISTS `ts_config`;
 CREATE TABLE `ts_config` (
   `property_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '属性标识',
-  `property_code` varchar(16) NOT NULL COMMENT '属性代码',
+  `property_code` varchar(32) NOT NULL COMMENT '属性代码',
   `property_value` varchar(512) NOT NULL COMMENT '属性值',
   `property_note` varchar(32) DEFAULT NULL COMMENT '属性描述',
   `created_by` varchar(32) DEFAULT NULL COMMENT '创建人员',
