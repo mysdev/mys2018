@@ -11,7 +11,13 @@ var TechnicianShiftEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/technicianshift/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/technicianshift/"+opid, "GET", null, function (data){
+			self.shiftId(data.shiftId);
+			self.shiftName(data.shiftName);
+			self.inTime(data.inTime);
+			self.outTime(data.outTime);
+			self.status(data.status);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -23,25 +29,18 @@ var TechnicianShiftEditViewModel = function () {
 		submitPar.status=self.status();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/technicianshift", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/technicianshift", "POST", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianShiftList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/technicianshift/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/technicianshift/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianShiftList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.shiftId(data.shiftId);
-	self.shiftName(data.shiftName);
-	self.inTime(data.inTime);
-	self.outTime(data.outTime);
-	self.status(data.status);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/TechnicianShiftList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

@@ -14,7 +14,16 @@ var TechnicianClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/technicianclass/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/technicianclass/"+opid, "GET", null, function (data){
+			self.detailId(data.detailId);
+			self.classId(data.classId);
+			self.technicianId(data.technicianId);
+			self.clockCt(data.clockCt);
+			self.isWork(data.isWork);
+			self.technicianLevel(data.technicianLevel);
+			self.priority(data.priority);
+			self.seqencing(data.seqencing);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -29,28 +38,18 @@ var TechnicianClassEditViewModel = function () {
 		submitPar.seqencing=self.seqencing();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/technicianclass", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/technicianclass", "POST", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianClassList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/technicianclass/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/technicianclass/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianClassList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.detailId(data.detailId);
-	self.classId(data.classId);
-	self.technicianId(data.technicianId);
-	self.clockCt(data.clockCt);
-	self.isWork(data.isWork);
-	self.technicianLevel(data.technicianLevel);
-	self.priority(data.priority);
-	self.seqencing(data.seqencing);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/TechnicianClassList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

@@ -17,7 +17,19 @@ var ClockOrderEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/clockorder/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/clockorder/"+opid, "GET", null, function (data){
+			self.orderId(data.orderId);
+			self.authorizationId(data.authorizationId);
+			self.types(data.types);
+			self.objectId(data.objectId);
+			self.status(data.status);
+			self.materialId(data.materialId);
+			self.goodsId(data.goodsId);
+			self.goodsTime(data.goodsTime);
+			self.technicianId(data.technicianId);
+			self.customerNote(data.customerNote);
+			self.note(data.note);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -35,31 +47,18 @@ var ClockOrderEditViewModel = function () {
 		submitPar.note=self.note();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/clockorder", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/clockorder", "POST", submitPar, function (data){
+				ChangeUrl("./clock/ClockOrderList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/clockorder/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/clockorder/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/ClockOrderList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.orderId(data.orderId);
-	self.authorizationId(data.authorizationId);
-	self.types(data.types);
-	self.objectId(data.objectId);
-	self.status(data.status);
-	self.materialId(data.materialId);
-	self.goodsId(data.goodsId);
-	self.goodsTime(data.goodsTime);
-	self.technicianId(data.technicianId);
-	self.customerNote(data.customerNote);
-	self.note(data.note);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/ClockOrderList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

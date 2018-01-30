@@ -10,7 +10,12 @@ var TechnicianSkillEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/technicianskill/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/technicianskill/"+opid, "GET", null, function (data){
+			self.tsId(data.tsId);
+			self.skillId(data.skillId);
+			self.technicianId(data.technicianId);
+			self.skillLevel(data.skillLevel);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -21,24 +26,18 @@ var TechnicianSkillEditViewModel = function () {
 		submitPar.skillLevel=self.skillLevel();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/technicianskill", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/technicianskill", "POST", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianSkillList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/technicianskill/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/technicianskill/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianSkillList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.tsId(data.tsId);
-	self.skillId(data.skillId);
-	self.technicianId(data.technicianId);
-	self.skillLevel(data.skillLevel);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/TechnicianSkillList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

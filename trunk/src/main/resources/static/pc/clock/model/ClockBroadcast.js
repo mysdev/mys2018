@@ -10,7 +10,12 @@ var ClockBroadcastEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/clockbroadcast/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/clockbroadcast/"+opid, "GET", null, function (data){
+			self.broadcastId(data.broadcastId);
+			self.stauts(data.stauts);
+			self.types(data.types);
+			self.content(data.content);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -21,24 +26,18 @@ var ClockBroadcastEditViewModel = function () {
 		submitPar.content=self.content();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/clockbroadcast", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/clockbroadcast", "POST", submitPar, function (data){
+				ChangeUrl("./clock/ClockBroadcastList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/clockbroadcast/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/clockbroadcast/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/ClockBroadcastList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.broadcastId(data.broadcastId);
-	self.stauts(data.stauts);
-	self.types(data.types);
-	self.content(data.content);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/ClockBroadcastList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

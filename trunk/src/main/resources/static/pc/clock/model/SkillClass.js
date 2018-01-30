@@ -16,7 +16,18 @@ var SkillClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/skillclass/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/skillclass/"+opid, "GET", null, function (data){
+			self.classId(data.classId);
+			self.className(data.className);
+			self.status(data.status);
+			self.clockFlag(data.clockFlag);
+			self.flag(data.flag);
+			self.types(data.types);
+			self.isPriority(data.isPriority);
+			self.priorityAccumulate(data.priorityAccumulate);
+			self.arriveWarn(data.arriveWarn);
+			self.arriveRemind(data.arriveRemind);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -33,30 +44,18 @@ var SkillClassEditViewModel = function () {
 		submitPar.arriveRemind=self.arriveRemind();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/skillclass", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/skillclass", "POST", submitPar, function (data){
+				ChangeUrl("./clock/SkillClassList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/skillclass/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/skillclass/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/SkillClassList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.classId(data.classId);
-	self.className(data.className);
-	self.status(data.status);
-	self.clockFlag(data.clockFlag);
-	self.flag(data.flag);
-	self.types(data.types);
-	self.isPriority(data.isPriority);
-	self.priorityAccumulate(data.priorityAccumulate);
-	self.arriveWarn(data.arriveWarn);
-	self.arriveRemind(data.arriveRemind);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/SkillClassList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

@@ -15,7 +15,17 @@ var TechnicianEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/technician/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/technician/"+opid, "GET", null, function (data){
+			self.technicianId(data.technicianId);
+			self.empId(data.empId);
+			self.techNo(data.techNo);
+			self.techCard(data.techCard);
+			self.techName(data.techName);
+			self.sex(data.sex);
+			self.shiftId(data.shiftId);
+			self.status(data.status);
+			self.shiftStatus(data.shiftStatus);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -31,29 +41,18 @@ var TechnicianEditViewModel = function () {
 		submitPar.shiftStatus=self.shiftStatus();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/technician", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/technician", "POST", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/technician/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/technician/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/TechnicianList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.technicianId(data.technicianId);
-	self.empId(data.empId);
-	self.techNo(data.techNo);
-	self.techCard(data.techCard);
-	self.techName(data.techName);
-	self.sex(data.sex);
-	self.shiftId(data.shiftId);
-	self.status(data.status);
-	self.shiftStatus(data.shiftStatus);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/TechnicianList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();

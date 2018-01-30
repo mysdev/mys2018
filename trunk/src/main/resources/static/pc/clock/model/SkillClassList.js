@@ -1,5 +1,4 @@
 var myPage;
-var self;
 var query = {};
 query.pageNo=1;
 query.pageSize = 20;
@@ -24,29 +23,30 @@ function Node(obj) {
 	this.updatedDate = ko.observable(obj.updatedDate); 
 }
 
-function doQueryActionSuccess(data){
-	var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
-	if(self){self.skillClassList(mappedTasks);}
-	myPage = data.page;
-	bindPage();
-	    
-	$("table tbody td .tomodify").bind(function(){
-		ChangeUrl('./clock/SkillClass.html?action=Edit&id='+$(this).attr('data'));
-	});
-}
-
-function reloadDate(data){
-	myAjax("/skillclasss", "GET", query, doQueryActionSuccess, true);
-}
 
 //定义ViewModel对象
 var SkillClassViewModel = function () {  
 	self=this;
     //添加动态监视数组对象
     self.skillClassList = ko.observableArray([]);
+    
+    //重载数据
+    self.reloadData = function(){
+    	myAjax("/skillclasss", "GET", query, function (data){
+			var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
+			self.skillClassList(mappedTasks);
+			myPage = data.page;
+			bindPage();
+			    
+			$("table tbody td .tomodify").bind(function(){
+				ChangeUrl('./clock/SkillClass.html?action=Edit&id='+$(this).attr('data'));
+			});
+		}, true);
+    };
+    
     	
-    //初始化数据
-    reloadDate(null);
+    //初始化数据--如何调用self.reloadData
+    
 	
 	//搜索
 	self.search = function(obj) {
@@ -120,7 +120,7 @@ var bindPage =function(){
         currentPage: myPage.page,
         onPageChange: function (num, type) {
         	query.pageNo=num;
-        	reloadDate(null);
+        	//如何触发  self.reloadData
 //            if (type != 'init') {
 //            	ChangeUrl('./clock/SkillClassList.html?page=' + num);
 //            }

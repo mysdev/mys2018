@@ -15,7 +15,17 @@ var ClockRecordEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	myAjax("/clockrecord/"+opid, "GET", null, doQueryActionSuccess, true);
+    	myAjax("/clockrecord/"+opid, "GET", null, function (data){
+			self.recordId(data.recordId);
+			self.orderId(data.orderId);
+			self.technicianId(data.technicianId);
+			self.classId(data.classId);
+			self.status(data.status);
+			self.beginTime(data.beginTime);
+			self.endTime(data.endTime);
+			self.actureTime(data.actureTime);
+			self.recordStatus(data.recordStatus);
+		}, true);
 	}
 
 	//【提交】按钮押下处理
@@ -31,29 +41,18 @@ var ClockRecordEditViewModel = function () {
 		submitPar.recordStatus=self.recordStatus();
     	
     	if(opFalg=="Add"){
-    		myAjaxJson("/clockrecord", "POST", null, doActionSuccess, true);
+    		myAjaxJson("/clockrecord", "POST", submitPar, function (data){
+				ChangeUrl("./clock/ClockRecordList.html");
+			}, true);
 		}else{
     		var opid=getQueryString('id');
-    		myAjaxJson("/clockrecord/"+opid, "PUT", null, doActionSuccess, true);
+    		myAjaxJson("/clockrecord/"+opid, "PUT", submitPar, function (data){
+				ChangeUrl("./clock/ClockRecordList.html");
+			}, true);
     	}
     };
 };
 
-function doQueryActionSuccess(data){
-	self.recordId(data.recordId);
-	self.orderId(data.orderId);
-	self.technicianId(data.technicianId);
-	self.classId(data.classId);
-	self.status(data.status);
-	self.beginTime(data.beginTime);
-	self.endTime(data.endTime);
-	self.actureTime(data.actureTime);
-	self.recordStatus(data.recordStatus);
-}
-
-function doActionSuccess(data){
-	ChangeUrl("./clock/ClockRecordList.html");
-}
 
 $().ready(function(){
 	$("#txtName").focus();
