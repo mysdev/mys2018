@@ -15,24 +15,7 @@ var TechnicianEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/technician/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.technicianId(result.technicianId);
-				self.empId(result.empId);
-				self.techNo(result.techNo);
-				self.techCard(result.techCard);
-				self.techName(result.techName);
-				self.sex(result.sex);
-				self.shiftId(result.shiftId);
-				self.status(result.status);
-				self.shiftStatus(result.shiftStatus);
-	        }
-	    });
+    	myAjax("/technician/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -48,37 +31,29 @@ var TechnicianEditViewModel = function () {
 		submitPar.shiftStatus=self.shiftStatus();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/technician",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/TechnicianList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
-		}
-    	else{
+    		myAjaxJson("/technician", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/technician/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/TechnicianList.html");
-	            }
-	        });
+    		myAjaxJson("/technician/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.technicianId(data.technicianId);
+	self.empId(data.empId);
+	self.techNo(data.techNo);
+	self.techCard(data.techCard);
+	self.techName(data.techName);
+	self.sex(data.sex);
+	self.shiftId(data.shiftId);
+	self.status(data.status);
+	self.shiftStatus(data.shiftStatus);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/TechnicianList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();

@@ -14,23 +14,7 @@ var TechnicianClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/technicianclass/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.detailId(result.detailId);
-				self.classId(result.classId);
-				self.technicianId(result.technicianId);
-				self.clockCt(result.clockCt);
-				self.isWork(result.isWork);
-				self.technicianLevel(result.technicianLevel);
-				self.priority(result.priority);
-				self.seqencing(result.seqencing);
-	        }
-	    });
+    	myAjax("/technicianclass/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -45,37 +29,28 @@ var TechnicianClassEditViewModel = function () {
 		submitPar.seqencing=self.seqencing();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/technicianclass",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/TechnicianClassList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
-		}
-    	else{
+    		myAjaxJson("/technicianclass", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/technicianclass/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/TechnicianClassList.html");
-	            }
-	        });
+    		myAjaxJson("/technicianclass/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.detailId(data.detailId);
+	self.classId(data.classId);
+	self.technicianId(data.technicianId);
+	self.clockCt(data.clockCt);
+	self.isWork(data.isWork);
+	self.technicianLevel(data.technicianLevel);
+	self.priority(data.priority);
+	self.seqencing(data.seqencing);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/TechnicianClassList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();

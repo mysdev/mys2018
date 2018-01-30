@@ -1,4 +1,10 @@
 var myPage;
+var query = {};
+query.pageNo=1;
+query.pageSize = 20;
+if(getQueryString('page')!=undefined){
+	query.pageNo=getQueryString('page');
+}
 
 function Node(obj) {
 	this.shiftId = ko.observable(obj.shiftId); 
@@ -12,62 +18,59 @@ function Node(obj) {
 	this.updatedDate = ko.observable(obj.updatedDate); 
 }
 
+function doQueryActionSuccess(data){
+	var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
+	self.technicianShiftList(mappedTasks);
+	myPage = data.page;
+	bindPage();
+	    
+	$("table tbody td .tomodify").bind(function(){
+		ChangeUrl('./clock/TechnicianShift.html?action=Edit&id='+$(this).attr('data'));
+	});
+}
+
+function reloadDate(data){
+	myAjax("/technicianshifts", "GET", query, doQueryActionSuccess, true);
+}
+
 //定义ViewModel对象
 var TechnicianShiftViewModel = function () {  
 	var self=this;
     //添加动态监视数组对象
     self.technicianShiftList = ko.observableArray([]);
-    
-    var myurl=homeUrl+"/technicianshifts";
-    if(getQueryString('page')!=null){
-    	myurl+="?pageNo="+getQueryString('page');
-    }
     	
     //初始化数据
-    $.getJSON(myurl,function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-	    self.technicianShiftList(mappedTasks);
-	    myPage = result.page;
-	    bindPage();
-	    
-	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+$(this).attr('data'));
-	    });
-	});
+    reloadDate(null);
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/technicianshifts?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-		    self.technicianShiftList(mappedTasks);
-		    myPage = result.page;
-		    bindPage();
-		});
+		query.pageNo=1;
+		query.pageSize = 20;
+		qeury.keyWord = $("txtKeywords").val(); //查询参数格式
+		myAjax("/technicianshifts", "GET", query, doQueryActionSuccess, true);
     };
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Add');
+    	ChangeUrl('./clock/TechnicianShift.html?action=Add');
     };
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShift.html?action=Edit&id='+obj.shiftId());
+    	ChangeUrl('./clock/TechnicianShift.html?action=Edit&id='+obj.shiftId());
     };
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
-	        type: 'DELETE',
-	        url: homeUrl+'/technicianshift/'+id,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (datas) {
-	            parent.dialog(datas.message).showModal();
-	        }
-	    });
+    	parent.dialog({
+            title: '提示',
+            content: '确定要删除该记录！',
+            okValue: '确定',
+            ok: function () {
+		    	var id = $(event.currentTarget).attr('data');
+		    	myAjax("/technicianshift/"+id, "DELETE", null, reloadDate, false);
+			}
+        }).showModal();
     }
     
     //批量删除
@@ -88,18 +91,9 @@ var TechnicianShiftViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
-				        type: 'DELETE',
-				        url: homeUrl+'/technicianshift/'+$(this).attr('data'),
-				        cache: false,
-				        async: false,
-				        dataType: "json",
-				        success: function (datas) {
-				            
-				        }
-				    });
+	        		myAjax("/technicianshift/"+id, "DELETE", null, null, false);
 	        	});
-	        	document.URL=location.href;
+	        	location.reload();
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
@@ -109,9 +103,7 @@ var TechnicianShiftViewModel = function () {
 };
 
 $().ready(function(){
-
     ko.applyBindings(new TechnicianShiftViewModel());
-
 });
 
 var bindPage =function(){
@@ -121,9 +113,11 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-            if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianShiftList.html?page=' + num);
-            }
+        	query.pageNo=num;
+        	reloadDate(null);
+//            if (type != 'init') {
+//            	ChangeUrl('./clock/TechnicianShiftList.html?page=' + num);
+//            }
         }
     });
 }

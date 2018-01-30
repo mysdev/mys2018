@@ -12,18 +12,7 @@ var ClockSkillEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	MyAjax("GET",
-    		homeUrl+"/clockskill/"+opid,
-    		null,
-    		function(result){
-    			self.skillId(result.skillId);
-				self.skillName(result.skillName);
-				self.materialId(result.materialId);
-				self.isClock(result.isClock);
-				self.classs(result.classs);
-				self.status(result.status);
-    		}
-		);
+    	myAjax("/clockskill/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -36,26 +25,26 @@ var ClockSkillEditViewModel = function () {
 		submitPar.status=self.status();
     	
     	if(opFalg=="Add"){
-    		MyAjax("POST",
-	    		homeUrl+"/clockskill",
-	    		submitPar,
-	    		function(result){
-                	ChangeUrl("./clock/ClockSkillList.html");
-	    		}
-			);
-		}
-    	else{
+    		myAjaxJson("/clockskill", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		MyAjax("PUT",
-	    		homeUrl+"/clockskill/"+opid,
-	    		submitPar,
-	    		function(result){
-    			ChangeUrl("./clock/ClockSkillList.html");
-	    		}
-			);
+    		myAjaxJson("/clockskill/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.skillId(data.skillId);
+	self.skillName(data.skillName);
+	self.materialId(data.materialId);
+	self.isClock(data.isClock);
+	self.classs(data.classs);
+	self.status(data.status);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/ClockSkillList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();

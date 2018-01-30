@@ -1,4 +1,10 @@
 var myPage;
+var query = {};
+query.pageNo=1;
+query.pageSize = 20;
+if(getQueryString('page')!=undefined){
+	query.pageNo=getQueryString('page');
+}
 
 function Node(obj) {
 	this.orderId = ko.observable(obj.orderId); 
@@ -18,62 +24,59 @@ function Node(obj) {
 	this.updatedDate = ko.observable(obj.updatedDate); 
 }
 
+function doQueryActionSuccess(data){
+	var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
+	self.clockOrderList(mappedTasks);
+	myPage = data.page;
+	bindPage();
+	    
+	$("table tbody td .tomodify").bind(function(){
+		ChangeUrl('./clock/ClockOrder.html?action=Edit&id='+$(this).attr('data'));
+	});
+}
+
+function reloadDate(data){
+	myAjax("/clockorders", "GET", query, doQueryActionSuccess, true);
+}
+
 //定义ViewModel对象
 var ClockOrderViewModel = function () {  
 	var self=this;
     //添加动态监视数组对象
     self.clockOrderList = ko.observableArray([]);
-    
-    var myurl=homeUrl+"/clockorders";
-    if(getQueryString('page')!=null){
-    	myurl+="?pageNo="+getQueryString('page');
-    }
     	
     //初始化数据
-    $.getJSON(myurl,function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-	    self.clockOrderList(mappedTasks);
-	    myPage = result.page;
-	    bindPage();
-	    
-	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrder.html?action=Edit&id='+$(this).attr('data'));
-	    });
-	});
+    reloadDate(null);
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/clockorders?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-		    self.clockOrderList(mappedTasks);
-		    myPage = result.page;
-		    bindPage();
-		});
+		query.pageNo=1;
+		query.pageSize = 20;
+		qeury.keyWord = $("txtKeywords").val(); //查询参数格式
+		myAjax("/clockorders", "GET", query, doQueryActionSuccess, true);
     };
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrder.html?action=Add');
+    	ChangeUrl('./clock/ClockOrder.html?action=Add');
     };
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrder.html?action=Edit&id='+obj.orderId());
+    	ChangeUrl('./clock/ClockOrder.html?action=Edit&id='+obj.orderId());
     };
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
-	        type: 'DELETE',
-	        url: homeUrl+'/clockorder/'+id,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (datas) {
-	            parent.dialog(datas.message).showModal();
-	        }
-	    });
+    	parent.dialog({
+            title: '提示',
+            content: '确定要删除该记录！',
+            okValue: '确定',
+            ok: function () {
+		    	var id = $(event.currentTarget).attr('data');
+		    	myAjax("/clockorder/"+id, "DELETE", null, reloadDate, false);
+			}
+        }).showModal();
     }
     
     //批量删除
@@ -94,18 +97,9 @@ var ClockOrderViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
-				        type: 'DELETE',
-				        url: homeUrl+'/clockorder/'+$(this).attr('data'),
-				        cache: false,
-				        async: false,
-				        dataType: "json",
-				        success: function (datas) {
-				            
-				        }
-				    });
+	        		myAjax("/clockorder/"+id, "DELETE", null, null, false);
 	        	});
-	        	document.URL=location.href;
+	        	location.reload();
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
@@ -115,9 +109,7 @@ var ClockOrderViewModel = function () {
 };
 
 $().ready(function(){
-
     ko.applyBindings(new ClockOrderViewModel());
-
 });
 
 var bindPage =function(){
@@ -127,9 +119,11 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-            if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'./clock/ClockOrderList.html?page=' + num);
-            }
+        	query.pageNo=num;
+        	reloadDate(null);
+//            if (type != 'init') {
+//            	ChangeUrl('./clock/ClockOrderList.html?page=' + num);
+//            }
         }
     });
 }

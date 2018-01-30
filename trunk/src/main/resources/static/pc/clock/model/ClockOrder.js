@@ -17,26 +17,7 @@ var ClockOrderEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/clockorder/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.orderId(result.orderId);
-				self.authorizationId(result.authorizationId);
-				self.types(result.types);
-				self.objectId(result.objectId);
-				self.status(result.status);
-				self.materialId(result.materialId);
-				self.goodsId(result.goodsId);
-				self.goodsTime(result.goodsTime);
-				self.technicianId(result.technicianId);
-				self.customerNote(result.customerNote);
-				self.note(result.note);
-	        }
-	    });
+    	myAjax("/clockorder/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -54,37 +35,31 @@ var ClockOrderEditViewModel = function () {
 		submitPar.note=self.note();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/clockorder",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockOrderList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
-		}
-    	else{
+    		myAjaxJson("/clockorder", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/clockorder/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/ClockOrderList.html");
-	            }
-	        });
+    		myAjaxJson("/clockorder/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.orderId(data.orderId);
+	self.authorizationId(data.authorizationId);
+	self.types(data.types);
+	self.objectId(data.objectId);
+	self.status(data.status);
+	self.materialId(data.materialId);
+	self.goodsId(data.goodsId);
+	self.goodsTime(data.goodsTime);
+	self.technicianId(data.technicianId);
+	self.customerNote(data.customerNote);
+	self.note(data.note);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/ClockOrderList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();

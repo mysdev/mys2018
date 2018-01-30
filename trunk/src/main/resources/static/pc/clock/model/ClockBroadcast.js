@@ -10,19 +10,7 @@ var ClockBroadcastEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/clockbroadcast/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.broadcastId(result.broadcastId);
-				self.stauts(result.stauts);
-				self.types(result.types);
-				self.content(result.content);
-	        }
-	    });
+    	myAjax("/clockbroadcast/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -33,37 +21,24 @@ var ClockBroadcastEditViewModel = function () {
 		submitPar.content=self.content();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/clockbroadcast",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/ClockBroadcastList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
-		}
-    	else{
+    		myAjaxJson("/clockbroadcast", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/clockbroadcast/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/ClockBroadcastList.html");
-	            }
-	        });
+    		myAjaxJson("/clockbroadcast/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.broadcastId(data.broadcastId);
+	self.stauts(data.stauts);
+	self.types(data.types);
+	self.content(data.content);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/ClockBroadcastList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();

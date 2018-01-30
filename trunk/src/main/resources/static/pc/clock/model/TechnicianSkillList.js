@@ -1,4 +1,10 @@
 var myPage;
+var query = {};
+query.pageNo=1;
+query.pageSize = 20;
+if(getQueryString('page')!=undefined){
+	query.pageNo=getQueryString('page');
+}
 
 function Node(obj) {
 	this.tsId = ko.observable(obj.tsId); 
@@ -11,62 +17,59 @@ function Node(obj) {
 	this.updatedDate = ko.observable(obj.updatedDate); 
 }
 
+function doQueryActionSuccess(data){
+	var mappedTasks = $.map(data.data, function(item) { return new Node(item) });  
+	self.technicianSkillList(mappedTasks);
+	myPage = data.page;
+	bindPage();
+	    
+	$("table tbody td .tomodify").bind(function(){
+		ChangeUrl('./clock/TechnicianSkill.html?action=Edit&id='+$(this).attr('data'));
+	});
+}
+
+function reloadDate(data){
+	myAjax("/technicianskills", "GET", query, doQueryActionSuccess, true);
+}
+
 //定义ViewModel对象
 var TechnicianSkillViewModel = function () {  
 	var self=this;
     //添加动态监视数组对象
     self.technicianSkillList = ko.observableArray([]);
-    
-    var myurl=homeUrl+"/technicianskills";
-    if(getQueryString('page')!=null){
-    	myurl+="?pageNo="+getQueryString('page');
-    }
     	
     //初始化数据
-    $.getJSON(myurl,function(result){
-		var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-	    self.technicianSkillList(mappedTasks);
-	    myPage = result.page;
-	    bindPage();
-	    
-	    $("table tbody td .tomodify").bind(function(){
-	    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkill.html?action=Edit&id='+$(this).attr('data'));
-	    });
-	});
+    reloadDate(null);
 	
 	//搜索
 	self.search = function(obj) {
-		$.getJSON(homeUrl+"/technicianskills?attendanceName="+$("txtKeywords").val(),function(result){
-			var mappedTasks = $.map(result.data, function(item) { return new Node(item) });  
-		    self.technicianSkillList(mappedTasks);
-		    myPage = result.page;
-		    bindPage();
-		});
+		query.pageNo=1;
+		query.pageSize = 20;
+		qeury.keyWord = $("txtKeywords").val(); //查询参数格式
+		myAjax("/technicianskills", "GET", query, doQueryActionSuccess, true);
     };
     
     //新增
     self.add = function(obj) {
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkill.html?action=Add');
+    	ChangeUrl('./clock/TechnicianSkill.html?action=Add');
     };
     
     //修改
     self.modify=function(obj){
-    	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkill.html?action=Edit&id='+obj.tsId());
+    	ChangeUrl('./clock/TechnicianSkill.html?action=Edit&id='+obj.tsId());
     };
     
     //删除
     self.delete=function(obj){
-    	var id = $(event.currentTarget).attr('data');
-    	$.ajax({
-	        type: 'DELETE',
-	        url: homeUrl+'/technicianskill/'+id,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (datas) {
-	            parent.dialog(datas.message).showModal();
-	        }
-	    });
+    	parent.dialog({
+            title: '提示',
+            content: '确定要删除该记录！',
+            okValue: '确定',
+            ok: function () {
+		    	var id = $(event.currentTarget).attr('data');
+		    	myAjax("/technicianskill/"+id, "DELETE", null, reloadDate, false);
+			}
+        }).showModal();
     }
     
     //批量删除
@@ -87,18 +90,9 @@ var TechnicianSkillViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		$.ajax({
-				        type: 'DELETE',
-				        url: homeUrl+'/technicianskill/'+$(this).attr('data'),
-				        cache: false,
-				        async: false,
-				        dataType: "json",
-				        success: function (datas) {
-				            
-				        }
-				    });
+	        		myAjax("/technicianskill/"+id, "DELETE", null, null, false);
 	        	});
-	        	document.URL=location.href;
+	        	location.reload();
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
@@ -108,9 +102,7 @@ var TechnicianSkillViewModel = function () {
 };
 
 $().ready(function(){
-
     ko.applyBindings(new TechnicianSkillViewModel());
-
 });
 
 var bindPage =function(){
@@ -120,9 +112,11 @@ var bindPage =function(){
         visiblePages: myPage.limit,
         currentPage: myPage.page,
         onPageChange: function (num, type) {
-            if (type != 'init') {
-            	$("#mainframe", parent.window.document).attr("src",'./clock/TechnicianSkillList.html?page=' + num);
-            }
+        	query.pageNo=num;
+        	reloadDate(null);
+//            if (type != 'init') {
+//            	ChangeUrl('./clock/TechnicianSkillList.html?page=' + num);
+//            }
         }
     });
 }

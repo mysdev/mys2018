@@ -16,25 +16,7 @@ var SkillClassEditViewModel = function () {
     
     if(opFalg!="Add"){
     	var opid=getQueryString('id');
-    	$.ajax({
-	        type: 'GET',
-	        url: homeUrl+"/skillclass/"+opid,
-	        cache: false,
-	        async: false,
-	        dataType: "json",
-	        success: function (result) {
-				self.classId(result.classId);
-				self.className(result.className);
-				self.status(result.status);
-				self.clockFlag(result.clockFlag);
-				self.flag(result.flag);
-				self.types(result.types);
-				self.isPriority(result.isPriority);
-				self.priorityAccumulate(result.priorityAccumulate);
-				self.arriveWarn(result.arriveWarn);
-				self.arriveRemind(result.arriveRemind);
-	        }
-	    });
+    	myAjax("/skillclass/"+opid, "GET", null, doQueryActionSuccess, true);
 	}
 
 	//【提交】按钮押下处理
@@ -51,37 +33,30 @@ var SkillClassEditViewModel = function () {
 		submitPar.arriveRemind=self.arriveRemind();
     	
     	if(opFalg=="Add"){
-	        $.ajax({
-	            type: "POST",
-	            url: homeUrl+"/skillclass",  //新增接口
-	            dataType: "json",
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (result) {
-	                if(result.code==200){
-	                	$("#mainframe", parent.window.document).attr("src","./clock/SkillClassList.html");
-	                }
-	                else{
-	                	parent.dialog(result.message).showModal();
-	                }	                
-	            }
-	        });
-		}
-    	else{
+    		myAjaxJson("/skillclass", "POST", null, doActionSuccess, true);
+		}else{
     		var opid=getQueryString('id');
-    		$.ajax({
-	            type: "PUT",
-	            url: homeUrl+"/skillclass/"+opid,  //修改接口
-	            contentType : "application/json", 
-	            data: JSON.stringify(submitPar),
-	            success: function (json) {
-	                alert(json.result);
-	                $("#mainframe", parent.window.document).attr("src","./clock/SkillClassList.html");
-	            }
-	        });
+    		myAjaxJson("/skillclass/"+opid, "PUT", null, doActionSuccess, true);
     	}
     };
 };
+
+function doQueryActionSuccess(data){
+	self.classId(data.classId);
+	self.className(data.className);
+	self.status(data.status);
+	self.clockFlag(data.clockFlag);
+	self.flag(data.flag);
+	self.types(data.types);
+	self.isPriority(data.isPriority);
+	self.priorityAccumulate(data.priorityAccumulate);
+	self.arriveWarn(data.arriveWarn);
+	self.arriveRemind(data.arriveRemind);
+}
+
+function doActionSuccess(data){
+	ChangeUrl("./clock/SkillClassList.html");
+}
 
 $().ready(function(){
 	$("#txtName").focus();
