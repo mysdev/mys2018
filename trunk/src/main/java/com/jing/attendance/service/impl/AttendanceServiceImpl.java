@@ -20,6 +20,7 @@ import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.dao.AttendanceMapper;
 import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
+import com.jing.attendance.service.EmployeeAttendanceService;
 
 /**
  * @ClassName: Attendance
@@ -38,6 +39,9 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	
 	@Autowired
 	private AttendanceDetailService attendanceDetailService;
+	
+	@Autowired
+	private EmployeeAttendanceService employeeAttendanceService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -54,9 +58,6 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	public Attendance addAttendance(Attendance attendance){
 		int ret = attendanceMapper.addAttendance(attendance);
 		if(ret>0){
-			if(attendance.getTypes().intValue()==2){
-				attendanceDetailService.createAttendanceDetail(attendance.getAttendanceId(), null);
-			}
 			return attendance;
 		}
 		return null;
@@ -83,6 +84,9 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceByAttendanceId(Integer attendanceId){
+		//TODO 对应详情如何实施-清空关联
+		// 详情清空
+		
 		return attendanceMapper.dropAttendanceByAttendanceId(attendanceId);
 	}
 	

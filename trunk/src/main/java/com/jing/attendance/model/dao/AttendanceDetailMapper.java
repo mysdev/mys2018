@@ -44,6 +44,15 @@ public interface AttendanceDetailMapper {
 	 */
 	Integer dropAttendanceDetailByAttId(Integer attId);
 	
+	/** 
+	* @Title: dropAttendanceDetailByAttendanceId 
+	* @Description: 清空规则下的所有详情配置
+	* @param attendanceId
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer dropAttendanceDetailByAttendanceId(Integer attendanceId);
+	
 	/**
 	 * @Title: queryAttendanceDetailByAttId
 	 * @Description:根据实体标识查询门店考勤详情
@@ -67,6 +76,15 @@ public interface AttendanceDetailMapper {
 	  * @return List<AttendanceDetail>
 	  */
 	 List<AttendanceDetail> queryAttendanceDetailByProperty(@Param("attendanceDetail") Map<String, Object> map);
+
+	 /** 
+		* @Title: queryAttendanceDetailHistory 
+		* @Description: 查询考勤规则历史
+		* @param attendanceId 规则标识
+		* @return  List<String>    返回类型 
+		* @throws 
+		*/
+	List<String> queryAttendanceDetailHistory(Integer attendanceId);
 	 
 	 
 	 

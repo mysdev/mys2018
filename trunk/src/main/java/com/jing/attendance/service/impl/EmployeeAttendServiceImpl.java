@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jing.utils.Constant;
+import com.jing.utils.DateUtil;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
@@ -80,14 +81,20 @@ public class  EmployeeAttendServiceImpl implements EmployeeAttendService {
 	}
 	
 	/**
-	 * @Title: queryEmployeeAttendByAttId
-	 * @Description:根据实体标识查询打卡记录
-	 * @param attId 实体标识
+	 * @Title: queryEmployeeAttendByEmployeeId
+	 * @Description:根据员工标识查询打卡记录
+	 * @param empId 员工标识
 	 * @return EmployeeAttend
 	 */
 	@Override
-	public EmployeeAttend queryEmployeeAttendByAttId(Integer attId){
-		return employeeAttendMapper.queryEmployeeAttendByAttId(attId);
+	public List<EmployeeAttend> queryEmployeeAttendByEmployeeId(String empId, String yearMonth){
+		if(yearMonth==null || yearMonth.length()!=7){
+			yearMonth = DateUtil.getDateYyyyMM();
+		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("employeeId", empId);
+		query.put("yearMonth", yearMonth);
+		return employeeAttendMapper.queryEmployeeAttendByProperty(query);
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
 	/**

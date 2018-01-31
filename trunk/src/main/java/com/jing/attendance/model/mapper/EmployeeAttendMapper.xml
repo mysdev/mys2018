@@ -85,7 +85,9 @@
 	FROM tw_employee_attend 
 	<where>
 		<include refid="sql_employeeAttend_query_nowhere"/>
+		<if test="employeeAttend.yearMonth != null">AND date_format(now(),'%Y-%m')=#{yearMonth} </if>		
 	</where>
+	order by attTime desc
 </select>
 
 <!-- 根据打卡记录属性与分页信息分页查询打卡记录信息 -->
@@ -95,6 +97,7 @@
 	FROM tw_employee_attend 
 	<where>
 		<include refid="sql_employeeAttend_query_nowhere"/>
+		<if test="employeeAttend.yearMonth != null">AND date_format(now(),'%Y-%m')=#{yearMonth} </if>
 	</where>
 </select>
 

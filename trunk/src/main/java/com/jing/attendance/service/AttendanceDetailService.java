@@ -15,15 +15,6 @@ import com.jing.attendance.model.entity.AttendanceDetail;
  */
 public interface AttendanceDetailService {
 	
-	/** 
-	* @Title: createAttendanceDetail 
-	* @Description: 生成考勤详情
-	* @param attendanceId 考勤标识
-	* @param yearMonth 待生成月份
-	* @return  List<AttendanceDetail>    返回类型 
-	* @throws 
-	*/
-	List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth);
 	
 	/** 
 	* @Title: queryAttendanceDetail 
@@ -83,6 +74,24 @@ public interface AttendanceDetailService {
 	 * @Description:根据属性查询门店考勤详情
 	 * @return List<AttendanceDetail>
 	 */
-	 List<AttendanceDetail> queryAttendanceDetailByProperty(Map<String, Object> map);	 
+	List<AttendanceDetail> queryAttendanceDetailByProperty(Map<String, Object> map);
+
+	/** 
+	* @Title: queryAttendanceDetailHistory 
+	* @Description: 查询考勤规则历史
+	* @param attendanceId 规则标识
+	* @return  List<String>    返回类型 
+	* @throws 
+	*/
+	List<String> queryAttendanceDetailHistory(Integer attendanceId);
+
+	/** 
+	* @Title: modifyAttendanceDetailBatch 
+	* @Description: 修改门店考勤详情
+	* @param attendanceList
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList);	 
 	 
 }

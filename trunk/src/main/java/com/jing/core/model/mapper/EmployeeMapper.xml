@@ -14,6 +14,7 @@
 	<result column="entry_date" property="entryDate"/>
 	<result column="quit_date" property="quitDate"/>
 	<result column="status" property="status"/>
+	<result column="emp_card" property="empCard"/>	
 	<result column="is_manager" property="isManager"/>
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
@@ -22,7 +23,7 @@
 </resultMap>
 
 <sql id="sql_employee_item">
-	emp_id, emp_name, pinyin, emp_no, user_id, store_id, dpt_id, entry_date, quit_date, status, is_manager, created_by, created_date, updated_by, updated_date
+	emp_id, emp_name, pinyin, emp_no, emp_card, user_id, store_id, dpt_id, entry_date, quit_date, status, is_manager, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -32,6 +33,7 @@
 		<if test="employee.empName != null">AND emp_name like concat(#{employee.empName}, '%') </if>
 		<if test="employee.pinyin != null">AND pinyin like concat(#{employee.pinyin}, '%') </if>
 		<if test="employee.empNo != null">AND emp_no like concat(#{employee.empNo}, '%') </if>
+		<if test="employee.empCard != null">AND emp_card like concat(#{employee.empCard}, '%') </if>
 		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
 		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
 		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
@@ -50,6 +52,7 @@
 		<if test="empName != null"> emp_name,</if>
 		<if test="pinyin != null"> pinyin,</if>
 		<if test="empNo != null"> emp_no,</if>
+		<if test="empCard != null"> emp_card,</if>
 		<if test="userId != null"> user_id,</if>
 		<if test="storeId != null"> store_id,</if>
 		<if test="dptId != null"> dpt_id,</if>
@@ -67,6 +70,7 @@
 		<if test="empName != null"> #{empName},</if>
 		<if test="pinyin != null"> #{pinyin},</if>
 		<if test="empNo != null"> #{empNo},</if>
+		<if test="empCard != null"> #{empCard},</if>
 		<if test="userId != null"> #{userId},</if>
 		<if test="storeId != null"> #{storeId},</if>
 		<if test="dptId != null"> #{dptId},</if>
@@ -88,6 +92,7 @@
 		<if test="empName != null"> emp_name = #{empName},</if>
 		<if test="pinyin != null"> pinyin = #{pinyin},</if>
 		<if test="empNo != null"> emp_no = #{empNo},</if>
+		<if test="empCard != null"> emp_card = #{empCard},</if>
 		<if test="userId != null"> user_id = #{userId},</if>
 		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="dptId != null"> dpt_id = #{dptId},</if>
@@ -123,6 +128,11 @@
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee WHERE emp_id = #{empId}
+</select>
+<select id="queryEmployeeByEmpCard"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_employee_item"/>
+	FROM tb_employee WHERE emp_card = #{empCard}
 </select>
 
 <!-- 根据属性查询员工 -->

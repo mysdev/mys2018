@@ -8,6 +8,8 @@ import com.jing.attendance.model.entity.AttendanceDetail;
 /**
  * @ClassName: AttendanceBo
  * @Description: 考勤信息与详情
+ * 考勤信息只负责考勤表的操作
+ * 详情分年月处理
  * @author: Jinlong He
  * @date: 2018年1月15日 下午2:29:25
  */
@@ -39,6 +41,8 @@ public class AttendanceBo extends Attendance{
 		this.setUpdatedDate(attendance.getUpdatedDate());
 		this.setStatus(attendance.getStatus());		
 	}
+	//考勤年月
+	private String yearMonth;
 	
 	//考勤详情信息
 	private List<AttendanceDetail> attendanceDetailList;
@@ -49,5 +53,13 @@ public class AttendanceBo extends Attendance{
 
 	public void setAttendanceDetailList(List<AttendanceDetail> attendanceDetailList) {
 		this.attendanceDetailList = attendanceDetailList;
+	}
+
+	public String getYearMonth() {
+		return yearMonth;
+	}
+
+	public void setYearMonth(String yearMonth) {
+		this.yearMonth = yearMonth;
 	}
 }

@@ -1,31 +1,27 @@
 package com.jing.attendance.service.impl;
 
-import java.util.List;
-import java.util.Map;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.AttendanceDetailMapper;
+import com.jing.attendance.model.entity.AttendanceDetail;
+import com.jing.attendance.service.AttendanceDetailService;
+import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
 import com.jing.utils.DateUtil;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.AttendanceDetail;
-import com.jing.attendance.model.dao.AttendanceDetailMapper;
-import com.jing.attendance.service.AttendanceDetailService;
-import com.jing.config.web.exception.CustomException;
 
 /**
  * @ClassName: AttendanceDetail
@@ -133,28 +129,33 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		return attendanceDetailMapper.queryAttendanceDetailByProperty(map);
 	}
 
+		
+	
 	/** 
-	* @Title: createAttendanceDetail 
-	* @Description: 生成考勤详情
+	* @Title: queryAttendanceDetail 
+	* @Description: 查询考勤详情 没有时生成考勤详情
 	* @param attendanceId 考勤标识
-	* @param yearMonth 待生成月份
+	* @param yearMonth 月份 为空时取当前月
 	* @return  List<AttendanceDetail>    返回类型 
 	* @throws 
 	*/
 	@Override
 	@Transactional(readOnly = false)
-	public List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth){
+	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth){
 		if(yearMonth==null || yearMonth.length()!=7){
 			yearMonth = DateUtil.getDate();
 			yearMonth.substring(0, yearMonth.lastIndexOf("-"));
 		}
-		List<AttendanceDetail> ret = queryAttendanceDetail(attendanceId, yearMonth);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("attendanceId", attendanceId);
+		query.put("attMonth", yearMonth);
+		List<AttendanceDetail> ret = queryAttendanceDetailByProperty(query);		
 		if(ret!=null && ret.size()>0){
 			return ret;//已有数据，不再生成
 		}
 		ret = new ArrayList<AttendanceDetail>();
 		try {
-			Calendar cal = getCalendar(yearMonth);
+			Calendar cal = DateUtil.getCalendar(yearMonth);
 			int maxDay = cal.getActualMaximum(Calendar.DATE);
 			int week = cal.get(Calendar.DAY_OF_WEEK)-1;
 			for(int i=0; i<maxDay; i++){
@@ -179,35 +180,21 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		}
 		return ret;
 	}
-	
-	private static Calendar getCalendar(String yearMonth) throws ParseException{
-		yearMonth = yearMonth+"-01";		
-		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-		Date date = format.parse(yearMonth);
-		Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
-	}
-	
-	/** 
-	* @Title: queryAttendanceDetail 
-	* @Description: 查询考勤详情
-	* @param attendanceId 考勤标识
-	* @param yearMonth 月份
-	* @return  List<AttendanceDetail>    返回类型 
-	* @throws 
-	*/
+
 	@Override
-	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth){
-		if(yearMonth==null || yearMonth.length()!=7){
-			yearMonth = DateUtil.getDate();
-			yearMonth.substring(0, yearMonth.lastIndexOf("-"));
-		}
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put("attendanceId", attendanceId);
-		query.put("attMonth", yearMonth);
-		return this.queryAttendanceDetailByProperty(query);
+	public List<String> queryAttendanceDetailHistory(Integer attendanceId) {
+		return attendanceDetailMapper.queryAttendanceDetailHistory(attendanceId);
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList) {
+		int ret = 0;
+		for(AttendanceDetail ad : attendanceList){
+			ret+=attendanceDetailMapper.modifyAttendanceDetail(ad);
+		}
+		return ret;
+	}
+	
 
 }
