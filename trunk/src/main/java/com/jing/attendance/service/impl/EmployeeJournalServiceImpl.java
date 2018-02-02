@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jing.utils.Constant;
+import com.jing.utils.DateUtil;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
@@ -124,6 +125,32 @@ public class  EmployeeJournalServiceImpl implements EmployeeJournalService {
 	@Override
 	public List<EmployeeJournal> queryEmployeeJournalByProperty(Map<String, Object> map){
 		return employeeJournalMapper.queryEmployeeJournalByProperty(map);
+	}
+
+	@Override
+	public List<EmployeeJournal> queryEmployeeJournalByEmpId(String employeeId, String yearMonth) {
+		if(yearMonth==null || yearMonth.length()!=7){
+			yearMonth = DateUtil.getDateYyyyMM();
+		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("employeeId", employeeId);
+		query.put("yearMonth", yearMonth);
+		return employeeJournalMapper.queryEmployeeJournalByProperty(query);
+	}
+
+	@Override
+	public Map<String, Object> queryEmployeeJournalAllForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query) {
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
+		pageBounds.setOrdersByJson(sort, null);
+		List<Map<String, Object>> entityList = employeeJournalMapper.queryEmployeeJournalAllForPage(pageBounds, query);
+		
+//		if (!entityList.isEmpty()) {
+			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
+			returnMap.put(Constant.PAGELIST, entityList);
+			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+//		}
+		return returnMap;
 	}
 
 

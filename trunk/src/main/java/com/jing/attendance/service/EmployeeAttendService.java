@@ -53,10 +53,10 @@ public interface EmployeeAttendService {
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
-	 * @param employeeAttend 实体
+	 * @param qeury 实体
 	 * @return List<EmployeeAttend>
 	 */
-	Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, EmployeeAttend employeeAttend);
+	Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> qeury);
 	 
 	 /**
 	 * @Title: queryEmployeeAttendByProperty

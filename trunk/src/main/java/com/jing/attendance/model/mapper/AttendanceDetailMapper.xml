@@ -122,7 +122,7 @@
 </select>
 
 <!-- 查询考勤规则历史 -->
-<select id="queryAttendanceDetailHistory" parameterType="java.lang.String">
+<select id="queryAttendanceDetailHistory" resultType="java.lang.String" parameterType="java.lang.Integer">
 	select DISTINCT(att_month) as attMonth from tw_attendance_detail where attendance_id=#{attendanceId} order by att_date desc
 </select>
 

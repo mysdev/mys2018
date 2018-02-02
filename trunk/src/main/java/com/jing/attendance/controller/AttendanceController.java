@@ -28,6 +28,7 @@ import com.jing.attendance.service.AttendanceService;
 import com.jing.attendance.service.bo.AttendanceBo;
 import com.jing.utils.ClassUtil;
 import com.jing.utils.DateUtil;
+import com.jing.utils.JsonUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -165,7 +166,7 @@ public class AttendanceController{
 //	}
 	
 	@ApiOperation(value = "查询 带详情的考勤规则设定历史信息", notes = "查询带详情的考勤规则设定历史")
-	@RequestMapping(value = "/attendance/{attendanceId:.+}/details/yyyyMM", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/details/yearmonth", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public Object queryAttendanceDetail(HttpServletResponse response,
 			@PathVariable Integer attendanceId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
@@ -181,8 +182,7 @@ public class AttendanceController{
 	@ApiOperation(value = "查询 初始带详情的考勤规则信息", notes = "初始带详情的考勤规则信息-已初始过的返回详情")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public Object queryAttendanceDetail(HttpServletResponse response,
-			@PathVariable Integer attendanceId,
-			@ApiParam(value = "yearMonth", required = false) String yearMonth) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+			@PathVariable Integer attendanceId, String yearMonth) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
 		if(null == tempAttendance){
 			throw new NotFoundException("门店考勤规则");
@@ -203,7 +203,7 @@ public class AttendanceController{
 	public Object modifyAttendanceDetailById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@PathVariable Integer attId,
-			@ApiParam(value = "attendance", required = true) Integer attendance
+			@RequestParam(value = "attendance", required = true) Integer attendance
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		AttendanceDetail attendanceDetail = new AttendanceDetail();
 		attendanceDetail.setAttendance(attendance);
@@ -226,9 +226,10 @@ public class AttendanceController{
 	@ApiOperation(value = "更新 批量根据门店考勤详情标识更新门店考勤详情信息", notes = "批量根据门店考勤详情标识更新门店考勤详情信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.PUT)
 	public Object modifyAttendanceDetailBatchById(HttpServletResponse response,
-			@PathVariable Integer attendanceId, AttendanceDetail[] attendanceList
+			@PathVariable Integer attendanceId, @RequestBody AttendanceDetail[] attendanceList
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		List<Map<String, String>> errors = new ArrayList<Map<String, String>>();
+		
 		//循环处理内部数据有效性
 		for(int i=0; i<attendanceList.length; i++){
 			if(attendanceList[i]==null || attendanceList[i].getAttId()==null || attendanceList[i].getAttendance()==null

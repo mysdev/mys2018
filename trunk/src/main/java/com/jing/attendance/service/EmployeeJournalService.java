@@ -3,7 +3,6 @@ package com.jing.attendance.service;
 import java.util.List;
 import java.util.Map;
 
-
 import com.jing.attendance.model.entity.EmployeeJournal;
 
 /**
@@ -63,6 +62,25 @@ public interface EmployeeJournalService {
 	 * @Description:根据属性查询员工考勤日志
 	 * @return List<EmployeeJournal>
 	 */
-	 List<EmployeeJournal> queryEmployeeJournalByProperty(Map<String, Object> map);	 
+	 List<EmployeeJournal> queryEmployeeJournalByProperty(Map<String, Object> map);
+
+	/** 
+	* @Title: queryEmployeeJournalByEmpId 
+	* @Description: 查询员工指定月份考勤日志
+	* @param employeeId
+	* @param yearMonth 为空时查当月
+	* @return  List<EmployeeJournal>    返回类型 
+	* @throws 
+	*/
+	List<EmployeeJournal> queryEmployeeJournalByEmpId(String employeeId, String yearMonth);	 
+	
+	/**
+	 * @Title: queryEmployeeJournalAllForPage
+	 * @Description: 根据员工等属性与分页信息分页查询员工考勤日志信息
+	 * @param pageBounds 分页信息
+	 * @param query 实体
+	 * @return List<EmployeeJournal>
+	 */
+	Map<String, Object> queryEmployeeJournalAllForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);
 	 
 }

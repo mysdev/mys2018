@@ -21,9 +21,9 @@
 <sql id="sql_employeeAttend_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="employeeAttend.attId != null">AND att_id = #{employeeAttend.attId} </if>
-		<if test="employeeAttend.employeeId != null">AND employee_id like concat(#{employeeAttend.employeeId}, '%') </if>
-		<if test="employeeAttend.createdBy != null">AND created_by like concat(#{employeeAttend.createdBy}, '%') </if>
-		<if test="employeeAttend.updatedBy != null">AND updated_by like concat(#{employeeAttend.updatedBy}, '%') </if>
+		<if test="employeeAttend.employeeId != null">AND employee_id = #{employeeAttend.employeeId} </if>
+		<if test="employeeAttend.createdBy != null">AND created_by = #{employeeAttend.createdBy} </if>
+		<if test="employeeAttend.updatedBy != null">AND updated_by = #{employeeAttend.updatedBy} </if>
 	</trim>
 </sql>
    
@@ -85,7 +85,7 @@
 	FROM tw_employee_attend 
 	<where>
 		<include refid="sql_employeeAttend_query_nowhere"/>
-		<if test="employeeAttend.yearMonth != null">AND date_format(now(),'%Y-%m')=#{yearMonth} </if>		
+		<if test="employeeAttend.yearMonth != null">AND date_format(attTime,'%Y-%m')=#{employeeAttend.yearMonth} </if>		
 	</where>
 	order by attTime desc
 </select>
@@ -97,8 +97,10 @@
 	FROM tw_employee_attend 
 	<where>
 		<include refid="sql_employeeAttend_query_nowhere"/>
-		<if test="employeeAttend.yearMonth != null">AND date_format(now(),'%Y-%m')=#{yearMonth} </if>
+		<if test="employeeAttend.yearMonth != null">AND date_format(attTime,'%Y-%m')=#{employeeAttend.yearMonth} </if>
 	</where>
 </select>
+
+
 
 </mapper>   

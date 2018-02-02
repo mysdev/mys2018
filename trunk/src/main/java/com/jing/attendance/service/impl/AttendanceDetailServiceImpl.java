@@ -144,7 +144,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth){
 		if(yearMonth==null || yearMonth.length()!=7){
 			yearMonth = DateUtil.getDate();
-			yearMonth.substring(0, yearMonth.lastIndexOf("-"));
+			yearMonth = yearMonth.substring(0, yearMonth.lastIndexOf("-"));
 		}
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put("attendanceId", attendanceId);
@@ -157,12 +157,15 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		try {
 			Calendar cal = DateUtil.getCalendar(yearMonth);
 			int maxDay = cal.getActualMaximum(Calendar.DATE);
-			int week = cal.get(Calendar.DAY_OF_WEEK)-1;
+			int week = cal.get(Calendar.DAY_OF_WEEK-1);
 			for(int i=0; i<maxDay; i++){
 				AttendanceDetail ad = new AttendanceDetail();
 				ad.setAttendanceId(attendanceId);
 				ad.setAttMonth(yearMonth);
-				ad.setWeekday((week+i)%7-1);
+				ad.setWeekday((week+i)%7);
+				if(ad.getWeekday().intValue()==0){
+					ad.setWeekday(7);
+				}
 				if(ad.getWeekday().intValue()<6){
 					ad.setAttendance(0);
 				}else{

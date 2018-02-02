@@ -107,11 +107,11 @@ public class  EmployeeAttendServiceImpl implements EmployeeAttendService {
 	 * @return List<EmployeeAttend>
 	 */
 	@Override
-	public Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, EmployeeAttend employeeAttend){
+	public Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> map){
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, EmployeeAttend.class);
-		List<EmployeeAttend> entityList = employeeAttendMapper.queryEmployeeAttendForPage(pageBounds, employeeAttend);
+		List<EmployeeAttend> entityList = employeeAttendMapper.queryEmployeeAttendForPage(pageBounds, map);
 		if(null!=sort && sort.length()>0){
 			pageBounds.setOrdersByJson(sort, EmployeeAttend.class);
 		}
