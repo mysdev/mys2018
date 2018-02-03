@@ -1,14 +1,34 @@
+var storeList=[];
+var schemeList=[{
+		"schemeId": "0",
+		"schemeName": "休天数"
+	},{
+		"schemeId": "1",
+		"schemeName": "考勤天数"
+	},{
+		"schemeId": "2",
+		"schemeName": "自定义"
+	}];
+
+var attendanceViewModel;
+
 //定义ViewModel对象
 var AttendanceEditViewModel = function () {  
 	var self=this;
 	self.attendanceId = ko.observable(''); 
-	self.storeId = ko.observable(''); 
+	//self.storeId = ko.observable(''); 
+	self.selectStore=ko.observableArray(storeList);
+    self.storeSelected = ko.observable('');
 	self.attendanceName = ko.observable(''); 
 	self.status = ko.observable(''); 
-	self.types = ko.observable(''); 
+	//self.types = ko.observable(''); 
+	self.selectScheme=ko.observableArray(schemeList);
+    self.schemeSelected = ko.observable(schemeList[0].schemeName);
 	self.attendance = ko.observable(''); 
-	self.signTime = ko.observable(''); 
-	self.outTime = ko.observable(''); 
+	self.signTime = ko.observable("09:00"); 
+	self.outTime = ko.observable("18:00");
+	self.myDis = ko.observable(true);
+	self.myNotDis = ko.observable(false);
 
     var opFalg=getQueryString('action');
     
@@ -16,7 +36,7 @@ var AttendanceEditViewModel = function () {
     	var opid=getQueryString('id');
     	myAjax("/attendance/"+opid, "GET", null, function (data){
 			self.attendanceId(data.attendanceId);
-			self.storeId(data.storeId);
+			//self.storeId(data.storeId);
 			self.attendanceName(data.attendanceName);
 			self.status(data.status);
 			self.types(data.types);
@@ -48,10 +68,34 @@ var AttendanceEditViewModel = function () {
 			}, true);
     	}
     };
+    
+    self.schemeChage=function(p){
+    	if(self.schemeSelected()==2)
+		{
+    		self.myDis(false);
+    		self.myNotDis(true);
+		}
+    	else{
+    		self.myDis(true);
+    		self.myNotDis(false);
+    	}
+    };
 };
 
 
 $().ready(function(){
+	
 	$("#txtName").focus();
-    ko.applyBindings(new AttendanceEditViewModel());
+	attendanceViewModel=new AttendanceEditViewModel();
+	ko.applyBindings(attendanceViewModel);
+    
+    //获取下拉列表数据
+	myAjax("/stores", "GET", null, function (data){
+		$.map(data.data, function(item) { storeList.push({storeId:item.storeId,storeName:item.storeName})});  
+		attendanceViewModel.selectStore(storeList);
+		attendanceViewModel.storeSelected(storeList[0].storeName);
+		$(".rule-single-select").ruleSingleSelect();
+	}, true);
+	
+	$(".rule-single-select").ruleSingleSelect();
 });

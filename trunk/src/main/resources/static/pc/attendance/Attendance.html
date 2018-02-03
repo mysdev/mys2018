@@ -9,12 +9,12 @@
 		<link rel="stylesheet" type="text/css" href="../js/artdialog/ui-dialog.css" />
 		<link rel="stylesheet" type="text/css" href="../css/skin/icon/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../css/skin/default/style.css" />
-		<link rel="stylesheet" type="text/css" href="../js/flatpickr/flatpickr.min.css" />
+		<link rel="stylesheet" type="text/css" href="../js/flatpickr/flatpickr.material_blue.min.css" />
 		<script type="text/javascript" charset="utf-8" src="../js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/jquery/knockout-3.4.2.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/jquery/Validform_v5.3.2_min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/artdialog/dialog-plus-min.js"></script>
-		<script type="text/javascript" charset="utf-8" src="../js/flatpickr/flatpickr.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="../js/flatpickr/flatpickr.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/laymain.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/common.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/jl/jquery.ajax.jl.js"></script>	
@@ -22,6 +22,8 @@
 			$(function() {
 				//初始化表单验证
 				$("#form1").initValidform();
+				$("#signTime").flatpickr();
+				$("#outTime").flatpickr();
 			});
 		</script>
 	</head>
@@ -55,32 +57,52 @@
 
 			<div class="tab-content">
 				<dl>
-					<dt>门店标识</dt>
-					<dd><input name="storeId" type="text" id="storeId" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:storeId" />  </dd>
+					<dt>选择门店</dt>
+					<dd>
+						<div class="rule-single-select">
+							<select name="selectStore" id="selectStore" datatype="*" errormsg="请选择门店！" sucmsg=" " data-bind="options:selectStore,optionsText:'storeName',optionsValue:'storeId',value:storeSelected">
+
+							</select>
+						</div>
+					</dd>
 				</dl>
 				<dl>
 					<dt>考勤方案名称</dt>
-					<dd><input name="attendanceName" type="text" id="attendanceName" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:attendanceName" /> <span class="Validform_checktip">*</span> </dd>
+					<dd><input name="attendanceName" type="text" id="attendanceName" class="input normal" datatype="*3-30" sucmsg=" " data-bind="value:attendanceName" /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
 				<dl>
 					<dt>考勤方案状态</dt>
-					<dd><input name="status" type="text" id="status" class="input" datatype="n" sucmsg=" " data-bind="value:status" /> <span class="Validform_checktip">*</span> </dd>
+					<dd>
+						<div class="rule-single-checkbox">
+							<input id="status" type="checkbox" name="status" data-bind="checked:status" />
+						</div>
+					</dd>
 				</dl>
 				<dl>
 					<dt>考勤方案方案</dt>
-					<dd><input name="types" type="text" id="types" class="input" datatype="n" sucmsg=" " data-bind="value:types" /> <span class="Validform_checktip">*</span> </dd>
+					<dd>
+						<div class="rule-single-select">
+							<select name="scheme" id="scheme" datatype="*" errormsg="请选择考勤方案！" sucmsg=" " data-bind="options:selectScheme,optionsText:'schemeName',optionsValue:'schemeId',value:schemeSelected,event:{change:schemeChage}">
+
+							</select>
+						</div>
+					</dd>
 				</dl>
-				<dl>
+				<dl data-bind="visible: myDis">
 					<dt>休息天数</dt>
+					<dd><input name="attendance" type="text" id="attendance" class="input" datatype="n" sucmsg=" " data-bind="value:attendance" />  </dd>
+				</dl>
+				<dl data-bind="visible: (!myDis)">
+					<dt>自定义考勤</dt>
 					<dd><input name="attendance" type="text" id="attendance" class="input" datatype="n" sucmsg=" " data-bind="value:attendance" />  </dd>
 				</dl>
 				<dl>
 					<dt>上班时间</dt>
-					<dd><input name="signTime" type="text" id="signTime" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:signTime" /> <span class="Validform_checktip">*</span> </dd>
+					<dd><input name="signTime" type="text" id="signTime" data-bind="value:signTime" class="input rule-date-input flatpickr" data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" "  /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
 				<dl>
 					<dt>下班时间</dt>
-					<dd><input name="outTime" type="text" id="outTime" class="input normal" datatype="*3-20" sucmsg=" " data-bind="value:outTime" /> <span class="Validform_checktip">*</span> </dd>
+					<dd><input name="outTime" type="text" id="outTime" data-bind="value:outTime" class="input rule-date-input flatpickr" data-enable-time="true" data-no-calendar="true" data-time_24hr="true" datatype="/^(\d{1,2}:){1}\d{1,2}$/" errormsg="请选择正确的时间" sucmsg=" "  /> <span class="Validform_checktip">*</span> </dd>
 				</dl>
 			</div>
 			<!--/内容-->
@@ -95,7 +117,7 @@
 			<!--/工具栏-->
 		</form>
 		<!--列表数据绑定开始-->
-		<script src="./model/Attendance.js"></script>		
+		<script src="./model/Attendance.js"></script>	
 		<!--列表数据绑定结束-->
 	</body>
 
