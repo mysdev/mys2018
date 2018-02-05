@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jing.attendance.model.dao.EmployeeAttendanceMapper">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceEmployeeMapper">
 
 <!-- Result Map-->
-<resultMap id="EmployeeAttendanceResultMap" type="com.jing.attendance.model.entity.EmployeeAttendance">
+<resultMap id="AttendanceEmployeeResultMap" type="com.jing.attendance.model.entity.AttendanceEmployee">
 	<id column="link_id" property="linkId"/>
 	<result column="emp_id" property="empId"/>
 	<result column="attendance_id" property="attendanceId"/>
@@ -14,35 +14,35 @@
 </resultMap>
 
 <!-- 员工、考勤规则、关联关系联合 -->
-<resultMap id="EmployeeAttendanceLinkResult" 
-		type="com.jing.attendance.service.bo.EmployeeAttendanceBo"
+<resultMap id="AttendanceEmployeeLinkResult" 
+		type="com.jing.attendance.service.bo.AttendanceEmployeeBo"
 		extends="com.jing.core.model.dao.EmployeeMapper.EmployeeResultMap">	
 	<result column="link_id" property="linkId"/>
 	<result column="attendance_name" property="attendanceName"/>
 	<result column="attendance_id" property="attendanceId"/>
 </resultMap>
 
-<sql id="sql_employeeAttendance_item">
+<sql id="sql_attendanceEmployee_item">
 	link_id, emp_id, attendance_id, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
-<sql id="sql_employeeAttendance_query_nowhere">
+<sql id="sql_attendanceEmployee_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="employeeAttendance.linkId != null">AND link_id = #{employeeAttendance.linkId} </if>
-		<if test="employeeAttendance.empId != null">AND emp_id like concat(#{employeeAttendance.empId}, '%') </if>
-		<if test="employeeAttendance.attendanceId != null">AND attendance_id = #{employeeAttendance.attendanceId} </if>
-		<if test="employeeAttendance.createdBy != null">AND created_by like concat(#{employeeAttendance.createdBy}, '%') </if>
-		<if test="employeeAttendance.updatedBy != null">AND updated_by like concat(#{employeeAttendance.updatedBy}, '%') </if>
+		<if test="attendanceEmployee.linkId != null">AND link_id = #{attendanceEmployee.linkId} </if>
+		<if test="attendanceEmployee.empId != null">AND emp_id like concat(#{attendanceEmployee.empId}, '%') </if>
+		<if test="attendanceEmployee.attendanceId != null">AND attendance_id = #{attendanceEmployee.attendanceId} </if>
+		<if test="attendanceEmployee.createdBy != null">AND created_by like concat(#{attendanceEmployee.createdBy}, '%') </if>
+		<if test="attendanceEmployee.updatedBy != null">AND updated_by like concat(#{attendanceEmployee.updatedBy}, '%') </if>
 	</trim>
 </sql>
    
 <!-- 插入 员工考勤关系 -->
-<insert id="addEmployeeAttendance" parameterType="com.jing.attendance.model.entity.EmployeeAttendance" >
+<insert id="addAttendanceEmployee" parameterType="com.jing.attendance.model.entity.AttendanceEmployee" >
 	<selectKey keyProperty="linkId" order="AFTER" resultType="java.lang.Integer">
 		SELECT LAST_INSERT_ID()
 	</selectKey>
- 	INSERT INTO tw_employee_attendance 
+ 	INSERT INTO tw_attendance_employee 
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="linkId != null"> link_id,</if>
 		<if test="empId != null"> emp_id,</if>
@@ -64,8 +64,8 @@
 </insert>
 
 <!-- 根据标识，修改 员工考勤关系 -->  
-<update id="modifyEmployeeAttendance" parameterType="com.jing.attendance.model.entity.EmployeeAttendance" >
-  	UPDATE tw_employee_attendance SET
+<update id="modifyAttendanceEmployee" parameterType="com.jing.attendance.model.entity.AttendanceEmployee" >
+  	UPDATE tw_attendance_employee SET
 	<trim suffixOverrides=",">
 		<if test="empId != null"> emp_id = #{empId},</if>
 		<if test="attendanceId != null"> attendance_id = #{attendanceId},</if>
@@ -77,49 +77,53 @@
 </update>
  
 <!-- 删除 员工考勤关系 -->
-<delete id="dropEmployeeAttendanceByLinkId" parameterType="java.lang.Integer">
-	DELETE FROM tw_employee_attendance WHERE link_id = #{linkId}
+<delete id="dropAttendanceEmployeeByLinkId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_employee WHERE link_id = #{linkId}
+</delete> 
+<delete id="dropAttendanceEmployeeByAttendanceId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_employee WHERE attendance_id = #{attendanceId}
 </delete> 
 
+
 <!-- 根据标识查询 员工考勤关系 -->
-<select id="queryEmployeeAttendanceByLinkId"  resultMap="EmployeeAttendanceResultMap" parameterType="java.lang.Integer">
+<select id="queryAttendanceEmployeeByLinkId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
 	SELECT 
-	<include refid="sql_employeeAttendance_item"/>
-	FROM tw_employee_attendance WHERE link_id = #{linkId}
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee WHERE link_id = #{linkId}
 </select>
 
 <!-- 根据标识查询 员工考勤关系 -->
-<select id="queryEmployeeAttendanceByEmpId"  resultMap="EmployeeAttendanceResultMap" parameterType="java.lang.Integer">
+<select id="queryAttendanceEmployeeByEmpId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
 	SELECT 
-	<include refid="sql_employeeAttendance_item"/>
-	FROM tw_employee_attendance WHERE emp_id = #{empId}
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee WHERE emp_id = #{empId}
 </select>
 
 <!-- 根据属性查询员工考勤关系 -->
-<select id="queryEmployeeAttendanceByProperty"  resultMap="EmployeeAttendanceResultMap" parameterType="java.util.Map">
+<select id="queryAttendanceEmployeeByProperty"  resultMap="AttendanceEmployeeResultMap" parameterType="java.util.Map">
 	SELECT 
-	<include refid="sql_employeeAttendance_item"/>
-	FROM tw_employee_attendance 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee 
 	<where>
-		<include refid="sql_employeeAttendance_query_nowhere"/>
+		<include refid="sql_attendanceEmployee_query_nowhere"/>
 	</where>
 </select>
 
 <!-- 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息 -->
-<select id="queryEmployeeAttendanceForPage"  resultMap="EmployeeAttendanceResultMap" > 
+<select id="queryAttendanceEmployeeForPage"  resultMap="AttendanceEmployeeResultMap" > 
 	SELECT 
-	<include refid="sql_employeeAttendance_item"/>
-	FROM tw_employee_attendance 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee 
 	<where>
-		<include refid="sql_employeeAttendance_query_nowhere"/>
+		<include refid="sql_attendanceEmployee_query_nowhere"/>
 	</where>
 </select>
 
 <!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
-<select id="queryEmployeeAttendanceAllForPage"  resultMap="EmployeeAttendanceLinkResult" > 
+<select id="queryAttendanceEmployeeAllForPage"  resultMap="AttendanceEmployeeLinkResult" > 
 	select * from (
 		select l.link_id, l.attendance_id, a.attendance_name, e.* from 
-		(select * from tw_employee_attendance 
+		(select * from tw_attendance_employee 
 			<where> 
 				<if test="attendanceId != null"> attendance_id = #{attendanceId}</if>
 			</where>) l

@@ -3,7 +3,7 @@ package com.jing.attendance.service;
 import java.util.List;
 import java.util.Map;
 
-
+import com.jing.attendance.controller.vo.AttendanceBo;
 import com.jing.attendance.model.entity.Attendance;
 
 /**
@@ -21,7 +21,7 @@ public interface AttendanceService {
 	 * @param attendance 实体
 	 * @return Integer
 	 */
-	Attendance addAttendance(Attendance attendance);
+	Attendance addAttendance(AttendanceBo attendance);
 	
 	/**
 	 * @Title modifyAttendance
@@ -29,7 +29,7 @@ public interface AttendanceService {
 	 * @param attendance 实体
 	 * @return Integer
 	 */
-	Integer modifyAttendance(Attendance attendance);
+	Integer modifyAttendance(AttendanceBo attendance);
 	
 	/**
 	 * @Title: dropAttendanceByAttendanceId

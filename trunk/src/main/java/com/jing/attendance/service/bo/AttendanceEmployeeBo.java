@@ -3,12 +3,12 @@ package com.jing.attendance.service.bo;
 import com.jing.core.model.entity.Employee;
 
 /**
- * @ClassName: EmployeeAttendanceBo
+ * @ClassName: AttendanceEmployeeBo
  * @Description: 员工、考勤规则、关联
  * @author: Jinlong He
  * @date: 2018年1月15日 下午4:58:48
  */
-public class EmployeeAttendanceBo extends Employee{	
+public class AttendanceEmployeeBo extends Employee{	
 	/**
 	 * @fieldName: serialVersionUID
 	 * @fieldType: long

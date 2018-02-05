@@ -13,13 +13,13 @@ import org.hibernate.validator.constraints.Range;
 import com.jing.utils.BaseEntity;
 
 /**
- * @ClassName: EmployeeAttendance
+ * @ClassName: AttendanceEmployee
  * @Description: 员工考勤关系实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
  * @date: 2018年01月11日 15时03分
  */
-public class EmployeeAttendance extends BaseEntity {
+public class AttendanceEmployee extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	
 

@@ -16,134 +16,100 @@ import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
 
 
-import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceTime;
-import com.jing.attendance.controller.vo.AttendanceBo;
-import com.jing.attendance.model.dao.AttendanceDetailMapper;
-import com.jing.attendance.model.dao.AttendanceMapper;
 import com.jing.attendance.model.dao.AttendanceTimeMapper;
-import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
-import com.jing.attendance.service.AttendanceDetailService;
-import com.jing.attendance.service.AttendanceService;
 import com.jing.attendance.service.AttendanceTimeService;
-import com.jing.attendance.service.AttendanceEmployeeService;
 
 /**
- * @ClassName: Attendance
- * @Description: 门店考勤服务实现类
+ * @ClassName: AttendanceTime
+ * @Description: 考勤时段 一个考勤方案至多三个时段服务实现类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * @date: 2018年02月05日 09时32分
  */
-@Service("attendanceService")
+@Service("attendanceTimeService")
 @Transactional(readOnly=true)
-public class  AttendanceServiceImpl implements AttendanceService {	
-	private static final Logger logger = LoggerFactory.getLogger(AttendanceServiceImpl.class);
+public class  AttendanceTimeServiceImpl implements AttendanceTimeService {	
+	private static final Logger logger = LoggerFactory.getLogger(AttendanceTimeServiceImpl.class);
 	
 	@Autowired
-    private AttendanceMapper attendanceMapper;  
-	
-	@Autowired
-	private AttendanceDetailMapper attendanceDetailMapper;
-	
-	@Autowired
-	private AttendanceEmployeeMapper employeeAttendanceMapper;
-	
-	@Autowired
-	private AttendanceTimeMapper attendanceTimeMapper;
+    private AttendanceTimeMapper attendanceTimeMapper;   
     
 	@Autowired
 	private PageService pageService; // 分页器
 	
 	
 	/**
-	 * @Title: addAttendance
-	 * @Description:添加门店考勤
-	 * @param attendance 实体
+	 * @Title: addAttendanceTime
+	 * @Description:添加考勤时段 一个考勤方案至多三个时段
+	 * @param attendanceTime 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Attendance addAttendance(AttendanceBo attendance){
-		int ret = attendanceMapper.addAttendance(attendance);
+	public AttendanceTime addAttendanceTime(AttendanceTime attendanceTime){
+		int ret = attendanceTimeMapper.addAttendanceTime(attendanceTime);
 		if(ret>0){
-			if(attendance.getAttTime()!=null && attendance.getAttTime().size()>0){
-				for(AttendanceTime at : attendance.getAttTime()){
-					at.setAttendanceId(attendance.getAttendanceId()); //回填标识
-					attendanceTimeMapper.addAttendanceTime(at);
-				}
-			}
-			return attendance;
+			return attendanceTime;
 		}
 		return null;
 	}
 	
 	/**
-	 * @Title modifyAttendance
-	 * @Description:修改门店考勤
-	 * @param attendance 实体
+	 * @Title modifyAttendanceTime
+	 * @Description:修改考勤时段 一个考勤方案至多三个时段
+	 * @param attendanceTime 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyAttendance(AttendanceBo attendance){
-		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>0){
-			attendanceTimeMapper.dropAttendanceTimeByAttendanceId(attendance.getAttendanceId());
-			for(AttendanceTime at : attendance.getAttTime()){
-				at.setAttendanceId(attendance.getAttendanceId()); //回填标识
-				attendanceTimeMapper.addAttendanceTime(at);
-			}
-		}
-		return attendanceMapper.modifyAttendance(attendance);
+	public Integer modifyAttendanceTime(AttendanceTime attendanceTime){
+		return attendanceTimeMapper.modifyAttendanceTime(attendanceTime);
 	}
 	
 	/**
-	 * @Title: dropAttendanceByAttendanceId
-	 * @Description:删除门店考勤
-	 * @param attendanceId 实体标识
+	 * @Title: dropAttendanceTimeById
+	 * @Description:删除考勤时段 一个考勤方案至多三个时段
+	 * @param id 实体标识
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropAttendanceByAttendanceId(Integer attendanceId){
-		//详情清空
-		attendanceTimeMapper.dropAttendanceTimeByAttendanceId(attendanceId);
-		attendanceDetailMapper.dropAttendanceDetailByAttendanceId(attendanceId);
-		employeeAttendanceMapper.dropAttendanceEmployeeByAttendanceId(attendanceId);
-		return attendanceMapper.dropAttendanceByAttendanceId(attendanceId);
+	public Integer dropAttendanceTimeById(Integer id){
+		return attendanceTimeMapper.dropAttendanceTimeById(id);
 	}
 	
 	/**
-	 * @Title: queryAttendanceByAttendanceId
-	 * @Description:根据实体标识查询门店考勤
-	 * @param attendanceId 实体标识
-	 * @return Attendance
+	 * @Title: queryAttendanceTimeById
+	 * @Description:根据实体标识查询考勤时段 一个考勤方案至多三个时段
+	 * @param id 实体标识
+	 * @return AttendanceTime
 	 */
 	@Override
-	public Attendance queryAttendanceByAttendanceId(Integer attendanceId){
-		return attendanceMapper.queryAttendanceByAttendanceId(attendanceId);
+	public AttendanceTime queryAttendanceTimeById(Integer id){
+		return attendanceTimeMapper.queryAttendanceTimeById(id);
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
 	/**
-	 * @Title: queryAttendanceForPage
-	 * @Description: 根据门店考勤属性与分页信息分页查询门店考勤信息
+	 * @Title: queryAttendanceTimeForPage
+	 * @Description: 根据考勤时段 一个考勤方案至多三个时段属性与分页信息分页查询考勤时段 一个考勤方案至多三个时段信息
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
-	 * @param attendance 实体
-	 * @return List<Attendance>
+	 * @param attendanceTime 实体
+	 * @return List<AttendanceTime>
 	 */
 	@Override
-	public Map<String, Object> queryAttendanceForPage(Integer pagenum, Integer pagesize, String sort, Attendance attendance){
+	public Map<String, Object> queryAttendanceTimeForPage(Integer pagenum, Integer pagesize, String sort, AttendanceTime attendanceTime){
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, Attendance.class);
-		List<Attendance> entityList = attendanceMapper.queryAttendanceForPage(pageBounds, attendance);
+		pageBounds.setOrdersByJson(sort, AttendanceTime.class);
+		List<AttendanceTime> entityList = attendanceTimeMapper.queryAttendanceTimeForPage(pageBounds, attendanceTime);
 		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, Attendance.class);
+			pageBounds.setOrdersByJson(sort, AttendanceTime.class);
 		}
 		if (!entityList.isEmpty()) {
-			PageList<Attendance> pagelist = (PageList<Attendance>) entityList;
+			PageList<AttendanceTime> pagelist = (PageList<AttendanceTime>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
 		}
@@ -151,13 +117,13 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	}
 	 
 	/**
-	 * @Title: queryAttendanceByProperty
-	 * @Description:根据属性查询门店考勤
-	 * @return List<Attendance>
+	 * @Title: queryAttendanceTimeByProperty
+	 * @Description:根据属性查询考勤时段 一个考勤方案至多三个时段
+	 * @return List<AttendanceTime>
 	 */
 	@Override
-	public List<Attendance> queryAttendanceByProperty(Map<String, Object> map){
-		return attendanceMapper.queryAttendanceByProperty(map);
+	public List<AttendanceTime> queryAttendanceTimeByProperty(Map<String, Object> map){
+		return attendanceTimeMapper.queryAttendanceTimeByProperty(map);
 	}
 
 

@@ -17,14 +17,14 @@ import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
 
 
-import com.jing.attendance.model.entity.EmployeeAttendance;
-import com.jing.attendance.model.dao.EmployeeAttendanceMapper;
-import com.jing.attendance.service.EmployeeAttendanceService;
-import com.jing.attendance.service.bo.EmployeeAttendanceBo;
+import com.jing.attendance.model.entity.AttendanceEmployee;
+import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
+import com.jing.attendance.service.AttendanceEmployeeService;
+import com.jing.attendance.service.bo.AttendanceEmployeeBo;
 import com.jing.core.model.entity.Employee;
 
 /**
- * @ClassName: EmployeeAttendance
+ * @ClassName: AttendanceEmployee
  * @Description: 员工考勤关系服务实现类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
@@ -32,26 +32,26 @@ import com.jing.core.model.entity.Employee;
  */
 @Service("employeeAttendanceService")
 @Transactional(readOnly=true)
-public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService {	
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeAttendanceServiceImpl.class);
+public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService {	
+	private static final Logger logger = LoggerFactory.getLogger(AttendanceEmployeeServiceImpl.class);
 	
 	@Autowired
-    private EmployeeAttendanceMapper employeeAttendanceMapper;   
+    private AttendanceEmployeeMapper employeeAttendanceMapper;   
     
 	@Autowired
 	private PageService pageService; // 分页器
 	
 	
 	/**
-	 * @Title: addEmployeeAttendance
+	 * @Title: addAttendanceEmployee
 	 * @Description:添加员工考勤关系
 	 * @param employeeAttendance 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public EmployeeAttendance addEmployeeAttendance(EmployeeAttendance employeeAttendance){
-		int ret = employeeAttendanceMapper.addEmployeeAttendance(employeeAttendance);
+	public AttendanceEmployee addAttendanceEmployee(AttendanceEmployee employeeAttendance){
+		int ret = employeeAttendanceMapper.addAttendanceEmployee(employeeAttendance);
 		if(ret>0){
 			return employeeAttendance;
 		}
@@ -59,60 +59,60 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 	}
 	
 	/**
-	 * @Title modifyEmployeeAttendance
+	 * @Title modifyAttendanceEmployee
 	 * @Description:修改员工考勤关系
 	 * @param employeeAttendance 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyEmployeeAttendance(EmployeeAttendance employeeAttendance){
-		return employeeAttendanceMapper.modifyEmployeeAttendance(employeeAttendance);
+	public Integer modifyAttendanceEmployee(AttendanceEmployee employeeAttendance){
+		return employeeAttendanceMapper.modifyAttendanceEmployee(employeeAttendance);
 	}
 	
 	/**
-	 * @Title: dropEmployeeAttendanceByLinkId
+	 * @Title: dropAttendanceEmployeeByLinkId
 	 * @Description:删除员工考勤关系
 	 * @param linkId 实体标识
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropEmployeeAttendanceByLinkId(Integer linkId){
-		return employeeAttendanceMapper.dropEmployeeAttendanceByLinkId(linkId);
+	public Integer dropAttendanceEmployeeByLinkId(Integer linkId){
+		return employeeAttendanceMapper.dropAttendanceEmployeeByLinkId(linkId);
 	}
 	
 	/**
-	 * @Title: queryEmployeeAttendanceByLinkId
+	 * @Title: queryAttendanceEmployeeByLinkId
 	 * @Description:根据实体标识查询员工考勤关系
 	 * @param linkId 实体标识
-	 * @return EmployeeAttendance
+	 * @return AttendanceEmployee
 	 */
 	@Override
-	public EmployeeAttendance queryEmployeeAttendanceByLinkId(Integer linkId){
-		return employeeAttendanceMapper.queryEmployeeAttendanceByLinkId(linkId);
+	public AttendanceEmployee queryAttendanceEmployeeByLinkId(Integer linkId){
+		return employeeAttendanceMapper.queryAttendanceEmployeeByLinkId(linkId);
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
 	/**
-	 * @Title: queryEmployeeAttendanceForPage
+	 * @Title: queryAttendanceEmployeeForPage
 	 * @Description: 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
 	 * @param employeeAttendance 实体
-	 * @return List<EmployeeAttendance>
+	 * @return List<AttendanceEmployee>
 	 */
 	@Override
-	public Map<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort, EmployeeAttendance employeeAttendance){
+	public Map<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, AttendanceEmployee employeeAttendance){
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
-		List<EmployeeAttendance> entityList = employeeAttendanceMapper.queryEmployeeAttendanceForPage(pageBounds, employeeAttendance);
+		pageBounds.setOrdersByJson(sort, AttendanceEmployee.class);
+		List<AttendanceEmployee> entityList = employeeAttendanceMapper.queryAttendanceEmployeeForPage(pageBounds, employeeAttendance);
 		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, EmployeeAttendance.class);
+			pageBounds.setOrdersByJson(sort, AttendanceEmployee.class);
 		}
 		if (!entityList.isEmpty()) {
-			PageList<EmployeeAttendance> pagelist = (PageList<EmployeeAttendance>) entityList;
+			PageList<AttendanceEmployee> pagelist = (PageList<AttendanceEmployee>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
 		}
@@ -120,43 +120,63 @@ public class  EmployeeAttendanceServiceImpl implements EmployeeAttendanceService
 	}
 	 
 	/**
-	 * @Title: queryEmployeeAttendanceByProperty
+	 * @Title: queryAttendanceEmployeeByProperty
 	 * @Description:根据属性查询员工考勤关系
-	 * @return List<EmployeeAttendance>
+	 * @return List<AttendanceEmployee>
 	 */
 	@Override
-	public List<EmployeeAttendance> queryEmployeeAttendanceByProperty(Map<String, Object> map){
-		return employeeAttendanceMapper.queryEmployeeAttendanceByProperty(map);
+	public List<AttendanceEmployee> queryAttendanceEmployeeByProperty(Map<String, Object> map){
+		return employeeAttendanceMapper.queryAttendanceEmployeeByProperty(map);
 	}
 
 	@Override
-	public EmployeeAttendance queryEmployeeAttendanceByEmpId(String empId) {
-		return employeeAttendanceMapper.queryEmployeeAttendanceByEmpId(empId);
+	public AttendanceEmployee queryAttendanceEmployeeByEmpId(String empId) {
+		return employeeAttendanceMapper.queryAttendanceEmployeeByEmpId(empId);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropEmployeeAttendanceByEmpId(String empId) {
-		EmployeeAttendance employeeAttendance = queryEmployeeAttendanceByEmpId(empId);
-		return employeeAttendance==null?0:dropEmployeeAttendanceByLinkId(employeeAttendance.getLinkId());
+	public Integer dropAttendanceEmployeeByEmpId(String empId) {
+		AttendanceEmployee employeeAttendance = queryAttendanceEmployeeByEmpId(empId);
+		return employeeAttendance==null?0:dropAttendanceEmployeeByLinkId(employeeAttendance.getLinkId());
 	}
 
 	@Override
-	public HashMap<String, Object> queryEmployeeAttendanceForPage(Integer pagenum, Integer pagesize, String sort,
+	public HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort,
 			Integer attendanceId, Employee employee, String namePYJob) {
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
-		List<EmployeeAttendanceBo> entityList = employeeAttendanceMapper.queryEmployeeAttendanceAllForPage(pageBounds, attendanceId, employee, namePYJob);
+		pageBounds.setOrdersByJson(sort, AttendanceEmployeeBo.class);
+		List<AttendanceEmployeeBo> entityList = employeeAttendanceMapper.queryAttendanceEmployeeAllForPage(pageBounds, attendanceId, employee, namePYJob);
 		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, EmployeeAttendanceBo.class);
+			pageBounds.setOrdersByJson(sort, AttendanceEmployeeBo.class);
 		}
 //		if (!entityList.isEmpty()) {
-			PageList<EmployeeAttendanceBo> pagelist = (PageList<EmployeeAttendanceBo>) entityList;
+			PageList<AttendanceEmployeeBo> pagelist = (PageList<AttendanceEmployeeBo>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
 //		}
 		return returnMap;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public Integer bindAttendanceEmployee(String userId, Integer attendanceId, List<String> empList) {
+		for(String empId : empList){
+			AttendanceEmployee ae = employeeAttendanceMapper.queryAttendanceEmployeeByEmpId(empId);
+			if(ae==null){
+				ae = new AttendanceEmployee();
+				ae.setCreatedBy(userId);
+				ae.setAttendanceId(attendanceId);
+				ae.setEmpId(empId);
+				employeeAttendanceMapper.addAttendanceEmployee(ae);
+			}else{
+				ae.setUpdatedBy(userId);
+				ae.setAttendanceId(attendanceId);
+				employeeAttendanceMapper.modifyAttendanceEmployee(ae);
+			}
+		}		
+		return empList.size();
 	}
 
 
