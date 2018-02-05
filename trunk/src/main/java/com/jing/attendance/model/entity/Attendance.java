@@ -1,7 +1,6 @@
 package com.jing.attendance.model.entity;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -40,13 +39,13 @@ public class Attendance extends BaseEntity {
 	@Range(min=0, max=31, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer attendance;	//tw_attendance:attendance  休息天数 类型0休天数 1考勤天数时有效  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
-	private String signTime;	//tw_attendance:sign_time  上班时间  
+	//@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=30, max=360, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer signCt;	//tw_attendance:sign_ct  上班打卡范围  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
-	private String outTime;	//tw_attendance:out_time  下班时间  
+	//@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=30, max=480, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer outCt;	//tw_attendance:out_ct  下班打卡范围  
 
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance_id
@@ -151,38 +150,39 @@ public class Attendance extends BaseEntity {
 		this.attendance = attendance;	
 	}	
 	/**
-	* @DatabasetableColumnName: tw_attendance:sign_time
-	* @Description: 获取属性        上班时间
-	* @return: java.sql.Timestamp
+	* @DatabasetableColumnName: tw_attendance:sign_ct
+	* @Description: 获取属性        上班打卡范围
+	* @return: Integer
 	*/
-	public String getSignTime(){
-		return signTime;	
+	public Integer getSignCt(){
+		return signCt;	
 	}
 	
 	/**
-	* @DatabasetableColumnName: tw_attendance:sign_time
-	* @Description: 设置属性        上班时间
-	* @return: java.sql.Timestamp
+	* @DatabasetableColumnName: tw_attendance:sign_ct
+	* @Description: 设置属性        上班打卡范围
+	* @return: Integer
 	*/
-	public void setSignTime(String signTime){
-		this.signTime = signTime;	
+	public void setSignCt(Integer signCt){
+		this.signCt = signCt;	
 	}	
+	
 	/**
-	* @DatabasetableColumnName: tw_attendance:out_time
-	* @Description: 获取属性        下班时间
-	* @return: java.sql.Timestamp
+	* @DatabasetableColumnName: tw_attendance:out_ct
+	* @Description: 获取属性        下班打卡范围
+	* @return: Integer
 	*/
-	public String getOutTime(){
-		return outTime;	
+	public Integer getOutCt(){
+		return outCt;	
 	}
 	
 	/**
-	* @DatabasetableColumnName: tw_attendance:out_time
-	* @Description: 设置属性        下班时间
-	* @return: java.sql.Timestamp
+	* @DatabasetableColumnName: tw_attendance:out_ct
+	* @Description: 设置属性        下班打卡范围
+	* @return: Integer
 	*/
-	public void setOutTime(String outTime){
-		this.outTime = outTime;	
+	public void setOutCt(Integer outCt){
+		this.outCt = outCt;	
 	}	
 	
 	

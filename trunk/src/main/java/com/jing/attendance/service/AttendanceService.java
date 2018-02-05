@@ -3,7 +3,7 @@ package com.jing.attendance.service;
 import java.util.List;
 import java.util.Map;
 
-
+import com.jing.attendance.controller.vo.AttendanceBo;
 import com.jing.attendance.model.entity.Attendance;
 
 /**
@@ -18,18 +18,18 @@ public interface AttendanceService {
     /**
 	 * @Title: addAttendance
 	 * @Description:添加门店考勤
-	 * @param attendance 实体
+	 * @param AttendanceBo 实体
 	 * @return Integer
 	 */
-	Attendance addAttendance(Attendance attendance);
+	Attendance addAttendance(AttendanceBo attendance);
 	
 	/**
 	 * @Title modifyAttendance
 	 * @Description:修改门店考勤
-	 * @param attendance 实体
+	 * @param AttendanceBo 实体
 	 * @return Integer
 	 */
-	Integer modifyAttendance(Attendance attendance);
+	Integer modifyAttendance(AttendanceBo attendance);
 	
 	/**
 	 * @Title: dropAttendanceByAttendanceId
@@ -43,9 +43,9 @@ public interface AttendanceService {
 	 * @Title: queryAttendanceByAttendanceId
 	 * @Description:根据实体标识查询门店考勤
 	 * @param attendanceId 实体标识
-	 * @return Attendance
+	 * @return AttendanceBo
 	 */
-	Attendance queryAttendanceByAttendanceId(Integer attendanceId);
+	AttendanceBo queryAttendanceByAttendanceId(Integer attendanceId);
 	 
 	/**
 	 * @Title: queryAttendanceForPage

@@ -51,6 +51,15 @@ public interface EmployeeMapper {
 	 * @return Employee
 	 */
 	Employee queryEmployeeByEmpId(String empId);
+	
+	/** 
+	* @Title: queryEmployeeByEmpCard 
+	* @Description: 根据实体标识查询员工
+	* @param empCard 用户卡号
+	* @return  Employee    返回类型 
+	* @throws 
+	*/
+	Employee queryEmployeeByEmpCard(String empCard);
 	 
 	/**
 	 * @Title: queryEmployeeForPage

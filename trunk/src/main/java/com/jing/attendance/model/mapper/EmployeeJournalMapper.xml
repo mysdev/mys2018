@@ -93,7 +93,9 @@
 	FROM tw_employee_journal 
 	<where>
 		<include refid="sql_employeeJournal_query_nowhere"/>
+		<if test="employeeJournal.yearMonth != null">AND date_format(attendance_date,'%Y-%m')=#{employeeJournal.yearMonth} </if>
 	</where>
+	order by attendance_date desc
 </select>
 
 <!-- 根据员工考勤日志属性与分页信息分页查询员工考勤日志信息 -->
@@ -103,7 +105,25 @@
 	FROM tw_employee_journal 
 	<where>
 		<include refid="sql_employeeJournal_query_nowhere"/>
+		<if test="employeeJournal.yearMonth != null">AND date_format(attendance_date,'%Y-%m')=#{employeeJournal.yearMonth} </if>
 	</where>
+</select>
+
+<select id="queryEmployeeJournalAllForPage" resultType="java.util.Map" parameterType="java.util.Map">
+select j.journal_id as journalId, j.emp_id as empId, j.attendance_date as attendanceDate,
+j.sign_time as signTime, j.out_time as outTime, e.emp_name empName, e.dpt_id dptId, d.dpt_name dptName from (
+	select * from tw_employee_journal 
+		<if test="query.yearMonth != null">AND date_format(attendance_date,'%Y-%m')=#{query.yearMonth} </if>
+		<if test="query.empId != null"> AND emp_id = #{query.empId}</if>
+	) j
+inner join (
+	select * from tb_employee 
+	<if test="query.empName != null">AND emp_name like concat('%',#{query.empName},'%') </if>
+	<if test="query.empNo != null">AND emp_no like concat('%',#{query.empNo},'%') </if>
+	<if test="query.pinyin != null">AND pinyin like concat('%',#{query.pinyin},'%') </if>
+	<if test="query.storeId != null">AND store_id = #{query.storeId} </if>
+) e on j.emp_id=e.emp_id
+left outer join tb_department d on e.dpt_id = d.dpt_id
 </select>
 
 </mapper>   

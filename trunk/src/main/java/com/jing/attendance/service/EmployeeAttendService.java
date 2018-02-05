@@ -40,12 +40,12 @@ public interface EmployeeAttendService {
 	Integer dropEmployeeAttendByAttId(Integer attId);
 	
 	/**
-	 * @Title: queryEmployeeAttendByAttId
-	 * @Description:根据实体标识查询打卡记录
-	 * @param attId 实体标识
+	 * @Title: queryEmployeeAttendByEmployeeId
+	 * @Description:根据员工标识查询打卡记录
+	 * @param empId 员工标识
 	 * @return EmployeeAttend
 	 */
-	EmployeeAttend queryEmployeeAttendByAttId(Integer attId);
+	List<EmployeeAttend> queryEmployeeAttendByEmployeeId(String empId, String yearMonth);
 	 
 	/**
 	 * @Title: queryEmployeeAttendForPage
@@ -53,10 +53,10 @@ public interface EmployeeAttendService {
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
-	 * @param employeeAttend 实体
+	 * @param qeury 实体
 	 * @return List<EmployeeAttend>
 	 */
-	Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, EmployeeAttend employeeAttend);
+	Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> qeury);
 	 
 	 /**
 	 * @Title: queryEmployeeAttendByProperty

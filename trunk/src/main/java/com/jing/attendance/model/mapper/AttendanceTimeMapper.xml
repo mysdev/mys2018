@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceTimeMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceTimeResultMap" type="com.jing.attendance.model.entity.AttendanceTime">
+	<id column="id" property="id"/>
+	<result column="attendance_id" property="attendanceId"/>
+	<result column="name" property="name"/>
+	<result column="sign_time" property="signTime"/>
+	<result column="out_time" property="outTime"/>
+</resultMap>
+
+<sql id="sql_attendanceTime_item">
+	id, attendance_id, name, sign_time, out_time
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendanceTime_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendanceTime.id != null">AND id = #{attendanceTime.id} </if>
+		<if test="attendanceTime.attendanceId != null">AND attendance_id = #{attendanceTime.attendanceId} </if>
+		<if test="attendanceTime.name != null">AND name like concat(#{attendanceTime.name}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 考勤时段 一个考勤方案至多三个时段 -->
+<insert id="addAttendanceTime" parameterType="com.jing.attendance.model.entity.AttendanceTime" >
+	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance_time 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="id != null"> id,</if>
+		<if test="attendanceId != null"> attendance_id,</if>
+		<if test="name != null"> name,</if>
+		<if test="signTime != null"> sign_time,</if>
+		<if test="outTime != null"> out_time,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="id != null"> #{id},</if>
+		<if test="attendanceId != null"> #{attendanceId},</if>
+		<if test="name != null"> #{name},</if>
+		<if test="signTime != null"> #{signTime},</if>
+		<if test="outTime != null"> #{outTime},</if>
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 考勤时段 一个考勤方案至多三个时段 -->  
+<update id="modifyAttendanceTime" parameterType="com.jing.attendance.model.entity.AttendanceTime" >
+  	UPDATE tw_attendance_time SET
+	<trim suffixOverrides=",">
+		<if test="attendanceId != null"> attendance_id = #{attendanceId},</if>
+		<if test="name != null"> name = #{name},</if>
+		<if test="signTime != null"> sign_time = #{signTime},</if>
+		<if test="outTime != null"> out_time = #{outTime},</if>
+	</trim>
+	WHERE id = #{id}
+</update>
+ 
+<!-- 删除 考勤时段 一个考勤方案至多三个时段 -->
+<delete id="dropAttendanceTimeById" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_time WHERE id = #{id}
+</delete> 
+<delete id="dropAttendanceTimeByAttendanceId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_time WHERE attendance_id = #{attendanceId}
+</delete> 
+
+
+<!-- 根据标识查询 考勤时段 一个考勤方案至多三个时段 -->
+<select id="queryAttendanceTimeById"  resultMap="AttendanceTimeResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendanceTime_item"/>
+	FROM tw_attendance_time WHERE id = #{id}
+</select>
+
+<!-- 根据属性查询考勤时段 一个考勤方案至多三个时段 -->
+<select id="queryAttendanceTimeByProperty"  resultMap="AttendanceTimeResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendanceTime_item"/>
+	FROM tw_attendance_time 
+	<where>
+		<include refid="sql_attendanceTime_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据考勤时段 一个考勤方案至多三个时段属性与分页信息分页查询考勤时段 一个考勤方案至多三个时段信息 -->
+<select id="queryAttendanceTimeForPage"  resultMap="AttendanceTimeResultMap" > 
+	SELECT 
+	<include refid="sql_attendanceTime_item"/>
+	FROM tw_attendance_time 
+	<where>
+		<include refid="sql_attendanceTime_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

@@ -146,5 +146,10 @@ public class  EmployeeServiceImpl implements EmployeeService {
 		return employeeMapper.queryEmployeeByEmpIds(query);
 	}
 
+	@Override
+	public Employee queryEmployeeByEmpCard(String empCard) {
+		return employeeMapper.queryEmployeeByEmpCard(empCard);
+	}
+
 
 }

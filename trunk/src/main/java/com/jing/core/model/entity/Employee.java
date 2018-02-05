@@ -54,6 +54,8 @@ public class Employee extends BaseEntity {
 	private Integer status;	//tb_employee:status  员工状态 0正常  
 
 	private Integer isManager;	//tb_employee:is_manager  是否管理 0否  
+	
+	private String empCard; //员工号卡
 
 
 	/**
@@ -242,6 +244,14 @@ public class Employee extends BaseEntity {
 	*/
 	public void setIsManager(Integer isManager){
 		this.isManager = isManager;	
+	}
+
+	public String getEmpCard() {
+		return empCard;
+	}
+
+	public void setEmpCard(String empCard) {
+		this.empCard = empCard;
 	}	
 	
 	

@@ -1,13 +1,16 @@
-package com.jing.attendance.service.bo;
+package com.jing.attendance.controller.vo;
 
 import java.util.List;
 
 import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceDetail;
+import com.jing.attendance.model.entity.AttendanceTime;
 
 /**
  * @ClassName: AttendanceBo
  * @Description: 考勤信息与详情
+ * 考勤信息只负责考勤表的操作
+ * 详情分年月处理
  * @author: Jinlong He
  * @date: 2018年1月15日 下午2:29:25
  */
@@ -29,8 +32,8 @@ public class AttendanceBo extends Attendance{
 		this.setAttendanceId(attendance.getAttendanceId());
 		this.setStoreId(attendance.getStoreId());
 		this.setAttendanceName(attendance.getAttendanceName());
-		this.setSignTime(attendance.getSignTime());
-		this.setOutTime(attendance.getOutTime());
+		this.setSignCt(attendance.getSignCt());
+		this.setOutCt(attendance.getOutCt());
 		this.setAttendance(attendance.getAttendance());
 		this.setTypes(attendance.getTypes());
 		this.setCreatedBy(attendance.getCreatedBy());
@@ -40,14 +43,20 @@ public class AttendanceBo extends Attendance{
 		this.setStatus(attendance.getStatus());		
 	}
 	
-	//考勤详情信息
-	private List<AttendanceDetail> attendanceDetailList;
-
-	public List<AttendanceDetail> getAttendanceDetailList() {
-		return attendanceDetailList;
+	/**
+	 * @fieldName: attTime
+	 * @fieldType: List<AttendanceTime>
+	 * @Description: 考勤时段
+	 */
+	private List<AttendanceTime> attTime;
+	
+	public List<AttendanceTime> getAttTime() {
+		return attTime;
 	}
 
-	public void setAttendanceDetailList(List<AttendanceDetail> attendanceDetailList) {
-		this.attendanceDetailList = attendanceDetailList;
+	public void setAttTime(List<AttendanceTime> attTime) {
+		this.attTime = attTime;
 	}
+
+	
 }

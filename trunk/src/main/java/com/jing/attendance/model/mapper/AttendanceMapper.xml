@@ -10,8 +10,8 @@
 	<result column="status" property="status"/>
 	<result column="types" property="types"/>
 	<result column="attendance" property="attendance"/>
-	<result column="sign_time" property="signTime"/>
-	<result column="out_time" property="outTime"/>
+	<result column="sign_ct" property="signCt"/>
+	<result column="out_ct" property="outCt"/>
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
 	<result column="updated_by" property="updatedBy"/>
@@ -19,7 +19,7 @@
 </resultMap>
 
 <sql id="sql_attendance_item">
-	attendance_id, store_id, attendance_name, status, types, attendance, sign_time, out_time, created_by, created_date, updated_by, updated_date
+	attendance_id, store_id, attendance_name, status, types, attendance, sign_ct, out_ct, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -30,6 +30,8 @@
 		<if test="attendance.attendanceName != null">AND attendance_name like concat(#{attendance.attendanceName}, '%') </if>
 		<if test="attendance.status != null">AND status = #{attendance.status} </if>
 		<if test="attendance.types != null">AND types = #{attendance.types} </if>
+		<if test="attendance.signCt != null">AND sign_ct &lt;= #{attendance.signCt} </if>
+		<if test="attendance.outCt != null">AND out_ct &lt;= #{attendance.outCt} </if>
 		<if test="attendance.attendance != null">AND attendance = #{attendance.attendance} </if>
 		<if test="attendance.createdBy != null">AND created_by like concat(#{attendance.createdBy}, '%') </if>
 		<if test="attendance.updatedBy != null">AND updated_by like concat(#{attendance.updatedBy}, '%') </if>
@@ -49,8 +51,8 @@
 		<if test="status != null"> status,</if>
 		<if test="types != null"> types,</if>
 		<if test="attendance != null"> attendance,</if>
-		<if test="signTime != null"> sign_time,</if>
-		<if test="outTime != null"> out_time,</if>
+		<if test="signCt != null"> sign_ct,</if>
+		<if test="outCt != null"> out_ct,</if>
 		<if test="createdBy != null"> created_by,</if>
 		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
@@ -63,8 +65,8 @@
 		<if test="status != null"> #{status},</if>
 		<if test="types != null"> #{types},</if>
 		<if test="attendance != null"> #{attendance},</if>
-		<if test="signTime != null"> #{signTime},</if>
-		<if test="outTime != null"> #{outTime},</if>
+		<if test="signCt != null"> #{signCt},</if>
+		<if test="outCt != null"> #{outCt},</if>
 		<if test="createdBy != null"> #{createdBy},</if>
 		now(),
 		<if test="updatedBy != null"> #{updatedBy},</if>
@@ -81,8 +83,8 @@
 		<if test="status != null"> status = #{status},</if>
 		<if test="types != null"> types = #{types},</if>
 		<if test="attendance != null"> attendance = #{attendance},</if>
-		<if test="signTime != null"> sign_time = #{signTime},</if>
-		<if test="outTime != null"> out_time = #{outTime},</if>
+		<if test="signCt != null"> sign_ct = #{signCt},</if>
+		<if test="outCt != null"> out_ct = #{outCt},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
 		updated_date = now(),

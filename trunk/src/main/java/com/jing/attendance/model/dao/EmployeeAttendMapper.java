@@ -59,7 +59,7 @@ public interface EmployeeAttendMapper {
 	 * @param employeeAttend 实体
 	 * @return List<EmployeeAttend>
 	 */
-	List<EmployeeAttend> queryEmployeeAttendForPage(PageBounds pageBounds, @Param("employeeAttend") EmployeeAttend employeeAttend);
+	List<EmployeeAttend> queryEmployeeAttendForPage(PageBounds pageBounds, @Param("employeeAttend") Map<String, Object> map);
 	 
 	 /**
 	  * @Title: queryEmployeeAttendByProperty

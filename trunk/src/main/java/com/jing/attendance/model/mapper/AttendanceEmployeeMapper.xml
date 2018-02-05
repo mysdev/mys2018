@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceEmployeeMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceEmployeeResultMap" type="com.jing.attendance.model.entity.AttendanceEmployee">
+	<id column="link_id" property="linkId"/>
+	<result column="emp_id" property="empId"/>
+	<result column="attendance_id" property="attendanceId"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_attendanceEmployee_item">
+	link_id, emp_id, attendance_id, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendanceEmployee_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendanceEmployee.linkId != null">AND link_id = #{attendanceEmployee.linkId} </if>
+		<if test="attendanceEmployee.empId != null">AND emp_id like concat(#{attendanceEmployee.empId}, '%') </if>
+		<if test="attendanceEmployee.attendanceId != null">AND attendance_id = #{attendanceEmployee.attendanceId} </if>
+		<if test="attendanceEmployee.createdBy != null">AND created_by like concat(#{attendanceEmployee.createdBy}, '%') </if>
+		<if test="attendanceEmployee.updatedBy != null">AND updated_by like concat(#{attendanceEmployee.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 员工考勤关系 -->
+<insert id="addAttendanceEmployee" parameterType="com.jing.attendance.model.entity.AttendanceEmployee" >
+	<selectKey keyProperty="linkId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance_employee 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="linkId != null"> link_id,</if>
+		<if test="empId != null"> emp_id,</if>
+		<if test="attendanceId != null"> attendance_id,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="linkId != null"> #{linkId},</if>
+		<if test="empId != null"> #{empId},</if>
+		<if test="attendanceId != null"> #{attendanceId},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 员工考勤关系 -->  
+<update id="modifyAttendanceEmployee" parameterType="com.jing.attendance.model.entity.AttendanceEmployee" >
+  	UPDATE tw_attendance_employee SET
+	<trim suffixOverrides=",">
+		<if test="empId != null"> emp_id = #{empId},</if>
+		<if test="attendanceId != null"> attendance_id = #{attendanceId},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE link_id = #{linkId}
+</update>
+ 
+<!-- 删除 员工考勤关系 -->
+<delete id="dropAttendanceEmployeeByLinkId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_employee WHERE link_id = #{linkId}
+</delete> 
+<delete id="dropAttendanceEmployeeByAttendanceId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_employee WHERE attendance_id = #{attendanceId}
+</delete> 
+
+
+<!-- 根据标识查询 员工考勤关系 -->
+<select id="queryAttendanceEmployeeByLinkId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee WHERE link_id = #{linkId}
+</select>
+
+<!-- 根据标识查询 员工考勤关系 -->
+<select id="queryAttendanceEmployeeByEmpId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.String">
+	SELECT 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee WHERE emp_id = #{empId}
+</select>
+
+<!-- 根据属性查询员工考勤关系 -->
+<select id="queryAttendanceEmployeeByProperty"  resultMap="AttendanceEmployeeResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee 
+	<where>
+		<include refid="sql_attendanceEmployee_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息 -->
+<select id="queryAttendanceEmployeeForPage"  resultMap="AttendanceEmployeeResultMap" > 
+	SELECT 
+	<include refid="sql_attendanceEmployee_item"/>
+	FROM tw_attendance_employee 
+	<where>
+		<include refid="sql_attendanceEmployee_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
+<select id="queryAttendanceEmployeeAllForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
+	select * from (
+		select l.*, a.attendance_name attendanceName, e.emp_name empName, e.emp_no empNo, e.pinyin pinyin, e.store_id storeId, e.dpt_id dptId from 
+		(select link_id linkId, emp_id empId, attendance_id attendanceId, created_by createdBy, created_date createdDate,
+			updated_by updatedBy, updated_date updatedDate from tw_attendance_employee 
+			<where> 
+				<if test="param.attendanceId != null"> attendance_id = #{param.attendanceId}</if>
+			</where>
+		) l
+		left OUTER join tw_attendance a on l.attendanceId=a.attendance_id
+		left outer join tb_employee e on l.empId=e.emp_id
+	) t 
+	<where> 
+		<if test="param.storeId != null"> storeId = #{param.storeId}</if>
+		<if test="param.namePYJob != null">
+			AND (
+				empName like concat('%', #{param.namePYJob}, '%') 
+				or pinyin like concat('%', #{param.namePYJob}, '%')
+				or empNo like concat('%', #{param.namePYJob}, '%')
+			) 
+		</if>
+		<if test="param.dptId != null">AND dptId = #{param.dptId} </if>
+	</where>
+</select>
+<!-- 未关联考勤规则用户 -->
+<select id="queryAttendanceEmployeeNotForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
+	select * from (
+		select e.*, l.link_id linkId from (
+			select emp_id empId, emp_name empName, emp_no empNo, pinyin pinyin, store_id storeId, dpt_Id dptId 
+			from tb_employee 
+			<where> 
+				<if test="param.storeId != null"> store_id = #{param.storeId}</if>
+				<if test="param.namePYJob != null">
+					AND (
+						emp_name like concat('%', #{param.namePYJob}, '%') 
+						or pinyin like concat('%', #{param.namePYJob}, '%')
+						or emp_no like concat('%', #{param.namePYJob}, '%')
+					) 
+				</if>
+				<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
+			</where>
+		) e LEFT OUTER JOIN tw_attendance_employee l on e.empId = l.emp_id
+	) t where linkId is null	
+</select>
+
+
+</mapper>   

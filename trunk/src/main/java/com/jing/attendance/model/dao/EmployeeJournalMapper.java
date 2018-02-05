@@ -61,6 +61,15 @@ public interface EmployeeJournalMapper {
 	 */
 	List<EmployeeJournal> queryEmployeeJournalForPage(PageBounds pageBounds, @Param("employeeJournal") EmployeeJournal employeeJournal);
 	 
+	/**
+	 * @Title: queryEmployeeJournalAllForPage
+	 * @Description: 根据员工等属性与分页信息分页查询员工考勤日志信息
+	 * @param pageBounds 分页信息
+	 * @param query 实体
+	 * @return List<EmployeeJournal>
+	 */
+	List<Map<String, Object>> queryEmployeeJournalAllForPage(PageBounds pageBounds, @Param("query") Map<String, Object> query);
+	
 	 /**
 	  * @Title: queryEmployeeJournalByProperty
 	  * @Description:根据属性查询员工考勤日志
