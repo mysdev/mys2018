@@ -1,27 +1,23 @@
 package com.jing.attendance.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
+import com.jing.attendance.model.entity.AttendanceEmployee;
+import com.jing.attendance.service.AttendanceEmployeeService;
+import com.jing.attendance.service.bo.AttendanceEmployeeBo;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.AttendanceEmployee;
-import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
-import com.jing.attendance.service.AttendanceEmployeeService;
-import com.jing.attendance.service.bo.AttendanceEmployeeBo;
-import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: AttendanceEmployee
@@ -143,13 +139,23 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 
 	@Override
 	public HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort,
-			Integer attendanceId, Employee employee, String namePYJob) {
+			Integer attendanceId, Map<String, Object> params) {
+		if(params==null){
+			params = new HashMap<String, Object>();
+		}
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, AttendanceEmployeeBo.class);
-		List<AttendanceEmployeeBo> entityList = employeeAttendanceMapper.queryAttendanceEmployeeAllForPage(pageBounds, attendanceId, employee, namePYJob);
-		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, AttendanceEmployeeBo.class);
+		pageBounds.setOrdersByJson(sort, null);
+		List<AttendanceEmployeeBo> entityList;
+		if(attendanceId!=null && attendanceId.intValue()==-1){
+			//查询未分配考勤员工
+			entityList = employeeAttendanceMapper.queryAttendanceEmployeeNotForPage(pageBounds, params);
+		}else{
+			//查询已分配考勤员工
+			if(attendanceId!=null && attendanceId.intValue()>0) {
+				params.put("attendanceId", attendanceId);
+			}
+			entityList = employeeAttendanceMapper.queryAttendanceEmployeeAllForPage(pageBounds, params);
 		}
 //		if (!entityList.isEmpty()) {
 			PageList<AttendanceEmployeeBo> pagelist = (PageList<AttendanceEmployeeBo>) entityList;

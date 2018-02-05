@@ -1,32 +1,27 @@
 package com.jing.attendance.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.controller.vo.AttendanceBo;
+import com.jing.attendance.model.dao.AttendanceDetailMapper;
+import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
+import com.jing.attendance.model.dao.AttendanceMapper;
+import com.jing.attendance.model.dao.AttendanceTimeMapper;
+import com.jing.attendance.model.entity.Attendance;
+import com.jing.attendance.model.entity.AttendanceTime;
+import com.jing.attendance.service.AttendanceService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.Attendance;
-import com.jing.attendance.model.entity.AttendanceTime;
-import com.jing.attendance.controller.vo.AttendanceBo;
-import com.jing.attendance.model.dao.AttendanceDetailMapper;
-import com.jing.attendance.model.dao.AttendanceMapper;
-import com.jing.attendance.model.dao.AttendanceTimeMapper;
-import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
-import com.jing.attendance.service.AttendanceDetailService;
-import com.jing.attendance.service.AttendanceService;
-import com.jing.attendance.service.AttendanceTimeService;
-import com.jing.attendance.service.AttendanceEmployeeService;
 
 /**
  * @ClassName: Attendance
@@ -120,8 +115,16 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	 * @return Attendance
 	 */
 	@Override
-	public Attendance queryAttendanceByAttendanceId(Integer attendanceId){
-		return attendanceMapper.queryAttendanceByAttendanceId(attendanceId);
+	public AttendanceBo queryAttendanceByAttendanceId(Integer attendanceId){
+		Attendance a = attendanceMapper.queryAttendanceByAttendanceId(attendanceId);
+		if(a==null){
+			return null;
+		}
+		AttendanceBo ab = new AttendanceBo(a);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("attendanceId", attendanceId);
+		ab.setAttTime(attendanceTimeMapper.queryAttendanceTimeByProperty(query));
+		return ab;
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
 	/**
@@ -139,14 +142,11 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, Attendance.class);
 		List<Attendance> entityList = attendanceMapper.queryAttendanceForPage(pageBounds, attendance);
-		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, Attendance.class);
-		}
-		if (!entityList.isEmpty()) {
+		//if (!entityList.isEmpty()) {
 			PageList<Attendance> pagelist = (PageList<Attendance>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
+		//}
 		return returnMap;
 	}
 	 

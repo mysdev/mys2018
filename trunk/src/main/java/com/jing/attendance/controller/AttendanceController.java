@@ -50,7 +50,7 @@ public class AttendanceController{
 	private static final Integer MAX_TIME_PER_ATT = 3;
 	
 	
-	@ApiOperation(value = "新增 添加门店考勤信息", notes = "添加门店考勤信息")
+	@ApiOperation(value = "新增 添加门店考勤信息", notes = "添加门店考勤信息 暂时只支持type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
 			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {		
@@ -58,12 +58,22 @@ public class AttendanceController{
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
+		if(attendance.getAttTime()==null || attendance.getAttTime().size()==0){
+			Map<String, String> e = new HashMap<String, String>();
+			e.put("field", "attTime");
+			e.put("message", "每考勤规则必须配置一个时间段。");
+			errors.add(e);
+		}
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
 			e.put("field", "attTime");
 			e.put("message", "每考勤规则限定最多"+MAX_TIME_PER_ATT+"个时间段。");
 			errors.add(e);
 		}
+		if(!errors.isEmpty()){
+			throw new ParameterException(errors);
+		}	
+		attendance.setTypes(2); //暂时只支持2
 		if(attendance.getTypes().intValue()<2 && (attendance.getAttendance()==null || attendance.getAttendance().intValue()==0)){
 			throw new ParameterException("attendance","类型为0休天数或1考勤天数时，对应天数必传且不能为零。");
 		}
@@ -79,7 +89,7 @@ public class AttendanceController{
 			@PathVariable Integer attendanceId,
 			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);
+		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);		
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
 			e.put("field", "attTime");
@@ -116,7 +126,7 @@ public class AttendanceController{
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.GET)
 	public Object queryAttendanceById(HttpServletResponse response,
 			@PathVariable Integer attendanceId) {
-		Attendance attendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);
+		AttendanceBo attendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		if(null == attendance){
 			throw new NotFoundException("门店考勤");
 		}
@@ -175,7 +185,7 @@ public class AttendanceController{
 	
 	
 	@ApiOperation(value = "更新 根据考勤时段信息", notes = "根据考勤时段信息")
-	@RequestMapping(value = "/{attendanceId:.+}/time/{id:.+}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/time/{id:.+}", method = RequestMethod.PUT)
 	public Object modifyAttendanceTimeById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@PathVariable Integer id,
@@ -185,7 +195,7 @@ public class AttendanceController{
 		if(null == tempAttendanceTime){
 			throw new NotFoundException("考勤时段");
 		}
-		if(attendanceTime.getAttendanceId().intValue()!=attendanceId.intValue()){
+		if(tempAttendanceTime.getAttendanceId().intValue()!=attendanceId.intValue()){
 			throw new ParameterException("attendanceId", "时段所属考勤规则不匹配。");
 		}
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendanceTime, false);
@@ -200,7 +210,7 @@ public class AttendanceController{
 	}
 
 	@ApiOperation(value = "删除 根据考勤时段标识删除时段信息", notes = "根据考勤时段标识删除时段信息")
-	@RequestMapping(value = "/{attendanceId:.+}/time/{id:.+}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/time/{id:.+}", method = RequestMethod.DELETE)
 	public Object dropAttendanceTimeById(HttpServletResponse response, 
 			@PathVariable Integer attendanceId,
 			@PathVariable Integer id) {		
@@ -211,11 +221,17 @@ public class AttendanceController{
 		if(attendanceTime.getAttendanceId().intValue()!=attendanceId.intValue()){
 			throw new ParameterException("attendanceId", "时段所属考勤规则不匹配。");
 		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("attendanceId", attendanceId);
+		List<AttendanceTime> list = attendanceTimeService.queryAttendanceTimeByProperty(query);
+		if(list==null || list.size()==1){
+			throw new ParameterException("id", "每考勤规则必须保留一个时间段。");
+		}
 		return attendanceTimeService.dropAttendanceTimeById(id);
 	}
 	
 	@ApiOperation(value = "查询 根据考勤标识查询时段信息", notes = "根据考勤标识查询时段信息")
-	@RequestMapping(value = "/{attendanceId:.+}/times", method = RequestMethod.GET)
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/times", method = RequestMethod.GET)
 	public Object queryAttendanceTimeById(HttpServletResponse response,
 			@PathVariable Integer attendanceId) {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		

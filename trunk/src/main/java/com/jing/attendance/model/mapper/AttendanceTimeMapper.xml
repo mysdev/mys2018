@@ -60,10 +60,10 @@
  
 <!-- 删除 考勤时段 一个考勤方案至多三个时段 -->
 <delete id="dropAttendanceTimeById" parameterType="java.lang.Integer">
-	DELETE FROM tw_attendance_time WHERE attendance_id = #{id}
+	DELETE FROM tw_attendance_time WHERE id = #{id}
 </delete> 
 <delete id="dropAttendanceTimeByAttendanceId" parameterType="java.lang.Integer">
-	DELETE FROM tw_attendance_time WHERE id = #{attendanceId}
+	DELETE FROM tw_attendance_time WHERE attendance_id = #{attendanceId}
 </delete> 
 
 

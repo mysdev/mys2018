@@ -87,9 +87,18 @@ public interface AttendanceEmployeeMapper {
 	* @return  List<AttendanceEmployeeBo>    返回类型 
 	* @throws 
 	*/
-	List<AttendanceEmployeeBo> queryAttendanceEmployeeAllForPage(PageBounds pageBounds, @Param("attendanceId") Integer attendanceId,
-			@Param("employee") Employee employee, @Param("namePYJob") String namePYJob);
-
+	List<AttendanceEmployeeBo> queryAttendanceEmployeeAllForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
+	
+	/** 
+	* @Title: queryAttendanceEmployeeNotForPage 
+	* @Description: 未关联考勤规则用户
+	* @param pageBounds
+	* @param param
+	* @return  List<AttendanceEmployeeBo>    返回类型 
+	* @throws 
+	*/
+	List<AttendanceEmployeeBo> queryAttendanceEmployeeNotForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
+	
 	Integer dropAttendanceEmployeeByAttendanceId(Integer attendanceId);
 	 
 	 

@@ -13,15 +13,6 @@
 	<result column="updated_date" property="updatedDate"/>
 </resultMap>
 
-<!-- 员工、考勤规则、关联关系联合 -->
-<resultMap id="AttendanceEmployeeLinkResult" 
-		type="com.jing.attendance.service.bo.AttendanceEmployeeBo"
-		extends="com.jing.core.model.dao.EmployeeMapper.EmployeeResultMap">	
-	<result column="link_id" property="linkId"/>
-	<result column="attendance_name" property="attendanceName"/>
-	<result column="attendance_id" property="attendanceId"/>
-</resultMap>
-
 <sql id="sql_attendanceEmployee_item">
 	link_id, emp_id, attendance_id, created_by, created_date, updated_by, updated_date
 </sql>
@@ -93,7 +84,7 @@
 </select>
 
 <!-- 根据标识查询 员工考勤关系 -->
-<select id="queryAttendanceEmployeeByEmpId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
+<select id="queryAttendanceEmployeeByEmpId"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.String">
 	SELECT 
 	<include refid="sql_attendanceEmployee_item"/>
 	FROM tw_attendance_employee WHERE emp_id = #{empId}
@@ -120,28 +111,50 @@
 </select>
 
 <!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
-<select id="queryAttendanceEmployeeAllForPage"  resultMap="AttendanceEmployeeLinkResult" > 
+<select id="queryAttendanceEmployeeAllForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
 	select * from (
-		select l.link_id, l.attendance_id, a.attendance_name, e.* from 
-		(select * from tw_attendance_employee 
+		select l.*, a.attendance_name attendanceName, e.emp_name empName, e.emp_no empNo, e.pinyin pinyin, e.store_id storeId, e.dpt_id dptId from 
+		(select link_id linkId, emp_id empId, attendance_id attendanceId, created_by createdBy, created_date createdDate,
+			updated_by updatedBy, updated_date updatedDate from tw_attendance_employee 
 			<where> 
-				<if test="attendanceId != null"> attendance_id = #{attendanceId}</if>
-			</where>) l
-		left OUTER join tw_attendance a on l.attendance_id=a.attendance_id
-		left outer join tb_employee e on l.emp_id=e.emp_id
+				<if test="param.attendanceId != null"> attendance_id = #{param.attendanceId}</if>
+			</where>
+		) l
+		left OUTER join tw_attendance a on l.attendanceId=a.attendance_id
+		left outer join tb_employee e on l.empId=e.emp_id
 	) t 
-	<where>
-		<if test="employee.empName != null">AND emp_name like concat('%', #{employee.empName}, '%') </if>
-		<if test="employee.pinyin != null">AND pinyin like concat('%', #{employee.pinyin}, '%') </if>
-		<if test="employee.empNo != null">AND emp_no like concat('%', #{employee.empNo}, '%') </if>
-		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
-		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
-		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
-		<if test="namePYJob != null">AND (emp_name like concat('%', #{namePYJob}, '%') 
-													or pinyin like concat('%', #{namePYJob}, '%')
-													or emp_no like concat('%', #{namePYJob}, '%')
-													) </if>
+	<where> 
+		<if test="param.storeId != null"> storeId = #{param.storeId}</if>
+		<if test="param.namePYJob != null">
+			AND (
+				empName like concat('%', #{param.namePYJob}, '%') 
+				or pinyin like concat('%', #{param.namePYJob}, '%')
+				or empNo like concat('%', #{param.namePYJob}, '%')
+			) 
+		</if>
+		<if test="param.dptId != null">AND dptId = #{param.dptId} </if>
 	</where>
 </select>
+<!-- 未关联考勤规则用户 -->
+<select id="queryAttendanceEmployeeNotForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
+	select * from (
+		select e.*, l.link_id linkId from (
+			select emp_id empId, emp_name empName, emp_no empNo, pinyin pinyin, store_id storeId, dpt_Id dptId 
+			from tb_employee 
+			<where> 
+				<if test="param.storeId != null"> store_id = #{param.storeId}</if>
+				<if test="param.namePYJob != null">
+					AND (
+						emp_name like concat('%', #{param.namePYJob}, '%') 
+						or pinyin like concat('%', #{param.namePYJob}, '%')
+						or emp_no like concat('%', #{param.namePYJob}, '%')
+					) 
+				</if>
+				<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
+			</where>
+		) e LEFT OUTER JOIN tw_attendance_employee l on e.empId = l.emp_id
+	) t where linkId is null	
+</select>
+
 
 </mapper>   

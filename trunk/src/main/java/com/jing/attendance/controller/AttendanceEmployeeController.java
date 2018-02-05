@@ -1,11 +1,12 @@
 package com.jing.attendance.controller;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,20 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jing.attendance.model.entity.Attendance;
+import com.jing.attendance.model.entity.AttendanceEmployee;
+import com.jing.attendance.service.AttendanceEmployeeService;
+import com.jing.attendance.service.AttendanceService;
+import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.CustomException;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployeeService;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
-import com.jing.attendance.model.entity.Attendance;
-import com.jing.attendance.model.entity.AttendanceEmployee;
-import com.jing.attendance.service.AttendanceService;
-import com.jing.attendance.service.AttendanceEmployeeService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,6 +76,7 @@ public class AttendanceEmployeeController{
 				e0.put("index", ""+i);
 				e0.put("filed", "employeeId");
 				e0.put("message", "员工不存在。");
+				errors.add(e0);
 			}	
 			empList.add(empId);
 			i++;
@@ -140,15 +138,27 @@ public class AttendanceEmployeeController{
 //		return new ArrayList();
 //	}
 	
-	@ApiOperation(value = "查询分页 根据员工考勤关系属性分页查询员工考勤关系信息列表", notes = "根据员工考勤关系属性分页查询员工考勤关系信息列表")
+	@ApiOperation(value = "查询分页 查询员工考勤关系信息列表", notes = "查询员工考勤关系信息列表 attendanceId 考勤标识 -1未分配 0全部 其它为指定考勤规则")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employees", method = RequestMethod.GET)
 	public Object queryAttendanceEmployeePage(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
 			@RequestParam(value = "sort", required = false) String sort, 
-			@RequestParam(value = "namePYJob", required = false) String namePYJob, Employee employee) {				
-		return attendanceEmployeeService.queryAttendanceEmployeeForPage(pagenum, pagesize, sort, attendanceId, employee, namePYJob);
+			@RequestParam(value = "namePYJob", required = false) String namePYJob,
+			@RequestParam(value = "dptId", required = false) Integer dptId,
+			@RequestParam(value = "storeId", required = false) String storeId) {	
+		Map<String, Object> query = new HashMap<String, Object>();
+		if(namePYJob!=null && namePYJob.trim().length()>0){
+			query.put("namePYJob", namePYJob.trim());
+		}
+		if(dptId!=null && dptId.intValue()>0){
+			query.put("dptId", dptId);
+		}
+		if(storeId!=null && storeId.trim().length()>0){
+			query.put("storeId", storeId.trim());
+		}
+		return attendanceEmployeeService.queryAttendanceEmployeeForPage(pagenum, pagesize, sort, attendanceId, query);
 	}
 
 }

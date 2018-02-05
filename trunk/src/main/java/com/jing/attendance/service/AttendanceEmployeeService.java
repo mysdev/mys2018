@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.jing.attendance.model.entity.AttendanceEmployee;
-import com.jing.attendance.service.bo.AttendanceEmployeeBo;
-import com.jing.core.model.entity.Employee;
 
 /**
  * @ClassName: AttendanceEmployee
@@ -90,14 +87,13 @@ public interface AttendanceEmployeeService {
 	* @param pagenum
 	* @param pagesize
 	* @param sort
-	* @param attendanceId 考勤标识
-	* @param employee 员工属性
-	* @param namePYJob 员工姓名、拼音、工号
+	* @param attendanceId 考勤标识 -1未分配 0全部 其它为指定考勤规则
+	* @param params 员工属性 namePYJob 员工姓名、拼音、工号 dptId部门标识 storeId门店标识
 	* @return  List<AttendanceEmployeeBo>    返回类型 
 	* @throws 
 	*/
 	HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, Integer attendanceId,
-			Employee employee, String namePYJob);
+			Map<String, Object> params);
 
 	/** 
 	* @Title: bindAttendanceEmployee 
