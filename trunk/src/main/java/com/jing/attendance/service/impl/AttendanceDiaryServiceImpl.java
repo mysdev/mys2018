@@ -11,112 +11,105 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jing.utils.Constant;
-import com.jing.utils.DateUtil;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
 
 
-import com.jing.attendance.model.entity.EmployeeAttend;
-import com.jing.attendance.model.dao.EmployeeAttendMapper;
-import com.jing.attendance.service.EmployeeAttendService;
+import com.jing.attendance.model.entity.AttendanceDiary;
+import com.jing.attendance.model.dao.AttendanceDiaryMapper;
+import com.jing.attendance.service.AttendanceDiaryService;
 
 /**
- * @ClassName: EmployeeAttend
+ * @ClassName: AttendanceDiary
  * @Description: 打卡记录服务实现类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * @date: 2018年02月05日 22时39分
  */
-@Service("employeeAttendService")
+@Service("attendanceDiaryService")
 @Transactional(readOnly=true)
-public class  EmployeeAttendServiceImpl implements EmployeeAttendService {	
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeAttendServiceImpl.class);
+public class  AttendanceDiaryServiceImpl implements AttendanceDiaryService {	
+	private static final Logger logger = LoggerFactory.getLogger(AttendanceDiaryServiceImpl.class);
 	
 	@Autowired
-    private EmployeeAttendMapper employeeAttendMapper;   
+    private AttendanceDiaryMapper attendanceDiaryMapper;   
     
 	@Autowired
 	private PageService pageService; // 分页器
 	
 	
 	/**
-	 * @Title: addEmployeeAttend
+	 * @Title: addAttendanceDiary
 	 * @Description:添加打卡记录
-	 * @param employeeAttend 实体
+	 * @param attendanceDiary 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public EmployeeAttend addEmployeeAttend(EmployeeAttend employeeAttend){
-		int ret = employeeAttendMapper.addEmployeeAttend(employeeAttend);
+	public AttendanceDiary addAttendanceDiary(AttendanceDiary attendanceDiary){
+		int ret = attendanceDiaryMapper.addAttendanceDiary(attendanceDiary);
 		if(ret>0){
-			return employeeAttend;
+			return attendanceDiary;
 		}
 		return null;
 	}
 	
 	/**
-	 * @Title modifyEmployeeAttend
+	 * @Title modifyAttendanceDiary
 	 * @Description:修改打卡记录
-	 * @param employeeAttend 实体
+	 * @param attendanceDiary 实体
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyEmployeeAttend(EmployeeAttend employeeAttend){
-		return employeeAttendMapper.modifyEmployeeAttend(employeeAttend);
+	public Integer modifyAttendanceDiary(AttendanceDiary attendanceDiary){
+		return attendanceDiaryMapper.modifyAttendanceDiary(attendanceDiary);
 	}
 	
 	/**
-	 * @Title: dropEmployeeAttendByAttId
+	 * @Title: dropAttendanceDiaryByAttId
 	 * @Description:删除打卡记录
 	 * @param attId 实体标识
 	 * @return Integer
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropEmployeeAttendByAttId(Integer attId){
-		return employeeAttendMapper.dropEmployeeAttendByAttId(attId);
+	public Integer dropAttendanceDiaryByAttId(Integer attId){
+		return attendanceDiaryMapper.dropAttendanceDiaryByAttId(attId);
 	}
 	
 	/**
-	 * @Title: queryEmployeeAttendByEmployeeId
-	 * @Description:根据员工标识查询打卡记录
-	 * @param empId 员工标识
-	 * @return EmployeeAttend
+	 * @Title: queryAttendanceDiaryByAttId
+	 * @Description:根据实体标识查询打卡记录
+	 * @param attId 实体标识
+	 * @return AttendanceDiary
 	 */
 	@Override
-	public List<EmployeeAttend> queryEmployeeAttendByEmployeeId(String empId, String yearMonth){
-		if(yearMonth==null || yearMonth.length()!=7){
-			yearMonth = DateUtil.getDateYyyyMM();
-		}
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put("employeeId", empId);
-		query.put("yearMonth", yearMonth);
-		return employeeAttendMapper.queryEmployeeAttendByProperty(query);
+	public AttendanceDiary queryAttendanceDiaryByAttId(Integer attId){
+		return attendanceDiaryMapper.queryAttendanceDiaryByAttId(attId);
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
 	/**
-	 * @Title: queryEmployeeAttendForPage
+	 * @Title: queryAttendanceDiaryForPage
 	 * @Description: 根据打卡记录属性与分页信息分页查询打卡记录信息
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
-	 * @param employeeAttend 实体
-	 * @return List<EmployeeAttend>
+	 * @param attendanceDiary 实体
+	 * @return List<AttendanceDiary>
 	 */
 	@Override
-	public Map<String, Object> queryEmployeeAttendForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> map){
+	public Map<String, Object> queryAttendanceDiaryForPage(Integer pagenum, Integer pagesize, String sort, AttendanceDiary attendanceDiary){
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, EmployeeAttend.class);
-		List<EmployeeAttend> entityList = employeeAttendMapper.queryEmployeeAttendForPage(pageBounds, map);
+		pageBounds.setOrdersByJson(sort, AttendanceDiary.class);
+		List<AttendanceDiary> entityList = attendanceDiaryMapper.queryAttendanceDiaryForPage(pageBounds, attendanceDiary);
 		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, EmployeeAttend.class);
+			pageBounds.setOrdersByJson(sort, AttendanceDiary.class);
 		}
 		if (!entityList.isEmpty()) {
-			PageList<EmployeeAttend> pagelist = (PageList<EmployeeAttend>) entityList;
+			PageList<AttendanceDiary> pagelist = (PageList<AttendanceDiary>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
 		}
@@ -124,13 +117,13 @@ public class  EmployeeAttendServiceImpl implements EmployeeAttendService {
 	}
 	 
 	/**
-	 * @Title: queryEmployeeAttendByProperty
+	 * @Title: queryAttendanceDiaryByProperty
 	 * @Description:根据属性查询打卡记录
-	 * @return List<EmployeeAttend>
+	 * @return List<AttendanceDiary>
 	 */
 	@Override
-	public List<EmployeeAttend> queryEmployeeAttendByProperty(Map<String, Object> map){
-		return employeeAttendMapper.queryEmployeeAttendByProperty(map);
+	public List<AttendanceDiary> queryAttendanceDiaryByProperty(Map<String, Object> map){
+		return attendanceDiaryMapper.queryAttendanceDiaryByProperty(map);
 	}
 
 

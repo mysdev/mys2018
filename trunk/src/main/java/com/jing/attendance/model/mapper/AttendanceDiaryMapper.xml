@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceDiaryMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceDiaryResultMap" type="com.jing.attendance.model.entity.AttendanceDiary">
+	<id column="att_id" property="attId"/>
+	<result column="employee_id" property="employeeId"/>
+	<result column="att_time" property="attTime"/>
+	<result column="sys_sign" property="sysSign"/>
+	<result column="sign_time" property="signTime"/>
+	<result column="sys_out" property="sysOut"/>
+	<result column="out_time" property="outTime"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="created_date" property="createdDate"/>
+	<result column="updated_by" property="updatedBy"/>
+	<result column="updated_date" property="updatedDate"/>
+</resultMap>
+
+<sql id="sql_attendanceDiary_item">
+	att_id, employee_id, att_time, sys_sign, sign_time, sys_out, out_time, created_by, created_date, updated_by, updated_date
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendanceDiary_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendanceDiary.attId != null">AND att_id = #{attendanceDiary.attId} </if>
+		<if test="attendanceDiary.employeeId != null">AND employee_id like concat(#{attendanceDiary.employeeId}, '%') </if>
+		<if test="attendanceDiary.createdBy != null">AND created_by like concat(#{attendanceDiary.createdBy}, '%') </if>
+		<if test="attendanceDiary.updatedBy != null">AND updated_by like concat(#{attendanceDiary.updatedBy}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 打卡记录 -->
+<insert id="addAttendanceDiary" parameterType="com.jing.attendance.model.entity.AttendanceDiary" >
+	<selectKey keyProperty="attId" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance_diary 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		<if test="attId != null"> att_id,</if>
+		<if test="employeeId != null"> employee_id,</if>
+		<if test="attTime != null"> att_time,</if>
+		<if test="sysSign != null"> sys_sign,</if>
+		<if test="signTime != null"> sign_time,</if>
+		<if test="sysOut != null"> sys_out,</if>
+		<if test="outTime != null"> out_time,</if>
+		<if test="createdBy != null"> created_by,</if>
+		created_date,
+		<if test="updatedBy != null"> updated_by,</if>
+		updated_date,
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="attId != null"> #{attId},</if>
+		<if test="employeeId != null"> #{employeeId},</if>
+		<if test="attTime != null"> #{attTime},</if>
+		<if test="sysSign != null"> #{sysSign},</if>
+		<if test="signTime != null"> #{signTime},</if>
+		<if test="sysOut != null"> #{sysOut},</if>
+		<if test="outTime != null"> #{outTime},</if>
+		<if test="createdBy != null"> #{createdBy},</if>
+		now(),
+		<if test="updatedBy != null"> #{updatedBy},</if>
+		now(),
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 打卡记录 -->  
+<update id="modifyAttendanceDiary" parameterType="com.jing.attendance.model.entity.AttendanceDiary" >
+  	UPDATE tw_attendance_diary SET
+	<trim suffixOverrides=",">
+		<if test="employeeId != null"> employee_id = #{employeeId},</if>
+		<if test="attTime != null"> att_time = #{attTime},</if>
+		<if test="sysSign != null"> sys_sign = #{sysSign},</if>
+		<if test="signTime != null"> sign_time = #{signTime},</if>
+		<if test="sysOut != null"> sys_out = #{sysOut},</if>
+		<if test="outTime != null"> out_time = #{outTime},</if>
+		<if test="createdBy != null"> created_by = #{createdBy},</if>
+		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
+		updated_date = now(),
+	</trim>
+	WHERE att_id = #{attId}
+</update>
+ 
+<!-- 删除 打卡记录 -->
+<delete id="dropAttendanceDiaryByAttId" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_diary WHERE att_id = #{attId}
+</delete> 
+
+<!-- 根据标识查询 打卡记录 -->
+<select id="queryAttendanceDiaryByAttId"  resultMap="AttendanceDiaryResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendanceDiary_item"/>
+	FROM tw_attendance_diary WHERE att_id = #{attId}
+</select>
+
+<!-- 根据属性查询打卡记录 -->
+<select id="queryAttendanceDiaryByProperty"  resultMap="AttendanceDiaryResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendanceDiary_item"/>
+	FROM tw_attendance_diary 
+	<where>
+		<include refid="sql_attendanceDiary_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据打卡记录属性与分页信息分页查询打卡记录信息 -->
+<select id="queryAttendanceDiaryForPage"  resultMap="AttendanceDiaryResultMap" > 
+	SELECT 
+	<include refid="sql_attendanceDiary_item"/>
+	FROM tw_attendance_diary 
+	<where>
+		<include refid="sql_attendanceDiary_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   

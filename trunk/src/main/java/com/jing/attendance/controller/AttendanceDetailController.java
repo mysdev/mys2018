@@ -102,6 +102,7 @@ public class AttendanceDetailController{
 		if(tempAttendanceDetail.getAttendanceId().intValue()!=attendanceId.intValue()){
 			throw new CustomException(400, "参数错误", "attId", "详情与规则不匹配。");
 		}
+		attendanceDetail.setEditable(null);
 		return attendanceDetailService.modifyAttendanceDetail(attendanceDetail);
 	}
 	
@@ -137,6 +138,7 @@ public class AttendanceDetailController{
 			attendanceList[i].setAttMonth(null);
 			attendanceList[i].setWeekday(null);	
 			attendanceList[i].setCreatedBy(null);
+			attendanceList[i].setEditable(null);
 		}
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);

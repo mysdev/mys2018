@@ -1,8 +1,10 @@
 package com.jing.attendance.service.impl;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.controller.vo.AttendanceBo;
 import com.jing.attendance.model.dao.AttendanceDetailMapper;
 import com.jing.attendance.model.entity.AttendanceDetail;
+import com.jing.attendance.model.entity.AttendanceTime;
 import com.jing.attendance.service.AttendanceDetailService;
+import com.jing.attendance.service.AttendanceService;
 import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
 import com.jing.utils.DateUtil;
@@ -36,7 +41,10 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	private static final Logger logger = LoggerFactory.getLogger(AttendanceDetailServiceImpl.class);
 	
 	@Autowired
-    private AttendanceDetailMapper attendanceDetailMapper;   
+    private AttendanceDetailMapper attendanceDetailMapper; 
+	
+	@Autowired
+	private AttendanceService attendanceService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -153,6 +161,10 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		if(ret!=null && ret.size()>0){
 			return ret;//已有数据，不再生成
 		}
+		
+		AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
+		AttendanceTime at = ab.getAttTime().get(0);
+		
 		ret = new ArrayList<AttendanceDetail>();
 		try {
 			Calendar cal = DateUtil.getCalendar(yearMonth);
@@ -160,6 +172,17 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 			int week = cal.get(Calendar.DAY_OF_WEEK-1);
 			for(int i=0; i<maxDay; i++){
 				AttendanceDetail ad = new AttendanceDetail();
+				ad.setTimeId(at.getId());
+				ad.setSignTime(DateUtil.String2DateTime(yearMonth+"-"+(i+1)+" "+at.getSignTime()));
+				ad.setOutTime(DateUtil.String2DateTime(yearMonth+"-"+(i+1)+" "+at.getOutTime()));
+				if(ad.getSignTime().getTime()>ad.getOutTime().getTime()) {
+					//结束时间  跨天处理
+					Calendar cala = Calendar.getInstance();
+					cala.setTime(ad.getOutTime());
+					cala.set(Calendar.DATE, cala.get(Calendar.DATE)+1);
+					ad.setOutTime(cala.getTime());
+				}
+				
 				ad.setAttendanceId(attendanceId);
 				ad.setAttMonth(yearMonth);
 				ad.setWeekday((week+i)%7);
@@ -198,6 +221,32 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		}
 		return ret;
 	}
+	
+//	
+//	public static void main(String[] arg) {
+//		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+//		String startTime ="21:30:00";
+//		String endTime = "08:30:00";
+//		try {
+//			Date startDate = DateUtil.String2DateTime("2018-02-05 "+startTime);
+//			Date endDate = DateUtil.String2DateTime("2018-02-05 "+endTime);
+//			
+//			if(startDate.getTime()>endDate.getTime()) {
+//				//结束时间  跨天处理
+//				Calendar cala = Calendar.getInstance();
+//				cala.setTime(endDate);
+//				cala.set(Calendar.DATE, cala.get(Calendar.DATE)+1);
+//				endDate = cala.getTime();
+//			}
+//			
+//			System.out.println(format.format(startDate));
+//			System.out.println(format.format(endDate));
+//			
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 
 }

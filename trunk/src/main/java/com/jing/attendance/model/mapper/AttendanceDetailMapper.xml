@@ -10,7 +10,11 @@
 	<result column="att_date" property="attDate"/>
 	<result column="att_month" property="attMonth"/>
 	<result column="att_day" property="attDay"/>
+	<result column="time_id" property="timeId"/>
+	<result column="sign_time" property="signTime"/>
+	<result column="out_time" property="outTime"/>
 	<result column="attendance" property="attendance"/>
+	<result column="editable" property="editable"/>	
 	<result column="created_by" property="createdBy"/>
 	<result column="created_date" property="createdDate"/>
 	<result column="updated_by" property="updatedBy"/>
@@ -18,7 +22,7 @@
 </resultMap>
 
 <sql id="sql_attendanceDetail_item">
-	att_id, attendance_id, weekday, att_date, att_month, att_day, attendance, created_by, created_date, updated_by, updated_date
+	att_id, attendance_id, weekday, att_date, att_month, att_day, attendance, time_id, sign_time, out_time, editable, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -30,6 +34,7 @@
 		<if test="attendanceDetail.attMonth != null">AND att_month like concat(#{attendanceDetail.attMonth}, '%') </if>
 		<if test="attendanceDetail.attDay != null">AND att_day = #{attendanceDetail.attDay} </if>
 		<if test="attendanceDetail.attendance != null">AND attendance = #{attendanceDetail.attendance} </if>
+		<if test="attendanceDetail.editable != null">AND editable = #{attendanceDetail.editable} </if>		
 		<if test="attendanceDetail.createdBy != null">AND created_by like concat(#{attendanceDetail.createdBy}, '%') </if>
 		<if test="attendanceDetail.updatedBy != null">AND updated_by like concat(#{attendanceDetail.updatedBy}, '%') </if>
 	</trim>
@@ -49,6 +54,10 @@
 		<if test="attMonth != null"> att_month,</if>
 		<if test="attDay != null"> att_day,</if>
 		<if test="attendance != null"> attendance,</if>
+		<if test="timeId != null"> time_id,</if>
+		<if test="signTime != null"> sign_time,</if>
+		<if test="outTime != null"> out_time,</if>
+		<if test="editable != null"> editable,</if>
 		<if test="createdBy != null"> created_by,</if>
 		created_date,
 		<if test="updatedBy != null"> updated_by,</if>
@@ -62,6 +71,10 @@
 		<if test="attMonth != null"> #{attMonth},</if>
 		<if test="attDay != null"> #{attDay},</if>
 		<if test="attendance != null"> #{attendance},</if>
+		<if test="timeId != null"> #{timeId},</if>
+		<if test="signTime != null"> #{signTime},</if>
+		<if test="outTime != null"> #{outTime},</if>
+		<if test="editable != null"> #{editable},</if>
 		<if test="createdBy != null"> #{createdBy},</if>
 		now(),
 		<if test="updatedBy != null"> #{updatedBy},</if>
@@ -79,6 +92,10 @@
 		<if test="attMonth != null"> att_month = #{attMonth},</if>
 		<if test="attDay != null"> att_day = #{attDay},</if>
 		<if test="attendance != null"> attendance = #{attendance},</if>
+		<if test="timeId != null"> time_id=#{timeId},</if>
+		<if test="signTime != null"> sign_time=#{signTime},</if>
+		<if test="outTime != null"> out_time=#{outTime},</if>
+		<if test="editable != null"> editable=#{editable},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
 		updated_date = now(),

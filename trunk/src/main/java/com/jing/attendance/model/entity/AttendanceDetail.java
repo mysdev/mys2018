@@ -46,8 +46,18 @@ public class AttendanceDetail extends BaseEntity {
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
-	private Integer attendance;	//tw_attendance_detail:attendance  是否考勤 0考勤  
+	private Integer attendance;	//tw_attendance_detail:attendance  是否考勤 0考勤 
+	
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
+	private Integer editable;
 
+	private Integer timeId;
+	
+	//@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
+	private Date signTime;
+	
+	//@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
+	private Date outTime;
 
 	/**
 	* @DatabasetableColumnName: tw_attendance_detail:att_id
@@ -167,6 +177,62 @@ public class AttendanceDetail extends BaseEntity {
 	*/
 	public void setAttendance(Integer attendance){
 		this.attendance = attendance;	
+	}
+
+	/**
+	 * @return the timeId
+	 */
+	public Integer getTimeId() {
+		return timeId;
+	}
+
+	/**
+	 * @param timeId the timeId to set
+	 */
+	public void setTimeId(Integer timeId) {
+		this.timeId = timeId;
+	}
+
+	/**
+	 * @return the signTime
+	 */
+	public Date getSignTime() {
+		return signTime;
+	}
+
+	/**
+	 * @param signTime the signTime to set
+	 */
+	public void setSignTime(Date signTime) {
+		this.signTime = signTime;
+	}
+
+	/**
+	 * @return the outTime
+	 */
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	/**
+	 * @param outTime the outTime to set
+	 */
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	/**
+	 * @return the editable
+	 */
+	public Integer getEditable() {
+		return editable;
+	}
+
+	/**
+	 * @param editable the editable to set
+	 */
+	public void setEditable(Integer editable) {
+		this.editable = editable;
 	}	
 	
 	
