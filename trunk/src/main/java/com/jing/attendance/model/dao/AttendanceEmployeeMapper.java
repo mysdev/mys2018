@@ -7,10 +7,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.attendance.model.entity.AttendanceEmployee;
-import com.jing.attendance.service.bo.AttendanceEmployeeBo;
-import com.jing.core.model.entity.Employee;
+import com.jing.utils.paginator.domain.PageBounds;
 
 /**
  * @ClassName: AttendanceEmployeeMapper
@@ -87,7 +85,7 @@ public interface AttendanceEmployeeMapper {
 	* @return  List<AttendanceEmployeeBo>    返回类型 
 	* @throws 
 	*/
-	List<AttendanceEmployeeBo> queryAttendanceEmployeeAllForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
+	List<Map<String, Object>> queryAttendanceEmployeeAllForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
 	
 	/** 
 	* @Title: queryAttendanceEmployeeNotForPage 
@@ -97,7 +95,7 @@ public interface AttendanceEmployeeMapper {
 	* @return  List<AttendanceEmployeeBo>    返回类型 
 	* @throws 
 	*/
-	List<AttendanceEmployeeBo> queryAttendanceEmployeeNotForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
+	List<Map<String, Object>> queryAttendanceEmployeeNotForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
 	
 	Integer dropAttendanceEmployeeByAttendanceId(Integer attendanceId);
 	 

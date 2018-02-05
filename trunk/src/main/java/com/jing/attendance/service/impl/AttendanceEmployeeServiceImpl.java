@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.entity.AttendanceEmployee;
 import com.jing.attendance.service.AttendanceEmployeeService;
-import com.jing.attendance.service.bo.AttendanceEmployeeBo;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
@@ -146,7 +145,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, null);
-		List<AttendanceEmployeeBo> entityList;
+		List<Map<String, Object>> entityList;
 		if(attendanceId!=null && attendanceId.intValue()==-1){
 			//查询未分配考勤员工
 			entityList = employeeAttendanceMapper.queryAttendanceEmployeeNotForPage(pageBounds, params);
@@ -158,7 +157,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 			entityList = employeeAttendanceMapper.queryAttendanceEmployeeAllForPage(pageBounds, params);
 		}
 //		if (!entityList.isEmpty()) {
-			PageList<AttendanceEmployeeBo> pagelist = (PageList<AttendanceEmployeeBo>) entityList;
+			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
 //		}
