@@ -53,7 +53,9 @@ public class AttendanceController{
 	@ApiOperation(value = "新增 添加门店考勤信息", notes = "添加门店考勤信息 暂时只支持type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
-			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {		
+			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {	
+		attendance.setTypes(2); //暂时只支持2
+		attendance.setStatus(0);
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
@@ -72,8 +74,7 @@ public class AttendanceController{
 		}
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
-		}	
-		attendance.setTypes(2); //暂时只支持2
+		}			
 		if(attendance.getTypes().intValue()<2 && (attendance.getAttendance()==null || attendance.getAttendance().intValue()==0)){
 			throw new ParameterException("attendance","类型为0休天数或1考勤天数时，对应天数必传且不能为零。");
 		}
