@@ -10,6 +10,7 @@ var schemeList=[{
 		"schemeName": "自定义"
 	}];
 
+var selectDates=[];
 var attendanceViewModel;
 
 //定义ViewModel对象
@@ -88,6 +89,24 @@ $().ready(function(){
 	$("#txtName").focus();
 	attendanceViewModel=new AttendanceEditViewModel();
 	ko.applyBindings(attendanceViewModel);
+	
+	$(".attendanceDetail tbody td").bind("click",function(){
+		if($(this).attr("class")=="ns") return;
+		
+		if($(this).attr("class")=="sl"){
+			$(this).removeClass("sl");
+			var removeValue = $(this).text();
+			selectDates = $.grep(selectDates, function(n,i) {
+			 	return n != removeValue;
+			});
+			$("#selectDate").val(selectDates.join('|'));
+		}
+		else{
+			$(this).addClass("sl");
+			selectDates.push($(this).text());
+			$("#selectDate").val(selectDates.join('|'));
+		}
+	});
     
     //获取下拉列表数据
 	myAjax("/stores", "GET", null, function (data){

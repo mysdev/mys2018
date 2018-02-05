@@ -17,7 +17,28 @@
 		<script type="text/javascript" charset="utf-8" src="../js/flatpickr/flatpickr.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/laymain.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../js/common.js"></script>
-		<script type="text/javascript" charset="utf-8" src="../js/jl/jquery.ajax.jl.js"></script>	
+		<script type="text/javascript" charset="utf-8" src="../js/jl/jquery.ajax.jl.js"></script>
+		<style type="text/css">
+			.tab-content table.attendanceDetail{
+				width: 200px;border-collapse:collapse;
+			}
+			.tab-content table.attendanceDetail thead{
+				background-color: #e2dede;
+			}
+			.tab-content table.attendanceDetail th,.tab-content table.attendanceDetail td{
+				height: 20px; width: 30px; padding: 1px 1px; text-align:center;
+				border: 1px solid #c3c3c3;
+			}
+			.tab-content table.attendanceDetail tbody td{
+				color: #858282; cursor: pointer;background-color: #ffffff;
+			}
+			.tab-content table.attendanceDetail tbody td.ns{
+				color: #cccaca; cursor: default;
+			}
+			.tab-content table.attendanceDetail tbody td.sl{
+				color: #858282; cursor: pointer; background-color: #dbf0f7;
+			}
+		</style>
 		<script type="text/javascript">
 			$(function() {
 				//初始化表单验证
@@ -92,9 +113,20 @@
 					<dt>休息天数</dt>
 					<dd><input name="attendance" type="text" id="attendance" class="input" datatype="n" sucmsg=" " data-bind="value:attendance" />  </dd>
 				</dl>
-				<dl data-bind="visible: (!myDis)">
+				<dl data-bind="visible:myNotDis">
 					<dt>自定义考勤</dt>
-					<dd><input name="attendance" type="text" id="attendance" class="input" datatype="n" sucmsg=" " data-bind="value:attendance" />  </dd>
+					<dd>
+						<table class="attendanceDetail"><thead><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></thead>
+							<tbody>
+								<tr><td class="ns">29</td><td class="ns">30 </td><td class="ns">31</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+								<tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr>
+								<tr><td>12</td><td class="sl">13</td><td class="sl">14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr>
+								<tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr>
+								<tr><td>26</td><td>27</td><td>28</td><td class="ns">1</td><td class="ns">2</td><td class="ns">3</td><td class="ns">4</td></tr>
+							</tbody>
+						</table>
+						<input type="hidden" id="selectDate"  />
+					</dd>
 				</dl>
 				<dl>
 					<dt>上班时间</dt>
