@@ -1,5 +1,6 @@
 package com.jing.attendance.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +73,6 @@ public class AttendanceController{
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
-		if(attendance.getAttTime()==null || attendance.getAttTime().size()==0){
-			Map<String, String> e = new HashMap<String, String>();
-			e.put("field", "attTime");
-			e.put("message", "每考勤规则必须配置一个时间段。");
-			errors.add(e);
-		}
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
 			e.put("field", "attTime");
@@ -90,7 +85,7 @@ public class AttendanceController{
 		}			
 		if(attendance.getTypes().intValue()<2 && (attendance.getAttendance()==null || attendance.getAttendance().intValue()==0)){
 			throw new ParameterException("attendance","类型为0休天数或1考勤天数时，对应天数必传且不能为零。");
-		}
+		}		
 		attendance.setAttendanceId(null);
 		attendance.setOutCt(null);
 		attendance.setSignCt(null);
@@ -139,7 +134,9 @@ public class AttendanceController{
 		if(null == attendance){
 			throw new NotFoundException("门店考勤");
 		}
-		
+		if(attendanceId.intValue()==1) {
+			throw new ParameterException("attendanceId", "全局门店考勤规则不允许删除。");
+		}
 		return attendanceService.dropAttendanceByAttendanceId(attendanceId);
 	}
 	

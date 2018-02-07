@@ -221,6 +221,41 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		}
 		return ret;
 	}
+
+	/*
+	 * @Title: modifyAttendanceDetailChange
+	 * @Description: 
+	 * @param @param attendanceId
+	 * @param @param attendanceTime
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param attendanceId
+	 * @param attendanceTime
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceDetailService#modifyAttendanceDetailChange(java.lang.Integer, com.jing.attendance.model.entity.AttendanceTime)
+	 */ 
+	@Override
+	public Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId) {
+		if(attendanceTime==null || attendanceTime.getId()==null) {
+			AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
+			attendanceTime = ab.getAttTime().get(0);
+		}
+		if(attendanceTime==null) {
+			attendanceTime = new AttendanceTime();
+		}
+		if(attendanceTime.getSignTime()==null) attendanceTime.setSignTime("08:30:00");
+		if(attendanceTime.getOutTime()==null) attendanceTime.setOutTime("17:30:00");
+		attendanceTime.setAttendanceId(attendanceId);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("attendanceId", attendanceTime.getAttendanceId());
+		params.put("signTime", attendanceTime.getSignTime());
+		params.put("outTime", attendanceTime.getOutTime());
+		params.put("timeId", attendanceTime.getId());
+		params.put("oldTimeId", oldId);
+		Integer ret = attendanceDetailMapper.modifyAttendanceDetailChange(params);
+		attendanceDetailMapper.modifyOutTimeBefore();
+		return ret;
+	}
 	
 //	
 //	public static void main(String[] arg) {

@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.attendance.model.entity.AttendanceDetail;
+import com.jing.attendance.model.entity.AttendanceTime;
 
 /**
  * @ClassName: AttendanceDetailMapper
@@ -93,7 +94,23 @@ public interface AttendanceDetailMapper {
 	* @throws 
 	*/
 	Integer disableDetailEditable();
+
+	/** 
+	* @Title: modifyAttendanceDetailChange 
+	* @Description: 更新考勤规则时间段变更引起的考勤详情变更
+	* @param Map<String, Object>
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer modifyAttendanceDetailChange(@Param("params") Map<String, Object> params);
 	 
-	 
+	/** 
+	* @Title: modifyOutTimeBefore 
+	* @Description: 处理考勤结束时间早于开始时间的情况
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer modifyOutTimeBefore();
+	
 	 
 }

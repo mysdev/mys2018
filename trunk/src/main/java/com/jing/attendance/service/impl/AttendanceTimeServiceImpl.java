@@ -18,6 +18,7 @@ import com.jing.utils.paginator.domain.PageService;
 
 import com.jing.attendance.model.entity.AttendanceTime;
 import com.jing.attendance.model.dao.AttendanceTimeMapper;
+import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceTimeService;
 
 /**
@@ -33,7 +34,10 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	private static final Logger logger = LoggerFactory.getLogger(AttendanceTimeServiceImpl.class);
 	
 	@Autowired
-    private AttendanceTimeMapper attendanceTimeMapper;   
+    private AttendanceTimeMapper attendanceTimeMapper;  
+	
+	@Autowired
+	private AttendanceDetailService attendanceDetailService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -63,8 +67,10 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyAttendanceTime(AttendanceTime attendanceTime){
-		return attendanceTimeMapper.modifyAttendanceTime(attendanceTime);
+	public Integer modifyAttendanceTime(AttendanceTime attendanceTime){		
+		Integer ret = attendanceTimeMapper.modifyAttendanceTime(attendanceTime);
+		attendanceDetailService.modifyAttendanceDetailChange(attendanceTime.getAttendanceId(), this.queryAttendanceTimeById(attendanceTime.getId()), null);
+		return ret;
 	}
 	
 	/**
@@ -76,7 +82,10 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceTimeById(Integer id){
-		return attendanceTimeMapper.dropAttendanceTimeById(id);
+		AttendanceTime at = this.queryAttendanceTimeById(id);
+		Integer ret = attendanceTimeMapper.dropAttendanceTimeById(id);
+		attendanceDetailService.modifyAttendanceDetailChange(at.getAttendanceId(), null, id);
+		return ret;
 	}
 	
 	/**

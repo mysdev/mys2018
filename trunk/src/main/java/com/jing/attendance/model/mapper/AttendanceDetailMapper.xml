@@ -29,6 +29,7 @@
 <sql id="sql_attendanceDetail_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="attendanceDetail.attId != null">AND att_id = #{attendanceDetail.attId} </if>
+		<if test="attendanceDetail.timeId != null">AND time_id = #{attendanceDetail.timeId} </if>
 		<if test="attendanceDetail.attendanceId != null">AND attendance_id = #{attendanceDetail.attendanceId} </if>
 		<if test="attendanceDetail.weekday != null">AND weekday = #{attendanceDetail.weekday} </if>
 		<if test="attendanceDetail.attMonth != null">AND att_month like concat(#{attendanceDetail.attMonth}, '%') </if>
@@ -106,6 +107,25 @@
 <!-- 锁定当天考勤详情，不允许更改 -->
 <update id="disableDetailEditable">
 	update tw_attendance_detail set editable=1 where att_date=DATE_FORMAT(NOW(),'%Y-%m-%d')
+</update>
+
+<!-- 更新考勤规则时间段变更引起的考勤详情变更 -->
+<update id="modifyAttendanceDetailChange" parameterType="com.jing.attendance.model.entity.AttendanceDetail">
+	update tw_attendance_detail  set 
+	<if test="params.timeId != null">time_id= #{params.timeId} ,</if>
+	<if test="params.timeId == null">time_id=null,</if>
+	sign_time=str_to_date(concat(DATE_FORMAT(att_date, '%Y-%m-%d'),' ', #{params.signTime}) , '%Y-%m-%d %H:%i:%s'),
+	out_time= str_to_date(concat(DATE_FORMAT(att_date, '%Y-%m-%d'),' ', #{params.outTime}) , '%Y-%m-%d %H:%i:%s'), updated_date=now()
+	where attendance_id=#{params.attendanceId}
+	<if test="params.oldTimeId != null"> and time_id= #{params.oldTimeId} </if>
+	 and att_date>now() and editable=0 
+</update>
+
+<!-- 处理考勤结束时间早于开始时间的情况 -->
+<update id="modifyOutTimeBefore">
+	update tw_attendance_detail set 
+	set out_time = date_add(out_time, INTERVAL  1 DAY) 
+	where att_date>now() and editable=0 and out_time &lt;= sign_time 
 </update>
  
 <!-- 删除 门店考勤详情 -->

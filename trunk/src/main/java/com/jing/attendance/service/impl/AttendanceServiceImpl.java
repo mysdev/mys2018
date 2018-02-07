@@ -1,5 +1,6 @@
 package com.jing.attendance.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,18 @@ public class  AttendanceServiceImpl implements AttendanceService {
 					at.setAttendanceId(attendance.getAttendanceId()); //回填标识
 					attendanceTimeMapper.addAttendanceTime(at);
 				}
+			}else {
+				//保证每个规则有个时间段
+				if(attendance.getAttTime()==null || attendance.getAttTime().size()==0){					
+					AttendanceTime at = new AttendanceTime();
+					at.setSignTime("08:30:00");
+					at.setOutTime("17:30:00");
+					at.setAttendanceId(attendance.getAttendanceId());
+					attendanceTimeMapper.addAttendanceTime(at);
+					List<AttendanceTime> atlist = new ArrayList<AttendanceTime>();
+					atlist.add(at);
+					attendance.setAttTime(atlist);
+				}
 			}
 			return attendance;
 		}
@@ -96,6 +109,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 				at.setAttendanceId(attendance.getAttendanceId()); //回填标识
 				attendanceTimeMapper.addAttendanceTime(at);
 			}
+			attendanceDetailService.modifyAttendanceDetailChange(attendance.getAttendanceId(), attendance.getAttTime().get(0), null);
 		}
 		return attendanceMapper.modifyAttendance(attendance);
 	}

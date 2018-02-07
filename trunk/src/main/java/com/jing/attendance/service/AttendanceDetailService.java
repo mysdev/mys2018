@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import com.jing.attendance.model.entity.AttendanceDetail;
+import com.jing.attendance.model.entity.AttendanceTime;
 
 /**
  * @ClassName: AttendanceDetail
@@ -92,6 +93,17 @@ public interface AttendanceDetailService {
 	* @return  Integer    返回类型 
 	* @throws 
 	*/
-	Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList);	 
+	Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList);
+
+	/** 
+	* @Title: modifyAttendanceDetailChange 
+	* @Description: 更新考勤规则时间段变更引起的考勤详情变更
+	* @param attendanceId
+	* @param attendanceTime  
+	* @param oldId
+	* @return void    返回类型 
+	* @throws 
+	*/
+	Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId);	 
 	 
 }
