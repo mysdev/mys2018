@@ -2,6 +2,7 @@ package com.jing.attendance.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ import com.jing.utils.paginator.domain.PageService;
 import com.jing.attendance.model.entity.AttendanceDiary;
 import com.jing.attendance.model.dao.AttendanceDiaryMapper;
 import com.jing.attendance.service.AttendanceDiaryService;
+import com.jing.attendance.service.bo.AttendanceDiaryBo;
+import com.jing.config.web.exception.CustomException;
 
 /**
  * @ClassName: AttendanceDiary
@@ -124,6 +127,65 @@ public class  AttendanceDiaryServiceImpl implements AttendanceDiaryService {
 	@Override
 	public List<AttendanceDiary> queryAttendanceDiaryByProperty(Map<String, Object> map){
 		return attendanceDiaryMapper.queryAttendanceDiaryByProperty(map);
+	}
+
+	/*
+	 * @Title: processAttendanceDiary
+	 * @Description: TODO
+	 * @param @param empId
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param empId
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceDiaryService#processAttendanceDiary(java.lang.String)
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public String processAttendanceDiary(String empId) {
+		List<AttendanceDiaryBo> boList = attendanceDiaryMapper.queryEmployeeYesterdayToday(empId);
+		if(boList==null || boList.size()==0) {
+			throw new CustomException(400, "没有找到员工对应考勤需求。");
+		}
+		//根据时差绝对值取出最近的考勤
+		AttendanceDiaryBo flag = boList.get(0);
+		int min = boList.get(0).getSignCount();
+		for(int i=0; i<boList.size(); i++) {
+			int tempMin = Math.abs(boList.get(i).getSignCount());
+			if(Math.abs(boList.get(i).getSignCount())>Math.abs(boList.get(i).getOutCount())) {
+				tempMin = Math.abs(boList.get(i).getOutCount());
+			}			
+			if(i==0) {
+				min = tempMin;				
+			}else {
+				if(tempMin<=min) {
+					min = tempMin;
+					flag = boList.get(i);
+				}
+			}			
+		}
+		
+		//处理时差最近的考勤
+		AttendanceDiary ad = new AttendanceDiary();
+		ad.setAttId(flag.getAttId());
+		if(Math.abs(flag.getSignCount())<Math.abs(flag.getOutCount())) {
+			//签到
+			if(flag.getSignTime()==null) {
+				ad.setSignTime(flag.getSysSign()); //签到
+				modifyAttendanceDiary(ad);
+				return "签到成功。"+(flag.getSignCount()>0?"迟到"+flag.getSignCount()+"分钟":"");
+			}else {
+				return "今天已签到。";
+			}
+		}else {
+			//签退
+			ad.setOutTime(flag.getSysOut()); //签退
+			modifyAttendanceDiary(ad);
+			if(flag.getOutCount()<0) {
+				return "未到签退时间，请于"+(Math.abs(flag.getOutCount()))+"分钟后即"+(new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒").format(flag.getSysOut()))+"前来签退。";
+			}else {
+				return "答退成功，感谢您的付出。";
+			}
+		}
 	}
 
 

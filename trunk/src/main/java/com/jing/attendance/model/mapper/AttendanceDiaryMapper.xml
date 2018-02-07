@@ -18,6 +18,11 @@
 	<result column="updated_date" property="updatedDate"/>
 </resultMap>
 
+<resultMap id="AttendanceDiaryBoResultMap" type="com.jing.attendance.service.bo.AttendanceDiaryBo" extends="AttendanceDiaryResultMap">
+	<result column="sign_count" property="signCount"/>
+	<result column="out_count" property="outCount"/>
+</resultMap>
+
 <sql id="sql_attendanceDiary_item">
 	att_id, employee_id, attendance, att_time, sys_sign, sign_time, sys_out, out_time, created_by, created_date, updated_by, updated_date
 </sql>
@@ -77,9 +82,9 @@
 		<if test="attendance != null"> attendance = #{attendance},</if>
 		<if test="attTime != null"> att_time = #{attTime},</if>
 		<if test="sysSign != null"> sys_sign = #{sysSign},</if>
-		<if test="signTime != null"> sign_time = #{signTime},</if>
+		<if test="signTime != null"> sign_time = now(),</if>
 		<if test="sysOut != null"> sys_out = #{sysOut},</if>
-		<if test="outTime != null"> out_time = #{outTime},</if>
+		<if test="outTime != null"> out_time = now(),</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
 		updated_date = now(),
@@ -140,6 +145,13 @@ select emp_id from (
 select e.emp_id, l.attendance_id from tb_employee e LEFT OUTER JOIN tw_attendance_employee l on e.emp_id= l.emp_id
 ) e1 where attendance_id is null
 ) e1 CROSS JOIN (select * from tw_attendance_detail where att_date=DATE_FORMAT(NOW(),'%Y-%m-%d') and attendance_id=1) d
+</select>
+
+<select id="queryEmployeeYesterdayToday"  parameterType="java.lang.String" resultMap="AttendanceDiaryBoResultMap">
+select t.*, TIMESTAMPDIFF(MINUTE, sys_sign, now()) as sign_count, TIMESTAMPDIFF(MINUTE, sys_out, now()) as out_count from(
+	select * from tw_attendance_diary where employee_id=#{employeeId}
+	and ( DATE_FORMAT(att_time, '%Y-%m-%d')=DATE_FORMAT(now(), '%Y-%m-%d') or DATE_FORMAT(date_add(att_time, INTERVAL  1 DAY), '%Y-%m-%d')=DATE_FORMAT(now(), '%Y-%m-%d'))
+) t
 </select>
 
 </mapper>   

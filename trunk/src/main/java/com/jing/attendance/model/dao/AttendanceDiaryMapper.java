@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.attendance.model.entity.AttendanceDiary;
+import com.jing.attendance.service.bo.AttendanceDiaryBo;
 
 /**
  * @ClassName: AttendanceDiaryMapper
@@ -92,6 +93,13 @@ public interface AttendanceDiaryMapper {
 	*/
 	Integer queryEmployeeCountsToday();
 	 
-	 
+	/** 
+	* @Title: queryEmployeeYesterdayToday 
+	* @Description: 取昨天、今天员工考勤详情及签到、应到与当前时间的分差 
+	* @param employeeId
+	* @return  List<AttendanceDiaryBo>    返回类型 
+	* @throws 
+	*/
+	List<AttendanceDiaryBo> queryEmployeeYesterdayToday(String employeeId);
 	 
 }

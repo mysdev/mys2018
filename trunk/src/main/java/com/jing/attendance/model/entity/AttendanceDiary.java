@@ -11,6 +11,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
+import com.jing.utils.BaseEntity;
+
 /**
  * @ClassName: AttendanceDiary
  * @Description: 打卡记录实体类
@@ -18,7 +20,7 @@ import org.hibernate.validator.constraints.Range;
  * @email: mailto:jinlong_he@126.com
  * @date: 2018年02月05日 22时39分
  */
-public class AttendanceDiary implements Serializable {
+public class AttendanceDiary extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	
 

@@ -63,6 +63,15 @@ public interface AttendanceDiaryService {
 	 * @Description:根据属性查询打卡记录
 	 * @return List<AttendanceDiary>
 	 */
-	 List<AttendanceDiary> queryAttendanceDiaryByProperty(Map<String, Object> map);	 
+	 List<AttendanceDiary> queryAttendanceDiaryByProperty(Map<String, Object> map);
+
+	/** 
+	* @Title: processAttendanceDiary 
+	* @Description: 处理用户签到
+	* @param empId
+	* @return  String    返回类型 
+	* @throws 
+	*/
+	String processAttendanceDiary(String empId);	 
 	 
 }

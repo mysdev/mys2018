@@ -1,29 +1,30 @@
 package com.jing.attendance.controller;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
 import com.jing.attendance.model.entity.AttendanceDiary;
+import com.jing.attendance.model.entity.AttendanceLogs;
 import com.jing.attendance.service.AttendanceDiaryService;
+import com.jing.attendance.service.AttendanceLogsService;
+import com.jing.config.validation.BeanValidator;
+import com.jing.config.web.exception.CustomException;
+import com.jing.core.model.entity.Employee;
+import com.jing.core.service.EmployeeService;
 import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * @ClassName: AttendanceDiaryController
@@ -41,53 +42,69 @@ public class AttendanceDiaryController{
 	
 	@Autowired
 	private AttendanceDiaryService attendanceDiaryService;
+	
+	@Autowired
+	private AttendanceLogsService attendanceLogsService;
+	
+	@Autowired
+	private EmployeeService employeeService;
 
-	///syswhite
 	
 	@ApiOperation(value = "新增 添加打卡记录信息", notes = "添加打卡记录信息")
-	@RequestMapping(value = "/attendancediary", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/syswhite/cardattend", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendanceDiary(HttpServletResponse response,
-			@ApiParam(value = "attendanceDiary") @RequestBody AttendanceDiary attendanceDiary) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		attendanceDiary.setAttId(null);
-		attendanceDiaryService.addAttendanceDiary(attendanceDiary);
-		return attendanceDiary;
+			@RequestParam(value = "empCard", required = true) String empCard) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Employee emp = employeeService.queryEmployeeByEmpCard(empCard);
+		if(emp==null){
+			throw new CustomException(400, "非法用户。");
+		}
+		AttendanceLogs logs = new AttendanceLogs();
+		logs.setEmpId(emp.getEmpId());
+		logs.setAttNote("{\"cardNo\":\""+empCard+"\"}");
+		attendanceLogsService.addAttendanceLogs(logs);
+		
+		Map<String, Object> ret = new HashMap<String, Object>();
+		
+		ret.put("employeeName", emp.getEmpName());
+		ret.put("message", attendanceDiaryService.processAttendanceDiary(emp.getEmpId()));		
+		return ret;
 	}
 	
-	
-	@ApiOperation(value = "更新 根据打卡记录标识更新打卡记录信息", notes = "根据打卡记录标识更新打卡记录信息")
-	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.PUT)
-	public Object modifyAttendanceDiaryById(HttpServletResponse response,
-			@PathVariable Integer attId,
-			@ApiParam(value = "attendanceDiary", required = true) @RequestBody AttendanceDiary attendanceDiary
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		AttendanceDiary tempAttendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
-		attendanceDiary.setAttId(attId);
-		if(null == tempAttendanceDiary){
-			throw new NotFoundException("打卡记录");
-		}
-		return attendanceDiaryService.modifyAttendanceDiary(attendanceDiary);
-	}
-
-	@ApiOperation(value = "删除 根据打卡记录标识删除打卡记录信息", notes = "根据打卡记录标识删除打卡记录信息")
-	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.DELETE)
-	public Object dropAttendanceDiaryByAttId(HttpServletResponse response, @PathVariable Integer attId) {
-		AttendanceDiary attendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
-		if(null == attendanceDiary){
-			throw new NotFoundException("打卡记录");
-		}
-		return attendanceDiaryService.dropAttendanceDiaryByAttId(attId);
-	}
-	
-	@ApiOperation(value = "查询 根据打卡记录标识查询打卡记录信息", notes = "根据打卡记录标识查询打卡记录信息")
-	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.GET)
-	public Object queryAttendanceDiaryById(HttpServletResponse response,
-			@PathVariable Integer attId) {
-		AttendanceDiary attendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
-		if(null == attendanceDiary){
-			throw new NotFoundException("打卡记录");
-		}
-		return attendanceDiary;
-	}
+//	
+//	@ApiOperation(value = "更新 根据打卡记录标识更新打卡记录信息", notes = "根据打卡记录标识更新打卡记录信息")
+//	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.PUT)
+//	public Object modifyAttendanceDiaryById(HttpServletResponse response,
+//			@PathVariable Integer attId,
+//			@ApiParam(value = "attendanceDiary", required = true) @RequestBody AttendanceDiary attendanceDiary
+//			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+//		AttendanceDiary tempAttendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
+//		attendanceDiary.setAttId(attId);
+//		if(null == tempAttendanceDiary){
+//			throw new NotFoundException("打卡记录");
+//		}
+//		return attendanceDiaryService.modifyAttendanceDiary(attendanceDiary);
+//	}
+//
+//	@ApiOperation(value = "删除 根据打卡记录标识删除打卡记录信息", notes = "根据打卡记录标识删除打卡记录信息")
+//	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.DELETE)
+//	public Object dropAttendanceDiaryByAttId(HttpServletResponse response, @PathVariable Integer attId) {
+//		AttendanceDiary attendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
+//		if(null == attendanceDiary){
+//			throw new NotFoundException("打卡记录");
+//		}
+//		return attendanceDiaryService.dropAttendanceDiaryByAttId(attId);
+//	}
+//	
+//	@ApiOperation(value = "查询 根据打卡记录标识查询打卡记录信息", notes = "根据打卡记录标识查询打卡记录信息")
+//	@RequestMapping(value = "/attendancediary/{attId:.+}", method = RequestMethod.GET)
+//	public Object queryAttendanceDiaryById(HttpServletResponse response,
+//			@PathVariable Integer attId) {
+//		AttendanceDiary attendanceDiary = attendanceDiaryService.queryAttendanceDiaryByAttId(attId);
+//		if(null == attendanceDiary){
+//			throw new NotFoundException("打卡记录");
+//		}
+//		return attendanceDiary;
+//	}
 	
 	@ApiOperation(value = "查询 根据打卡记录属性查询打卡记录信息列表", notes = "根据打卡记录属性查询打卡记录信息列表")
 	@RequestMapping(value = "/attendancediary", method = RequestMethod.GET)

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.attendance.model.dao.AttendanceLogsMapper">
+
+<!-- Result Map-->
+<resultMap id="AttendanceLogsResultMap" type="com.jing.attendance.model.entity.AttendanceLogs">
+	<id column="id" property="id"/>
+	<result column="emp_id" property="empId"/>
+	<result column="att_time" property="attTime"/>
+	<result column="att_note" property="attNote"/>
+</resultMap>
+
+<sql id="sql_attendanceLogs_item">
+	id, emp_id, att_time, att_note
+</sql>
+       
+<!-- 查询条件 无WHERE -->
+<sql id="sql_attendanceLogs_query_nowhere">
+	<trim prefix=" " prefixOverrides="AND|OR">
+		<if test="attendanceLogs.id != null">AND id = #{attendanceLogs.id} </if>
+		<if test="attendanceLogs.empId != null">AND emp_id = #{attendanceLogs.empId} </if>
+		<if test="attendanceLogs.attNote != null">AND att_note like concat(#{attendanceLogs.attNote}, '%') </if>
+	</trim>
+</sql>
+   
+<!-- 插入 员工考勤记录表 -->
+<insert id="addAttendanceLogs" parameterType="com.jing.attendance.model.entity.AttendanceLogs" >
+	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	INSERT INTO tw_attendance_logs 
+	<trim prefix=" (" suffix=")" suffixOverrides=",">
+		att_time, 
+		<if test="id != null"> id,</if>
+		<if test="empId != null"> emp_id,</if>
+		<if test="attNote != null"> att_note,</if>
+	</trim>	 	
+	<trim prefix="values (" suffix=")" suffixOverrides=",">
+		now(), 
+		<if test="id != null"> #{id},</if>
+		<if test="empId != null"> #{empId},</if>
+		<if test="attNote != null"> #{attNote},</if>
+	</trim>
+</insert>
+
+<!-- 根据标识，修改 员工考勤记录表 -->  
+<update id="modifyAttendanceLogs" parameterType="com.jing.attendance.model.entity.AttendanceLogs" >
+  	UPDATE tw_attendance_logs SET
+	<trim suffixOverrides=",">
+		<if test="empId != null"> emp_id = #{empId},</if>
+		<if test="attTime != null"> att_time = #{attTime},</if>
+		<if test="attNote != null"> att_note = #{attNote},</if>
+	</trim>
+	WHERE id = #{id}
+</update>
+ 
+<!-- 删除 员工考勤记录表 -->
+<delete id="dropAttendanceLogsById" parameterType="java.lang.Integer">
+	DELETE FROM tw_attendance_logs WHERE id = #{id}
+</delete> 
+
+<!-- 根据标识查询 员工考勤记录表 -->
+<select id="queryAttendanceLogsById"  resultMap="AttendanceLogsResultMap" parameterType="java.lang.Integer">
+	SELECT 
+	<include refid="sql_attendanceLogs_item"/>
+	FROM tw_attendance_logs WHERE id = #{id}
+</select>
+
+<!-- 根据属性查询员工考勤记录表 -->
+<select id="queryAttendanceLogsByProperty"  resultMap="AttendanceLogsResultMap" parameterType="java.util.Map">
+	SELECT 
+	<include refid="sql_attendanceLogs_item"/>
+	FROM tw_attendance_logs 
+	<where>
+		<include refid="sql_attendanceLogs_query_nowhere"/>
+	</where>
+</select>
+
+<!-- 根据员工考勤记录表属性与分页信息分页查询员工考勤记录表信息 -->
+<select id="queryAttendanceLogsForPage"  resultMap="AttendanceLogsResultMap" > 
+	SELECT 
+	<include refid="sql_attendanceLogs_item"/>
+	FROM tw_attendance_logs 
+	<where>
+		<include refid="sql_attendanceLogs_query_nowhere"/>
+	</where>
+</select>
+
+</mapper>   
