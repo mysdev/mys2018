@@ -251,7 +251,9 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		params.put("signTime", attendanceTime.getSignTime());
 		params.put("outTime", attendanceTime.getOutTime());
 		params.put("timeId", attendanceTime.getId());
-		params.put("oldTimeId", oldId);
+		if(oldId!=null && oldId.intValue()>0) {
+			params.put("oldTimeId", oldId);
+		}
 		Integer ret = attendanceDetailMapper.modifyAttendanceDetailChange(params);
 		attendanceDetailMapper.modifyOutTimeBefore();
 		return ret;
