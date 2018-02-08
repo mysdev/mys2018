@@ -1,35 +1,17 @@
+var vTempId = 1;  //自定义班点块ID起始编号
 var storeList=[];
-var schemeList=[{
-		"schemeId": "0",
-		"schemeName": "休天数"
-	},{
-		"schemeId": "1",
-		"schemeName": "考勤天数"
-	},{
-		"schemeId": "2",
-		"schemeName": "自定义"
-	}];
-
-var selectDates=[];
+var attendanceTime=[];
 var attendanceViewModel;
 
 //定义ViewModel对象
 var AttendanceEditViewModel = function () {  
 	var self=this;
 	self.attendanceId = ko.observable(''); 
-	//self.storeId = ko.observable(''); 
 	self.selectStore=ko.observableArray(storeList);
     self.storeSelected = ko.observable('');
 	self.attendanceName = ko.observable(''); 
-	self.status = ko.observable(''); 
-	//self.types = ko.observable(''); 
-	self.selectScheme=ko.observableArray(schemeList);
-    self.schemeSelected = ko.observable(schemeList[0].schemeName);
-	self.attendance = ko.observable(''); 
-	self.signTime = ko.observable("09:00"); 
-	self.outTime = ko.observable("18:00");
-	self.myDis = ko.observable(true);
-	self.myNotDis = ko.observable(false);
+	self.storeStatus = ko.observable(true); 
+	self.attendanceTimeList = ko.observableArray(attendanceTime);
 
     var opFalg=getQueryString('action');
     
@@ -37,26 +19,51 @@ var AttendanceEditViewModel = function () {
     	var opid=getQueryString('id');
     	myAjax("/attendance/"+opid, "GET", null, function (data){
 			self.attendanceId(data.attendanceId);
-			//self.storeId(data.storeId);
 			self.attendanceName(data.attendanceName);
-			self.status(data.status);
-			self.types(data.types);
-			self.attendance(data.attendance);
-			self.signTime(data.signTime);
-			self.outTime(data.outTime);
+			self.storeStatus(data.status);
+		}, true);
+		//班点获取
+		myAjax("/attendance/"+opid+"/times", "GET", null, function (data){
+			vTempId=data.length+1;
+			attendanceTime = data;
+			self.attendanceTimeList(attendanceTime);
+			AttendanceTimeEvent();
 		}, true);
 	}
+    
+    //新增班点
+    self.AddTime=function(){
+    	if(attendanceTime.length > 2) {
+			jsprints("最多添加3个班点！");
+			return;
+		}
+    	
+    	var opid=0;
+    	if(opFalg!="Add"){
+    		var opid=getQueryString('id');
+    	}
+
+    	var node ={attendanceId:opid,id:vTempId,name:'',signTime: "8:30:00",outTime: "18:00:00"};
+    	attendanceTime.push(node);
+    	self.attendanceTimeList(attendanceTime);
+    	
+    	//选时间控件初始化
+    	$("#sTime" + vTempId).flatpickr();
+		$("#eTime" + vTempId).flatpickr();
+    	vTempId++;
+    	
+    	AttendanceTimeEvent();
+    }
 
 	//【提交】按钮押下处理
     self.Commit = function () {    
     	var submitPar ={};
-		submitPar.storeId=self.storeId();
+		submitPar.storeId=self.storeSelected();
 		submitPar.attendanceName=self.attendanceName();
-		submitPar.status=self.status();
-		submitPar.types=self.types();
-		submitPar.attendance=self.attendance();
-		submitPar.signTime=self.signTime();
-		submitPar.outTime=self.outTime();
+		submitPar.status=self.storeStatus();
+		submitPar.types=2;
+		GetAttendanceTimeInfo();
+		submitPar.attTime=self.attendanceTimeList();
     	
     	if(opFalg=="Add"){
     		myAjaxJson("/attendance", "POST", submitPar, function (data){
@@ -68,19 +75,7 @@ var AttendanceEditViewModel = function () {
 				ChangeUrl("./attendance/AttendanceList.html");
 			}, true);
     	}
-    };
-    
-    self.schemeChage=function(p){
-    	if(self.schemeSelected()==2)
-		{
-    		self.myDis(false);
-    		self.myNotDis(true);
-		}
-    	else{
-    		self.myDis(true);
-    		self.myNotDis(false);
-    	}
-    };
+   };
 };
 
 
@@ -89,25 +84,7 @@ $().ready(function(){
 	$("#txtName").focus();
 	attendanceViewModel=new AttendanceEditViewModel();
 	ko.applyBindings(attendanceViewModel);
-	
-	$(".attendanceDetail tbody td").bind("click",function(){
-		if($(this).attr("class")=="ns") return;
-		
-		if($(this).attr("class")=="sl"){
-			$(this).removeClass("sl");
-			var removeValue = $(this).text();
-			selectDates = $.grep(selectDates, function(n,i) {
-			 	return n != removeValue;
-			});
-			$("#selectDate").val(selectDates.join('|'));
-		}
-		else{
-			$(this).addClass("sl");
-			selectDates.push($(this).text());
-			$("#selectDate").val(selectDates.join('|'));
-		}
-	});
-    
+
     //获取下拉列表数据
 	myAjax("/stores", "GET", null, function (data){
 		$.map(data.data, function(item) { storeList.push({storeId:item.storeId,storeName:item.storeName})});  
@@ -115,6 +92,31 @@ $().ready(function(){
 		attendanceViewModel.storeSelected(storeList[0].storeName);
 		$(".rule-single-select").ruleSingleSelect();
 	}, true);
-	
+	//美化下拉框样式
 	$(".rule-single-select").ruleSingleSelect();
+	$(".rule-single-checkbox").ruleSingleCheckbox();
+	
+	AttendanceTimeEvent();
+	
+	$(".timeList").show();
 });
+
+var AttendanceTimeEvent=function(){
+	//班点块删除事件
+	$(".timeList .tmodel img").bind("click", function() {
+		$(this).parent().remove();
+		for(var i = 0; i < attendanceTime.length; i++) {
+			if(attendanceTime[i].id == $(this).attr('data'))
+				attendanceTime.splice(i, 1);
+		}
+	});
+}
+
+var GetAttendanceTimeInfo = function(){
+	//获取页面班点信息
+	$.each(attendanceTime, function(i, item){
+		this.name = $("#tTitle"+item.id).val();
+		this.signTime=$("#sTime"+item.id).val();
+		this.outTime=$("#eTime"+item.id).val();
+	});
+}
