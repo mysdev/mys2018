@@ -1,7 +1,5 @@
 package com.jing.attendance.controller;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jing.attendance.model.entity.AttendanceDiary;
 import com.jing.attendance.model.entity.AttendanceLogs;
 import com.jing.attendance.service.AttendanceDiaryService;
 import com.jing.attendance.service.AttendanceLogsService;
@@ -21,7 +18,6 @@ import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.CustomException;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployeeService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -105,21 +101,37 @@ public class AttendanceDiaryController{
 //		}
 //		return attendanceDiary;
 //	}
-	
-	@ApiOperation(value = "查询 根据打卡记录属性查询打卡记录信息列表", notes = "根据打卡记录属性查询打卡记录信息列表")
-	@RequestMapping(value = "/attendancediary", method = RequestMethod.GET)
-	public Object queryAttendanceDiaryList(HttpServletResponse response,
-			AttendanceDiary attendanceDiary) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return attendanceDiaryService.queryAttendanceDiaryByProperty(ClassUtil.transBean2Map(attendanceDiary, false));
-	}
+//	
+//	@ApiOperation(value = "查询 根据打卡记录属性查询打卡记录信息列表", notes = "根据打卡记录属性查询打卡记录信息列表")
+//	@RequestMapping(value = "/attendancediary", method = RequestMethod.GET)
+//	public Object queryAttendanceDiaryList(HttpServletResponse response,
+//			AttendanceDiary attendanceDiary) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
+//		return attendanceDiaryService.queryAttendanceDiaryByProperty(ClassUtil.transBean2Map(attendanceDiary, false));
+//	}
 	
 	@ApiOperation(value = "查询分页 根据打卡记录属性分页查询打卡记录信息列表", notes = "根据打卡记录属性分页查询打卡记录信息列表")
 	@RequestMapping(value = "/attendancediarys", method = RequestMethod.GET)
 	public Object queryAttendanceDiaryPage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, AttendanceDiary attendanceDiary) {				
-		return attendanceDiaryService.queryAttendanceDiaryForPage(pagenum, pagesize, sort, attendanceDiary);
+			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "employeeId", required = false) String employeeId,
+			@RequestParam(value = "namePYJob", required = false) String namePYJob,
+			@RequestParam(value = "dptId", required = false) Integer dptId,
+			@RequestParam(value = "storeId", required = false) String storeId,
+			@RequestParam(value = "yearMonth", required = false) String yearMonth,
+			@RequestParam(value = "empCard", required = false) String empCard) {				
+		Map<String, Object> query = new HashMap<String, Object>();
+		if(employeeId!=null) query.put("employeeId", employeeId);
+		if(namePYJob!=null) query.put("namePYJob", namePYJob);
+		if(dptId!=null) query.put("dptId", dptId);
+		if(storeId!=null) query.put("storeId", storeId);
+		if(yearMonth!=null) query.put("yearMonth", yearMonth);
+		if(empCard!=null) query.put("empCard", empCard);
+		if(sort==null || sort.length()==0){
+			sort = "{\"attTime\":\"DESC\"}";
+		}
+		return attendanceDiaryService.queryAttendanceDiaryAllForPage(pagenum, pagesize, sort, query);
 	}
 
 }

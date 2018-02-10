@@ -154,4 +154,29 @@ select t.*, TIMESTAMPDIFF(MINUTE, sys_sign, now()) as sign_count, TIMESTAMPDIFF(
 ) t
 </select>
 
+
+<select id="queryAttendanceDiaryAllForPage" resultType="java.util.Map" parameterType="java.util.Map">
+select t.* ,d.* from (
+	select att_id attId, employee_id employeeId, attendance, att_time attTime,
+	sys_sign sysSign, sign_time signTime, sys_out sysOut, out_time outTime from tw_attendance_diary 
+	<where>
+		<if test="params.yearMonth != null">AND DATE_FORMAT(att_time,'%Y-%m') = #{params.yearMonth} </if>
+		<if test="params.employeeId != null">AND employee_id = #{params.employeeId} </if>
+	</where>
+) d 
+INNER JOIN (
+	select e.*, s.store_name storeName from (
+		select emp_id empId, emp_name empName, store_id storeId, pinyin, emp_no empNo from tb_employee 
+		<where>
+			<if test="params.employeeId != null">AND emp_id = #{params.employeeId} </if>
+			<if test="params.empCard != null">AND emp_card = #{params.empCard} </if>
+			<if test="params.storeId != null">AND store_id = #{params.storeId} </if>
+			<if test="params.dptId != null">AND dpt_id = #{params.dptId} </if>			
+			<if test="params.namePYJob != null">AND ( emp_name like CONCAT('%',#{params.namePYJob}, '%') or  emp_no like CONCAT('%',#{params.namePYJob}, '%') or  pinyin like CONCAT('%',#{params.namePYJob}, '%') ) </if>
+		</where>
+	) e left outer join tb_store s on e.storeId=s.store_id
+) t on d.employeeId=t.empId
+
+</select>
+
 </mapper>   

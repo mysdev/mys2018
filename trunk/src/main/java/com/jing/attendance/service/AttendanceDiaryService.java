@@ -72,6 +72,18 @@ public interface AttendanceDiaryService {
 	* @return  String    返回类型 
 	* @throws 
 	*/
-	String processAttendanceDiary(String empId);	 
+	String processAttendanceDiary(String empId);
+
+	/** 
+	* @Title: queryAttendanceDiaryAllForPage 
+	* @Description: 查询用户考勤信息
+	* @param pagenum
+	* @param pagesize
+	* @param sort
+	* @param query
+	* @return  Map<String,Object>    返回类型 
+	* @throws 
+	*/
+	Map<String, Object> queryAttendanceDiaryAllForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);	 
 	 
 }

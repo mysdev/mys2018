@@ -1,27 +1,25 @@
 package com.jing.attendance.service.impl;
 
-import java.util.List;
-import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.AttendanceDiaryMapper;
+import com.jing.attendance.model.entity.AttendanceDiary;
+import com.jing.attendance.service.AttendanceDiaryService;
+import com.jing.attendance.service.bo.AttendanceDiaryBo;
+import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.AttendanceDiary;
-import com.jing.attendance.model.dao.AttendanceDiaryMapper;
-import com.jing.attendance.service.AttendanceDiaryService;
-import com.jing.attendance.service.bo.AttendanceDiaryBo;
-import com.jing.config.web.exception.CustomException;
 
 /**
  * @ClassName: AttendanceDiary
@@ -129,16 +127,6 @@ public class  AttendanceDiaryServiceImpl implements AttendanceDiaryService {
 		return attendanceDiaryMapper.queryAttendanceDiaryByProperty(map);
 	}
 
-	/*
-	 * @Title: processAttendanceDiary
-	 * @Description: TODO
-	 * @param @param empId
-	 * @param @return    参数  
-	 * @author Jinlong He
-	 * @param empId
-	 * @return
-	 * @see com.jing.attendance.service.AttendanceDiaryService#processAttendanceDiary(java.lang.String)
-	 */ 
 	@Override
 	@Transactional(readOnly = false)
 	public String processAttendanceDiary(String empId) {
@@ -186,6 +174,21 @@ public class  AttendanceDiaryServiceImpl implements AttendanceDiaryService {
 				return "答退成功，感谢您的付出。";
 			}
 		}
+	}
+
+	@Override
+	public Map<String, Object> queryAttendanceDiaryAllForPage(Integer pagenum, Integer pagesize, String sort,
+			Map<String, Object> query) {
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
+		pageBounds.setOrdersByJsonForMap(sort);
+		List<Map<String, Object>> entityList = attendanceDiaryMapper.queryAttendanceDiaryAllForPage(pageBounds, query);
+		//if (!entityList.isEmpty()) {
+			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
+			returnMap.put(Constant.PAGELIST, entityList);
+			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+		//}
+		return returnMap;
 	}
 
 

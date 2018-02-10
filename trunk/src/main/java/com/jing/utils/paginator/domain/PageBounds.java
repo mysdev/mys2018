@@ -143,6 +143,55 @@ public class PageBounds extends RowBounds implements Serializable {
         this.orders = orders;
     }
     
+    /** 
+    * @Title: setOrdersByJsonForMap 
+    * @Title: setOrdersByString 
+     * @Description:  排序查询参数  此方法直接将传入参数进行数据过滤，可能会因为字段不存在导致错误
+     * 防止先后顺序影响数据，手工解析数据。
+     * @param jsonS {"id":"asc","name":"desc"}
+     * @return  void    返回类型 
+    * @throws 
+    */
+    public void setOrdersByJsonForMap(String jsonS){
+		if (jsonS == null) {
+			return;
+		}
+		if (jsonS.startsWith("{")) {
+			jsonS = jsonS.substring(1, jsonS.length());
+		}
+		if (jsonS.endsWith("}")) {
+			jsonS = jsonS.substring(0, jsonS.length() - 1);
+		}
+		// //防止参数出问题
+		// jsonS = jsonS.toUpperCase();
+		// jsonS = jsonS.replaceAll(" DESC", "");
+		// jsonS = jsonS.replaceAll(" ASC", "");
+		// jsonS = jsonS.replaceAll(" ", ""); //去空格-方式一 容错
+		jsonS = jsonS.trim(); // 去首尾空格-方式二 数据格式正确
+
+		if (jsonS.length() == 0) {
+			return;
+		}
+		List<Order> order = new ArrayList<Order>();
+		String[] orders = jsonS.split(",\"");
+		for (int i = 0; i < orders.length; i++) {
+			if (orders[i] != null && orders[i].length() > 0) {
+				String[] item = orders[i].replaceAll("\"", "").split(":");
+				if (item[0] == null || item[0].trim().length() == 0) {
+					continue; // 字段数据为空
+				}
+				Order o = new Order(item[0].trim(), Direction.ASC, null);
+				if (item.length > 1 && item[1] != null && "desc".equals(item[1].trim().toLowerCase())) {
+					o.setDirection(Direction.DESC);
+				}
+				order.add(o);				
+			}
+		}
+		if (order.size() > 0) {
+			this.setOrders(order);
+		}
+    }
+    
     /**
      * @param class  
      * @Title: setOrdersByString 
