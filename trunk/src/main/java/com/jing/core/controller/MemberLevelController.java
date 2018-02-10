@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="会员体系")
+@Api(description="会员体系", tags={"CoreMemberLevel"})
 public class MemberLevelController{
 
 	@Autowired

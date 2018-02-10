@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
  * @date: 2018年02月05日 22时39分
  */
 @RestController
-@Api(description="打卡记录", tags={"AttendanceDiary"})
+@Api(description="员工考勤详情", tags={"AttendanceDiary"})
 public class AttendanceDiaryController{
 
 	@Autowired

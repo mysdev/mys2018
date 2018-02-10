@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="应钟记录", tags={"Clock&Record"})
+@Api(description="钟房 技师应钟记录", tags={"ClockRecord"})
 public class ClockRecordController{
 
 	@Autowired

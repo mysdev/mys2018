@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="订单", tags={"Clock&Order"})
+@Api(description="钟房客户订单", tags={"ClockOrder"})
 public class ClockOrderController{
 
 	@Autowired

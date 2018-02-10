@@ -17,7 +17,7 @@ import io.swagger.annotations.Api;
  *
  */
 @Controller
-@Api(description="登录用户相关")
+@Api(description="登录用户相关", tags={"SystemLogin"})
 public class LoginController {
 	
 	@RequestMapping(value="/login/auth",method=RequestMethod.POST)  
