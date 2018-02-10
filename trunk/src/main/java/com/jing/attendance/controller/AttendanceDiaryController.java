@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
  * @date: 2018年02月05日 22时39分
  */
 @RestController
-@Api(description="打卡记录")
+@Api(description="打卡记录", tags={"AttendanceDiary"})
 public class AttendanceDiaryController{
 
 	@Autowired
@@ -110,7 +110,7 @@ public class AttendanceDiaryController{
 //	}
 	
 	@ApiOperation(value = "查询分页 根据打卡记录属性分页查询打卡记录信息列表", notes = "根据打卡记录属性分页查询打卡记录信息列表")
-	@RequestMapping(value = "/attendancediarys", method = RequestMethod.GET)
+	@RequestMapping(value = "/attendance/employee/diarys", method = RequestMethod.GET)
 	public Object queryAttendanceDiaryPage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 

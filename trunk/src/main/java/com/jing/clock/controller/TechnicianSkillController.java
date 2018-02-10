@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="技师技能")
+@Api(description="技师技能", tags={"Clock&TechnicianSkill"})
 public class TechnicianSkillController{
 
 	@Autowired
