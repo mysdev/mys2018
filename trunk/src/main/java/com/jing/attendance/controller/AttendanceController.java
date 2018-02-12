@@ -197,6 +197,7 @@ public class AttendanceController{
 			throw new ParameterException(errors);
 		}
 		attendanceTime.setAttendanceId(attendanceId);
+		attendanceTime.setId(null);
 		attendanceTimeService.addAttendanceTime(attendanceTime);
 		return attendanceTime;
 	}
