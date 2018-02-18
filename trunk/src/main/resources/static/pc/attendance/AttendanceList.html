@@ -68,7 +68,7 @@
 				<thead>
 					<tr>
 						<th width="4%">选择</th>
-						<th align="left">门店标识</th>
+						<th align="left">门店</th>
 						<th align="left">考勤方案名称</th>
 						<th align="left">考勤方案状态</th>
 						<th align="left">考勤方案方案</th>
@@ -79,6 +79,7 @@
 						<th align="left">创建时间</th>
 						<th align="left">修订人员</th>
 						<th align="left">修订时间</th>
+						<th align="center">操作</th>
 					</tr>
 				</thead>
 				<tbody data-bind="foreach: { data: attendanceList, as: 'obj' }">
@@ -86,10 +87,10 @@
 						<td align="center">
 							<span class="checkall" style="vertical-align:middle;"><input id="chkid" type="checkbox" name="chkid"  data-bind="attr:{data: obj.attendanceId}" /></span>
 						</td>
-						<td data-bind="text: obj.storeId"></td>
+						<td data-bind="text: obj.storeName"></td>
 						<td data-bind="text: obj.attendanceName"></td>
-						<td data-bind="text: obj.status"></td>
-						<td data-bind="text: obj.types"></td>
+						<td data-bind="text: mappingStatus(obj.status())"></td>
+						<td data-bind="text: mappingAttendanceType(obj.types())"></td>
 						<td data-bind="text: obj.attendance"></td>
 						<td data-bind="text: obj.signTime"></td>
 						<td data-bind="text: obj.outTime"></td>
