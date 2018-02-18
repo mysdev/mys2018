@@ -10,6 +10,7 @@ if(getQueryString('page')!=undefined){
 function Node(obj) {
 	this.attendanceId = ko.observable(obj.attendanceId); 
 	this.storeId = ko.observable(obj.storeId); 
+	this.storeName = ko.observable(obj.storeName); 
 	this.attendanceName = ko.observable(obj.attendanceName); 
 	this.status = ko.observable(obj.status); 
 	this.types = ko.observable(obj.types); 
@@ -40,7 +41,7 @@ var AttendanceViewModel = function () {
 			$("table tbody td .tomodify").bind(function(){
 				ChangeUrl('./attendance/Attendance.html?action=Edit&id='+$(this).attr('data'));
 			});
-		}, true);
+		}, false);
     };
     
     	
@@ -72,8 +73,10 @@ var AttendanceViewModel = function () {
             content: '确定要删除该记录！',
             okValue: '确定',
             ok: function () {
-		    	var id = $(event.currentTarget).attr('data');
-		    	myAjax("/attendance/"+id, "DELETE", null, reloadDate, false);
+		    	var id = obj.attendanceId();
+		    	myAjax("/attendance/"+id, "DELETE", null, function(data){
+		    		viewMode.reloadData();
+		    	}, false);
 			}
         }).showModal();
     }
@@ -96,9 +99,11 @@ var AttendanceViewModel = function () {
 	        okValue: '确定',
 	        ok: function () {
 	        	$(".checkall input:checked").each(function(i){
-	        		myAjax("/attendance/"+id, "DELETE", null, null, false);
+	        		myAjax("/attendance/"+$(this).attr('data'), "DELETE", null, null, false);
 	        	});
-	        	location.reload();
+	        	setTimeout(function () { 
+			        viewMode.reloadData();
+			    }, 600);
 	        },
 	        cancelValue: '取消',
 	        cancel: function () { }
@@ -110,6 +115,8 @@ var AttendanceViewModel = function () {
 $().ready(function(){
 	viewMode = new AttendanceViewModel();
     ko.applyBindings(viewMode);
+    
+
 });
 
 var bindPage =function(){
@@ -128,5 +135,11 @@ var bindPage =function(){
 //            }
         }
     });
+}
+
+function mappingAttendanceType(b){
+	if(b==0) return '休天数';
+	else if(b==1) return '考勤天数';
+	else return '详情';
 }
 
