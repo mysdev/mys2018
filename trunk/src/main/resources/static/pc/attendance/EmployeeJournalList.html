@@ -44,12 +44,6 @@
 							<li>
 								<a href="#" data-bind="click:$root.add"><i class="iconfont icon-close"></i><span>新增</span></a>
 							</li>
-							<li>
-								<a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a>
-							</li>
-							<li>
-								<a data-bind="click:$root.deletes" id="lbtnDelete" href="#"><i class="iconfont icon-delete"></i><span>删除</span></a>
-							</li>
 						</ul>
 					</div>
 					<div class="r-list">
@@ -67,9 +61,11 @@
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="ltable">
 				<thead>
 					<tr>
-						<th width="4%">选择</th>
-						<th align="left">员工标识</th>
+						<th align="center">员工名称</th>
+						<th align="left">是否考勤</th>
 						<th align="left">考勤日期</th>
+						<th align="left">应到时间</th>
+						<th align="left">应退时间</th>
 						<th align="left">签到时间</th>
 						<th align="left">签退时间</th>
 						<th align="left">创建人员</th>
@@ -80,21 +76,17 @@
 				</thead>
 				<tbody data-bind="foreach: { data: employeeJournalList, as: 'obj' }">
 					<tr>
-						<td align="center">
-							<span class="checkall" style="vertical-align:middle;"><input id="chkid" type="checkbox" name="chkid"  data-bind="attr:{data: obj.journalId}" /></span>
-						</td>
-						<td data-bind="text: obj.empId"></td>
-						<td data-bind="text: obj.attendanceDate"></td>
+						<td align="center" data-bind="text: obj.empName"></td>
+						<td data-bind="text: mappingBool(obj.attendance())"></td>
+						<td data-bind="text: formatDate(obj.attTime())"></td>
+						<td data-bind="text: obj.sysSign"></td>
+						<td data-bind="text: obj.sysOut"></td>
 						<td data-bind="text: obj.signTime"></td>
 						<td data-bind="text: obj.outTime"></td>
 						<td data-bind="text: obj.createdBy"></td>
 						<td data-bind="text: obj.createdDate"></td>
 						<td data-bind="text: obj.updatedBy"></td>
 						<td data-bind="text: obj.updatedDate"></td>
-						<td align="center">
-							<a href="#" data-bind="click:$root.modify" >修改</a>&nbsp;
-							<a href="#" data-bind="click:$root.delete" >删除</a>
-						</td>
 					</tr>
 				</tbody>
 			</table>
