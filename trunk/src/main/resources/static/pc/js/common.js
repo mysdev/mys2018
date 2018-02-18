@@ -1,4 +1,4 @@
-﻿// 布局脚本
+// 布局脚本
 /*====================================
  *基于JQuery 1.11.2主框架
  *作者：CMC
@@ -593,3 +593,15 @@ function MyAjax(requestType, url,submitPar, callback) {
 function ChangeUrl(url){
 	$("#mainframe", parent.window.document).attr("src",url);
 }
+function formatDate(d){
+	return d.toString().substr(0,10);
+}
+function mappingBool(b){
+	if(b==1) return '是';
+	return '否';
+}
+function mappingStatus(b){
+	if(b==0) return '正常';
+	return '无效';
+}
+
