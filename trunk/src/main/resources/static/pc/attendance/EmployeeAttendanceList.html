@@ -51,6 +51,13 @@
 								<a data-bind="click:$root.deletes" id="lbtnDelete" href="#"><i class="iconfont icon-delete"></i><span>删除</span></a>
 							</li>
 						</ul>
+						<div class="menu-list">
+          					<div class="rule-single-select">
+          						<select name="ddlAttendance" id="ddlAttendance" datatype="*" errormsg="请选择考勤方案！" sucmsg=" " data-bind="options:attendanceList,optionsText:'name',optionsValue:'id',value:attendanceSelected, event:{change:attendanceChage}">
+
+								</select>
+          					</div>
+          				</div>
 					</div>
 					<div class="r-list">
 						<input name="txtKeywords" type="text" id="txtKeywords" class="keyword" />
@@ -68,8 +75,8 @@
 				<thead>
 					<tr>
 						<th width="4%">选择</th>
-						<th align="left">员工标识</th>
-						<th align="left">考勤方案标识</th>
+						<th align="left">员工名称</th>
+						<th align="left">考勤方案</th>
 						<th align="left">创建人员</th>
 						<th align="left">创建时间</th>
 						<th align="left">修订人员</th>
@@ -81,8 +88,8 @@
 						<td align="center">
 							<span class="checkall" style="vertical-align:middle;"><input id="chkid" type="checkbox" name="chkid"  data-bind="attr:{data: obj.linkId}" /></span>
 						</td>
-						<td data-bind="text: obj.empId"></td>
-						<td data-bind="text: obj.attendanceId"></td>
+						<td data-bind="text: obj.empName"></td>
+						<td data-bind="text: obj.attendanceName"></td>
 						<td data-bind="text: obj.createdBy"></td>
 						<td data-bind="text: obj.createdDate"></td>
 						<td data-bind="text: obj.updatedBy"></td>
