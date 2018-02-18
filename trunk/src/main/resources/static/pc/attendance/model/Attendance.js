@@ -43,7 +43,7 @@ var AttendanceEditViewModel = function () {
     		var opid=getQueryString('id');
     	}
 
-    	var node ={attendanceId:opid,id:vTempId,name:'',signTime: "8:30:00",outTime: "18:00:00"};
+    	var node ={attendanceId:opid,id:vTempId,name:'',signTime: "08:30:00",outTime: "18:00:00"};
     	attendanceTime.push(node);
     	self.attendanceTimeList(attendanceTime);
     	
@@ -104,6 +104,11 @@ $().ready(function(){
 var AttendanceTimeEvent=function(){
 	//班点块删除事件
 	$(".timeList .tmodel img").bind("click", function() {
+		if($(".timeList .tmodel img").length<2)
+		{
+			jsprints("至少保留一个考勤班点！");
+			return;
+		}
 		$(this).parent().remove();
 		for(var i = 0; i < attendanceTime.length; i++) {
 			if(attendanceTime[i].id == $(this).attr('data'))
@@ -118,5 +123,6 @@ var GetAttendanceTimeInfo = function(){
 		this.name = $("#tTitle"+item.id).val();
 		this.signTime=$("#sTime"+item.id).val();
 		this.outTime=$("#eTime"+item.id).val();
+		this.id=0;
 	});
 }
