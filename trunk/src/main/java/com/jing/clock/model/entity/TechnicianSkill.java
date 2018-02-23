@@ -1,13 +1,7 @@
 package com.jing.clock.model.entity;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 import com.jing.utils.BaseEntity;
@@ -17,9 +11,9 @@ import com.jing.utils.BaseEntity;
  * @Description: 技师技能实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class TechnicianSkill extends BaseEntity {
+public class TechnicianSkill extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
@@ -32,6 +26,7 @@ public class TechnicianSkill extends BaseEntity {
 	private Integer technicianId;	//tc_technician_skill:technician_id  技师标识  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=9, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer skillLevel;	//tc_technician_skill:skill_level  技能等级  
 
 

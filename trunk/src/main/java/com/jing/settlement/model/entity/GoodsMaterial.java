@@ -34,6 +34,7 @@ public class GoodsMaterial extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String materialNo;	//to_goods_material:material_no  原料代码  
 
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer materialTypes;	//to_goods_material:material_types  原料类型 0物品1服务  
 
 	private Integer materialCt;	//to_goods_material:material_ct  原料库存  

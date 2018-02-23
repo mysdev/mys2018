@@ -5,6 +5,7 @@
 <!-- Result Map-->
 <resultMap id="TechnicianClassResultMap" type="com.jing.clock.model.entity.TechnicianClass">
 	<id column="detail_id" property="detailId"/>
+	<result column="store_id" property="storeId"/>
 	<result column="class_id" property="classId"/>
 	<result column="technician_id" property="technicianId"/>
 	<result column="clock_ct" property="clockCt"/>
@@ -19,13 +20,14 @@
 </resultMap>
 
 <sql id="sql_technicianClass_item">
-	detail_id, class_id, technician_id, clock_ct, is_work, technician_level, priority, seqencing, created_by, created_date, updated_by, updated_date
+	detail_id, store_id, class_id, technician_id, clock_ct, is_work, technician_level, priority, seqencing, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
 <sql id="sql_technicianClass_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="technicianClass.detailId != null">AND detail_id = #{technicianClass.detailId} </if>
+		<if test="technicianClass.storeId != null">AND store_id like concat(#{technicianClass.storeId}, '%') </if>
 		<if test="technicianClass.classId != null">AND class_id = #{technicianClass.classId} </if>
 		<if test="technicianClass.technicianId != null">AND technician_id = #{technicianClass.technicianId} </if>
 		<if test="technicianClass.clockCt != null">AND clock_ct = #{technicianClass.clockCt} </if>
@@ -46,6 +48,7 @@
  	INSERT INTO tc_technician_class 
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="detailId != null"> detail_id,</if>
+		<if test="storeId != null"> store_id,</if>
 		<if test="classId != null"> class_id,</if>
 		<if test="technicianId != null"> technician_id,</if>
 		<if test="clockCt != null"> clock_ct,</if>
@@ -60,6 +63,7 @@
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="detailId != null"> #{detailId},</if>
+		<if test="storeId != null"> #{storeId},</if>
 		<if test="classId != null"> #{classId},</if>
 		<if test="technicianId != null"> #{technicianId},</if>
 		<if test="clockCt != null"> #{clockCt},</if>
@@ -78,6 +82,7 @@
 <update id="modifyTechnicianClass" parameterType="com.jing.clock.model.entity.TechnicianClass" >
   	UPDATE tc_technician_class SET
 	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="classId != null"> class_id = #{classId},</if>
 		<if test="technicianId != null"> technician_id = #{technicianId},</if>
 		<if test="clockCt != null"> clock_ct = #{clockCt},</if>

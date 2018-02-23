@@ -17,13 +17,17 @@ import com.jing.utils.BaseEntity;
  * @Description: 轮班详情实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class TechnicianClass extends BaseEntity {
+public class TechnicianClass extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
 	private Integer detailId;	//tc_technician_class:detail_id  自增标识  
+
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
+	private String storeId;	//tc_technician_class:store_id  归属门店  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer classId;	//tc_technician_class:class_id  归属轮班  
@@ -35,6 +39,7 @@ public class TechnicianClass extends BaseEntity {
 	private Integer clockCt;	//tc_technician_class:clock_ct  轮钟次数  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer isWork;	//tc_technician_class:is_work  是否在班 0否 1在  
 
 	private Integer technicianLevel;	//tc_technician_class:technician_level  轮班级别  
@@ -60,6 +65,23 @@ public class TechnicianClass extends BaseEntity {
 	*/
 	public void setDetailId(Integer detailId){
 		this.detailId = detailId;	
+	}	
+	/**
+	* @DatabasetableColumnName: tc_technician_class:store_id
+	* @Description: 获取属性        归属门店
+	* @return: String
+	*/
+	public String getStoreId(){
+		return storeId;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tc_technician_class:store_id
+	* @Description: 设置属性        归属门店
+	* @return: String
+	*/
+	public void setStoreId(String storeId){
+		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tc_technician_class:class_id

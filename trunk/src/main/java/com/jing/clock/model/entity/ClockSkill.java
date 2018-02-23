@@ -1,11 +1,7 @@
 package com.jing.clock.model.entity;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -17,9 +13,9 @@ import com.jing.utils.BaseEntity;
  * @Description: 技能实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class ClockSkill extends BaseEntity {
+public class ClockSkill extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
@@ -33,11 +29,13 @@ public class ClockSkill extends BaseEntity {
 	private Integer materialId;	//tc_clock_skill:material_id  服务标识  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer isClock;	//tc_clock_skill:is_clock  是否计钟 0是  
 
-	private Integer classs;	//tc_clock_skill:class  归属轮班  
+	private Integer classs;	//tc_clock_skill:classs  归属轮班  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_clock_skill:status  技能状态 0正常  
 
 

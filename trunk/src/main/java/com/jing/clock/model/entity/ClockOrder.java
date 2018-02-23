@@ -1,11 +1,7 @@
 package com.jing.clock.model.entity;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -17,9 +13,9 @@ import com.jing.utils.BaseEntity;
  * @Description: 订单实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class ClockOrder extends BaseEntity {
+public class ClockOrder extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
@@ -29,7 +25,12 @@ public class ClockOrder extends BaseEntity {
 	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String authorizationId;	//tc_clock_order:authorization_id  授权标识  
 
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
+	private String storeId;	//tc_clock_order:store_id  归属门店  
+
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer types;	//tc_clock_order:types  来源类型 0房间1手环  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
@@ -37,6 +38,7 @@ public class ClockOrder extends BaseEntity {
 	private String objectId;	//tc_clock_order:object_id  来源标识  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=4, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_clock_order:status  订单状态 0等待1进行中2完成4取消  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
@@ -94,6 +96,23 @@ public class ClockOrder extends BaseEntity {
 	*/
 	public void setAuthorizationId(String authorizationId){
 		this.authorizationId = authorizationId;	
+	}	
+	/**
+	* @DatabasetableColumnName: tc_clock_order:store_id
+	* @Description: 获取属性        归属门店
+	* @return: String
+	*/
+	public String getStoreId(){
+		return storeId;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tc_clock_order:store_id
+	* @Description: 设置属性        归属门店
+	* @return: String
+	*/
+	public void setStoreId(String storeId){
+		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tc_clock_order:types

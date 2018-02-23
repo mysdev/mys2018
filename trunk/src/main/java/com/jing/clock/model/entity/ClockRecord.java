@@ -17,9 +17,9 @@ import com.jing.utils.BaseEntity;
  * @Description: 应钟记录实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class ClockRecord extends BaseEntity {
+public class ClockRecord extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
@@ -35,6 +35,7 @@ public class ClockRecord extends BaseEntity {
 	private Integer classId;	//tc_clock_record:class_id  归属轮班  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_clock_record:status  应钟状态 正常0 过时1  
 
 	private Date beginTime;	//tc_clock_record:begin_time  上钟时间  
@@ -43,6 +44,7 @@ public class ClockRecord extends BaseEntity {
 
 	private Date actureTime;	//tc_clock_record:acture_time  实际下钟时间  
 
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer recordStatus;	//tc_clock_record:record_status  服务状态 0完成 1退换  
 
 

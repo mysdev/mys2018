@@ -17,9 +17,9 @@ import com.jing.utils.BaseEntity;
  * @Description: 轮班实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class SkillClass extends BaseEntity {
+public class SkillClass extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
@@ -29,6 +29,10 @@ public class SkillClass extends BaseEntity {
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String className;	//tc_skill_class:class_name  轮班名称  
 
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
+	private String storeId;	//tc_skill_class:store_id  归属门店  
+
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer status;	//tc_skill_class:status  轮班状态  
 
@@ -37,18 +41,23 @@ public class SkillClass extends BaseEntity {
 	private Integer flag;	//tc_skill_class:flag  不计指针  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer types;	//tc_skill_class:types  排号规则 0按序1按次  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer isPriority;	//tc_skill_class:is_priority  挂起优先 0否1是  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer priorityAccumulate;	//tc_skill_class:priority_accumulate  挂起累计 0是1否  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer arriveWarn;	//tc_skill_class:arrive_warn  到时提醒 0否  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer arriveRemind;	//tc_skill_class:arrive_remind  提前播报 0否  
 
 
@@ -85,6 +94,23 @@ public class SkillClass extends BaseEntity {
 	*/
 	public void setClassName(String className){
 		this.className = className;	
+	}	
+	/**
+	* @DatabasetableColumnName: tc_skill_class:store_id
+	* @Description: 获取属性        归属门店
+	* @return: String
+	*/
+	public String getStoreId(){
+		return storeId;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tc_skill_class:store_id
+	* @Description: 设置属性        归属门店
+	* @return: String
+	*/
+	public void setStoreId(String storeId){
+		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tc_skill_class:status

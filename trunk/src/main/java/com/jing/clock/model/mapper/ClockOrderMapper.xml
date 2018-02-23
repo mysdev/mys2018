@@ -6,6 +6,7 @@
 <resultMap id="ClockOrderResultMap" type="com.jing.clock.model.entity.ClockOrder">
 	<id column="order_id" property="orderId"/>
 	<result column="authorization_id" property="authorizationId"/>
+	<result column="store_id" property="storeId"/>
 	<result column="types" property="types"/>
 	<result column="object_id" property="objectId"/>
 	<result column="status" property="status"/>
@@ -22,7 +23,7 @@
 </resultMap>
 
 <sql id="sql_clockOrder_item">
-	order_id, authorization_id, types, object_id, status, material_id, goods_id, goods_time, technician_id, customer_note, note, created_by, created_date, updated_by, updated_date
+	order_id, authorization_id, store_id, types, object_id, status, material_id, goods_id, goods_time, technician_id, customer_note, note, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -30,6 +31,7 @@
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="clockOrder.orderId != null">AND order_id = #{clockOrder.orderId} </if>
 		<if test="clockOrder.authorizationId != null">AND authorization_id like concat(#{clockOrder.authorizationId}, '%') </if>
+		<if test="clockOrder.storeId != null">AND store_id like concat(#{clockOrder.storeId}, '%') </if>
 		<if test="clockOrder.types != null">AND types = #{clockOrder.types} </if>
 		<if test="clockOrder.objectId != null">AND object_id like concat(#{clockOrder.objectId}, '%') </if>
 		<if test="clockOrder.status != null">AND status = #{clockOrder.status} </if>
@@ -53,6 +55,7 @@
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="orderId != null"> order_id,</if>
 		<if test="authorizationId != null"> authorization_id,</if>
+		<if test="storeId != null"> store_id,</if>
 		<if test="types != null"> types,</if>
 		<if test="objectId != null"> object_id,</if>
 		<if test="status != null"> status,</if>
@@ -70,6 +73,7 @@
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="orderId != null"> #{orderId},</if>
 		<if test="authorizationId != null"> #{authorizationId},</if>
+		<if test="storeId != null"> #{storeId},</if>
 		<if test="types != null"> #{types},</if>
 		<if test="objectId != null"> #{objectId},</if>
 		<if test="status != null"> #{status},</if>
@@ -91,6 +95,7 @@
   	UPDATE tc_clock_order SET
 	<trim suffixOverrides=",">
 		<if test="authorizationId != null"> authorization_id = #{authorizationId},</if>
+		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="types != null"> types = #{types},</if>
 		<if test="objectId != null"> object_id = #{objectId},</if>
 		<if test="status != null"> status = #{status},</if>

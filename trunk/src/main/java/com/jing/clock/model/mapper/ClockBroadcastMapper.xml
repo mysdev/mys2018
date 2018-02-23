@@ -5,6 +5,7 @@
 <!-- Result Map-->
 <resultMap id="ClockBroadcastResultMap" type="com.jing.clock.model.entity.ClockBroadcast">
 	<id column="broadcast_id" property="broadcastId"/>
+	<result column="store_id" property="storeId"/>
 	<result column="stauts" property="stauts"/>
 	<result column="types" property="types"/>
 	<result column="content" property="content"/>
@@ -15,13 +16,14 @@
 </resultMap>
 
 <sql id="sql_clockBroadcast_item">
-	broadcast_id, stauts, types, content, created_by, created_date, updated_by, updated_date
+	broadcast_id, store_id, stauts, types, content, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
 <sql id="sql_clockBroadcast_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="clockBroadcast.broadcastId != null">AND broadcast_id = #{clockBroadcast.broadcastId} </if>
+		<if test="clockBroadcast.storeId != null">AND store_id like concat(#{clockBroadcast.storeId}, '%') </if>
 		<if test="clockBroadcast.stauts != null">AND stauts = #{clockBroadcast.stauts} </if>
 		<if test="clockBroadcast.types != null">AND types = #{clockBroadcast.types} </if>
 		<if test="clockBroadcast.content != null">AND content like concat(#{clockBroadcast.content}, '%') </if>
@@ -38,6 +40,7 @@
  	INSERT INTO tc_clock_broadcast 
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="broadcastId != null"> broadcast_id,</if>
+		<if test="storeId != null"> store_id,</if>
 		<if test="stauts != null"> stauts,</if>
 		<if test="types != null"> types,</if>
 		<if test="content != null"> content,</if>
@@ -48,6 +51,7 @@
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="broadcastId != null"> #{broadcastId},</if>
+		<if test="storeId != null"> #{storeId},</if>
 		<if test="stauts != null"> #{stauts},</if>
 		<if test="types != null"> #{types},</if>
 		<if test="content != null"> #{content},</if>
@@ -62,6 +66,7 @@
 <update id="modifyClockBroadcast" parameterType="com.jing.clock.model.entity.ClockBroadcast" >
   	UPDATE tc_clock_broadcast SET
 	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="stauts != null"> stauts = #{stauts},</if>
 		<if test="types != null"> types = #{types},</if>
 		<if test="content != null"> content = #{content},</if>

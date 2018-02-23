@@ -1,11 +1,7 @@
 package com.jing.clock.model.entity;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -17,13 +13,17 @@ import com.jing.utils.BaseEntity;
  * @Description: 技师班次实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * @date: 2018年02月23日 16时14分
  */
-public class TechnicianShift extends BaseEntity {
+public class TechnicianShift extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
 	private Integer shiftId;	//tc_technician_shift:shift_id  自增标识  
+
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
+	private String storeId;	//tc_technician_shift:store_id  归属门店  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
@@ -36,6 +36,7 @@ public class TechnicianShift extends BaseEntity {
 	private java.sql.Timestamp outTime;	//tc_technician_shift:out_time  交班时间  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_technician_shift:status  状态 0正常  
 
 
@@ -55,6 +56,23 @@ public class TechnicianShift extends BaseEntity {
 	*/
 	public void setShiftId(Integer shiftId){
 		this.shiftId = shiftId;	
+	}	
+	/**
+	* @DatabasetableColumnName: tc_technician_shift:store_id
+	* @Description: 获取属性        归属门店
+	* @return: String
+	*/
+	public String getStoreId(){
+		return storeId;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tc_technician_shift:store_id
+	* @Description: 设置属性        归属门店
+	* @return: String
+	*/
+	public void setStoreId(String storeId){
+		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tc_technician_shift:shift_name

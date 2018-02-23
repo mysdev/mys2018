@@ -6,6 +6,7 @@
 <resultMap id="SkillClassResultMap" type="com.jing.clock.model.entity.SkillClass">
 	<id column="class_id" property="classId"/>
 	<result column="class_name" property="className"/>
+	<result column="store_id" property="storeId"/>
 	<result column="status" property="status"/>
 	<result column="clock_flag" property="clockFlag"/>
 	<result column="flag" property="flag"/>
@@ -21,7 +22,7 @@
 </resultMap>
 
 <sql id="sql_skillClass_item">
-	class_id, class_name, status, clock_flag, flag, types, is_priority, priority_accumulate, arrive_warn, arrive_remind, created_by, created_date, updated_by, updated_date
+	class_id, class_name, store_id, status, clock_flag, flag, types, is_priority, priority_accumulate, arrive_warn, arrive_remind, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -29,6 +30,7 @@
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="skillClass.classId != null">AND class_id = #{skillClass.classId} </if>
 		<if test="skillClass.className != null">AND class_name like concat(#{skillClass.className}, '%') </if>
+		<if test="skillClass.storeId != null">AND store_id like concat(#{skillClass.storeId}, '%') </if>
 		<if test="skillClass.status != null">AND status = #{skillClass.status} </if>
 		<if test="skillClass.clockFlag != null">AND clock_flag = #{skillClass.clockFlag} </if>
 		<if test="skillClass.flag != null">AND flag = #{skillClass.flag} </if>
@@ -51,6 +53,7 @@
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="classId != null"> class_id,</if>
 		<if test="className != null"> class_name,</if>
+		<if test="storeId != null"> store_id,</if>
 		<if test="status != null"> status,</if>
 		<if test="clockFlag != null"> clock_flag,</if>
 		<if test="flag != null"> flag,</if>
@@ -67,6 +70,7 @@
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="classId != null"> #{classId},</if>
 		<if test="className != null"> #{className},</if>
+		<if test="storeId != null"> #{storeId},</if>
 		<if test="status != null"> #{status},</if>
 		<if test="clockFlag != null"> #{clockFlag},</if>
 		<if test="flag != null"> #{flag},</if>
@@ -87,6 +91,7 @@
   	UPDATE tc_skill_class SET
 	<trim suffixOverrides=",">
 		<if test="className != null"> class_name = #{className},</if>
+		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="status != null"> status = #{status},</if>
 		<if test="clockFlag != null"> clock_flag = #{clockFlag},</if>
 		<if test="flag != null"> flag = #{flag},</if>
