@@ -5,6 +5,7 @@
 <!-- Result Map-->
 <resultMap id="ClockSkillResultMap" type="com.jing.clock.model.entity.ClockSkill">
 	<id column="skill_id" property="skillId"/>
+	<result column="store_id" property="storeId"/>
 	<result column="skill_name" property="skillName"/>
 	<result column="material_id" property="materialId"/>
 	<result column="is_clock" property="isClock"/>
@@ -17,13 +18,14 @@
 </resultMap>
 
 <sql id="sql_clockSkill_item">
-	skill_id, skill_name, material_id, is_clock, classs, status, created_by, created_date, updated_by, updated_date
+	skill_id, store_id, skill_name, material_id, is_clock, classs, status, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
 <sql id="sql_clockSkill_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="clockSkill.skillId != null">AND skill_id = #{clockSkill.skillId} </if>
+		<if test="clockSkill.storeId != null">AND store_id like concat(#{clockSkill.storeId}, '%') </if>
 		<if test="clockSkill.skillName != null">AND skill_name like concat(#{clockSkill.skillName}, '%') </if>
 		<if test="clockSkill.materialId != null">AND material_id = #{clockSkill.materialId} </if>
 		<if test="clockSkill.isClock != null">AND is_clock = #{clockSkill.isClock} </if>
@@ -42,6 +44,7 @@
  	INSERT INTO tc_clock_skill 
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="skillId != null"> skill_id,</if>
+		<if test="storeId != null"> store_id,</if>
 		<if test="skillName != null"> skill_name,</if>
 		<if test="materialId != null"> material_id,</if>
 		<if test="isClock != null"> is_clock,</if>
@@ -54,6 +57,7 @@
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="skillId != null"> #{skillId},</if>
+		<if test="storeId != null"> #{storeId},</if>
 		<if test="skillName != null"> #{skillName},</if>
 		<if test="materialId != null"> #{materialId},</if>
 		<if test="isClock != null"> #{isClock},</if>
@@ -70,6 +74,7 @@
 <update id="modifyClockSkill" parameterType="com.jing.clock.model.entity.ClockSkill" >
   	UPDATE tc_clock_skill SET
 	<trim suffixOverrides=",">
+		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="skillName != null"> skill_name = #{skillName},</if>
 		<if test="materialId != null"> material_id = #{materialId},</if>
 		<if test="isClock != null"> is_clock = #{isClock},</if>

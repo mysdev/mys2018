@@ -13,13 +13,17 @@ import com.jing.utils.BaseEntity;
  * @Description: 技能实体类
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
- * @date: 2018年02月23日 16时14分
+ * @date: 2018年02月23日 16时22分
  */
 public class ClockSkill extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
 
 	private Integer skillId;	//tc_clock_skill:skill_id  技能标识  
+
+	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
+	@Length(min=1, max=255, message="{org.hibernate.validator.constraints.Length.message}")
+	private String storeId;	//tc_clock_skill:store_id  归属门店  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
@@ -55,6 +59,23 @@ public class ClockSkill extends BaseEntity{
 	*/
 	public void setSkillId(Integer skillId){
 		this.skillId = skillId;	
+	}	
+	/**
+	* @DatabasetableColumnName: tc_clock_skill:store_id
+	* @Description: 获取属性        归属门店
+	* @return: String
+	*/
+	public String getStoreId(){
+		return storeId;	
+	}
+	
+	/**
+	* @DatabasetableColumnName: tc_clock_skill:store_id
+	* @Description: 设置属性        归属门店
+	* @return: String
+	*/
+	public void setStoreId(String storeId){
+		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tc_clock_skill:skill_name
