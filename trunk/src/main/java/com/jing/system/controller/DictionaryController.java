@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时04分
  */
 @RestController
-@Api(description = "字典值")
+@Api(description = "字典值", tags={"SystemDictionary"})
 public class DictionaryController {
 
 	@Autowired

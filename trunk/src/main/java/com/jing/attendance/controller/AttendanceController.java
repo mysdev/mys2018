@@ -1,6 +1,5 @@
 package com.jing.attendance.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时03分
  */
 @RestController
-@Api(description="门店考勤")
+@Api(description="门店考勤规则", tags={"AttendanceTime"})
 public class AttendanceController{
 
 	@Autowired
@@ -197,7 +196,6 @@ public class AttendanceController{
 			throw new ParameterException(errors);
 		}
 		attendanceTime.setAttendanceId(attendanceId);
-		attendanceTime.setId(null);
 		attendanceTimeService.addAttendanceTime(attendanceTime);
 		return attendanceTime;
 	}

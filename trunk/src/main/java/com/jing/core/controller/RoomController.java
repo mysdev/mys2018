@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="房间")
+@Api(description="房间", tags={"CoreRoom"})
 public class RoomController{
 
 	@Autowired

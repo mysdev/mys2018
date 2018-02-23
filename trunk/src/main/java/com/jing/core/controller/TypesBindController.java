@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时02分
  */
 @RestController
-@Api(description="类型消费绑定")
+@Api(description="类型消费绑定", tags={"CoreTypesBind"})
 public class TypesBindController{
 
 	@Autowired

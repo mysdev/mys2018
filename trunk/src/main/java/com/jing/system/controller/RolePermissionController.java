@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时04分
  */
 @RestController
-@Api(description="角色权限")
+@Api(description="角色权限", tags={"SystemRolePermission"})
 public class RolePermissionController{
 
 	@Autowired

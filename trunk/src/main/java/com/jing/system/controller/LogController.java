@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时04分
  */
 @RestController
-@Api(description="日志")
+@Api(description="日志", tags={"SystemLog"})
 public class LogController{
 
 	@Autowired

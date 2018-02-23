@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiParam;
  * @date: 2018年01月11日 15时04分
  */
 @RestController
-@Api(description="消费结算")
+@Api(description="消费结算", tags={"TradeSettlement"})
 public class SettlementController{
 
 	@Autowired

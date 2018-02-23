@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiParam;
  *
  */
 @RestController
-@Api(description="员工与用户")
+@Api(description="员工与用户", tags={"CoreEmployUser"})
 public class EmployUserController {
 	@Autowired
 	BeanValidator beanValidator;
