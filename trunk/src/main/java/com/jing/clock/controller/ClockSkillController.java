@@ -44,7 +44,7 @@ public class ClockSkillController{
 
 	
 	@ApiOperation(value = "新增 添加技能信息", notes = "添加技能信息")
-	@RequestMapping(value = "/clockskill", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/clock/skill", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addClockSkill(HttpServletResponse response,
 			@ApiParam(value = "clockSkill") @RequestBody ClockSkill clockSkill) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(clockSkill, true);
@@ -58,7 +58,7 @@ public class ClockSkillController{
 	
 	
 	@ApiOperation(value = "更新 根据技能标识更新技能信息", notes = "根据技能标识更新技能信息")
-	@RequestMapping(value = "/clockskill/{skillId:.+}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/clock/skill/{skillId:.+}", method = RequestMethod.PUT)
 	public Object modifyClockSkillById(HttpServletResponse response,
 			@PathVariable Integer skillId,
 			@ApiParam(value = "clockSkill", required = true) @RequestBody ClockSkill clockSkill
@@ -76,7 +76,7 @@ public class ClockSkillController{
 	}
 
 	@ApiOperation(value = "删除 根据技能标识删除技能信息", notes = "根据技能标识删除技能信息")
-	@RequestMapping(value = "/clockskill/{skillId:.+}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/clock/skill/{skillId:.+}", method = RequestMethod.DELETE)
 	public Object dropClockSkillBySkillId(HttpServletResponse response, @PathVariable Integer skillId) {
 		ClockSkill clockSkill = clockSkillService.queryClockSkillBySkillId(skillId);
 		if(null == clockSkill){
@@ -86,7 +86,7 @@ public class ClockSkillController{
 	}
 	
 	@ApiOperation(value = "查询 根据技能标识查询技能信息", notes = "根据技能标识查询技能信息")
-	@RequestMapping(value = "/clockskill/{skillId:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/clock/skill/{skillId:.+}", method = RequestMethod.GET)
 	public Object queryClockSkillById(HttpServletResponse response,
 			@PathVariable Integer skillId) {
 		ClockSkill clockSkill = clockSkillService.queryClockSkillBySkillId(skillId);
@@ -97,14 +97,14 @@ public class ClockSkillController{
 	}
 	
 	@ApiOperation(value = "查询 根据技能属性查询技能信息列表", notes = "根据技能属性查询技能信息列表")
-	@RequestMapping(value = "/clockskill", method = RequestMethod.GET)
+	@RequestMapping(value = "/clock/skill", method = RequestMethod.GET)
 	public Object queryClockSkillList(HttpServletResponse response,
 			ClockSkill clockSkill) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
 		return clockSkillService.queryClockSkillByProperty(ClassUtil.transBean2Map(clockSkill, false));
 	}
 	
 	@ApiOperation(value = "查询分页 根据技能属性分页查询技能信息列表", notes = "根据技能属性分页查询技能信息列表")
-	@RequestMapping(value = "/clockskills", method = RequestMethod.GET)
+	@RequestMapping(value = "/clock/skills", method = RequestMethod.GET)
 	public Object queryClockSkillPage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 

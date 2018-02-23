@@ -195,6 +195,7 @@ public class AttendanceController{
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
+		attendanceTime.setId(null);
 		attendanceTime.setAttendanceId(attendanceId);
 		attendanceTimeService.addAttendanceTime(attendanceTime);
 		return attendanceTime;

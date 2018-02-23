@@ -144,7 +144,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 		}
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, null);
+		pageBounds.setOrdersByJsonForMap(sort);
 		List<Map<String, Object>> entityList;
 		if(attendanceId!=null && attendanceId.intValue()==-1){
 			//查询未分配考勤员工

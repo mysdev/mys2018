@@ -101,5 +101,15 @@ public interface AttendanceDiaryMapper {
 	* @throws 
 	*/
 	List<AttendanceDiaryBo> queryEmployeeYesterdayToday(String employeeId);
+
+	/** 
+	* @Title: queryAttendanceDiaryAllForPage 
+	* @Description: 查询用户考勤信息
+	* @param pageBounds
+	* @param query
+	* @return  List<Map<String,Object>>    返回类型 
+	* @throws 
+	*/
+	List<Map<String, Object>> queryAttendanceDiaryAllForPage(PageBounds pageBounds, @Param("params") Map<String, Object> query);
 	 
 }
