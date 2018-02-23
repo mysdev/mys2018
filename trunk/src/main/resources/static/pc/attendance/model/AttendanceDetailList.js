@@ -73,12 +73,10 @@ $().ready(function(){
 });
 
 function GetData(){
-	var searchKey = $("#txtKeywords").val().toString(); 
+	var searchKey = $("#txtKeywords").val().toString();  
 	var url = "/attendance/"+self.attendanceSelected()+"/details";
-	
 	if(searchKey!="" && searchKey.indexOf("-")>0)
 		url=url+'?yearMonth='+searchKey;
-		
 	myAjax(url, "GET", null, function (data){
 		var mappedTasks = $.map(data, function(item) { return new Node(item) });  
 		self.attendanceDetailList(mappedTasks);
