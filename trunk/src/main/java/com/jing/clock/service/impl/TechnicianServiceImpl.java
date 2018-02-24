@@ -48,6 +48,7 @@ public class  TechnicianServiceImpl implements TechnicianService {
 	@Override
 	@Transactional(readOnly = false)
 	public Technician addTechnician(Technician technician){
+		technician.setShiftStatus(0);
 		int ret = technicianMapper.addTechnician(technician);
 		if(ret>0){
 			return technician;

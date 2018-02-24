@@ -44,7 +44,7 @@ public class Technician extends BaseEntity{
 
 	private Integer shiftId;	//tc_technician:shift_id  技师班次  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	//@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_technician:status  技师状态 0正常  
 

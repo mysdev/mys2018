@@ -56,6 +56,9 @@ public class Employee extends BaseEntity {
 	private Integer isManager;	//tb_employee:is_manager  是否管理 0否  
 	
 	private String empCard; //员工号卡
+	
+	private Integer sex;
+	
 
 
 	/**
@@ -252,6 +255,14 @@ public class Employee extends BaseEntity {
 
 	public void setEmpCard(String empCard) {
 		this.empCard = empCard;
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
 	}	
 	
 	

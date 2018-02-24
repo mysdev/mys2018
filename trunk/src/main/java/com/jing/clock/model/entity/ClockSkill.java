@@ -22,7 +22,7 @@ public class ClockSkill extends BaseEntity{
 	private Integer skillId;	//tc_clock_skill:skill_id  技能标识  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
-	@Length(min=1, max=255, message="{org.hibernate.validator.constraints.Length.message}")
+	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String storeId;	//tc_clock_skill:store_id  归属门店  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
@@ -38,7 +38,7 @@ public class ClockSkill extends BaseEntity{
 
 	private Integer classs;	//tc_clock_skill:classs  归属轮班  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
+	//@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
 	private Integer status;	//tc_clock_skill:status  技能状态 0正常  
 
