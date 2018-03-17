@@ -14,6 +14,11 @@
 	<result column="updated_date" property="updatedDate"/>
 </resultMap>
 
+<resultMap id="TechnicianSkillBoResultMap" extends="TechnicianSkillResultMap" type="com.jing.clock.service.bo.TechnicianSkillBo">
+	<result column="technician_name" property="technicianName"/>
+	<result column="skill_Name" property="skillName"/>
+</resultMap>
+
 <sql id="sql_technicianSkill_item">
 	ts_id, skill_id, technician_id, skill_level, created_by, created_date, updated_by, updated_date
 </sql>
@@ -76,6 +81,9 @@
 <delete id="dropTechnicianSkillByTsId" parameterType="java.lang.Integer">
 	DELETE FROM tc_technician_skill WHERE ts_id = #{tsId}
 </delete> 
+<delete id="dropTechnicianSkillByTechnicianId" parameterType="java.lang.Integer">
+	DELETE FROM tc_technician_skill WHERE technician_id = #{technicianId}
+</delete> 
 
 <!-- 根据标识查询 技师技能 -->
 <select id="queryTechnicianSkillByTsId"  resultMap="TechnicianSkillResultMap" parameterType="java.lang.Integer">
@@ -96,12 +104,35 @@
 
 <!-- 根据技师技能属性与分页信息分页查询技师技能信息 -->
 <select id="queryTechnicianSkillForPage"  resultMap="TechnicianSkillResultMap" > 
-	SELECT 
-	<include refid="sql_technicianSkill_item"/>
-	FROM tc_technician_skill 
-	<where>
-		<include refid="sql_technicianSkill_query_nowhere"/>
-	</where>
+	SELECT t.*, l.tech_no as technician_name, s.skill_name from (
+		SELECT 
+		<include refid="sql_technicianSkill_item"/>
+		FROM tc_technician_skill
+		<where>
+			<include refid="sql_technicianSkill_query_nowhere"/>
+		</where>
+	) t inner join (
+		select * from tc_technician
+		<where>
+			<if test="technicianSkill.storeId != null">AND store_id = #{technicianSkill.storeId} </if>
+			<if test="technicianSkill.empId != null">AND emp_id = #{technicianSkill.empId} </if>
+			<if test="technicianSkill.sex != null">AND sex = #{technicianSkill.sex} </if>
+			<if test="technicianSkill.techCard != null">AND tech_card = #{technicianSkill.techCard} </if>
+			<if test="technicianSkill.techNo != null">AND tech_no like concat('%', #{technicianSkill.techNo}, '%') </if>
+			<if test="technicianSkill.techName != null">AND tech_name like concat('%', #{technicianSkill.techName}, '%') </if>
+		</where>
+	) l	on t.technician_id=l.technician_id
+	LEFT OUTER JOIN
+	tc_clock_skill s on t.skill_id=s.skill_id	
+</select>
+
+<!-- 根据技师标识查询技能 -->
+<select id="queryTechnicianSkillByTechnicianId"  resultMap="TechnicianSkillBoResultMap" parameterType="java.lang.Integer">
+	SELECT t.*, '' as technician_name, s.skill_name from (
+		SELECT 
+		<include refid="sql_technicianSkill_item"/>
+		FROM tc_technician_skill WHERE technician_id = #{technicianId}
+	) t left outer join tc_clock_skill s on t.skill_id=s.skill_id
 </select>
 
 </mapper>   

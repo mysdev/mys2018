@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.clock.model.entity.TechnicianSkill;
+import com.jing.clock.service.bo.TechnicianSkillBo;
 
 /**
  * @ClassName: TechnicianSkillMapper
@@ -59,7 +60,7 @@ public interface TechnicianSkillMapper {
 	 * @param technicianSkill 实体
 	 * @return List<TechnicianSkill>
 	 */
-	List<TechnicianSkill> queryTechnicianSkillForPage(PageBounds pageBounds, @Param("technicianSkill") TechnicianSkill technicianSkill);
+	List<TechnicianSkillBo> queryTechnicianSkillForPage(PageBounds pageBounds, @Param("technicianSkill") Map<String, Object> technicianSkill);
 	 
 	 /**
 	  * @Title: queryTechnicianSkillByProperty
@@ -67,6 +68,23 @@ public interface TechnicianSkillMapper {
 	  * @return List<TechnicianSkill>
 	  */
 	 List<TechnicianSkill> queryTechnicianSkillByProperty(@Param("technicianSkill") Map<String, Object> map);
+
+	/** 
+	* @Title: dropTechnicianSkillByTechnicianId 
+	* @Description: 根据技师标识清除技能
+	* @param technicianId  void    返回类型 
+	* @throws 
+	*/
+	Integer dropTechnicianSkillByTechnicianId(Integer technicianId);
+
+	/** 
+	* @Title: queryTechnicianSkillByTechnicianId 
+	* @Description: 根据技师标识查询技能
+	* @param technicianId
+	* @return  List<TechnicianSkillBo>    返回类型 
+	* @throws 
+	*/
+	List<TechnicianSkillBo> queryTechnicianSkillByTechnicianId(Integer technicianId);
 	 
 	 
 	 

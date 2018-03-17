@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import com.jing.clock.model.entity.TechnicianSkill;
+import com.jing.clock.service.bo.TechnicianSkillBo;
 
 /**
  * @ClassName: TechnicianSkill
@@ -53,16 +54,35 @@ public interface TechnicianSkillService {
 	 * @param pagenum 页 
 	 * @param pagesize 页大小 
 	 * @param sort 排序
-	 * @param technicianSkill 实体
+	 * @param query 实体
 	 * @return List<TechnicianSkill>
 	 */
-	Map<String, Object> queryTechnicianSkillForPage(Integer pagenum, Integer pagesize, String sort, TechnicianSkill technicianSkill);
+	Map<String, Object> queryTechnicianSkillForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);
 	 
 	 /**
 	 * @Title: queryTechnicianSkillByProperty
 	 * @Description:根据属性查询技师技能
 	 * @return List<TechnicianSkill>
 	 */
-	 List<TechnicianSkill> queryTechnicianSkillByProperty(Map<String, Object> map);	 
+	 List<TechnicianSkill> queryTechnicianSkillByProperty(Map<String, Object> map);
+
+	/** 
+	* @Title: bindTechnicianSkill 
+	* @Description: 绑定技师技能
+	* @param technicianId
+	* @param skills
+	* @return  Object    返回类型 
+	* @throws 
+	*/
+	List<TechnicianSkillBo> bindTechnicianSkill(Integer technicianId, Map<Integer, Integer> skills);
+
+	/** 
+	* @Title: queryTechnicianSkillByTechnicianId 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param technicianId
+	* @return  List<TechnicianSkillBo>    返回类型 
+	* @throws 
+	*/
+	List<TechnicianSkillBo> queryTechnicianSkillByTechnicianId(Integer technicianId);	 
 	 
 }

@@ -3,6 +3,7 @@ package com.jing.config.validation;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,14 @@ public class BeanValidator {
 
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+	
+	public static Map<String, String> gotErrorMessage(Integer index, String field, String message){
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("index", ""+index);
+		ret.put("field", field);
+		ret.put("message", message);
+		return ret;
 	}
 	
 	/** 

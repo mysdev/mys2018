@@ -19,6 +19,7 @@ import com.jing.utils.paginator.domain.PageService;
 import com.jing.clock.model.entity.TechnicianSkill;
 import com.jing.clock.model.dao.TechnicianSkillMapper;
 import com.jing.clock.service.TechnicianSkillService;
+import com.jing.clock.service.bo.TechnicianSkillBo;
 
 /**
  * @ClassName: TechnicianSkill
@@ -100,19 +101,19 @@ public class  TechnicianSkillServiceImpl implements TechnicianSkillService {
 	 * @return List<TechnicianSkill>
 	 */
 	@Override
-	public Map<String, Object> queryTechnicianSkillForPage(Integer pagenum, Integer pagesize, String sort, TechnicianSkill technicianSkill){
+	public Map<String, Object> queryTechnicianSkillForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query){
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, TechnicianSkill.class);
-		List<TechnicianSkill> entityList = technicianSkillMapper.queryTechnicianSkillForPage(pageBounds, technicianSkill);
+		List<TechnicianSkillBo> entityList = technicianSkillMapper.queryTechnicianSkillForPage(pageBounds, query);
 		if(null!=sort && sort.length()>0){
 			pageBounds.setOrdersByJson(sort, TechnicianSkill.class);
 		}
-		if (!entityList.isEmpty()) {
-			PageList<TechnicianSkill> pagelist = (PageList<TechnicianSkill>) entityList;
-			returnMap.put(Constant.PAGELIST, entityList);
-			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
+		
+		PageList<TechnicianSkillBo> pagelist = (PageList<TechnicianSkillBo>) entityList;
+		returnMap.put(Constant.PAGELIST, entityList);
+		returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+		
 		return returnMap;
 	}
 	 
@@ -124,6 +125,36 @@ public class  TechnicianSkillServiceImpl implements TechnicianSkillService {
 	@Override
 	public List<TechnicianSkill> queryTechnicianSkillByProperty(Map<String, Object> map){
 		return technicianSkillMapper.queryTechnicianSkillByProperty(map);
+	}
+
+
+	@Override
+	@Transactional(readOnly = false)
+	public List<TechnicianSkillBo> bindTechnicianSkill(Integer technicianId, Map<Integer, Integer> skills) {
+		technicianSkillMapper.dropTechnicianSkillByTechnicianId(technicianId);
+		for(Integer skillId : skills.keySet()) {
+			TechnicianSkill ts = new TechnicianSkill();
+			ts.setSkillId(skillId);
+			ts.setTechnicianId(technicianId);
+			ts.setSkillLevel(skills.get(skillId));
+			addTechnicianSkill(ts);
+		}
+		return technicianSkillMapper.queryTechnicianSkillByTechnicianId(technicianId);
+	}
+
+	/*
+	 * @Title: queryTechnicianSkillByTechnicianId
+	 * @Description: TODO
+	 * @param @param technicianId
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param technicianId
+	 * @return
+	 * @see com.jing.clock.service.TechnicianSkillService#queryTechnicianSkillByTechnicianId(java.lang.Integer)
+	 */ 
+	@Override
+	public List<TechnicianSkillBo> queryTechnicianSkillByTechnicianId(Integer technicianId) {
+		return technicianSkillMapper.queryTechnicianSkillByTechnicianId(technicianId);
 	}
 
 

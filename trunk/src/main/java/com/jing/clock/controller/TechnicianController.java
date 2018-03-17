@@ -1,6 +1,8 @@
 package com.jing.clock.controller;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +24,13 @@ import com.jing.core.service.StoreService;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import com.jing.config.validation.BeanValidator;
+import com.jing.clock.model.entity.ClockSkill;
 import com.jing.clock.model.entity.Technician;
 import com.jing.clock.model.entity.TechnicianSkill;
+import com.jing.clock.service.ClockSkillService;
 import com.jing.clock.service.TechnicianService;
 import com.jing.clock.service.TechnicianSkillService;
+import com.jing.clock.service.bo.TechnicianSkillBo;
 import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
@@ -57,6 +62,9 @@ public class TechnicianController{
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private ClockSkillService clockSkillService;
 
 	
 	@ApiOperation(value = "新增 添加技师信息", notes = "添加技师信息")
@@ -176,32 +184,69 @@ public class TechnicianController{
 	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skill", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addTechnicianSkill(HttpServletResponse response,
 			@PathVariable Integer technicianId,
-			@ApiParam(value = "technicianSkill") @RequestBody TechnicianSkill technicianSkill) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		Technician technician = technicianService.queryTechnicianByTechnicianId(technicianId);
-		if(null == technician){
-			throw new NotFoundException("技师");
+			@ApiParam(value = "technicianSkill", required = true) @RequestBody TechnicianSkill technicianSkill) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		technicianSkill.setTechnicianId(technicianId);
+		if(technicianSkill.getSkillLevel()==null) {
+			technicianSkill.setSkillLevel(0);
 		}
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(technicianSkill, true);
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
+		}	
+		Technician technician = technicianService.queryTechnicianByTechnicianId(technicianId);
+		if(null == technician){
+			throw new NotFoundException("技师");
 		}
-		technicianSkill.setTechnicianId(technicianId);
+		ClockSkill skill = clockSkillService.queryClockSkillBySkillId(technicianSkill.getSkillId());
+		if(skill==null) {
+			throw new NotFoundException("技能");
+		}
+		if(!skill.getStoreId().equals(technician.getStoreId())) {
+			throw new NotFoundException("技师与技能归属门店不匹配");
+		}
 		technicianSkill.setTsId(null);
 		technicianSkillService.addTechnicianSkill(technicianSkill);
 		return technicianSkill;
 	}
 	
+	@ApiOperation(value = "绑定 技师绑定技能信息", notes = "绑定技师技能信息")
+	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skills", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	public Object bindTechnicianSkill(HttpServletResponse response,
+			@PathVariable Integer technicianId,
+			@ApiParam(value = "technicianSkillList", required = true) @RequestBody TechnicianSkill[] technicianSkillList) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Technician technician = technicianService.queryTechnicianByTechnicianId(technicianId);
+		if(null == technician){
+			throw new NotFoundException("技师");
+		}
+		Map<Integer, Integer> skills = new HashMap<Integer, Integer>();
+		List<Map<String, String>> errors = new ArrayList<Map<String, String>>();
+		for(int i=0; i<technicianSkillList.length; i++) {			
+			if(technicianSkillList[i].getSkillLevel()==null) {
+				technicianSkillList[i].setSkillLevel(0);
+			}
+			if(technicianSkillList[i].getSkillId()==null) {
+				errors.add(BeanValidator.gotErrorMessage(i, "skillId", "skillId必传"));
+			}
+			ClockSkill skill = clockSkillService.queryClockSkillBySkillId(technicianSkillList[i].getSkillId());
+			if(skill==null) {
+				errors.add(BeanValidator.gotErrorMessage(i, "skillId", "找不到对应技能"));
+			}
+			if(!skill.getStoreId().equals(technician.getStoreId())) {
+				errors.add(BeanValidator.gotErrorMessage(i, "skillId", "技能与技师归属门店不一致"));
+			}
+			skills.put(technicianSkillList[i].getSkillId(), technicianSkillList[i].getSkillLevel());
+		}
+		
+		return technicianSkillService.bindTechnicianSkill(technicianId, skills);
+	}
 	
-	@ApiOperation(value = "更新 根据技师技能标识更新技师技能信息", notes = "根据技师技能标识更新技师技能信息")
-	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skill/{tsId:.+}", method = RequestMethod.PUT)
+	
+	@ApiOperation(value = "更新 根据技师技能标识更新技师技能级别信息", notes = "根据技师技能标识更新技师技能级别信息")
+	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skill/{tsId:.+}/{skillLevel:.+}", method = RequestMethod.PUT)
 	public Object modifyTechnicianSkillById(HttpServletResponse response,
 			@PathVariable Integer technicianId, @PathVariable Integer tsId,
-			@ApiParam(value = "technicianSkill", required = true) @RequestBody TechnicianSkill technicianSkill
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(technicianSkill, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}			
+			@PathVariable Integer skillLevel
+			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {				
 		TechnicianSkill tempTechnicianSkill = technicianSkillService.queryTechnicianSkillByTsId(tsId);		
 		if(null == tempTechnicianSkill){
 			throw new NotFoundException("技师技能");
@@ -209,14 +254,14 @@ public class TechnicianController{
 		if(technicianId.intValue()!=tempTechnicianSkill.getTechnicianId().intValue()){
 			throw new NotFoundException("技师");
 		}
-		
-		technicianSkill.setTechnicianId(null);
-		technicianSkill.setTsId(tsId);		
+		TechnicianSkill technicianSkill = new TechnicianSkill();
+		technicianSkill.setTsId(tsId);
+		technicianSkill.setSkillLevel(skillLevel);
 		return technicianSkillService.modifyTechnicianSkill(technicianSkill);
-	}
+	}	
 
 	@ApiOperation(value = "删除 根据技师技能标识删除技师技能信息", notes = "根据技师技能标识删除技师技能信息")
-	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skill/{tsId:.+}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/clock/technician/{t echnicianId:.+}/skill/{tsId:.+}", method = RequestMethod.DELETE)
 	public Object dropTechnicianSkillByTsId(HttpServletResponse response,
 			@PathVariable Integer technicianId, @PathVariable Integer tsId) {		
 		TechnicianSkill technicianSkill = technicianSkillService.queryTechnicianSkillByTsId(tsId);
@@ -229,13 +274,43 @@ public class TechnicianController{
 		return technicianSkillService.dropTechnicianSkillByTsId(tsId);
 	}
 	
+	@ApiOperation(value = "查询 查询技师技能信息", notes = "查询技师技能信息")
+	@RequestMapping(value = "/clock/technician/{technicianId:.+}/skills", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public Object queryTechnicianSkillByTechnicianId(HttpServletResponse response,
+			@PathVariable Integer technicianId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {		
+		Technician technician = technicianService.queryTechnicianByTechnicianId(technicianId);
+		if(null == technician){
+			throw new NotFoundException("技师");
+		}
+		List<TechnicianSkillBo> ret = technicianSkillService.queryTechnicianSkillByTechnicianId(technicianId);
+		for(TechnicianSkillBo tsb : ret) {
+			tsb.setTechnicianName(technician.getTechNo());
+		}
+		return ret;
+	}
+	
 	@ApiOperation(value = "查询分页 根据技师技能属性分页查询技师技能信息列表", notes = "根据技师技能属性分页查询技师技能信息列表")
-	@RequestMapping(value = "/clock/technician/{technicianId}/skills", method = RequestMethod.GET)
+	@RequestMapping(value = "/clock/technician/technician/skills", method = RequestMethod.GET)
 	public Object queryTechnicianSkillPage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, TechnicianSkill technicianSkill) {				
-		return technicianSkillService.queryTechnicianSkillForPage(pagenum, pagesize, sort, technicianSkill);
+			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "employeeId", required = false) String employeeId,
+			@RequestParam(value = "namePYJob", required = false) String namePYJob,
+			@RequestParam(value = "dptId", required = false) Integer dptId,
+			@RequestParam(value = "storeId", required = false) String storeId,
+			@RequestParam(value = "empCard", required = false) String empCard,
+			@RequestParam(value = "technicianId", required = false) String technicianId,
+			@RequestParam(value = "technicianName", required = false) String technicianName) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		if(employeeId!=null) query.put("employeeId", employeeId);
+		if(namePYJob!=null) query.put("namePYJob", namePYJob);
+		if(dptId!=null) query.put("dptId", dptId);
+		if(storeId!=null) query.put("storeId", storeId);		
+		if(empCard!=null) query.put("empCard", empCard);
+		if(technicianId!=null) query.put("technicianId", technicianId);
+		if(technicianId!=null) query.put("technicianName", technicianName);		
+		return technicianSkillService.queryTechnicianSkillForPage(pagenum, pagesize, sort, query);
 	}
 
 }
