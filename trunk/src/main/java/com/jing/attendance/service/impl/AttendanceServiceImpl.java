@@ -77,6 +77,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		if(ret>0){
 			if(attendance.getAttTime()!=null && attendance.getAttTime().size()>0){
 				for(AttendanceTime at : attendance.getAttTime()){
+					
 					at.setAttendanceId(attendance.getAttendanceId()); //回填标识
 					attendanceTimeMapper.addAttendanceTime(at);
 				}
@@ -84,6 +85,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 				//保证每个规则有个时间段
 				if(attendance.getAttTime()==null || attendance.getAttTime().size()==0){					
 					AttendanceTime at = new AttendanceTime();
+					at.setName("缺省");
 					at.setSignTime("08:30:00");
 					at.setOutTime("17:30:00");
 					at.setAttendanceId(attendance.getAttendanceId());
