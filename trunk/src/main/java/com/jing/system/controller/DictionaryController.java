@@ -21,6 +21,7 @@ import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
 import com.jing.system.model.entity.Dictionary;
 import com.jing.system.service.DictionaryService;
+import com.jing.system.util.DictionaryMapper;
 import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
@@ -121,5 +122,16 @@ public class DictionaryController {
 	public Object refreshDictionaryFile() throws IOException {
 		dictionaryService.refreshDictionaryFile();
 		return true;
+	}
+	
+	/**
+	 * 手机查询出所有的数据字典
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "获取数据字典", notes = "获取数据字典")
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public List<Map<String, Object>> getAllDictionaryToMobile() {
+		return DictionaryMapper.getJsonObj();
 	}
 }

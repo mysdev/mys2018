@@ -1,6 +1,7 @@
 package com.jing.settlement.model.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -44,7 +45,9 @@ public class Packages extends BaseEntity {
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer status;	//to_packages:status  套餐状态 0正常  
-
+	
+	
+	private List<PackagesDetail> packagesDetails; //套餐详情
 
 	/**
 	* @DatabasetableColumnName: to_packages:package_id

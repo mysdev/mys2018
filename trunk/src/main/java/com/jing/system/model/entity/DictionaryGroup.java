@@ -1,5 +1,7 @@
 package com.jing.system.model.entity;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -28,6 +30,16 @@ public class DictionaryGroup extends BaseEntity {
 
 	@Length(min=1, max=255, message="{org.hibernate.validator.constraints.Length.message}")
 	private String remark;
+	
+	private List<Dictionary> dictionaries;
+
+	public List<Dictionary> getDictionaries() {
+		return dictionaries;
+	}
+
+	public void setDictionaries(List<Dictionary> dictionaries) {
+		this.dictionaries = dictionaries;
+	}
 
 	/**
 	* @DatabasetableColumnName: ts_dictionary_group:group_id
