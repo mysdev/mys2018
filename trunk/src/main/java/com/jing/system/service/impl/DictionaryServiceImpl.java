@@ -59,6 +59,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	public Dictionary addDictionary(Dictionary dictionary) {
 		int ret = dictionaryMapper.addDictionary(dictionary);
 		if (ret > 0) {
+			com.jing.system.util.DictionaryMapper.setValue(dictionary);
 			return dictionary;
 		}
 		return null;
@@ -74,6 +75,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyDictionary(Dictionary dictionary) {
+		com.jing.system.util.DictionaryMapper.setValue(dictionary);
 		return dictionaryMapper.modifyDictionary(dictionary);
 	}
 
@@ -152,29 +154,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 	@SuppressWarnings("resource")
 	@Override
 	public void refreshDictionaryFile() throws IOException {
-		List<DictionaryGroup> groupList = dictionaryGroupService
-				.queryDictionaryGroupByProperty(new HashMap<String, Object>());
-		List<Map<String, Object>> gl = new ArrayList<Map<String, Object>>();
-		for (DictionaryGroup group : groupList) {
-			Map<String, Object> g = new HashMap<String, Object>();
-			g.put("code", group.getGroupCode());
-			List<Dictionary> list = this.queryDictionaryByGroupCode(group.getGroupCode());
-			if (list != null && list.size() > 0) {
-				List<Map<String, String>> dl = new ArrayList<Map<String, String>>();
-				for (Dictionary dictionary : list) {
-					Map<String, String> d = new HashMap<String, String>();
-					d.put("code", dictionary.getCode());
-					d.put("value", dictionary.getValue());
-					dl.add(d);
-				}
-				g.put("dictionarys", dl);
-			} else {
-				g.put("dictionarys", null);
-			}
-			gl.add(g);
-		}
-		JSONArray json = new JSONArray(gl);
-		String data = "var dictionaryObj=" + json.toString();
+		String mapJakcson = com.jing.system.util.DictionaryMapper.getJsonString();
+		String data = "var dictionaryObj=" + mapJakcson;
 		File file = new File(SystemConfigMapper.getValue("dictionary.file.url"));
 		PrintStream ps = new PrintStream(new FileOutputStream(file), false, "UTF-8");
 		ps.println(data);// 往文件里写入字符串

@@ -14,11 +14,11 @@ import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
+import com.jing.system.model.entity.Dictionary;
 import com.jing.system.model.entity.DictionaryGroup;
 import com.jing.system.model.dao.DictionaryGroupMapper;
 import com.jing.system.service.DictionaryGroupService;
+import com.jing.system.service.DictionaryService;
 
 /**
  * @ClassName: DictionaryGroup
@@ -37,6 +37,8 @@ public class  DictionaryGroupServiceImpl implements DictionaryGroupService {
     
 	@Autowired
 	private PageService pageService; // 分页器
+	@Autowired
+	private DictionaryService dictionaryService;
 	
 	
 	/**
@@ -127,4 +129,17 @@ public class  DictionaryGroupServiceImpl implements DictionaryGroupService {
 	}
 
 
+	@Override
+	public List<DictionaryGroup> findAllDictionaryGroup() {
+		List<DictionaryGroup> list = this.queryDictionaryGroupByProperty(new HashMap<String, Object>());
+		if(list!=null && list.size()>0) {
+			for (DictionaryGroup dictionaryGroup : list) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("groupCode", dictionaryGroup.getGroupCode());
+				List<Dictionary> ds = dictionaryService.queryDictionaryByProperty(map);
+				dictionaryGroup.setDictionaries(ds);
+			}
+		}
+		return list;
+	}
 }
