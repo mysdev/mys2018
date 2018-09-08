@@ -61,7 +61,7 @@ public interface AttendanceDiaryMapper {
 	 * @return List<AttendanceDiary>
 	 */
 	List<AttendanceDiary> queryAttendanceDiaryForPage(PageBounds pageBounds, @Param("attendanceDiary") AttendanceDiary attendanceDiary);
-	 
+	
 	 /**
 	  * @Title: queryAttendanceDiaryByProperty
 	  * @Description:根据属性查询打卡记录
@@ -111,5 +111,51 @@ public interface AttendanceDiaryMapper {
 	* @throws 
 	*/
 	List<Map<String, Object>> queryAttendanceDiaryAllForPage(PageBounds pageBounds, @Param("params") Map<String, Object> query);
+	
+	/** 
+	* @Title: queryAttendanceDiaryForPageMap 
+	* @Description: 查询用户考勤信息
+	* @param pageBounds
+	* @param query
+	* @return  List<Map<String,Object>>    返回类型 
+	* @throws 
+	*/
+	List<Map<String, Object>> queryAttendanceDiaryForPageMap(PageBounds pageBounds, @Param("params") Map<String, Object> query);
+
+	/** 
+	* @Title: clearFutureDiaryRecord 
+	* @Description: 清空员工末来考勤
+	* @param empId  员工标识
+	* @return Integer    返回类型 
+	* @throws 
+	*/
+	Integer clearFutureDiaryRecord(String empId);	 
+	
+	/** 
+	* @Title: clearFutureDiaryRecordByAttendanceId 
+	* @Description: 清空员工末来考勤
+	* @param attendanceId 考勤标识
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer clearFutureDiaryRecordByAttendanceId(Integer attendanceId);	
+	
+	/** 
+	* @Title: insertFutureDiaryRecordByEmployeeId 
+	* @Description: 重建员工末来考勤数据
+	* @param empId  员工标识
+	* @return Integer    返回类型 
+	* @throws 
+	*/
+	Integer insertFutureDiaryRecordByEmployeeId(@Param("empId") String empId);
+
+	/** 
+	* @Title: insertFutureDiaryRecordByAttendanceId 
+	* @Description:  重建规则下所有员工末来考勤数据
+	* @param attendanceId  考勤标识
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer insertFutureDiaryRecordByAttendanceId(@Param("attendanceId") Integer attendanceId);	
 	 
 }

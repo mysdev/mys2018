@@ -21,6 +21,12 @@ import com.jing.attendance.model.entity.AttendanceDiary;
  */
 public class AttendanceDiaryBo extends AttendanceDiary{
 	
+	/**
+	 * @fieldName: serialVersionUID
+	 * @fieldType: long
+	 * @Description: 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer signCount;
 	private Integer outCount;
 	/**

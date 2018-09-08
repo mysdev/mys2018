@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.entity.AttendanceEmployee;
 import com.jing.attendance.service.AttendanceEmployeeService;
+import com.jing.attendance.service.PublicAttendanceService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
@@ -31,7 +32,10 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	private static final Logger logger = LoggerFactory.getLogger(AttendanceEmployeeServiceImpl.class);
 	
 	@Autowired
-    private AttendanceEmployeeMapper employeeAttendanceMapper;   
+    private AttendanceEmployeeMapper employeeAttendanceMapper;
+	
+	@Autowired
+	private PublicAttendanceService publicAttendanceService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -74,6 +78,8 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	@Override
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceEmployeeByLinkId(Integer linkId){
+		AttendanceEmployee ae = queryAttendanceEmployeeByLinkId(linkId);
+		publicAttendanceService.doAndRedoPersonAttendanceByEmpId(ae.getEmpId()); //初始化末来考勤数据
 		return employeeAttendanceMapper.dropAttendanceEmployeeByLinkId(linkId);
 	}
 	
@@ -154,7 +160,8 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 			if(attendanceId!=null && attendanceId.intValue()>0) {
 				params.put("attendanceId", attendanceId);
 			}
-			entityList = employeeAttendanceMapper.queryAttendanceEmployeeAllForPage(pageBounds, params);
+			//查询所有员工
+			entityList = employeeAttendanceMapper.queryAttendanceEmployeeTotalForPage(pageBounds, params);
 		}
 //		if (!entityList.isEmpty()) {
 			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
@@ -180,6 +187,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 				ae.setAttendanceId(attendanceId);
 				employeeAttendanceMapper.modifyAttendanceEmployee(ae);
 			}
+			publicAttendanceService.doAndRedoPersonAttendanceByEmpId(empId); //初始化末来考勤数据
 		}		
 		return empList.size();
 	}

@@ -51,6 +51,14 @@ public interface AttendanceDetailService {
 	 */
 	Integer dropAttendanceDetailByAttId(Integer attId);
 	
+	/** 
+	* @Title: disableDetailEditable 
+	* @Description: 锁定当天考勤详情
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer disableDetailEditable();
+	
 	/**
 	 * @Title: queryAttendanceDetailByAttId
 	 * @Description:根据实体标识查询门店考勤详情

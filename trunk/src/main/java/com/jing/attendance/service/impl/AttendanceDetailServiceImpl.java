@@ -21,6 +21,7 @@ import com.jing.attendance.model.entity.AttendanceDetail;
 import com.jing.attendance.model.entity.AttendanceTime;
 import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
+import com.jing.attendance.service.PublicAttendanceService;
 import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
 import com.jing.utils.DateUtil;
@@ -45,6 +46,9 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	
 	@Autowired
 	private AttendanceService attendanceService;
+	
+	@Autowired
+	private PublicAttendanceService publicAttendanceService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -87,7 +91,22 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceDetailByAttId(Integer attId){
-		return attendanceDetailMapper.dropAttendanceDetailByAttId(attId);
+		//TODO 执行员工末来考勤数据初始化
+		Integer ret = attendanceDetailMapper.dropAttendanceDetailByAttId(attId);
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attId);
+		return ret;
+	}
+	
+
+	/**
+	 * @Title: disableDetailEditable
+	 * @Description:锁定当天考勤详情
+	 * @return Integer
+	 */
+	@Override
+	@Transactional(readOnly = false)
+	public Integer disableDetailEditable(){
+		return attendanceDetailMapper.disableDetailEditable();
 	}
 	
 	/**
@@ -200,6 +219,8 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 				addAttendanceDetail(ad);
 				ret.add(ad);
 			}
+			//TODO 执行员工末来考勤数据初始化
+			publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
 		} catch (ParseException e) {			
 			logger.error("(yyyy-MM)年月格式转换异常，参数："+yearMonth, e);
 			throw new CustomException(400, "参数错误", "yearMonth", "格式非七位(yyyy-MM)日期。");
@@ -216,9 +237,12 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList) {
 		int ret = 0;
+		Integer attendanceId = attendanceList[0].getAttendanceId();
 		for(AttendanceDetail ad : attendanceList){
 			ret+=attendanceDetailMapper.modifyAttendanceDetail(ad);
 		}
+		//TODO 执行员工末来考勤数据初始化
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
 		return ret;
 	}
 
@@ -256,6 +280,8 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		}
 		Integer ret = attendanceDetailMapper.modifyAttendanceDetailChange(params);
 		attendanceDetailMapper.modifyOutTimeBefore();
+		//TODO 执行员工末来考勤数据初始化
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
 		return ret;
 	}
 	

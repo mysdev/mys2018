@@ -108,10 +108,11 @@ public class AttendanceDiaryController{
 //			AttendanceDiary attendanceDiary) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
 //		return attendanceDiaryService.queryAttendanceDiaryByProperty(ClassUtil.transBean2Map(attendanceDiary, false));
 //	}
-	
+
 	@ApiOperation(value = "查询分页 根据打卡记录属性分页查询打卡记录信息列表", notes = "根据打卡记录属性分页查询打卡记录信息列表")
 	@RequestMapping(value = "/attendance/employee/diarys", method = RequestMethod.GET)
 	public Object queryAttendanceDiaryPage(HttpServletResponse response,
+			@RequestParam(value = "showAll", required = false) Integer showAll,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
 			@RequestParam(value = "sort", required = false) String sort, 
@@ -129,9 +130,13 @@ public class AttendanceDiaryController{
 		if(yearMonth!=null) query.put("yearMonth", yearMonth);
 		if(empCard!=null) query.put("empCard", empCard);
 		if(sort==null || sort.length()==0){
-			sort = "{\"attTime\":\"DESC\"}";
+			sort = "{\"attTime\":\"ASC\"}";
+		}
+		if(showAll!=null && showAll.intValue()!=0) {
+			return attendanceDiaryService.queryAttendanceDiaryForPageMap(pagenum, pagesize, sort, query);
 		}
 		return attendanceDiaryService.queryAttendanceDiaryAllForPage(pagenum, pagesize, sort, query);
+		
 	}
 
 }

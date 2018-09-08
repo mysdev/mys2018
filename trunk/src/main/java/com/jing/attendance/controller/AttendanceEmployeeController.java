@@ -138,7 +138,7 @@ public class AttendanceEmployeeController{
 //		return new ArrayList();
 //	}
 	
-	@ApiOperation(value = "查询分页 查询员工考勤关系信息列表", notes = "查询员工考勤关系信息列表 attendanceId 考勤标识 -1未分配 0全部 其它为指定考勤规则")
+	@ApiOperation(value = "查询分页 查询员工考勤关系信息列表", notes = "查询员工考勤关系信息列表 attendanceId 考勤标识 -1未分配  0全部    其它为指定考勤规则")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employees", method = RequestMethod.GET)
 	public Object queryAttendanceEmployeePage(HttpServletResponse response,
 			@PathVariable Integer attendanceId,

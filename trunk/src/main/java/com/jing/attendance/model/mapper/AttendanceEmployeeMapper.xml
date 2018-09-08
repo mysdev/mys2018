@@ -124,7 +124,8 @@
 		left outer join tb_employee e on l.empId=e.emp_id
 	) t 
 	<where> 
-		<if test="param.storeId != null"> storeId = #{param.storeId}</if>
+		`status`=0
+		<if test="param.storeId != null"> and storeId = #{param.storeId}</if>
 		<if test="param.namePYJob != null">
 			AND (
 				empName like concat('%', #{param.namePYJob}, '%') 
@@ -154,6 +155,34 @@
 			</where>
 		) e LEFT OUTER JOIN tw_attendance_employee l on e.empId = l.emp_id
 	) t where linkId is null	
+</select>
+
+<!-- 查询所有员工考勤规则 -->
+<select id="queryAttendanceEmployeeTotalForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
+select * from (
+	select s.store_name storeName, e.*, a.link_id linkId, a.attendance_id attendanceId, d.attendance_name attendanceName, a.created_by createdBy, 
+	a.created_date createdDate, a.updated_By updatedBy, a.updated_Date updatedDate from (
+		select store_id storeId, emp_id empId, emp_name empName, emp_no empNo, pinyin pinyin, dpt_Id dptId from tb_employee 
+			<where> 
+				`status`=0
+				<if test="param.storeId != null"> and store_id = #{param.storeId}</if>
+				<if test="param.namePYJob != null">
+					AND (
+						emp_name like concat('%', #{param.namePYJob}, '%') 
+						or pinyin like concat('%', #{param.namePYJob}, '%')
+						or emp_no like concat('%', #{param.namePYJob}, '%')
+					) 
+				</if>
+				<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
+			</where>
+	) e LEFT OUTER JOIN tb_store s on e.storeId=s.store_id
+	LEFT OUTER JOIN tw_attendance_employee a on e.empId=a.emp_id
+	LEFT OUTER JOIN tw_attendance d on a.attendance_id=d.attendance_id
+) t
+<where> 
+	<if test="param.attendanceId != null"> attendanceId = #{param.attendanceId}</if>
+</where>
+
 </select>
 
 

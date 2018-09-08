@@ -95,7 +95,7 @@
 <!-- 删除 打卡记录 -->
 <delete id="dropAttendanceDiaryByAttId" parameterType="java.lang.Integer">
 	DELETE FROM tw_attendance_diary WHERE att_id = #{attId}
-</delete> 
+</delete>
 
 <!-- 根据标识查询 打卡记录 -->
 <select id="queryAttendanceDiaryByAttId"  resultMap="AttendanceDiaryResultMap" parameterType="java.lang.Integer">
@@ -178,5 +178,52 @@ INNER JOIN (
 ) t on d.employeeId=t.empId
 
 </select>
+
+<select id="queryAttendanceDiaryForPageMap" resultType="java.util.Map" parameterType="java.util.Map">
+select p.*, d.att_time as attTime, d.sys_sign as sysSign, d.sign_time as signTime, d.sys_out as sysOut, d.out_time as outTime from (
+	select s.store_name storeName, e.*  from (
+		select emp_id empId, emp_name empName, store_id storeId, pinyin, emp_no empNo from tb_employee 
+		<where>
+			<if test="params.employeeId != null">AND emp_id = #{params.employeeId} </if>
+			<if test="params.empCard != null">AND emp_card = #{params.empCard} </if>
+			<if test="params.storeId != null">AND store_id = #{params.storeId} </if>
+			<if test="params.dptId != null">AND dpt_id = #{params.dptId} </if>			
+			<if test="params.namePYJob != null">AND ( emp_name like CONCAT('%',#{params.namePYJob}, '%') or  emp_no like CONCAT('%',#{params.namePYJob}, '%') or  pinyin like CONCAT('%',#{params.namePYJob}, '%') ) </if>
+		</where>
+	) e left outer join tb_store s on e.storeId=s.store_id
+) p
+RIGHT OUTER JOIN 
+(select employee_id, att_time, sys_sign, sign_time, sys_out, out_time from tw_attendance_diary 
+	<where>
+		<if test="params.yearMonth != null">AND DATE_FORMAT(att_time,'%Y-%m') = #{params.yearMonth} </if>
+		<if test="params.employeeId != null">AND employee_id = #{params.employeeId} </if>
+	</where>
+) d on p.empId = d.employee_id
+</select>
+
+<!-- 清除员工末来考勤数据   sys_sign与sys_out条件用以防止DB时间错误引起数据误删-->
+<delete id="clearFutureDiaryRecord" parameterType="java.lang.String">
+	delete from tw_attendance_diary where employee_id=#{empId} and att_time>DATE_FORMAT(now(),'%Y-%m-%d') and sys_sign is null and sys_out is null
+</delete>
+
+<!-- 清除规则下所有员工末来考勤数据   sys_sign与sys_out条件用以防止DB时间错误引起数据误删 -->
+<delete id="clearFutureDiaryRecordByAttendanceId" parameterType="java.lang.Integer">
+	delete from tw_attendance_diary where employee_id in (select emp_id from tw_attendance_employee where attendance_id=#{attendanceId}) and att_time>DATE_FORMAT(now(),'%Y-%m-%d') and sys_sign is null and sys_out is null
+</delete>
+
+<!-- 重建员工末来考勤数据 -->
+<insert id="insertFutureDiaryRecordByEmployeeId" parameterType="java.lang.String">
+	insert into tw_attendance_diary (employee_id, attendance, att_time, sys_sign, sys_out, created_date, created_by, updated_date)
+	select #{empId}, attendance, att_date, sign_time, out_time, now(), 'system', NOW() from tw_attendance_detail 
+	where attendance_id=8 and att_date>DATE_FORMAT(now(),'%Y-%m-%d') ORDER BY att_date asc	
+</insert>
+
+<!-- 重建规则下所有员工末来考勤数据 -->
+<insert id="insertFutureDiaryRecordByAttendanceId" parameterType="java.lang.Integer">
+	insert into tw_attendance_diary (employee_id, attendance, att_time, sys_sign, sys_out, created_date, created_by, updated_date)
+	select b.*, t.*, now() as created_date, 'system' as created_by, NOW() as updated_date  from (
+		select attendance, att_date, sign_time, out_time from tw_attendance_detail where attendance_id=#{attendanceId} and att_date>DATE_FORMAT(now(),'%Y-%m-%d') 
+	) t CROSS join (select emp_id from tw_attendance_employee where attendance_id=#{attendanceId}) b
+</insert>
 
 </mapper>   

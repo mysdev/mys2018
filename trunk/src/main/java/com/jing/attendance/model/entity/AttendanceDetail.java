@@ -49,9 +49,9 @@ public class AttendanceDetail extends BaseEntity {
 	private Integer attendance;	//tw_attendance_detail:attendance  是否考勤 0考勤 
 	
 	@Range(min=0, max=1, message = "{org.hibernate.validator.constraints.Range.message}")
-	private Integer editable;
+	private Integer editable;   //允许修订   0是 1否
 
-	private Integer timeId;
+	private Integer timeId; //时间方案标识
 	
 	//@Pattern(regexp="^((20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d)$", message="{validator.time.message}")
 	private Date signTime;

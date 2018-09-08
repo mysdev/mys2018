@@ -3,7 +3,6 @@ package com.jing.attendance.service;
 import java.util.List;
 import java.util.Map;
 
-
 import com.jing.attendance.model.entity.AttendanceDiary;
 
 /**
@@ -84,6 +83,56 @@ public interface AttendanceDiaryService {
 	* @return  Map<String,Object>    返回类型 
 	* @throws 
 	*/
-	Map<String, Object> queryAttendanceDiaryAllForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);	 
+	Map<String, Object> queryAttendanceDiaryAllForPage(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);
+	
+	/** 
+	* @Title: queryAttendanceDiaryForPageMap 
+	* @Description: 查询用户考勤信息
+	* @param pagenum
+	* @param pagesize
+	* @param sort
+	* @param query
+	* @return  Map<String,Object>    返回类型 
+	* @throws 
+	*/
+	Map<String, Object> queryAttendanceDiaryForPageMap(Integer pagenum, Integer pagesize, String sort, Map<String, Object> query);
+
+	/** 
+	* @Title: clearFutureDiaryRecord 
+	* @Description: 清空员工末来考勤
+	* @param empId  员工标识
+	* @return Integer    返回类型 
+	* @throws 
+	*/
+	Integer clearFutureDiaryRecord(String empId);	 
+	
+	/** 
+	* @Title: clearFutureDiaryRecordByAttendanceId 
+	* @Description: 清空员工末来考勤
+	* @param attendanceId 考勤标识
+	* @return  Integer    返回类型 
+	* @throws 
+	*/
+	Integer clearFutureDiaryRecordByAttendanceId(Integer attendanceId);	
+	
+	/** 
+	* @Title: insertFutureDiaryRecordByEmployeeId 
+	* @Description: 重建员工末来考勤数据
+	* @param empId  员工标识
+	* @return Integer    返回类型 
+	* @throws 
+	*/
+	Integer insertFutureDiaryRecordByEmployeeId(String empId);
+
+	/** 
+	* @Title: insertFutureDiaryRecordByAttendanceId 
+	* @Description: 重建规则下所有员工末来考勤数据
+	* @param attendanceId  考勤标识
+	* @return void    返回类型 
+	* @throws 
+	*/
+	Integer insertFutureDiaryRecordByAttendanceId(Integer attendanceId);	
+	
+	
 	 
 }

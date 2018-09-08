@@ -12,3 +12,14 @@ www.szrobot.net 6588 root 123456
 
 web
 www.szrobot.net:6580
+
+
+
+mysql
+
+211.149.247.180 33060  mys mys123#@!
+admin 123456
+
+CREATE USER 'mys'@'%' IDENTIFIED BY 'mys123#@!';
+
+GRANT ALL ON mys.* TO 'mys'@'%'

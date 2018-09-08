@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.jing.attendance.service.AttendanceService;
+import com.jing.attendance.service.AttendanceDetailService;
+
+//import com.jing.attendance.service.AttendanceService;
 
 
 /**
@@ -22,7 +24,7 @@ public class SchedulingConfig {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulingConfig.class);
 
 	@Autowired
-	private AttendanceService attendanceService;
+	private AttendanceDetailService attendanceDetailService;
 	/** 
 	* @Title: initAttendanceDayWork 
 	* @Description: 定时任务-0点7分
@@ -30,9 +32,9 @@ public class SchedulingConfig {
 	*/
 	@Scheduled(cron = "0 7 0 * * ?")
 	public void initAttendanceDayWork() {
-		logger.info("定时任务启动：当日员工考勤数据生成。");
-		attendanceService.initAttendanceDayWork();
-		logger.info("定时任务完成：当日员工考勤数据生成。");
+		logger.info("定时任务启动：锁定当天考勤详情。");
+		attendanceDetailService.disableDetailEditable();
+		logger.info("定时任务完成：锁定当天考勤详情。");
 	}
 	
 	

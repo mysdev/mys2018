@@ -190,6 +190,80 @@ public class  AttendanceDiaryServiceImpl implements AttendanceDiaryService {
 		//}
 		return returnMap;
 	}
+	
+	@Override
+	public Map<String, Object> queryAttendanceDiaryForPageMap(Integer pagenum, Integer pagesize, String sort,
+			Map<String, Object> query) {
+		HashMap<String, Object> returnMap = new HashMap<String, Object>();
+		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
+		pageBounds.setOrdersByJsonForMap(sort);
+		List<Map<String, Object>> entityList = attendanceDiaryMapper.queryAttendanceDiaryForPageMap(pageBounds, query);
+		//if (!entityList.isEmpty()) {
+			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
+			returnMap.put(Constant.PAGELIST, entityList);
+			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
+		//}
+		return returnMap;
+	}
+
+	/*
+	 * @Title: clearFutureDiaryRecord
+	 * @Description: 
+	 * @param @param empId    参数  
+	 * @author Jinlong He
+	 * @param empId
+	 * @see com.jing.attendance.service.AttendanceDiaryService#clearFutureDiaryRecord(java.lang.String)
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Integer clearFutureDiaryRecord(String empId) {
+		return attendanceDiaryMapper.clearFutureDiaryRecord(empId);
+	}
+
+	/*
+	 * @Title: clearFutureDiaryRecordByAttendanceId
+	 * @Description: 
+	 * @param @param attendanceId    参数  
+	 * @author Jinlong He
+	 * @param attendanceId
+	 * @see com.jing.attendance.service.AttendanceDiaryService#clearFutureDiaryRecordByAttendanceId(java.lang.Integer)
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Integer clearFutureDiaryRecordByAttendanceId(Integer attendanceId) {
+		return attendanceDiaryMapper.clearFutureDiaryRecordByAttendanceId(attendanceId);
+	}
+
+	/*
+	 * @Title: insertFutureDiaryRecordByEmployeeId
+	 * @Description: 
+	 * @param @param empId
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param empId
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceDiaryService#insertFutureDiaryRecordByEmployeeId(java.lang.String)
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Integer insertFutureDiaryRecordByEmployeeId(String empId) {
+		return attendanceDiaryMapper.insertFutureDiaryRecordByEmployeeId(empId);
+	}
+
+	/*
+	 * @Title: insertFutureDiaryRecordByAttendanceId
+	 * @Description: 
+	 * @param @param attendanceId
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param attendanceId
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceDiaryService#insertFutureDiaryRecordByAttendanceId(java.lang.Integer)
+	 */ 
+	@Override
+	public Integer insertFutureDiaryRecordByAttendanceId(Integer attendanceId) {
+		return attendanceDiaryMapper.insertFutureDiaryRecordByAttendanceId(attendanceId);
+	}
 
 
 }
