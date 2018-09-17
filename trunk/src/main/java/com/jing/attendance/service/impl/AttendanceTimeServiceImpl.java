@@ -1,25 +1,21 @@
 package com.jing.attendance.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.AttendanceTimeMapper;
+import com.jing.attendance.model.entity.AttendanceTime;
+import com.jing.attendance.service.AttendanceDetailService;
+import com.jing.attendance.service.AttendanceTimeService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.AttendanceTime;
-import com.jing.attendance.model.dao.AttendanceTimeMapper;
-import com.jing.attendance.service.AttendanceDetailService;
-import com.jing.attendance.service.AttendanceTimeService;
 
 /**
  * @ClassName: AttendanceTime
@@ -31,7 +27,7 @@ import com.jing.attendance.service.AttendanceTimeService;
 @Service("attendanceTimeService")
 @Transactional(readOnly=true)
 public class  AttendanceTimeServiceImpl implements AttendanceTimeService {	
-	private static final Logger logger = LoggerFactory.getLogger(AttendanceTimeServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(AttendanceTimeServiceImpl.class);
 	
 	@Autowired
     private AttendanceTimeMapper attendanceTimeMapper;  

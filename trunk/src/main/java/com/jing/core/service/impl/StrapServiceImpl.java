@@ -1,25 +1,21 @@
 package com.jing.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.core.model.dao.StrapMapper;
+import com.jing.core.model.entity.Strap;
+import com.jing.core.service.StrapService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.core.model.entity.Strap;
-import com.jing.core.model.dao.StrapMapper;
-import com.jing.core.service.StrapService;
 
 /**
  * @ClassName: Strap
@@ -31,7 +27,7 @@ import com.jing.core.service.StrapService;
 @Service("strapService")
 @Transactional(readOnly=true)
 public class  StrapServiceImpl implements StrapService {	
-	private static final Logger logger = LoggerFactory.getLogger(StrapServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(StrapServiceImpl.class);
 	
 	@Autowired
     private StrapMapper strapMapper;   

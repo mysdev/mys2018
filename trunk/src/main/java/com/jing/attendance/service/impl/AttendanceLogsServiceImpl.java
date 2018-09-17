@@ -1,24 +1,20 @@
 package com.jing.attendance.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.AttendanceLogsMapper;
+import com.jing.attendance.model.entity.AttendanceLogs;
+import com.jing.attendance.service.AttendanceLogsService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.AttendanceLogs;
-import com.jing.attendance.model.dao.AttendanceLogsMapper;
-import com.jing.attendance.service.AttendanceLogsService;
 
 /**
  * @ClassName: AttendanceLogs
@@ -30,7 +26,7 @@ import com.jing.attendance.service.AttendanceLogsService;
 @Service("attendanceLogsService")
 @Transactional(readOnly=true)
 public class  AttendanceLogsServiceImpl implements AttendanceLogsService {	
-	private static final Logger logger = LoggerFactory.getLogger(AttendanceLogsServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(AttendanceLogsServiceImpl.class);
 	
 	@Autowired
     private AttendanceLogsMapper attendanceLogsMapper;   

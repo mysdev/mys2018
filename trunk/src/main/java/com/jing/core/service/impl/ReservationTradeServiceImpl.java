@@ -1,24 +1,20 @@
 package com.jing.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.core.model.dao.ReservationTradeMapper;
+import com.jing.core.model.entity.ReservationTrade;
+import com.jing.core.service.ReservationTradeService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.core.model.entity.ReservationTrade;
-import com.jing.core.model.dao.ReservationTradeMapper;
-import com.jing.core.service.ReservationTradeService;
 
 /**
  * @ClassName: ReservationTrade
@@ -30,7 +26,7 @@ import com.jing.core.service.ReservationTradeService;
 @Service("reservationTradeService")
 @Transactional(readOnly=true)
 public class  ReservationTradeServiceImpl implements ReservationTradeService {	
-	private static final Logger logger = LoggerFactory.getLogger(ReservationTradeServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ReservationTradeServiceImpl.class);
 	
 	@Autowired
     private ReservationTradeMapper reservationTradeMapper;   

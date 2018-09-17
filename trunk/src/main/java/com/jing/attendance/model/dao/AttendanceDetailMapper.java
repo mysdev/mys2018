@@ -7,9 +7,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.attendance.model.entity.AttendanceDetail;
-import com.jing.attendance.model.entity.AttendanceTime;
+import com.jing.utils.paginator.domain.PageBounds;
 
 /**
  * @ClassName: AttendanceDetailMapper

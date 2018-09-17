@@ -1,24 +1,20 @@
 package com.jing.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.core.model.dao.MemberRecordMapper;
+import com.jing.core.model.entity.MemberRecord;
+import com.jing.core.service.MemberRecordService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.core.model.entity.MemberRecord;
-import com.jing.core.model.dao.MemberRecordMapper;
-import com.jing.core.service.MemberRecordService;
 
 /**
  * @ClassName: MemberRecord
@@ -30,7 +26,7 @@ import com.jing.core.service.MemberRecordService;
 @Service("memberRecordService")
 @Transactional(readOnly=true)
 public class  MemberRecordServiceImpl implements MemberRecordService {	
-	private static final Logger logger = LoggerFactory.getLogger(MemberRecordServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(MemberRecordServiceImpl.class);
 	
 	@Autowired
     private MemberRecordMapper memberRecordMapper;   

@@ -1,7 +1,7 @@
 package com.jing.core.service;
 
 import com.jing.core.model.entity.Employee;
-import com.jing.system.model.entity.User;
+import com.jing.system.user.entity.User;
 
 /**
  * 员工+用户

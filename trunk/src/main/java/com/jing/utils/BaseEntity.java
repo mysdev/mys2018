@@ -20,12 +20,12 @@ public class BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String createdBy;	//tt_coupon:created_by  创建人员  
+	private Integer createdBy;	//tt_coupon:created_by  创建人员  
 	
 	private Date createdDate;	//tt_coupon:created_date  创建时间  
 	
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String updatedBy;	//tt_coupon:updated_by  修订人员  
+	private Integer updatedBy;	//tt_coupon:updated_by  修订人员  
 
 	private Date updatedDate;	//tt_coupon:updated_date  修订时间 
 	
@@ -34,7 +34,7 @@ public class BaseEntity implements Serializable {
 	* @Description: 获取属性        创建人员
 	* @return: String
 	*/
-	public String getCreatedBy(){
+	public Integer getCreatedBy(){
 		return createdBy;	
 	}
 	
@@ -43,7 +43,7 @@ public class BaseEntity implements Serializable {
 	* @Description: 设置属性        创建人员
 	* @return: String
 	*/
-	public void setCreatedBy(String createdBy){
+	public void setCreatedBy(Integer createdBy){
 		this.createdBy = createdBy;	
 	}	
 
@@ -70,7 +70,7 @@ public class BaseEntity implements Serializable {
 	* @Description: 获取属性        修订人员
 	* @return: String
 	*/
-	public String getUpdatedBy(){
+	public Integer getUpdatedBy(){
 		return updatedBy;	
 	}
 	
@@ -79,7 +79,7 @@ public class BaseEntity implements Serializable {
 	* @Description: 设置属性        修订人员
 	* @return: String
 	*/
-	public void setUpdatedBy(String updatedBy){
+	public void setUpdatedBy(Integer updatedBy){
 		this.updatedBy = updatedBy;	
 	}	
 
@@ -100,4 +100,12 @@ public class BaseEntity implements Serializable {
 	public void setUpdatedDate(Date updatedDate){
 		this.updatedDate = updatedDate;	
 	}	
+	
+	public void setCreatedDateNow(){
+		this.createdDate = new Date();
+	}
+	
+	public void setUpdatedDateNow(){
+		this.updatedDate = new Date();
+	}
 }

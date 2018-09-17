@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceEmployee;
-import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceDiaryService;
 import com.jing.attendance.service.AttendanceService;
 import com.jing.attendance.service.PublicAttendanceService;
@@ -42,9 +41,6 @@ public class PublicAttendanceServiceImpl implements PublicAttendanceService {
 	
 	@Autowired
     private AttendanceEmployeeMapper employeeAttendanceMapper;   
-	
-	@Autowired
-	private AttendanceDetailService attendanceDetailService;
 	
 	@Autowired
 	private AttendanceService attendanceService;

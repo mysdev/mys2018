@@ -1,25 +1,21 @@
 package com.jing.settlement.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.settlement.model.dao.AuthorizationMapper;
+import com.jing.settlement.model.entity.Authorization;
+import com.jing.settlement.service.AuthorizationService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.settlement.model.entity.Authorization;
-import com.jing.settlement.model.dao.AuthorizationMapper;
-import com.jing.settlement.service.AuthorizationService;
 
 /**
  * @ClassName: Authorization
@@ -31,7 +27,7 @@ import com.jing.settlement.service.AuthorizationService;
 @Service("authorizationService")
 @Transactional(readOnly=true)
 public class  AuthorizationServiceImpl implements AuthorizationService {	
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
 	
 	@Autowired
     private AuthorizationMapper authorizationMapper;   

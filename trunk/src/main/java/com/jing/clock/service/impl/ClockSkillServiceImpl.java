@@ -1,24 +1,20 @@
 package com.jing.clock.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.clock.model.dao.ClockSkillMapper;
+import com.jing.clock.model.entity.ClockSkill;
+import com.jing.clock.service.ClockSkillService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.clock.model.entity.ClockSkill;
-import com.jing.clock.model.dao.ClockSkillMapper;
-import com.jing.clock.service.ClockSkillService;
 
 /**
  * @ClassName: ClockSkill
@@ -30,7 +26,7 @@ import com.jing.clock.service.ClockSkillService;
 @Service("clockSkillService")
 @Transactional(readOnly=true)
 public class  ClockSkillServiceImpl implements ClockSkillService {	
-	private static final Logger logger = LoggerFactory.getLogger(ClockSkillServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ClockSkillServiceImpl.class);
 	
 	@Autowired
     private ClockSkillMapper clockSkillMapper;   

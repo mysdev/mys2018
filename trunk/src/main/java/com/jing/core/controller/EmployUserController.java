@@ -16,7 +16,7 @@ import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.ParameterException;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployUserService;
-import com.jing.system.model.entity.User;
+import com.jing.system.user.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

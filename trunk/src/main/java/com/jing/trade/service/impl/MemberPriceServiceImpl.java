@@ -1,24 +1,20 @@
 package com.jing.trade.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.trade.model.dao.MemberPriceMapper;
+import com.jing.trade.model.entity.MemberPrice;
+import com.jing.trade.service.MemberPriceService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.trade.model.entity.MemberPrice;
-import com.jing.trade.model.dao.MemberPriceMapper;
-import com.jing.trade.service.MemberPriceService;
 
 /**
  * @ClassName: MemberPrice
@@ -30,7 +26,7 @@ import com.jing.trade.service.MemberPriceService;
 @Service("memberPriceService")
 @Transactional(readOnly=true)
 public class  MemberPriceServiceImpl implements MemberPriceService {	
-	private static final Logger logger = LoggerFactory.getLogger(MemberPriceServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(MemberPriceServiceImpl.class);
 	
 	@Autowired
     private MemberPriceMapper memberPriceMapper;   

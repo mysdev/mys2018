@@ -103,6 +103,6 @@ public interface AttendanceEmployeeService {
 	* @return  Integer    返回类型 
 	* @throws 
 	*/
-	Integer bindAttendanceEmployee(String userId, Integer attendanceId, List<String> empList);	 
+	Integer bindAttendanceEmployee(int userId, Integer attendanceId, List<String> empList);	 
 	 
 }

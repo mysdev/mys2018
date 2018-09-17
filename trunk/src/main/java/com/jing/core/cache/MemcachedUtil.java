@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.jing.system.util.SystemConfigMapper;
+import com.jing.system.sysconfig.SysConfigMapper;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
@@ -19,8 +19,8 @@ public class MemcachedUtil {
 
 	public static final InetSocketAddress address = AddrUtil.getOneAddress("localhost:11211");
 	private static final MemcachedClientBuilder build = new XMemcachedClientBuilder(
-			AddrUtil.getAddresses(SystemConfigMapper.getValue("cache.memcached.ip") + ":"
-					+ SystemConfigMapper.getValue("cache.memcached.port")));
+			AddrUtil.getAddresses(SysConfigMapper.getValue("cache.memcached.ip") + ":"
+					+ SysConfigMapper.getValue("cache.memcached.port")));
 
 	public static MemcachedClient getClient() {
 		try {

@@ -1,25 +1,21 @@
 package com.jing.settlement.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.settlement.model.dao.GoodsMapper;
+import com.jing.settlement.model.entity.Goods;
+import com.jing.settlement.service.GoodsService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.settlement.model.entity.Goods;
-import com.jing.settlement.model.dao.GoodsMapper;
-import com.jing.settlement.service.GoodsService;
 
 /**
  * @ClassName: Goods
@@ -31,7 +27,7 @@ import com.jing.settlement.service.GoodsService;
 @Service("goodsService")
 @Transactional(readOnly=true)
 public class  GoodsServiceImpl implements GoodsService {	
-	private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 	
 	@Autowired
     private GoodsMapper goodsMapper;   

@@ -5,13 +5,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jing.config.web.exception.CustomException;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployUserService;
 import com.jing.core.service.EmployeeService;
-import com.jing.system.model.entity.User;
-import com.jing.system.service.UserService;
+import com.jing.system.user.entity.User;
+import com.jing.system.user.service.UserService;
 
 @Service("employUserService")
 public class EmployUserServiceImpl implements EmployUserService{
@@ -23,7 +22,7 @@ public class EmployUserServiceImpl implements EmployUserService{
 	@Override
 	@Transactional
 	public void addEmployee(Employee employee, User user) {
-		user = userService.addUser(user);
+		user = userService.addUser(user,0);
 		employee.setUserId(user.getUserId());
 		employee = employeeService.addEmployee(employee);
 	}
@@ -35,7 +34,7 @@ public class EmployUserServiceImpl implements EmployUserService{
 		if(employee==null) {
 			throw new NotFoundException("员工");
 		}
-		user = userService.addUser(user);
+		user = userService.addUser(user,0);
 		employee.setUserId(user.getUserId());
 		return employeeService.modifyEmployee(employee);
 	}
@@ -58,7 +57,7 @@ public class EmployUserServiceImpl implements EmployUserService{
 			throw new NotFoundException("员工");
 		}
 		if(employee.getUserId() != null) {
-			userService.dropUserByUserId(employee.getUserId());
+			userService.deleteUserById(employee.getUserId(),0);
 		}
 		employeeService.dropEmployeeByEmpId(empId);
 	}

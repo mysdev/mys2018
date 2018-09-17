@@ -84,7 +84,7 @@ public class AttendanceEmployeeController{
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}		
-		return attendanceEmployeeService.bindAttendanceEmployee("system", attendanceId, empList);
+		return attendanceEmployeeService.bindAttendanceEmployee(0, attendanceId, empList);
 	}
 
 

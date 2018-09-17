@@ -22,6 +22,12 @@ public class CustomException extends RuntimeException {
 	
 	private List<Map<String, String>> errors;	
 	
+	public CustomException(String message){
+		super();
+		this.code = -1;
+		this.message = message;
+	}
+	
 	/**
 	 * @Title:CustomException
 	 * @Description:不带下标的错误信息

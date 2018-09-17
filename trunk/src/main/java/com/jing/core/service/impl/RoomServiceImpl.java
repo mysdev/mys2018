@@ -1,25 +1,21 @@
 package com.jing.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.core.model.dao.RoomMapper;
+import com.jing.core.model.entity.Room;
+import com.jing.core.service.RoomService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-import java.util.UUID;
-
-
-import com.jing.core.model.entity.Room;
-import com.jing.core.model.dao.RoomMapper;
-import com.jing.core.service.RoomService;
 
 /**
  * @ClassName: Room
@@ -31,7 +27,7 @@ import com.jing.core.service.RoomService;
 @Service("roomService")
 @Transactional(readOnly=true)
 public class  RoomServiceImpl implements RoomService {	
-	private static final Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
 	
 	@Autowired
     private RoomMapper roomMapper;   

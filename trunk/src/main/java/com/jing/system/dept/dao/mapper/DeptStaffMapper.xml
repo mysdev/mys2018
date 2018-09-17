@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faith.framework.dept.dao.DeptStaffDao">
+
+	<!-- Result Map -->
+	<resultMap id="DeptStaffResultMap" type="com.faith.framework.dept.entity.DeptStaff">
+		<id column="dsid" property="dsid" />
+		<result column="deptCode" property="deptCode" />
+		<result column="image" property="image" />
+		<result column="name" property="name" />
+		<result column="sex" property="sex" />
+		<result column="birthday" property="birthday" />
+		<result column="phone" property="phone" />
+		<result column="addr" property="addr" />
+		<result column="email" property="email" />
+		<result column="post" property="post" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.dsid != null and param.dsid != ''">
+				and dsid = #{param.dsid}
+			</if>
+			<if test="param.deptCode != null and param.deptCode != ''">
+				and deptCode = #{param.deptCode}
+			</if>
+			<if test="param.image != null and param.image != ''">
+				and image = #{param.image}
+			</if>
+			<if test="param.name != null and param.name != ''">
+				and name = #{param.name}
+			</if>
+			<if test="param.sex != null and param.sex != ''">
+				and sex = #{param.sex}
+			</if>
+			<if test="param.birthday != null and param.birthday != ''">
+				and birthday = #{param.birthday}
+			</if>
+			<if test="param.phone != null and param.phone != ''">
+				and phone = #{param.phone}
+			</if>
+			<if test="param.addr != null and param.addr != ''">
+				and addr = #{param.addr}
+			</if>
+			<if test="param.email != null and param.email != ''">
+				and email = #{param.email}
+			</if>
+			<if test="param.post != null and param.post != ''">
+				and post = #{param.post}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 部门职工 -->
+	<insert id="addDeptStaff" parameterType="com.faith.framework.dept.entity.DeptStaff">
+		<selectKey keyProperty="dsid" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_dept_staff (dsid ,deptCode ,image ,name ,sex ,birthday ,phone ,addr ,email ,post,createdBy,createdDate) 
+		values
+		(#{dsid},#{deptCode},#{image},#{name},#{sex},#{birthday},#{phone},#{addr},#{email},#{post},#{createdBy},#{createdDate})
+	</insert>
+
+	<!-- 修改部门职工 -->
+	<update id="updateDeptStaff" parameterType="com.faith.framework.dept.entity.DeptStaff">
+		UPDATE sys_dept_staff
+		<set> 
+			<if test="deptCode != null" >
+				deptCode = #{deptCode},
+			</if>
+			<if test="image != null" >
+				image = #{image},
+			</if>
+			<if test="name != null" >
+				name = #{name},
+			</if>
+			<if test="sex != null" >
+				sex = #{sex},
+			</if>
+			<if test="birthday != null" >
+				birthday = #{birthday},
+			</if>
+			<if test="phone != null" >
+				phone = #{phone},
+			</if>
+			<if test="addr != null" >
+				addr = #{addr},
+			</if>
+			<if test="email != null" >
+				email = #{email},
+			</if>
+			<if test="post != null" >
+				post = #{post},
+			</if>
+			<if test="updatedBy != null" >
+				updatedBy = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updatedDate = #{updatedDate},
+			</if>
+		</set>
+		WHERE	dsid = #{dsid}
+	</update>
+	
+	<!-- 根据ID删除部门职工 -->
+	<delete id="deleteDeptStaffById"  parameterType="Integer">
+		DELETE FROM sys_dept_staff WHERE dsid = #{value}
+	</delete>
+	
+	<!-- 根据ID查询部门职工 -->
+	<select id="getDeptStaffById" resultMap="DeptStaffResultMap" parameterType="Integer">
+		SELECT * FROM sys_dept_staff WHERE dsid = #{value}
+	</select>
+	
+	<select id="findDeptStaffListPage" resultMap="DeptStaffResultMap">
+		SELECT * FROM sys_dept_staff
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findDeptStaffList" resultMap="DeptStaffResultMap">
+		SELECT * FROM sys_dept_staff
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

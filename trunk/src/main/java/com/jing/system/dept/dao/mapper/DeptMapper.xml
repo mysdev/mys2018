@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faith.framework.dept.dao.DeptDao">
+
+	<!-- Result Map -->
+	<resultMap id="DeptResultMap" type="com.faith.framework.dept.entity.Dept">
+		<id column="deptCode" property="deptCode" />
+		<result column="deptName" property="deptName" />
+		<result column="remark" property="remark" />
+		<result column="pid" property="pid" />
+		<result column="sort" property="sort" />
+		<result column="status" property="status" />
+	</resultMap>
+	
+	<!-- Result Map -->
+	<resultMap id="DeptResultMapV" type="com.faith.framework.dept.entity.DeptV">
+		<id column="deptCode" property="deptCode" />
+		<result column="deptName" property="deptName" />
+		<result column="remark" property="remark" />
+		<result column="pid" property="pid" />
+		<result column="sort" property="sort" />
+		<result column="status" property="status" />
+		<result column="level" property="level" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.deptCode != null">
+				and deptCode = #{param.deptCode}
+			</if>
+			<if test="param.deptName != null and param.deptName != ''">
+				and deptName = #{param.deptName}
+			</if>
+			<if test="param.remark != null and param.remark != ''">
+				and remark = #{param.remark}
+			</if>
+			<if test="param.pid != null">
+				and pid = #{param.pid}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.areaCode != null">
+				and b.areaCode = #{param.areaCode}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 部门 -->
+	<insert id="addDept" parameterType="com.faith.framework.dept.entity.Dept">
+		<selectKey keyProperty="deptCode" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_dept (deptCode ,deptName ,remark ,pid ,sort ,status ) 
+		values
+		(#{deptCode},#{deptName},#{remark},#{pid},#{sort},#{status})
+	</insert>
+
+	<!-- 修改部门 -->
+	<update id="updateDept" parameterType="com.faith.framework.dept.entity.Dept">
+		UPDATE sys_dept
+		<set> 
+			<if test="deptName != null" >
+				deptName = #{deptName},
+			</if>
+			<if test="remark != null" >
+				remark = #{remark},
+			</if>
+			<if test="pid != null" >
+				pid = #{pid},
+			</if>
+			<if test="sort != null" >
+				sort = #{sort},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+		</set>
+		WHERE	deptCode = #{deptCode}
+	</update>
+	
+	<!-- 根据ID删除部门 -->
+	<delete id="deleteDeptById"  parameterType="Integer">
+		DELETE FROM sys_dept WHERE deptCode = #{value}
+	</delete>
+	
+	<!-- 根据ID查询部门 -->
+	<select id="getDeptById" resultMap="DeptResultMap" parameterType="Integer">
+		SELECT * FROM sys_dept WHERE deptCode = #{value}
+	</select>
+	
+	<select id="findDeptListPage" resultMap="DeptResultMap">
+		SELECT * FROM sys_dept
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findDeptList" resultMap="DeptResultMap">
+		SELECT * FROM sys_dept a
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findDeptPermissionList" resultMap="DeptResultMap">
+		select a.* from 
+		sys_dept a left join
+		sys_dept_area b on a.deptCode = b.orgId
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<!-- <select id="findDeptListBy" resultMap="DeptResultMapV">
+		SELECT *,(case when (select count(1) from sys_dept where pid=a.deptCode)>0 then 1 else 0 end) as Level FROM sys_dept a
+		<include refid="query_tables_Property" />
+	</select> -->
+	
+	<select id="findDeptName" resultType="String" parameterType="Integer">
+		SELECT deptName FROM sys_dept WHERE deptCode = #{value}
+	</select>
+	
+	<select id="findDeptByAreaAndName" resultMap="DeptResultMap">
+		select DISTINCT d.* from sys_dept d, sys_dept_area a where d.deptCode = a.orgid
+		and a.areacode=#{areaCode}
+		<if test="deptName != null">
+			and d.deptName like CONCAT(#{deptName},'%')
+		</if>
+	</select>
+	
+	<select id="findDeptByRoleAndArea" resultMap="DeptResultMap">
+		select * from sys_dept where deptCode in (
+			select deptCode from sys_user_role
+			 where roleid=#{roleId} and deptCode in (
+			select orgid from sys_dept_area where areacode=#{areaCode})
+		)
+		ORDER BY sort limit 0,1
+	</select>
+</mapper>

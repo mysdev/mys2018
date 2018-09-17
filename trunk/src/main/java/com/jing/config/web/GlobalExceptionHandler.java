@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,23 +41,7 @@ import com.jing.utils.JsonUtil;
 public class GlobalExceptionHandler {
     
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    
-    /**
-     * 没有权限 异常
-     * <p/>
-     */
-    @ExceptionHandler({UnauthorizedException.class})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Map<String, Object> processUnauthenticatedException(UnauthorizedException e,HttpServletResponse response) {
-    	logger.error("没有访问权限", e);
-		Map<String, Object> returnMap = Maps.newHashMap();
-		response.setStatus(HttpCodeEnum.HTTP_NO_PERMISSION.getCode());
-		returnMap.put("code", HttpCodeEnum.HTTP_NO_PERMISSION.getCode());
-		returnMap.put("message","没有访问权限");
-		returnMap.put("errors", e.getMessage());
-		return returnMap;
-    }
-    
+        
     
 	/**
 	 * 

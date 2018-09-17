@@ -1,25 +1,21 @@
 package com.jing.attendance.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.attendance.model.dao.EmployeeJournalMapper;
+import com.jing.attendance.model.entity.EmployeeJournal;
+import com.jing.attendance.service.EmployeeJournalService;
 import com.jing.utils.Constant;
 import com.jing.utils.DateUtil;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.attendance.model.entity.EmployeeJournal;
-import com.jing.attendance.model.dao.EmployeeJournalMapper;
-import com.jing.attendance.service.EmployeeJournalService;
 
 /**
  * @ClassName: EmployeeJournal
@@ -31,7 +27,7 @@ import com.jing.attendance.service.EmployeeJournalService;
 @Service("employeeJournalService")
 @Transactional(readOnly=true)
 public class  EmployeeJournalServiceImpl implements EmployeeJournalService {	
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeJournalServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(EmployeeJournalServiceImpl.class);
 	
 	@Autowired
     private EmployeeJournalMapper employeeJournalMapper;   

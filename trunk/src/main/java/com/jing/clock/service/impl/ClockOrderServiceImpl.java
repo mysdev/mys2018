@@ -1,24 +1,20 @@
 package com.jing.clock.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.clock.model.dao.ClockOrderMapper;
+import com.jing.clock.model.entity.ClockOrder;
+import com.jing.clock.service.ClockOrderService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.clock.model.entity.ClockOrder;
-import com.jing.clock.model.dao.ClockOrderMapper;
-import com.jing.clock.service.ClockOrderService;
 
 /**
  * @ClassName: ClockOrder
@@ -30,7 +26,7 @@ import com.jing.clock.service.ClockOrderService;
 @Service("clockOrderService")
 @Transactional(readOnly=true)
 public class  ClockOrderServiceImpl implements ClockOrderService {	
-	private static final Logger logger = LoggerFactory.getLogger(ClockOrderServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ClockOrderServiceImpl.class);
 	
 	@Autowired
     private ClockOrderMapper clockOrderMapper;   

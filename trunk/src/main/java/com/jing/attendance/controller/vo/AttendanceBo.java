@@ -3,7 +3,6 @@ package com.jing.attendance.controller.vo;
 import java.util.List;
 
 import com.jing.attendance.model.entity.Attendance;
-import com.jing.attendance.model.entity.AttendanceDetail;
 import com.jing.attendance.model.entity.AttendanceTime;
 
 /**

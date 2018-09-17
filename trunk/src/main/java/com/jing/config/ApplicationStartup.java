@@ -20,7 +20,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.jing.attendance.service.AttendanceDetailService;
-import com.jing.attendance.service.impl.AttendanceDetailServiceImpl;
 
 /**
  * @ClassName: A

@@ -1,24 +1,20 @@
 package com.jing.trade.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.trade.model.dao.VolumeMapper;
+import com.jing.trade.model.entity.Volume;
+import com.jing.trade.service.VolumeService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
 import com.jing.utils.paginator.domain.PageService;
-
-
-import com.jing.trade.model.entity.Volume;
-import com.jing.trade.model.dao.VolumeMapper;
-import com.jing.trade.service.VolumeService;
 
 /**
  * @ClassName: Volume
@@ -30,7 +26,7 @@ import com.jing.trade.service.VolumeService;
 @Service("volumeService")
 @Transactional(readOnly=true)
 public class  VolumeServiceImpl implements VolumeService {	
-	private static final Logger logger = LoggerFactory.getLogger(VolumeServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(VolumeServiceImpl.class);
 	
 	@Autowired
     private VolumeMapper volumeMapper;   

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,7 @@ import com.jing.utils.paginator.domain.PageService;
 @Service("employeeAttendanceService")
 @Transactional(readOnly=true)
 public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService {	
-	private static final Logger logger = LoggerFactory.getLogger(AttendanceEmployeeServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(AttendanceEmployeeServiceImpl.class);
 	
 	@Autowired
     private AttendanceEmployeeMapper employeeAttendanceMapper;
@@ -173,7 +171,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 
 	@Override
 	@Transactional(readOnly = false)
-	public Integer bindAttendanceEmployee(String userId, Integer attendanceId, List<String> empList) {
+	public Integer bindAttendanceEmployee(int userId, Integer attendanceId, List<String> empList) {
 		for(String empId : empList){
 			AttendanceEmployee ae = employeeAttendanceMapper.queryAttendanceEmployeeByEmpId(empId);
 			if(ae==null){

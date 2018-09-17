@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faith.framework.sysconfig.dao.SysConfigDao">
+
+	<!-- Result Map -->
+	<resultMap id="SysConfigResultMap" type="com.faith.framework.sysconfig.entity.SysConfig">
+		<id column="pid" property="pid" />
+		<result column="pcode" property="pcode" />
+		<result column="pvalue" property="pvalue" />
+		<result column="desc" property="desc" />
+		<result column="createdBy" property="createdBy" />
+		<result column="createdDate" property="createdDate" jdbcType="TIMESTAMP" />
+		<result column="updatedBy" property="updatedBy" />
+		<result column="updatedDate" property="updatedDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.pid != null and param.pid != ''">
+				and pid = #{param.pid}
+			</if>
+			<if test="param.pcode != null and param.pcode != ''">
+				and pcode = #{param.pcode}
+			</if>
+			<if test="param.pvalue != null and param.pvalue != ''">
+				and pvalue = #{param.pvalue}
+			</if>
+			<if test="param.desc != null and param.desc != ''">
+				and `desc` = #{param.desc}
+			</if>
+			<if test="param.createdBy != null">
+				and createdBy = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null">
+				and createdDate = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null">
+				and updatedBy = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null">
+				and updatedDate = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 系统参数 -->
+	<insert id="addSysConfig" parameterType="com.faith.framework.sysconfig.entity.SysConfig">
+		INSERT INTO sys_config (pid ,pcode ,pvalue ,`desc` ,createdBy ,createdDate ,updatedBy ,updatedDate ) 
+		values
+		(#{pid},#{pcode},#{pvalue},#{desc},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
+
+	<!-- 修改系统参数 -->
+	<update id="updateSysConfig" parameterType="com.faith.framework.sysconfig.entity.SysConfig">
+		UPDATE sys_config
+		<set> 
+			<if test="pcode != null and pcode != ''" >
+				pcode = #{pcode},
+			</if>
+			<if test="pvalue != null and pvalue != ''" >
+				pvalue = #{pvalue},
+			</if>
+			<if test="desc != null and desc != ''" >
+				`desc` = #{desc},
+			</if>
+			<if test="updatedBy != null" >
+				updatedBy = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updatedDate = #{updatedDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		WHERE	pid = #{pid}
+	</update>
+	
+	<!-- 根据ID删除系统参数 -->
+	<delete id="deleteSysConfigById"  parameterType="String">
+		DELETE FROM sys_config WHERE pid = #{value}
+	</delete>
+	
+	<!-- 根据ID查询系统参数 -->
+	<select id="getSysConfigById" resultMap="SysConfigResultMap" parameterType="String">
+		SELECT * FROM sys_config WHERE pid = #{value}
+	</select>
+	
+	<select id="findSysConfigListPage" resultMap="SysConfigResultMap">
+		SELECT * FROM sys_config
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findSysConfigList" resultMap="SysConfigResultMap">
+		SELECT * FROM sys_config
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>
