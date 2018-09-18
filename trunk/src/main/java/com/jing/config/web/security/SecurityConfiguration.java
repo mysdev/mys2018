@@ -34,10 +34,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests() //拦截请求
-		//.antMatchers("/**/pc/**","/**/checkcode").permitAll() //访问白名单		
+		.antMatchers("/home").permitAll() //访问白名单		
 		.anyRequest().authenticated().and()//其他请求都要过滤
-		.formLogin().loginPage("/pc/login.html").permitAll().failureHandler(loginFailureHandler()).successHandler(loginSuccessHandler()).and() // 登录
-		.logout().permitAll().and()// 注销
+		.formLogin().loginPage("/pc/login.html").defaultSuccessUrl("/home").permitAll().failureHandler(loginFailureHandler()).successHandler(loginSuccessHandler()).and() // 登录
+		.logout().logoutSuccessUrl("/pc/login.html").permitAll().and()// 注销
 		.csrf().disable(); //默认开启,我们关闭
 		
 //		http.authenticationProvider(authenticationProvider());
@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		 // 设置不拦截规则  
-		web.ignoring().antMatchers("/pc/login.html","/**/images/**","/**/css/**","**/js/**","/**/checkcode");
+		web.ignoring().antMatchers("/pc/**","/**/images/**","/**/css/**","**/js/**","/**/checkcode");
 //		super.configure(web);
 	}
 	
