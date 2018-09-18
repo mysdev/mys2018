@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.jing.system.user.uitl.UserMapper;
 
-@Service
+@Service("")
 public class CustomUserServiceImpl implements UserDetailsService {
 
 	@Override

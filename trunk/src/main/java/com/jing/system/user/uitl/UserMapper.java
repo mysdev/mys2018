@@ -8,8 +8,11 @@ import java.util.Map;
 import com.jing.core.cache.CacheMap;
 import com.jing.core.cache.CacheObservable;
 import com.jing.core.cache.CacheObserver;
+import com.jing.system.permission.service.RoleService;
+import com.jing.system.permission.service.UserRoleService;
 import com.jing.system.user.entity.User;
 import com.jing.system.user.service.UserService;
+import com.jing.utils.FrameworkUtils;
 import com.jing.utils.SpringContextHolder;
 
 /**
@@ -55,6 +58,16 @@ public class UserMapper implements CacheObserver {
 		mapper.put(user.getUserId(), user.getNickName(), 360000);
 		objMapper.put(user.getUserId(), user, 360000);
 		unmapper.put(user.getUsername(), user.getUserId(), 360000);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public synchronized static void setRoles(int userid){
+		User user = UserMapper.getObj(userid);
+		RoleService roleService = (RoleService) SpringContextHolder.getBean("roleService");
+		UserRoleService userRoleService = (UserRoleService) SpringContextHolder.getBean("userRoleService");
+		List roles = roleService.findRoleListByUserId(user.getUserId());
+		user.setUserRole(roles);
+		user.setUserRoles(userRoleService.findUserRoleList(FrameworkUtils.hashMap("userId", user.getUserId())));
 	}
 
 	public static List<User> getAll() {

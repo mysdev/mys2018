@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.permission.dao.RoleDao">
+
+	<!-- Result Map -->
+	<resultMap id="RoleResultMap" type="com.jing.system.permission.entity.Role">
+		<id column="roleId" property="roleId" />
+		<result column="roleName" property="roleName" />
+		<result column="roleTitle" property="roleTitle" />
+		<result column="deptCode" property="deptCode" />
+		<result column="parentRole" property="parentRole" />
+		<result column="status" property="status" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.roleId != null and param.roleId != ''">
+				and LIKE concat(concat('%',#{param.roleId}),'%')
+			</if>
+			<if test="param.roleName != null and param.roleName != ''">
+				and roleName  LIKE concat(concat('%',#{param.roleName}),'%')
+			</if>
+			<if test="param.roleTitle != null and param.roleTitle != ''">
+				and roleTitle  LIKE concat(concat('%',#{param.roleTitle}),'%')
+			</if>
+			<if test="param.deptCode != null and param.deptCode != ''">
+				and deptCode = #{param.deptCode}
+			</if>
+			<if test="param.parentRole != null and param.parentRole != ''">
+				and parentRole = #{param.parentRole}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 角色 -->
+	<insert id="addRole" parameterType="com.jing.system.permission.entity.Role">
+		INSERT INTO sys_role (roleId ,roleName ,roleTitle ,deptCode ,parentRole ,status ) 
+		values
+		(#{roleId},#{roleName},#{roleTitle},#{deptCode},#{parentRole},#{status})
+	</insert>
+
+	<!-- 修改角色 -->
+	<update id="updateRole" parameterType="com.jing.system.permission.entity.Role">
+		UPDATE sys_role
+		<set> 
+			<if test="roleName != null and roleName != ''">
+				 roleName = #{roleName},
+			</if>
+			<if test="roleTitle != null and roleTitle != ''">
+				 roleTitle = #{roleTitle},
+			</if>
+			<if test="deptCode != null ">
+				 deptCode = #{deptCode},
+			</if>
+			<if test="parentRole != null and parentRole != ''">
+				 parentRole = #{parentRole},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+		</set>
+		WHERE	roleId = #{roleId}
+	</update>
+	
+	<!-- 根据ID删除角色 -->
+	<delete id="deleteRoleById"  parameterType="String">
+		DELETE FROM sys_role WHERE roleId = #{value}
+	</delete>
+	
+	<!-- 根据ID查询角色 -->
+	<select id="getRoleById" resultMap="RoleResultMap" parameterType="String">
+		SELECT * FROM sys_role WHERE roleId = #{value}
+	</select>
+	
+	<select id="findRoleListPage" resultMap="RoleResultMap">
+		SELECT * FROM sys_role
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findRoleList" resultMap="RoleResultMap">
+		SELECT * FROM sys_role
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findRoleListByUserId" resultMap="RoleResultMap"  parameterType="Integer">
+		select r.* from sys_role r ,sys_user_role u where r.roleId = u.roleId
+		and u.userId = #{userId}
+	</select>
+	
+	
+	<select id="findRolesByResUrl" resultMap="RoleResultMap"  parameterType="String">
+		select DISTINCT r1.* from sys_role r1 , sys_resource r2 ,sys_permission p 
+		where r2.resId=p.resId
+		and r1.roleId=p.roleId
+		and r2.resURL=#{url}
+	</select>
+	
+	<select id="findRoleLisRemoveRole0tByUserId" resultMap="RoleResultMap"  parameterType="Integer">
+		select r.* from sys_role r ,sys_user_role u where r.roleId = u.roleId
+		and u.userId = #{userId} and r.roleId <![CDATA[<> ]]> 'ROLE0'
+	</select>
+	
+	<select id="findRolesByAll" resultMap="RoleResultMap"  parameterType="String">
+		select * from (
+			select t1.*,
+			if(find_in_set(parentRole, @pids) > 0, @pids := concat(@pids, ',',roleId), 0) as ischild
+			from (
+					 select * from sys_role t where t.status = 1 order by parentRole, roleId
+					) t1,
+					(select @pids := 'ROLE3' ) t2
+		 ) t3 where ischild != '0'
+	</select>
+	
+	
+	<select id="selectRoleByDeptCode" resultMap="RoleResultMap"  parameterType="Integer">
+		SELECT * FROM sys_role WHERE deptCode = #{deptCode} OR deptCode IS NULL
+	</select>
+</mapper>

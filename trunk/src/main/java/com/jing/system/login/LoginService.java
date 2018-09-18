@@ -2,8 +2,9 @@ package com.jing.system.login;
 
 import java.util.List;
 
-import com.jing.config.web.security.RoleDetail;
-import com.jing.config.web.security.UserDetail;
+import com.jing.config.web.security.SecurityRoleDetail;
+import com.jing.config.web.security.SecurityUserDetail;
+import com.jing.system.permission.entity.Role;
 
 public interface LoginService {
 
@@ -33,7 +34,7 @@ public interface LoginService {
 	 * @return
 	 * @throws PbicBusinessException
 	 */
-	UserDetail getUserDetailByName(String name);
+	SecurityUserDetail getUserDetailByName(String name);
 
 	/**
 	 * 通过用户名获取用户角色信息
@@ -42,7 +43,7 @@ public interface LoginService {
 	 * @return
 	 * @throws PbicBusinessException
 	 */
-	List<RoleDetail> getRolesByUserName(String userName);
+	List<Role> getRolesByUserName(String userName);
 
 	/**
 	 * 通过地址获取对应的角色信息
@@ -51,7 +52,7 @@ public interface LoginService {
 	 * @return
 	 * @throws PbicBusinessException
 	 */
-	List<RoleDetail> getRolesByResUrl(String url);
+	List<SecurityRoleDetail> getRolesByResUrl(String url);
 
 	/**
 	 * 是否采用该认证

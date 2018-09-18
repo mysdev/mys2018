@@ -16,12 +16,11 @@ import com.jing.config.web.exception.CustomException;
 import com.jing.system.login.LoginService;
 import com.jing.utils.SpringContextHolder;
 
-
 public class PermissionUserDetailsAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 	public PermissionUserDetailsAuthenticationProvider() {
 	}
-
+	
 	private LoginService loginService = getLoginService();
 
 	private LoginService getLoginService() {
@@ -68,7 +67,7 @@ public class PermissionUserDetailsAuthenticationProvider extends AbstractUserDet
 			throw new UsernameNotFoundException("用户名或密码错误!");
 		}
 
-		UserDetail user = loginService.getUserDetailByName(username);
+		SecurityUserDetail user = loginService.getUserDetailByName(username);
 		// 验证用户
 		validUser(username, user);
 
@@ -79,7 +78,7 @@ public class PermissionUserDetailsAuthenticationProvider extends AbstractUserDet
 
 		Collection<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
 		for (int i = 0; i < roles.size(); i++) {
-			auths.add(new SimpleGrantedAuthority(((RoleDetail) roles.get(i)).getRoleName()));
+			auths.add(new SimpleGrantedAuthority(((SecurityRoleDetail) roles.get(i)).getRoleName()));
 		}
 		user.setAuthorities(auths);
 		user.setUserRole(roles);
@@ -104,7 +103,7 @@ public class PermissionUserDetailsAuthenticationProvider extends AbstractUserDet
 	 * @param username
 	 * @param roles
 	 */
-	private void validSetRole(String username, List<RoleDetail> roles) {
+	private void validSetRole(String username, List<SecurityRoleDetail> roles) {
 		if (roles == null || roles.size() == 0) {
 			String errormessage = username + "：在本系统中没有设置角色信息，请联系系统管理员进行处理，谢谢！";
 			super.logger.warn(errormessage);

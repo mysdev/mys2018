@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.user.dao.UserDeptDao">
+
+	<!-- Result Map -->
+	<resultMap id="UserDeptResultMap" type="com.jing.system.user.entity.UserDept">
+		<id column="userId" property="userId" />
+		<result column="deptCode" property="deptCode" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.userId != null and param.userId != ''">
+				and userId = #{param.userId}
+			</if>
+			<if test="param.deptCode != null and param.deptCode != ''">
+				and deptCode = #{param.deptCode}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 用户部门 -->
+	<insert id="addUserDept" parameterType="com.jing.system.user.entity.UserDept">
+		<selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_user_dept (userId ,deptCode ) 
+		values
+		(#{userId},#{deptCode})
+	</insert>
+
+	<!-- 修改用户部门 -->
+	<update id="updateUserDept" parameterType="com.jing.system.user.entity.UserDept">
+		UPDATE sys_user_dept
+		<set> 
+			<if test="deptCode != null" >
+				deptCode = #{deptCode},
+			</if>
+		</set>
+		WHERE	userId = #{userId}
+	</update>
+	
+	<!-- 根据ID删除用户部门 -->
+	<delete id="deleteUserDeptById" >
+		DELETE FROM sys_user_dept WHERE userId = #{userId} and deptCode = #{deptCode}
+	</delete>
+	
+	<!-- 根据ID查询用户部门 -->
+	<select id="getUserDeptById" resultMap="UserDeptResultMap" parameterType="Integer">
+		SELECT * FROM sys_user_dept WHERE userId = #{value}
+	</select>
+	
+	<select id="findUserDeptListPage" resultMap="UserDeptResultMap">
+		SELECT * FROM sys_user_dept
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findUserDeptList" resultMap="UserDeptResultMap">
+		SELECT * FROM sys_user_dept
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

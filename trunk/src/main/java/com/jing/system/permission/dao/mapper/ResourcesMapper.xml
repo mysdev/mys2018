@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.permission.dao.ResourcesDao">
+
+	<!-- Result Map -->
+	<resultMap id="ResourcesResultMap" type="com.jing.system.permission.entity.Resources">
+		<id column="resId" property="resId" />
+		<result column="resName" property="resName" />
+		<result column="resURL" property="resURL" />
+		<result column="resType" property="resType" />
+		<result column="icon" property="resIcon" />
+		<result column="sort" property="sort" />
+		<result column="promission" property="promission" />
+		<result column="parentId" property="parentId" />
+		<result column="pageButtonKey" property="pageButtonKey" />
+		<result column="callback" property="callback" />
+	</resultMap>
+	
+    <resultMap id="VResourcesResultMap" type="com.jing.system.permission.entity.VResources" extends="com.jing.system.permission.dao.ResourcesDao.ResourcesResultMap">
+		<result column="checked" property="checked" /> 
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.resId != null and param.resId != ''">
+				and resId = #{param.resId}
+			</if>
+			<if test="param.resName != null and param.resName != ''">
+				and resName  LIKE concat(concat('%',#{param.resName}),'%')
+			</if>
+			<if test="param.resURL != null and param.resURL != ''">
+				and resURL LIKE concat(concat('%',#{param.resURL}),'%')
+			</if>
+			<if test="param.resType != null and param.resType != ''">
+				and resType = #{param.resType}
+			</if>
+			<if test="param.resIcon != null and param.resIcon != ''">
+				and icon = #{param.resIcon}
+			</if>
+			<!-- <if test="param.sort != null and param.sort != ''">
+				and sort = #{param.sort}
+			</if> -->
+			<if test="param.promission != null and param.promission != ''">
+				and promission = #{param.promission}
+			</if>
+			<if test="param.parentId != null and param.parentId != ''">
+				and parentId = #{param.parentId}
+			</if>
+			<if test="param.pageButtonKey != null and param.pageButtonKey != ''">
+				and pageButtonKey = #{param.pageButtonKey}
+			</if>
+			<if test="param.callback != null and param.callback != ''">
+				and callback = #{param.callback}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 系统资源（菜单、按钮） -->
+	<insert id="addResources" parameterType="com.jing.system.permission.entity.Resources">
+		<selectKey keyProperty="resId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_resource (resId ,resName ,resURL ,resType ,icon ,sort ,promission ,parentId ,pageButtonKey ,callback ) 
+		values
+		(#{resId},#{resName},#{resURL},#{resType},#{resIcon},#{sort},#{promission},#{parentId},#{pageButtonKey},#{callback})
+	</insert>
+
+	<!-- 修改系统资源（菜单、按钮） -->
+	<update id="updateResources" parameterType="com.jing.system.permission.entity.Resources">
+		UPDATE sys_resource
+		<set> 
+			<if test="resId != null and resId != ''">
+				 resId = #{resId},
+			</if>
+			<if test="resName != null and resName != ''">
+				 resName = #{resName},
+			</if>
+			<if test="resURL != null and resURL != ''">
+				 resURL = #{resURL},
+			</if>
+			<if test="resType != null and resType != ''">
+				 resType = #{resType},
+			</if>
+			<if test="resIcon != null and resIcon != ''">
+				 icon = #{resIcon},
+			</if>
+			<if test="sort != null and sort != ''">
+				 sort = #{sort},
+			</if>
+			<if test="promission != null and promission != ''">
+				 promission = #{promission},
+			</if>
+			<if test="parentId != null and parentId != ''">
+				 parentId = #{parentId},
+			</if>
+			<if test="pageButtonKey != null and pageButtonKey != ''">
+				 pageButtonKey = #{pageButtonKey},
+			</if>
+			<if test="callback != null and callback != ''">
+				 callback = #{callback},
+			</if>
+		</set>
+		WHERE	resId = #{resId}
+	</update>
+	
+	<!-- 根据ID删除系统资源（菜单、按钮） -->
+	<delete id="deleteResourcesById"  parameterType="Integer">
+		DELETE FROM sys_resource WHERE resId = #{value}
+	</delete>
+	
+	<!-- 根据ID查询系统资源（菜单、按钮） -->
+	<select id="getResourcesById" resultMap="ResourcesResultMap" parameterType="Integer">
+		SELECT * FROM sys_resource WHERE resId = #{value}
+	</select>
+	
+	<select id="findResourcesListPage" resultMap="ResourcesResultMap">
+		SELECT * FROM sys_resource
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findResourcesList" resultMap="ResourcesResultMap">
+		SELECT * FROM sys_resource
+		<include refid="query_tables_Property" />
+	</select>
+	<select id="getResourcesList" resultMap="ResourcesResultMap">
+		SELECT * FROM sys_resource where promission=1 order by sort
+	</select>
+	
+	<select id="getVResourcesList" resultMap="VResourcesResultMap">
+		SELECT a.*,(case when b.resId>0 then 'true' else 'false' end) as `checked` FROM sys_resource a 
+left join ( select * from sys_permission where roleId=#{roleId})b on  a.resId=b.resId
+where a.promission=1
+	</select>
+</mapper>

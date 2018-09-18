@@ -1,0 +1,168 @@
+﻿.tab_wrap{
+    width:100%;
+    border:1px solid #ffffff;
+    margin-top:2px;
+    margin-bottom:10px;
+    font-size:12px;
+}
+.tab_wrap_left{
+    border:1px solid #e7ecf1;
+    width:49.5%;
+    float:left;
+    margin-bottom:10px;
+}
+.tab_wrap_right{
+    border:1px solid #e7ecf1;
+    width:49.5%;
+    float:right;
+    margin-bottom:10px;
+}
+.last-td{
+    width:100px!important;
+}
+.tab_wrap th{
+    text-align:center;
+    padding:5px 20px;
+    /*background:#d2e3f4;*/
+    font-weight:normal;
+    color:#808080;
+}
+.tab_wrap td{
+    text-align:center;
+    border:1px solid #eaeaea;
+    padding:3px 3px;
+    color: #808080;
+}
+.tab_wrap th:not(.tab_title){
+    background:#fff;
+    border:1px solid #eaeaea;
+}
+.tab_title{
+    font-weight: bold;
+    color: #000;
+    font-size: 18px;
+    padding-left:0!important;
+    text-align:left!important;
+}
+.add_cion{
+    display:inline-block;
+    vertical-align:middle;
+    float:right;
+    background:url(../images/add_tab.png) no-repeat;
+    width:20px;
+    height:20px;
+    background-size: 40px 20px;
+}
+.add_cion:hover{
+    background-position-x:-20px
+}
+.minus_cion{
+    display:inline-block;
+    vertical-align:middle;
+    text-align:center;
+    background:url(/web/lib/images/minus_icon_tab.svg) no-repeat;
+    width:20px;
+    height:20px;
+}
+
+
+
+
+.input_style{
+    border: none;
+    background: none;
+    text-align: center;
+    padding:5px 0;
+    width:95%;
+}
+.tab_toptitle{
+    height:30px;
+    line-height:22px;
+    /*background:#d2e3f4;
+    text-align:center;*/
+    padding:5px 0px 5px 0px;
+    font-weight: 400;
+    font-family: "Microsoft YaHei UI";
+    vertical-align: middle;
+    font-size: 16px;
+    color:#2958de;
+}
+.tab_secondtitle{
+    padding:5px 0;
+    font-family:"Microsoft YaHei UI";
+}
+.tab_but{
+    padding:20px;
+}
+.save_but{
+    background:#0094ff;
+    width:130px;
+    height:40px;
+    border:none;
+    font-size:16px;
+    color:#fff;
+    border-radius:5px;
+}
+.submin_but{
+    background:#00d4cb;
+    width:130px;
+    height:40px;
+    border:none;
+    font-size:16px;
+    color:#fff;
+    border-radius:5px;
+    float:right;
+    margin-right:0px;
+}
+.tab_but{
+    padding:0;overflow:hidden;margin-bottom:0px;
+}
+.tab-content{
+    padding: 0px 10px 10px 10px;
+}
+.tab_wrap tr td input,.tab_wrap tr td select{
+	border:none;
+}
+.table_detail{
+	margin-bottom:0!important;
+}
+.table_detail tr td{
+	padding:3px!important;
+	height:30px;
+	line-height:23px!important;
+	font-size:9px;
+}
+.table_detail tr td .tab_pic{
+	width:105px;
+	height:150px;
+	overflow: hidden;
+}
+.table_detail tr .tab_pic img{
+	width:180px;
+	/* height:210px; */
+}
+.table_detail .tab_tabtop{
+	background:#f0f0f0;
+	font-weight: bold;
+}
+.padding_smal{
+	padding:5px;
+}
+.img_wrap{
+	border:1px solid #f0f0f0;
+	padding:5px!important;
+	overflow:hidden;
+	width:150px!important;
+}
+.img_wrap img{
+	width:100%
+}
+.datagrid-toolbar tr td .l-btn-left{
+	color:#26b3bf!important
+}
+@media screen and (max-width: 1400px) {
+	.table_detail tr .tab_pic img{
+	width:127px;
+	height:210px;
+}
+}

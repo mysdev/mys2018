@@ -3,7 +3,7 @@
 <mapper namespace="com.faith.framework.dept.dao.DeptStaffDao">
 
 	<!-- Result Map -->
-	<resultMap id="DeptStaffResultMap" type="com.faith.framework.dept.entity.DeptStaff">
+	<resultMap id="DeptStaffResultMap" type="com.jing.system.dept.entity.DeptStaff">
 		<id column="dsid" property="dsid" />
 		<result column="deptCode" property="deptCode" />
 		<result column="image" property="image" />
@@ -52,7 +52,7 @@
 	</sql>
 
 	<!-- 添加 部门职工 -->
-	<insert id="addDeptStaff" parameterType="com.faith.framework.dept.entity.DeptStaff">
+	<insert id="addDeptStaff" parameterType="com.jing.system.dept.entity.DeptStaff">
 		<selectKey keyProperty="dsid" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -62,7 +62,7 @@
 	</insert>
 
 	<!-- 修改部门职工 -->
-	<update id="updateDeptStaff" parameterType="com.faith.framework.dept.entity.DeptStaff">
+	<update id="updateDeptStaff" parameterType="com.jing.system.dept.entity.DeptStaff">
 		UPDATE sys_dept_staff
 		<set> 
 			<if test="deptCode != null" >

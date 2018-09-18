@@ -132,7 +132,7 @@ public class PermissionSecurityFilter extends AbstractSecurityInterceptor implem
                     Authentication authentication = ((SecurityContext) fi.getRequest().getSession().getAttribute(
                             PermissionConstants.SPRING_SECURITY_CONTEXT)).getAuthentication();
                     if (authentication.getPrincipal() != null) {
-                        UserDetail user = (UserDetail) authentication.getPrincipal();
+                        SecurityUserDetail user = (SecurityUserDetail) authentication.getPrincipal();
                         if (user != null) {
                             userName = user.getUsername();
                         }

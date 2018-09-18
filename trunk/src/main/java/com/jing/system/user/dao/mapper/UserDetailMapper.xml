@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.user.dao.UserDetailDao">
+
+	<!-- Result Map -->
+	<resultMap id="UserDetailResultMap" type="com.jing.system.user.entity.UserDetail" extends="com.jing.system.user.dao.UserDao.UserResultMap">
+		<id column="userId" property="userId" />
+		<result column="phone" property="phone" />
+		<result column="image" property="image" />
+		<result column="addr" property="addr" />
+		<result column="email" property="email" />
+		
+		<result column="remediation" property="remediation" />
+		<result column="scope" property="scope" />
+		<result column="familyNumber" property="familyNumber" />
+	</resultMap>
+	
+	<!-- Result Map -->
+	<resultMap id="GridUserDetailResultMap" type="com.jing.system.user.entity.UserDetail" extends="com.jing.system.user.dao.UserDao.UserResultMap">
+		<id column="userId" property="userId" />
+		<result column="phone" property="phone" />
+		<result column="image" property="image" />
+		<result column="addr" property="addr" />
+		<result column="email" property="email" />
+		
+		<result column="remediation" property="remediation" />
+		<result column="scope" property="scope" />
+		<result column="familyNumber" property="familyNumber" />
+	</resultMap>
+	
+	<!-- Result Map -->
+	<resultMap id="UserDetailSimpleResultMap" type="com.jing.system.user.entity.UserDetail">
+		<id column="userId" property="userId" />
+		<result column="phone" property="phone" />
+		<result column="image" property="image" />
+		<result column="addr" property="addr" />
+		<result column="email" property="email" />
+		
+		<result column="remediation" property="remediation" />
+		<result column="scope" property="scope" />
+		<result column="familyNumber" property="familyNumber" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.userId != null and param.userId != ''">
+				and d.userId = #{param.userId}
+			</if>
+			<if test="param.phone != null and param.phone != ''">
+				and d.phone = #{param.phone}
+			</if>
+			<if test="param.image != null and param.image != ''">
+				and d.image = #{param.image}
+			</if>
+			<if test="param.addr != null and param.addr != ''">
+				and d.addr = #{param.addr}
+			</if>
+			<if test="param.email != null and param.email != ''">
+				and d.email = #{param.email}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="query_grid_tables_Property" >
+		<where>
+			<if test="param.userId != null and param.userId != ''">
+				and d.userId = #{param.userId}
+			</if>
+			<if test="param.phone != null and param.phone != ''">
+				and d.phone = #{param.phone}
+			</if>
+			<if test="param.image != null and param.image != ''">
+				and d.image = #{param.image}
+			</if>
+			<if test="param.addr != null and param.addr != ''">
+				and d.addr = #{param.addr}
+			</if>
+			<if test="param.email != null and param.email != ''">
+				and d.email = #{param.email}
+			</if>
+			<if test="param.deptCode != null and param.deptCode != ''">
+				and s.deptCode = #{param.deptCode}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 用户详情 -->
+	<insert id="addUserDetail" parameterType="com.jing.system.user.entity.UserDetail">
+		INSERT INTO sys_user_detail (userId ,phone ,image ,addr ,email,remediation,scope,familyNumber ) 
+		values
+		(#{userId},#{phone},#{image},#{addr},#{email},#{remediation},#{scope},#{familyNumber})
+	</insert>
+
+	<!-- 修改用户详情 -->
+	<update id="updateUserDetail" parameterType="com.jing.system.user.entity.UserDetail">
+		UPDATE sys_user_detail
+		<set> 
+			<if test="phone != null" >
+				phone = #{phone},
+			</if>
+			<if test="image != null" >
+				image = #{image},
+			</if>
+			<if test="addr != null" >
+				addr = #{addr},
+			</if>
+			<if test="email != null" >
+				email = #{email},
+			</if>
+			<if test="remediation != null" >
+				remediation = #{remediation},
+			</if>
+			<if test="scope != null" >
+				scope = #{scope},
+			</if>
+			<if test="familyNumber != null" >
+				familyNumber = #{familyNumber},
+			</if>
+		</set>
+		WHERE	userId = #{userId}
+	</update>
+	
+	<!-- 根据ID删除用户详情 -->
+	<delete id="deleteUserDetailById"  parameterType="Integer">
+		DELETE FROM sys_user_detail WHERE userId = #{value}
+	</delete>
+	
+	<!-- 根据ID查询用户详情   连表 -->
+	<select id="getUserDetailById" resultMap="UserDetailResultMap" parameterType="Integer">
+		SELECT u.*,d.phone,d.image,d.addr,d.email,d.remediation,d.scope,d.familyNumber FROM sys_user u LEFT JOIN sys_user_detail d on u.userId=d.userId 
+		WHERE u.userId = #{value}
+	</select>
+	
+	
+	<!-- 根据ID查询用户详情 -->
+	<select id="getUserDetailByIdSimple" resultMap="UserDetailSimpleResultMap" parameterType="Integer">
+		SELECT * FROM sys_user_detail u  
+		WHERE u.userId = #{value}
+	</select>
+	
+	<select id="findUserDetailListPage" resultMap="UserDetailResultMap">
+		SELECT u.*,d.phone,d.image,d.addr,d.email FROM sys_user u LEFT JOIN sys_user_detail d on u.userId=d.userId 
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findGridUserDetailListPage" resultMap="GridUserDetailResultMap">
+<!-- 		SELECT u.*,d.phone,d.image,d.addr,d.email ,d.remediation,d.scope,d.familyNumber FROM sys_user u LEFT JOIN sys_user_detail d on u.userId=d.userId   LEFT JOIN sys_user_dept s on u.userId=s.userId   -->
+<!-- 		<include refid="query_grid_tables_Property" /> -->
+		
+		SELECT t.*,d.phone,d.image,d.addr,d.email,d.remediation,d.scope,d.familyNumber  from (
+		select 
+		DISTINCT u.*
+		from sys_user u,
+		sys_user_dept d,
+		sys_user_role r 
+		where u.userId=d.userId
+		and u.userId=r.userId
+		<if test="param.nickName != null and param.nickName != ''">
+			and nickName like CONCAT('%',#{param.nickName},'%')
+		</if>
+<!-- 		<if test="param.roleId != null"> -->
+			and r.roleId in 
+<!-- 			<foreach collection="param.roleId" item="roleId" index="index" -->
+<!--                 open="(" close=")" separator=","> -->
+                ('ROLE8','ROLE9','ROLE10','ROLE11')
+<!--             </foreach> -->
+<!-- 		</if> -->
+		<if test="param.deptCode != null">
+			and d.deptCode = 
+<!-- 			<foreach collection="param.deptCode" item="deptCode" index="index" -->
+<!--                 open="(" close=")" separator=","> -->
+                ${param.deptCode}
+<!--             </foreach> -->
+		</if>
+		<if test="param.areaCode != null">
+			and (
+<!-- 			<foreach collection="param.areaCode" item="areaCode" index="index" -->
+<!--                 open="" close="" separator="or"> -->
+                d.deptCode in (
+					SELECT orgId from sys_dept_area a where a.areaCode like CONCAT('${param.areaCode}','%')
+				)
+<!--             </foreach> -->
+            )
+		</if>
+		
+		)t LEFT JOIN  sys_user_detail d on t.userId=d.userId
+		
+		
+	</select>
+	
+	<select id="findUserDetailList" resultMap="UserDetailResultMap">
+		SELECT u.*,d.phone,d.image,d.addr,d.email FROM sys_user u LEFT JOIN sys_user_detail d on u.userId=d.userId 
+		<include refid="query_tables_Property" />
+	</select>
+	
+	
+	<select id="findUserListComplex" resultMap="UserDetailResultMap">
+		SELECT t.*,d.phone,d.image,d.addr,d.email from (
+		select 
+		DISTINCT u.*
+		from sys_user u,
+		sys_user_dept d,
+		sys_user_role r 
+		where u.userId=d.userId
+		and u.userId=r.userId
+		<if test="param.nickName != null and param.nickName != ''">
+			and nickName like CONCAT('%',#{param.nickName},'%')
+		</if>
+		<if test="param.roleId != null">
+			and r.roleId in 
+			<foreach collection="param.roleId" item="roleId" index="index"
+                open="(" close=")" separator=",">
+                '${roleId}'
+            </foreach>
+		</if>
+		<if test="param.deptCode != null">
+			and d.deptCode in 
+			<foreach collection="param.deptCode" item="deptCode" index="index"
+                open="(" close=")" separator=",">
+                ${deptCode}
+            </foreach>
+		</if>
+		<if test="param.areaCode != null">
+			and (
+			<foreach collection="param.areaCode" item="areaCode" index="index"
+                open="" close="" separator="or">
+                d.deptCode in (
+					SELECT orgId from sys_dept_area a where a.areaCode like CONCAT('${areaCode}','%')
+				)
+            </foreach>
+            )
+		</if>
+		
+		)t LEFT JOIN  sys_user_detail d on t.userId=d.userId
+	</select>
+	
+</mapper>

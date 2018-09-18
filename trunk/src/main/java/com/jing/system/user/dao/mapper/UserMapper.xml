@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.user.dao.UserDao">
+
+	<!-- Result Map -->
+	<resultMap id="UserResultMap" type="com.jing.system.user.entity.User">
+		<id column="userId" property="userId" />
+		<result column="userName" property="userName" />
+	<!-- <result column="password" property="password" /> -->	
+		<result column="nickName" property="nickName" />
+		<result column="status" property="status" />
+		<result column="loginStatus" property="loginStatus" />
+		<result column="clintId" property="clintId" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<!-- <if test="param.userId != null">
+				and userId = #{param.userId}
+			</if> -->
+			<if test="param.userName != null and param.userName != ''">
+				and userName LIKE concat(concat('%',#{param.userName}),'%')
+				
+			</if>
+			<if test="param.nickName != null and param.nickName != ''">
+				and nickName LIKE concat(concat('%',#{param.nickName}),'%')
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.loginStatus != null and param.loginStatus != ''">
+				and loginStatus = #{param.loginStatus}
+			</if>
+			<if test="param.clintId != null and param.clintId != ''">
+				and clintId = #{param.clintId}
+			</if>
+			<if test="param.deptCode != null">
+				and userId in (select userId from sys_user_dept where deptCode=#{param.deptCode})
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 用户 -->
+	<insert id="addUser" parameterType="com.jing.system.user.entity.User">
+		<selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_user (userId ,userName ,password ,nickName ,status ,loginStatus ,clintId ) 
+		values
+		(#{userId},#{userName},#{password},#{nickName},#{status},#{loginStatus},#{clintId})
+	</insert>
+
+	<!-- 修改用户 -->
+	<update id="updateUser" parameterType="com.jing.system.user.entity.User">
+		UPDATE sys_user
+		<set> 
+			<if test="userName != null" >
+				userName = #{userName},
+			</if>
+			<if test="password != null" >
+				password = #{password},
+			</if>
+			<if test="nickName != null" >
+				nickName = #{nickName},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="loginStatus != null" >
+				loginStatus = #{loginStatus},
+			</if>
+			<if test="clintId != null" >
+				clintId = #{clintId},
+			</if>
+		</set>
+		WHERE	userId = #{userId}
+	</update>
+	
+	<!-- 根据ID删除用户 -->
+	<delete id="deleteUserById"  parameterType="Integer">
+		DELETE FROM sys_user WHERE userId = #{value}
+	</delete>
+	
+	<!-- 根据ID查询用户 -->
+	<select id="getUserById" resultMap="UserResultMap" parameterType="Integer">
+		SELECT userId,userName,nickName,status,loginStatus,clintId FROM sys_user WHERE userId = #{value}
+	</select>
+	
+	<select id="findUserListPage" resultMap="UserResultMap">
+		SELECT userId,userName,nickName,status,loginStatus,clintId FROM sys_user
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findUserList" resultMap="UserResultMap">
+		SELECT userId,userName,nickName,status,loginStatus,clintId FROM sys_user
+		<include refid="query_tables_Property" />
+	</select>
+	
+	
+	<select id="findUserByResourceId" resultMap="UserResultMap" parameterType="Integer">
+		select * from sys_user u,sys_user_role r ,sys_permission p
+			where u.userId = r.userId and r.roleId = p.roleId and p.resId = #{value}
+	</select>
+	
+	<select id="findUserByRoleId" resultMap="UserResultMap" parameterType="String">
+		select DISTINCT u.* from sys_user u ,sys_user_role r where u.userId = r.userId and r.roleId=#{value}
+	</select>
+	
+</mapper>

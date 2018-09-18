@@ -3,7 +3,7 @@
 <mapper namespace="com.faith.framework.dept.dao.DeptDao">
 
 	<!-- Result Map -->
-	<resultMap id="DeptResultMap" type="com.faith.framework.dept.entity.Dept">
+	<resultMap id="DeptResultMap" type="com.jing.system.dept.entity.Dept">
 		<id column="deptCode" property="deptCode" />
 		<result column="deptName" property="deptName" />
 		<result column="remark" property="remark" />
@@ -13,7 +13,7 @@
 	</resultMap>
 	
 	<!-- Result Map -->
-	<resultMap id="DeptResultMapV" type="com.faith.framework.dept.entity.DeptV">
+	<resultMap id="DeptResultMapV" type="com.jing.system.dept.entity.DeptV">
 		<id column="deptCode" property="deptCode" />
 		<result column="deptName" property="deptName" />
 		<result column="remark" property="remark" />
@@ -47,7 +47,7 @@
 	</sql>
 
 	<!-- 添加 部门 -->
-	<insert id="addDept" parameterType="com.faith.framework.dept.entity.Dept">
+	<insert id="addDept" parameterType="com.jing.system.dept.entity.Dept">
 		<selectKey keyProperty="deptCode" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -57,7 +57,7 @@
 	</insert>
 
 	<!-- 修改部门 -->
-	<update id="updateDept" parameterType="com.faith.framework.dept.entity.Dept">
+	<update id="updateDept" parameterType="com.jing.system.dept.entity.Dept">
 		UPDATE sys_dept
 		<set> 
 			<if test="deptName != null" >

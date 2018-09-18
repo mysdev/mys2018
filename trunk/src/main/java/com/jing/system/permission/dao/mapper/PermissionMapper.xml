@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.permission.dao.PermissionDao">
+
+	<!-- Result Map -->
+	<resultMap id="PermissionResultMap" type="com.jing.system.permission.entity.Permission">
+		<id column="roleId" property="roleId" />
+		<result column="resId" property="resId" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.roleId != null and param.roleId != ''">
+				and roleId = #{param.roleId}
+			</if>
+			<if test="param.resId != null and param.resId != ''">
+				and resId = #{param.resId}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 权限 -->
+	<insert id="addPermission" parameterType="com.jing.system.permission.entity.Permission">
+		INSERT INTO sys_permission (roleId ,resId ) 
+		values
+		(#{roleId},#{resId})
+	</insert>
+	
+	<!-- 添加 权限 -->
+	<insert id="batchAddPermission" parameterType="java.util.List">
+		INSERT INTO sys_permission (roleId ,resId ) 
+		values
+		<foreach collection="list" item="item" separator=",">
+       		(#{item.roleId}, #{item.resId})
+   		</foreach>
+	</insert>
+
+	<!-- 修改权限 -->
+	<update id="updatePermission" parameterType="com.jing.system.permission.entity.Permission">
+		UPDATE sys_permission
+		<set> 
+			<if test="resId != null and resId != ''" >
+				resId = #{resId},
+			</if>
+		</set>
+		WHERE	roleId = #{roleId}
+	</update>
+	
+	<!-- 根据ID删除权限 -->
+	<delete id="deletePermssionByRoleId"  parameterType="String">
+		DELETE FROM sys_permission WHERE roleId = #{value}
+	</delete>
+	
+	<!-- 根据ID查询权限 -->
+	<select id="getPermissionById" resultMap="PermissionResultMap" parameterType="String">
+		SELECT * FROM sys_permission WHERE roleId = #{value}
+	</select>
+	
+	<select id="findPermissionListPage" resultMap="PermissionResultMap">
+		SELECT * FROM sys_permission
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findPermissionList" resultMap="PermissionResultMap">
+		SELECT * FROM sys_permission
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<delete id="deletePermssionByRoleIdAndResId">
+		DELETE FROM sys_permission WHERE roleId= #{roleId} and resId = #{resId}
+	</delete>
+	
+	
+	<select id="findActions" resultMap="com.jing.system.permission.dao.ResourcesDao.ResourcesResultMap">
+		select DISTINCT r.* from sys_resource r, sys_permission p,sys_user_role u 
+		where r.resId=p.resId
+		and p.roleId=u.roleId
+		and u.userId=#{userId}
+		and r.parentId=#{parentId}
+		and r.pageButtonKey=#{pageButtonKey}
+		and resType=1
+		order by sort asc
+	</select>
+	
+	<select id="findMyMenus" resultMap="com.jing.system.permission.dao.ResourcesDao.ResourcesResultMap">
+		select DISTINCT r.* from sys_resource r, sys_permission p,sys_user_role u 
+		where r.resId=p.resId
+		and p.roleId=u.roleId
+		and u.userId=#{userId}
+		and resType=2
+		order by sort asc
+	</select>
+</mapper>

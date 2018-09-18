@@ -135,11 +135,11 @@ public class PermissionSecurityMetadataSource implements FilterInvocationSecurit
 				// 请求/index/5，响应/index/{id},进行相同转化
 				requestMappingValue = requestUrl.substring(0, requestMappingValue.indexOf(".") - 1);
 			}
-			List<RoleDetail> resRoleList = loginService.getRolesByResUrl(requestMappingValue);
+			List<SecurityRoleDetail> resRoleList = loginService.getRolesByResUrl(requestMappingValue);
 			// 验证该资源的是否设置了访问权限
 			validSetRole(requestUrl, resRoleList);
 			Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
-			for (RoleDetail role : resRoleList) {
+			for (SecurityRoleDetail role : resRoleList) {
 				atts.add(new SecurityConfig(role.getRoleName()));
 			}
 			return atts;
@@ -163,7 +163,7 @@ public class PermissionSecurityMetadataSource implements FilterInvocationSecurit
 	 * @param requestUrl
 	 * @param resRoleList
 	 */
-	private void validSetRole(String requestUrl, List<RoleDetail> resRoleList) {
+	private void validSetRole(String requestUrl, List<SecurityRoleDetail> resRoleList) {
 		if (resRoleList == null || resRoleList.size() == 0) {
 			String msg = "未设置此资源:" + requestUrl + " 的访问权限，请联系系统管理员进行处理，谢谢.";
 			this.logger.warn(msg);

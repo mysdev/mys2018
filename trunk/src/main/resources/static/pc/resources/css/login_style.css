@@ -1,0 +1,160 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+    background:none!important;
+}
+
+.box-shadow {
+    -moz-box-shadow: 0 0 15px #909090;
+    -webkit-box-shadow: 0 0 15px #909090;
+    box-shadow: 0 0 15px #909090;
+}
+#web_bg{
+    height: 100%; 
+    width: 100%; 
+    z-index: -1;
+    background-image:url(../images/login/login_bg.png);
+    background-repeat: no-repeat;
+    background-size: 65% 100%;
+}
+/* .login_top_w{
+    background:-webkit-linear-gradient(left,#0c61ec,#1546c4);
+    background: -o-linear-gradient(right, #0c61ec,#1546c4); Opera 11.1 - 12.0
+  background: -moz-linear-gradient(right, #0c61ec,#1546c4); Firefox 3.6 - 15
+  background: linear-gradient(to right, #0c61ec,#1546c4); 标准的语法
+    height: 110px; 
+    text-align: 
+    center; width: 100%;
+} */
+/* .login_top{
+    background: url('../images/login/top.png') no-repeat; 
+    background-size:cover;
+    text-align: left;
+    width: 1280px;
+    height: 110px; 
+    margin-left: auto; 
+    margin-right: auto;
+    
+} */
+.wrap_content{
+    min-height: 550px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top:18%;
+    padding:15px;
+}
+.wrap_content_top{
+	margin-bottom:10px;
+}
+.login_wrap_content{
+	width: 35%;
+    float: right;
+    height: 100%;
+    padding:45px;
+}
+.login_right_wrap{
+	background:url(../images/login/right_bg.png);
+	background-repeat: no-repeat;
+}
+.footer{
+    /* background-color: #404040;  */
+        bottom: 80px;
+    color: #808080;
+    font-size: 12px;
+    height: 35px;
+    line-height: 20px;
+        margin-top: 20px;
+    /* position: absolute; */
+}
+.noborder{border:none!important}
+.noborder:hover{border:none!important}
+.input_div{
+    width:100%;
+    margin-top:20%;
+}
+.input_div h4{
+    font-family:"Microsoft YaHei UI";
+    font-size:34px;
+    color:#5f5f5f;
+    margin-bottom:30px;
+}
+.wrap_iocn{
+    display:inline-block;
+    width:30px;
+    height:30px;  
+    position:absolute;
+    top:10px;
+    right:5px;
+}
+.icon_u{
+    background:url('/web/lib/images/login/username.svg') no-repeat;
+    background-size:25px 25px;
+}
+.icon_p{
+    background:url('/web/lib/images/login/password.svg') no-repeat;
+    background-size:25px 25px;
+}
+.form-group-t{
+    position:relative;
+    margin-bottom:40px;
+}
+.form-group-t input{
+    height:40px;
+}
+.loginbtn{
+    background-color: #636363!important; 
+    border: 0!important;  
+    color: #fff!important; 
+    font-family:"Microsoft YaHei UI";
+    font-size:18px;
+}
+.loginbtn:hover{
+    background-color:#303030!important; 
+}
+
+.code_div{
+	position: fixed;
+	bottom:100px;
+	right:-135px;
+	background:#2155e9;
+	width:155px;
+	height:130px;
+	z-index:999;
+	overflow:hidden;
+	padding:5px;
+	border-radius:3px;
+	cursor:pointer;
+	transition:all .5s;
+}
+.code_div h4{
+	width:20px;
+	height:130px;
+    text-align: center;
+    margin-top:12px;
+    font-size: 12px;
+    color:#fff;
+    float:left;
+	writing-mode:lr-tb;
+	margin-bottom: 0!important;
+	margin-right: 5px;
+    font-family:"Microsoft YaHei UI";
+}
+.code_con{
+	height: 120px;
+	width:120px;
+	overflow: hidden;
+    background:#fff;
+}
+.code_con img{
+	width:120px;
+}
+@media screen and (max-width:1400px){
+	.input_div{
+    width:100%;
+    margin-top:10%;
+}
+}

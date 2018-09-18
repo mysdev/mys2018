@@ -1,0 +1,40 @@
+body {
+    min-width: 1200px;
+    background: #C0C2CC!important;
+}
+body {
+    display: block;
+    margin: 8px;
+}
+.bg {
+    width: 794px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+    margin-top: 20px;
+    padding:15px;
+}
+.print_title{
+    text-align: center;
+}
+.top_wrap{
+    overflow: hidden;
+}
+.top_left{
+    width:70%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.top_right{
+    width:29%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.font_s_small{
+    font-size: 8px;
+}
+.tab_wrap .table tr td{
+    vertical-align: middle;
+}
+.tab_center{text-align: center}
+.tab_bole{font-weight: bold}

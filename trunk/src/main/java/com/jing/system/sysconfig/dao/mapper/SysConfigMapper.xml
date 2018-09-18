@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.faith.framework.sysconfig.dao.SysConfigDao">
+<mapper namespace="com.jing.system.sysconfig.dao.SysConfigDao">
 
 	<!-- Result Map -->
-	<resultMap id="SysConfigResultMap" type="com.faith.framework.sysconfig.entity.SysConfig">
+	<resultMap id="SysConfigResultMap" type="com.jing.system.sysconfig.entity.SysConfig">
 		<id column="pid" property="pid" />
 		<result column="pcode" property="pcode" />
 		<result column="pvalue" property="pvalue" />
@@ -44,14 +44,14 @@
 	</sql>
 
 	<!-- 添加 系统参数 -->
-	<insert id="addSysConfig" parameterType="com.faith.framework.sysconfig.entity.SysConfig">
+	<insert id="addSysConfig" parameterType="com.jing.system.sysconfig.entity.SysConfig">
 		INSERT INTO sys_config (pid ,pcode ,pvalue ,`desc` ,createdBy ,createdDate ,updatedBy ,updatedDate ) 
 		values
 		(#{pid},#{pcode},#{pvalue},#{desc},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
 	</insert>
 
 	<!-- 修改系统参数 -->
-	<update id="updateSysConfig" parameterType="com.faith.framework.sysconfig.entity.SysConfig">
+	<update id="updateSysConfig" parameterType="com.jing.system.sysconfig.entity.SysConfig">
 		UPDATE sys_config
 		<set> 
 			<if test="pcode != null and pcode != ''" >

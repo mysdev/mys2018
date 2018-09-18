@@ -1,16 +1,19 @@
 package com.jing.system.user.entity;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.jing.config.web.security.SecurityRoleDetail;
+import com.jing.config.web.security.SecurityUserDetail;
+import com.jing.system.permission.entity.Role;
+import com.jing.system.permission.entity.UserRole;
 
 /**
  * 用户 实体类
  * 
  * @author codeing gen
  */
-public class User implements UserDetails {
+public class User extends SecurityUserDetail {
 	private static final long serialVersionUID = 1L;
 	public static final String DEFAULT_PASSWORD = "123456";
 
@@ -20,9 +23,43 @@ public class User implements UserDetails {
 	private String nickName; // 昵称
 	private Integer status; // 账号状态
 	private Integer loginStatus; // 登录状态
-	private String clintId; // 客户端标识
-	
+	private String clintId; // 客户端标识	
 	private Integer deptCode;
+	
+	private List<Role> userRole;
+	private List<UserRole> userRoles;
+
+	public List<UserRole> getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+
+	public boolean isAdmin() {
+		if (userRole != null && userRole.size() > 0) {
+			for (Role role : userRole) {
+				if ("ROLE1".equals(role.getRoleId())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public List<Role> getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(List<SecurityRoleDetail> roles) {
+		if (roles != null) {
+			userRole = new ArrayList<Role>();
+			for (SecurityRoleDetail role : roles) {
+				userRole.add((Role) role);
+			}
+		}
+	}
 
 	public Integer getDeptCode() {
 		return deptCode;
@@ -32,46 +69,7 @@ public class User implements UserDetails {
 		this.deptCode = deptCode;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
-	@Override
-	public String getUsername() {
-		return username;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		if (status.intValue() == 1) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
+	
 	public Integer getUserId() {
 		return userId;
 	}
@@ -118,6 +116,21 @@ public class User implements UserDetails {
 
 	public void setLoginStatus(Integer loginStatus) {
 		this.loginStatus = loginStatus;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 }
