@@ -1,0 +1,63 @@
+<form id="form_resources" class="fromstyle">
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">资源名称</label>
+  	 	<input type="text" class="form-control easyui-validatebox" data-options="required:true" id="resName" name="resName"  placeholder="请输入资源名称">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">资源URL</label>
+  	 	<input type="text" class="form-control easyui-validatebox" data-options="required:true" id="resURL" name="resURL"  placeholder="请输入资源URL">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">资源类型</label>
+  	 	<select class="form-control" id="resType" name="resType"  placeholder="请选择资源类型"  >
+  	 		<option value="1">按钮</option>
+  	 		<option value="2">菜单</option>
+  	 	</select>
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">图标</label>
+  	 	<input type="text" class="form-control"  id="resIcon" name="resIcon"  placeholder="请输入图标" onclick="openIcon(this);">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">序号</label>
+  	 	<input type="number" class="form-control" name="sort">
+  	</div>
+  	<div class="form-group col-sm-6">
+  	 	<label for="tableName">上级资源</label>
+  	 	<input type="number" class="form-control" name="parentId" id="parentId">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">界面按钮标识</label>
+  	 	<input type="text" class="form-control"  id="pageButtonKey" name="pageButtonKey"  placeholder="请输入界面按钮标识">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">回调函数</label>
+  	 	<input type="text" class="form-control"  id="callback" name="callback"  placeholder="请输入回调函数">
+  	</div>
+  	<div class="form-group col-sm-6">
+  	 	<label for="tableName">是否权限配置</label>
+  	 	<input type="radio"  name="promission" value="1">是
+  	 	<input type="radio"  name="promission" value="2">否
+  	</div>
+</form>
+<script>
+function openIcon(_this){
+	//alert($(_this).val());
+	//弹出图标选择界面
+	var icon_options = {
+		title : '选择图标',
+		formpage : projectName+'/webpage/icon.html',
+		buttons : [ {
+			text : '确定',
+			handler : function() {
+				console.log($("#dialog_wrap").html());
+				var icon = $("#dialog_wrap")[0].contentWindow.returnIcon()
+				$(_this).val(icon);
+				$("#dialog_wrap").dialog('destroy');// 销毁
+			}
+		} ],
+		
+	};
+	Faith.openForm(icon_options);
+}
+</script>

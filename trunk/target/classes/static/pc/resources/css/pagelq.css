@@ -1,0 +1,221 @@
+@CHARSET "UTF-8";
+.nopadding .col-sm-2,.nopadding .col-sm-4,.nopadding .col-sm-8,.nopadding .col-sm-10,.nopadding .col-sm-12,.nopadding .col-sm-3,
+.nopadding.col-sm-12 {padding-right: 0px;padding-left: 0px;}
+.ispadding .col-sm-2,.ispadding .col-sm-10{padding-right: 15px;padding-left: 15px;}
+.rankingrb{padding: 40px 100px!important;}
+
+.nav-tabs2 {
+    border-bottom: 1px solid #e7ecf1;
+    margin-bottom: 5px;;
+}
+.gre_l_border{
+    min-height: 550px!important;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.gre_l_border3{
+	border-right: 5px solid #eef1f5;
+    min-height: 550px!important;
+    padding-left: 20px;
+    padding-right: 25px;
+	padding-top: 30px;
+}
+.gre_l_border2{
+	
+    padding-left: 5px!important;
+    padding-right: 0px!important;
+}
+.gre_l_border4{
+    padding-left: 25px;
+    padding-right: 20px;
+    padding-top: 30px;
+}
+.bctitle_img{
+	width:100%;
+	border-bottom:1px solid #e7ecf1;
+    padding:2px 10px;
+    font-size: 16px;
+}
+/* 通知 */
+.noteul{
+	background-color: #fff;
+    width: 80%;
+    text-align: left;
+    height: 40px;
+}
+.notejdk{
+	margin-top:15px;
+	margin-bottom: 15px;
+}
+.notespan{
+	margin-top: 10px;
+}
+.noteli{
+    top: 95px;
+    left:20px;
+    width:71%
+}
+.noteli2{
+    top: 160px;
+    left:20px;
+    width:71%
+}
+.noteli3{
+    top: 225px;
+    left:20px;
+    width:71%
+}
+.notesubmit{
+    width: 25%;
+    margin: 20px;
+    left: 30%;
+    position: relative;
+    height: 50px;
+    font-size: 18px;
+    letter-spacing: 30px;
+    padding-left: 30px;
+}
+.width80{
+    width: 80%;
+}
+.width80 label{
+    font-weight: 500;
+}
+/*事务派遣*/
+.detailcontent{
+	padding: 20px 30px;
+    border: 1px solid #a7a7a7;
+    color: #808080;
+    position: relative;
+    left: 130px;
+    top: -50px;
+    width:87%;
+}
+.detailcontent span{
+	display: inline-block;
+	width:50%;
+    padding: 3px 0px;
+}
+.detailcontent select{
+	width:32.5%;
+	margin-top: 10px;
+    margin-bottom: 20px;
+}
+.img1{
+    top: 120px;
+    position: relative;
+    width: 60px;
+    display: inline-block;
+}
+.img2{
+    top: 120px;
+    position: relative;
+    width: 60px;
+    display: inline-block;
+    left: 30px;
+    z-index: 10;
+}
+.img3{
+    top: 70px;
+    position: relative;
+    width: 60px;
+    display: inline-block;
+}
+.img4{
+    top: 70px;
+    position: relative;
+    width: 60px;
+    display: inline-block;
+    left: 30px;
+    z-index: 10;
+}
+
+/*紧急事件*/
+.emertop{
+    border-bottom: 5px solid #f2f2f2;
+    padding:10px 30px;
+}
+.emertopbutt{
+	font-size: 18px;
+}
+.emerleft{
+	border-right: 5px solid #f2f2f2;
+    min-height: 800px;
+}
+.emerleft.t1{padding-top: 30px;padding-left: 2.5%!important;}
+.emernav{
+	border-bottom:1px solid #f2f2f2;
+	height: 50px;
+    font-size: 16px;
+    line-height: 50px;
+	color:#808080;
+	padding-left: 75px;
+}
+.emernav.active{
+	background-color: #fafafa;
+}
+.emernav:hover{
+	background-color: #fafafa;
+}
+.emernav1{
+	background: url('../images/emer_nav01.png')30px no-repeat;
+    background-size: 6%;
+}
+.emernav2{
+	background: url('../images/emer_nav02.png')30px no-repeat;
+	background-size: 6%;
+}
+.emernav3{
+	background: url('../images/emer_nav03.png')30px no-repeat;
+	background-size: 6%;
+}
+.from_wrap_apadding{
+	padding:25px;
+}
+@media screen and (max-width:1400px){
+	.emerleft{
+    	min-height: 500px;
+	}
+}
+/*工作签到*/
+.signtop{margin-top: 20px;}
+.signtitle{text-align: center;}
+.signtitle2{margin-top: 20px;margin-bottom: 20px;text-align:center;}
+.signtitle2 span{display: inline-block;border-radius: 50%;margin-left: 10px;}
+.signtitle_aa{font-size:16px;}
+.signsearch{border: 1px solid #ccc;font-size: 14px;padding: 6px 15px;}
+.signsearchicon{background: url(../images/sign_nav01.png) no-repeat;float: right; display: inline-block;width: 20px;height: 20px;}
+.signtable tr th{font-weight: 500!important;padding: 8px 0px!important;text-align: center!important;font-size: 10px;background-color: #fff;border-top:none!important;}
+.signtable tr{border-bottom: #fff solid 3px;}
+.signtable tr td{text-align: center!important;background-color: #fafafa;padding-left: 8px!important;padding-right: 8px!important; padding-top: 12px!important;padding-bottom: 12px!important;}
+.signtable .cal1{border-right: #fff solid 4px;}
+.signtable .cal2{border-left: #fff solid 3px;font-weight: bold;}
+.signtable .cal3{background-color: #d7f6ff;}
+.signtable span {width: 25px;height: 25px;display: inline-block;border-radius: 50%;color:#fff;font-size:10px;line-height: 25px;}
+span.sgrey{background-color: #b0adad;}
+span.sgreen{background-color: #3ebe2d;}
+span.sred{background-color: #ff0000;}
+span.sblue{background-color: #427aed;}
+span.sblurgreen{background-color: #28cece;}
+span.svolid{background-color: #a836ff;}
+span.syellow{background-color:#f0d811;}
+
+/*考核排名*/
+.rankingleft{border-right: 8px solid #f2f2f2;min-height: 850px;}
+@media screen and (max-width:1400px){.rankingleft{min-height: 550px;}}
+.rankinglicon1{background:#479aef url('../images/rank_nav01.png')10px no-repeat;color:#fff;font-size: 20px;padding: 10px 10px 10px 35px;line-height: 20px;}
+.rankinglicon2{background: url('../images/rank_nav02.png')10px no-repeat;float: right;display: inline-block;width: 30px;height: 18px;background-position: center;}
+ul.rankleft{list-style:none ;padding-left: 0px;}
+ul.rankleft li{    font-size: 18px;border-bottom: 1px solid #ccc;padding: 10px 20px;color:#606060;}
+.rankingright1{border-bottom: 8px solid #f2f2f2;}
+.rankingrr{border-left: 8px solid #f2f2f2;}
+.rankimg{height: 100%; text-align: center;}
+.rankicon{    width: 100%;height: 280px;}
+.rankicon1{position: relative;bottom: 0px;display: inline-block;top: 18.2%;}
+.rankicon2{position: relative;bottom: 0px;display: inline-block;top: 32.5%;}
+.rankicon span{position: absolute;left: 42.5%;top: 58%;z-index: 30;color: #fff;font-size: 16px;}
+.rankingrb table tr th{background-color: #284379;color:#fff;font-weight: 500!important;text-align: center;border: 1px solid #fff;vertical-align: middle;}
+.rankingrb table tr td{border: 1px solid #ddd;background-color: #f0f0f0!important;text-align: center;}
+
+#premonth:hover{cursor: pointer;}
+#nextmonth:hover{cursor: pointer;}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8" />
+<title>动态表单设置</title>
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
+
+<script type="text/javascript">
+	//列表中的列对象
+	var columns = [ 
+					{field:'fid', title:'表单ID', width:52, align:'center'  },
+					{field:'title', title:'表单名称', width:300, align:'center'  },
+					{field:'createdByName', title:'创建人', width:59, align:'center'  },
+					{field:'createdDate', title:'创建时间', width:52, align:'center',formatter:function(value,row,index){
+						if(row.createdDate!=null){
+							return Faith.getDateFormat(row.createdDate,"yyyy-MM-dd");
+						}
+					}  },
+					{field:'updatedByName', title:'修改人', width:59, align:'center'  },
+					{field:'updatedDate', title:'修改时间', width:52, align:'center' ,formatter:function(value,row,index){
+						if(row.updatedDate!=null){
+							return Faith.getDateFormat(row.updatedDate,"yyyy-MM-dd");
+						}
+					} }             
+	             ];
+
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_unit', //表格容器id
+			tableKey : "fid",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/sys/form/page', //列表接口
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加单位",
+			addUrl : "/webpage/system/form/form_form.html"
+		},
+		updateOptions : {
+			title : "修改单位",
+			updateUrl : "/webpage/system/form/form_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/sys/form/delete/'
+		},
+		viewOptions : {
+			viewUrl : "/webpage/system/form/form_detail.html"
+		}
+	});
+
+	$(function() {
+		//加载按钮工具条
+		//Faith.initToolBar("tb", resId, "");
+
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+
+		//查询条件
+		Faith.initSelectArea('areaCode', { 
+			required : false,
+			height:28
+		});//初始化区域选择
+
+		//初始化搜索收缩
+		//searchDown_Up("down_up", "search_Secondary");
+	});
+	
+	
+	
+	function doFiled(){
+		var selected = $('#' + Faith.gridOptions.gridId).datagrid('getSelected');
+		if (selected && selected != "") {
+			var url = '/webpage/system/form/filed.html';
+			if (url.indexOf('?') > 0) {
+				url = url + "&pkVal=" + selected[Faith.gridOptions.tableKey];
+			} else {
+				url = url + "?pkVal=" + selected[Faith.gridOptions.tableKey];
+			}
+			top.addTab("字段配置", url);
+		} else {
+			$.messager.alert("提示", "请先选择一条数据");
+		}
+	}
+	
+</script>
+ 
+</head>
+
+<body>
+
+
+
+	<div id="search" class="search wrap_border">
+		<div class="search-wrap">
+			<input type="text"  label="所属区域" id="areaCode" name="areaCode">
+		</div> 
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" label="单位名称" id="dwmc" name="dwmc" />
+		</div>
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+
+	<!-- <div id="tb"></div> -->
+	<div class="grid">
+		<table id="grid_unit" class="easyui-datagrid"></table>
+	</div>
+
+
+</body>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,85 @@
+﻿.dialogs{
+    border:1px solid #ccc;
+    margin-top:10px;
+    width:100%;
+}
+.dialogs h5{
+    text-align:center;
+    padding:10px;
+    border-bottom:1px solid #ccc;
+}
+.dialogs_wrap{
+    width: 65%;
+    min-height: 450px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    background: #fff;
+    font-family: "Microsoft YaHei UI";
+    z-index: 999;
+}
+.receive_div{
+    height:100px;
+    overflow:auto;
+
+}
+.delete_sub img{
+    width:15px;
+    margin-left:2px;
+}
+.hover_li{
+    position:relative;
+}
+.dialogs_wrap h4{
+    text-align:center;
+    font-family:'Microsoft YaHei UI';
+    padding:15px;
+    background:#3598dc;
+    color:#fff;
+}
+.form_in{
+    min-height:35px;
+    vertical-align:middle;
+    width:100%;
+}
+.form_lab{
+    vertical-align:middle;
+    /*min-height:35px;*/
+    margin-top: 10px;
+    text-align:right;
+}
+
+.wrap_header_hover{
+    background: #3598dc; height: 85px; text-align: center; border-radius: 5px!important;
+}
+.wrap_header_hover:hover{
+    background:#3281ad;border:1px solid #ccc;
+}
+.wrap_content_a{
+    padding:10px;
+}
+.wrap_content_b{
+    padding:5px;
+    height:200px;
+    overflow:auto;
+    width:100%;
+    border:1px solid #ccc;
+}
+.wrap_content_b h5{
+    font-family:'Microsoft YaHei UI';
+    margin-bottom:5px;
+}
+.wrap_list li{
+    padding:2px;
+}
+.right_float{
+    float:right;
+}
+.set_but{
+    border:1px solid #ccc;
+    padding:2px 5px;
+    cursor:pointer;
+}

@@ -1,0 +1,292 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+    background:none!important;
+}
+.ph_w{
+	position:absolute;
+	z-index:111;
+	right:0px;
+	top:60px;
+	background:#32c5d2;
+	color:#fff;
+	padding:5px 10px 5px 5px; 
+	cursor:pointer;
+	transition: all 1s;
+}
+.home_bg{
+	height: 100%; 
+    width: 100%;    
+}
+#home_wrap{
+	position:relative;	
+}
+.yiz-slider-1 ul li{
+	position:relative;
+}
+.yiz-slider-1 .banner_title{
+	position:absolute;
+	z-index:666;
+	
+}
+.color_banner{color:#ffffff;padding:20px}
+.banner_postion{
+	top:180px;
+	left:15%
+}
+
+.banner_postion1{
+	top:180px;
+	left:60%
+}
+.banner_postion2{
+	top:180px;
+	left:35%
+}
+.home_top_wrap{
+	width:100%;
+	z-index:555;
+	position:absolute;
+	top:0;
+	left:0;
+	padding:5px;
+	transition: all 3s;
+}
+.home_top_wrap img{
+	height:40px
+}
+
+/* 主页面导航样式 */
+.home_foot_wrap{
+	height: 150px;
+    padding: 10px;
+    width: 100%;
+    position: fixed;
+    z-index: 555;
+    bottom: 0;
+    background:#fff
+}
+.center_f{
+	text-align: center;
+}
+.color_f{
+	color:#303030!important
+}
+.home_foot_wrap ul{
+	display: -webkit-flex; /* Safari */
+  	display: flex;
+  }
+.home_foot_wrap ul li{
+	height:100%;
+	padding-top:30px;
+ 	width: 8.33%;
+ 	order: 1;
+ 	flexs-shrink:0;
+ 	border-right:1px solid #f0f0f0;
+ 	cursor:pointer;
+ } 
+ .home_foot_wrap ul li .icon_style{
+ 	display:block;
+ 	font-size:30px;
+ 	width:100%;
+ 	height: 26px;
+ }
+ .home_foot_wrap ul li:hover{
+	color:#28bfc7!important;
+ }
+ 
+ .home_wrap{
+ 	transition: all 1s;
+ }
+ /* 子页面导航样式 */
+  #home_head_wrap{
+	position:fixed;
+	margin-top:60px; 
+}
+ .home_head_wrap{
+ 	height: 60px;
+    width: 100%;
+    position: fixed;
+    z-index: 555;
+    top: 0;
+    background:#fff;
+    box-shadow: 0px 0px 4px #ccc;
+ }
+ .home_head_wrap ul{
+ 	height: 60px;
+ 	overflow:hidden;
+  }
+.home_head_wrap ul li{
+ 	border-right:1px solid #f0f0f0;
+ 	cursor:pointer;
+ 	padding: 15px;
+    vertical-align: bottom;
+    height: 60px; 
+    display:inline-grid;
+    text-align: -webkit-center;
+ }
+ 
+.home_head_wrap ul li:hover{
+	color:#28bfc7!important;
+ }
+ 
+ 
+.home_head_wrap ul li .icon_style{
+ 	display:inline-block;
+ 	font-size:18px;
+ }
+ .home_head_wrap ul:before{
+ 	content:url(../images/login_logo_before.png);
+ }
+ 
+ 
+ /* 右上角菜单 */
+ .nav_right{
+ 	font-size:18px!important;
+ 	color:#ccc!important;
+ 	position:absolute!important;
+ 	top:0px!important;
+ 	right:0px!important;
+ 	z-index:666;
+ 	
+ }
+ .nav_right_wrap{
+ 	cursor:pointer;
+ 	width:70px;
+ 	height:70px;
+ 	line-height:70px;
+ 	text-align: center;
+ }
+ .nav_right ul li{
+ color:#303030;
+ font-size:14px;
+ width:70px;
+ height:70px;
+ background:#fff;
+ border-bottom:1px solid #808080;
+ text-align: center;
+ padding-top:15px;
+ cursor:pointer;
+  }
+  .nav_right ul li span{
+  font-size:18px
+  }
+ .action_mouse{
+ background:#fff;
+ color:#303030
+ }
+ .fa-angle-down{
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    background: url(../images/icon/portlet-collapse-icon.png);
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    float:right;
+    margin-top:2px
+ }
+
+
+ .fa-angle-up{
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    background: url(../images/icon/portlet-collapse-icon.png);
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    transform:rotate(180deg);
+    float:right;
+    margin-top:2px
+ }
+ 
+ .page-sidebar, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover{
+ 	background-color:#fff!important;
+ }
+  .page-sidebar, .page-sidebar-closed.page-sidebar-fixed .page-sidebar{
+ 	background-color:#fff!important;
+ }
+ .nav_second_level{
+	/* border:1px solid #f0f0f0; */
+}
+.nav_second_level li{
+	cursor: pointer;
+    padding: 8px 10px;
+    border-bottom: 1px solid #c9f7f5;
+}
+
+.nav_second_level li .info_icon{
+	width: 22px;
+	height:22px;
+	display:inline-block;
+	background-repeat: no-repeat;
+	background-size:44px 22px;
+	vertical-align: middle;
+	margin-right:3px;
+	transition: all 0.3s;
+	margin-right:3px;
+	}
+.one_nav{
+	background:#f0f0f0;
+}
+.two_nav{
+	background:#fff;
+}
+.deafult_nav{
+	background:#ccc;
+}
+ 
+ 
+.nav_1{
+	background:#9fe2e2;
+	color:#516d6d;
+	
+}
+.nav_1>li{
+	font-weight:bold;
+}
+.nav_1 li:hover{ 
+	background-color:#0a8e8e;
+	color:#fff;
+	
+}
+.nav_1 li:hover .fa-angle-up{
+	    background: url(../images/icon/portlet-collapse-icon-w.png);
+}
+
+.nav_2{
+	background:#83d4d4;
+	color: #516d6d;
+}
+ .nav_2 li:hover{ 
+	background-color:#0a8e8e;
+	color:#fff;
+}
+
+ .nav_2 li{ 
+	padding-left:20px;
+}
+ 
+ 
+ 
+.nav_3{ 
+	font-size: 13px;
+	background:#6bc3c3;
+	color: #516d6d;
+}
+.nav_3 li{ 
+	padding-left:40px;
+}
+ 
+ .nav_3 li:hover{ 
+	background-color:#0a8e8e;
+}
+.dialog_select{position:absolute;width:400px;height:200px}
+
+ 
+ 
+ 
+
+ 

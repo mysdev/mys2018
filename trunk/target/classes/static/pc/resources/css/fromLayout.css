@@ -1,0 +1,31 @@
+﻿.form_ww_st{
+	padding:15px;
+	
+}
+.fromstyle{
+	padding: 15px;
+	border:1px solid #f0f0f0;
+    overflow: hidden;
+}
+.from_title {
+    padding: 15px;
+    border:1px solid #f0f0f0;
+    border-bottom:none;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.content_info_wrap_c{
+	/* padding:15px; */
+}
+.info_wrap_title{
+	 padding: 15px;
+    border:1px solid #f0f0f0;
+    border-bottom:none;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.redwrite{
+	color:red;
+}

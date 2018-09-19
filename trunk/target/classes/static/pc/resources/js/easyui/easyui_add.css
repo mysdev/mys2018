@@ -1,0 +1,51 @@
+@import url("icon.css");
+@import url("easyuiNew.css");
+@import url("../../css/fromLayout.css");
+@import url("../../js/plugins/datepicker/skin/WdatePicker.css");
+
+
+
+.dialog_from_content{padding:20px 5px;overflow: auto;}
+.d_f_c_left{width:49%;float:left}
+.d_f_c_right{width:49%;float:right}
+.padding_in{padding:0px!important}
+.apdding_out_10{padding:10px}
+.panel{border:none!important}
+/* .panel-body {padding: 5px!important;} */
+.searchbox-but{background: #8cc5f5;height: 30px;border-radius: 4px;color: #fff;padding: 7px 20px;}
+.searchbox-but:hover{background:#79b9ef;color:#fff;text-decoration:none;}
+.search_input{line-height:20px;height:30px;margin-right:0.4%;width:12%;margin-bottom:5px;border-radius: 3px;}
+.search_input_imp{line-height:20px;height:30px;margin-right:0.4%;width:12%;margin-bottom:5px;border-radius: 3px;}
+.error{color:red}
+.search_input {width:15%;margin-top:5px}
+.down_up{width:20px;height:20px;display:inline-block;background:url('icons/down_up.png') no-repeat center center;background-size: 10px 10px;}
+.cl-9{width:92%;display:inline-block;padding:10px;}
+.cl-1{width:8%;display:inline-block;margin-left: -5px;vertical-align: top;padding:10px;}
+.search_wrap{transition: all 2s;-webkit-transition: all 2s;}
+.search_Secondary{display:none}
+.search_input_imp{width:19.3%;margin-top:5px;display: inline-block;}
+.select_sty{border: 1px solid #ccc;-webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    padding: 1px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: initial;
+    border-image: initial;
+}
+.dateinput{width:45%}
+
+@media screen and (max-width:1400px) {
+	.cl-9{width:89%;display:inline-block;padding:10px;}
+	.cl-1{width:11%;display:inline-block;margin-left: -5px;vertical-align: top;padding:10px;}
+	.search_input_imp{width:19.2%;margin-top:5px;    display: inline-block;}
+}
+
+.easyui-textbox{
+	width: 250px;
+}
+
+.redwrite{
+	color: red;
+}

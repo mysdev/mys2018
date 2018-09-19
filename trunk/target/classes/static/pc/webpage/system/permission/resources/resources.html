@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../../../../resources/css/bootstrap.min.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../../resources/css/public_style.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../../resources/js/easyui/easyui_add.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../../resources/js/plugins/datepicker/skin/WdatePicker.css"/>
+	<script type="text/javascript" src="../../../../resources/js/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/easyui/validatebox.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/common.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/pagecommon.js"></script>
+	<script type="text/javascript"  src="../../../../resources/js/plugins/datepicker/WdatePicker.js"></script>
+	<!--zTree组件start-->
+    <link rel="stylesheet" href="../../../../resources/js/plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">	
+	<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.excheck-3.5.js"></script>
+	<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.exedit-3.5.js"></script>
+	
+	<script type="text/javascript" src="../../../../resources/js/Faith.js"></script>
+    <!--zTree组件end-->
+		<script>
+			var resources_columns = [
+				{field:'resId', title:'资源ID', width:52, align:'center' },
+				{field:'resName', title:'资源名称', width:120, align:'center'  },
+				{field:'resURL', title:'资源URL', width:360, align:'left'  },
+				{field:'resType', title:'资源类型', width:82, align:'center'   ,
+					formatter: function(value,row,index){
+						if(row.resType == 1){
+							return '按钮';
+						} else if(row.resType == 2){
+							return '菜单';
+						}
+					}
+				},
+				{field:'resIcon', title:'图标', width:200, align:'center'  },
+				{field:'sort', title:'序号', width:40, align:'center' ,hidden:true },
+				{field:'promission', title:'权限配置', width:78, align:'center'   ,
+					formatter: function(value,row,index){
+						if(row.promission == 1){
+							return '是';
+						} else if(row.promission == 2){
+							return '否';
+						}
+					}},
+				{field:'parentId', title:'上级资源', width:62, align:'center'  },
+				{field:'pageButtonKey', title:'界面按钮标识', width:120, align:'center'  },
+				{field:'callback', title:'回调函数', width:150, align:'center'  }
+			];
+			
+			var modelPath = '/sys/permission/resources'; //模块目录
+			var tablename = 'resources';// 表名---用于表格加载刷新
+			var dialogtitle = '系统资源（菜单、按钮）';// 表中文名---弹窗标题
+			var tablekey = 'resId';// 表主鍵列名--修改/删除时Id
+			var formpage = 'resources_from.html'; // 静态表单页面---弹窗load时表单页面
+			var detailpage = 'resources_detail.html'; // 静态详情单页面---弹窗load时详情单页面
+			var addNodes = [];
+			var pid = "0";
+			$(document).ready(function () {	 
+				 $.ajax({
+					url:projectName+modelPath+'/tree',
+					type:"get",
+					dataType: 'json',
+					success:function(data){
+						loadOrgStructure(data.data);//左边的资源树   	   
+					}
+				});
+			});
+			
+			//同步加载树
+			var setting = {
+				data: {
+					simpleData:{
+						enable:true,
+						idKey:'resId',
+						pIdKey:'parentId'
+					},key:{
+						name:"resName"
+					}
+				},view: {
+					selectedMulti: false 
+				},callback: {
+					onClick:getResourcesStructure,
+					onNodeCreated: orgStructureLoadSuccess
+				}
+			};
+			//左边的资源树
+			function loadOrgStructure(zNodes){
+				$.fn.zTree.init($("#orgStructureTree"), setting,zNodes);
+			}
+		
+			//鼠标单击组织机构--刷新用户列表
+			function getResourcesStructure(event, treeId, treeNode) {
+				var searchData = [];
+				searchData.parentId = treeNode.resId;
+				addNodes.parentid = treeNode.resId;
+				addNodes.resName = treeNode.resName;
+				pid = treeNode.resId;
+				$('#grid_' + tablename).datagrid('load', searchData);					
+				
+			};
+			//组织机构加载成功回调
+			function orgStructureLoadSuccess(event, treeId, treeNode){
+				var zTree = $.fn.zTree.getZTreeObj("orgStructureTree");
+				expandOrgStructureNodes(zTree.getNodes());
+				var node = zTree.getNodes()[0];				
+			    zTree.selectNode(node);//选择节点
+			   
+			}
+			function expandOrgStructureNodes(nodes) {
+				if (!nodes) return;
+				var zTree = $.fn.zTree.getZTreeObj("orgStructureTree");
+				for (var i=0, l=nodes.length; i<l; i++) {
+					zTree.expandNode(nodes[i], true, false, false);
+				}
+			}
+			//页面加载数据
+			$(function() {	
+				var options = {
+					tableId : tablename,
+					url : projectName+modelPath+'/page',
+					columns : [ window[tablename + "_columns"] ],					
+					onDblClickRow : function(rowIndex, rowData) {
+						detail(rowData.id);
+					},queryParams:{
+						parentId : '0'
+					}
+				};
+				// 加载表格
+				initGrid(options);	
+				
+				//初始化搜索收缩
+				searchDown_Up("down_up","search_Secondary");
+				
+			});
+			
+			//添加方法
+			function addResources(str1,str2) {				
+				var add_options = {
+					api : projectName+modelPath+'/add',
+					title : '添加' + dialogtitle,
+					formpage : formpage,
+					buttons : [ {
+						text : '保存',
+						handler : function() {
+							$("#parentId").val(pid);
+							if($("#parentId").val() >= 0 ){
+								submitForm(add_options,str1,str2);
+							}						
+						}
+					} ]
+				};
+				add_options.callback=function(){
+					if (dialog) {
+						dialog.dialog('destroy');// 销毁
+					} 
+				 
+					$('#grid_' + tablename).datagrid('load');
+				}				
+				
+				openForm(add_options);
+				//添加成功后刷新资源树
+				$.ajax({
+					url:projectName+modelPath+'/tree',
+					type:"get",
+					dataType: 'json',
+					success:function(data){
+						loadOrgStructure(data.data);//左边的资源树   	   
+					}
+				});
+			}
+			
+			
+			
+			function resetTree(){
+				//要做成异步加载才可以
+			
+			}
+			
+		</script>
+		
+		<style type="text/css">
+		.yyy{height: 940px}
+		@media screen and (max-width:1400px){
+	    .yyy{height: 800px}
+	    }
+		</style>
+</head>
+<body style="height:100%">
+	<div class="easyui-layout yyy" style="width:100%;">
+		<div id="p" data-options="region:'west'" title="资源结构" style="width:20%;padding:10px">
+			<ul id="orgStructureTree" class="ztree"></ul>
+		</div>
+		<div data-options="region:'center'" title="详细列表">
+			<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+				<div class="easyui-layout layout easyui-fluid">
+		   			<!-- 搜索容器 -->
+					<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+						<form class="form-horizontal" style="width:100%">
+						<div class="cl-9 ">
+							<!-- 必要搜索条件 -->
+							<input id="resName" name="resName" class="search_input_imp" placeholder="请输入资源名称">
+							<input id="resURL" name="resURL" class="search_input_imp" placeholder="请输入资源URL">
+							<select id="resType" name="resType" class="search_input_imp  select_sty">
+								<option value="0">请选择资源类型</option>
+								<option value="1">按钮</option>
+								<option value="2">菜单</option>
+							</select>
+							<input id="icon" name="icon" class="search_input_imp" placeholder="请输入图标">
+							<input id="pageButtonKey" name="pageButtonKey" class="search_input_imp" placeholder="请输入界面按钮标识">
+							<input id="callback" name="callback" class="search_input_imp" placeholder="请输入回调函数">
+						</div>
+						<div class="cl-1" style="margin-top:10px">
+							<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+							<span class="down_up" style="float:right"></span>
+						</div>
+						</form>
+					</div>
+				</div>
+				<div style="margin-top:5px;">	 
+		        	<!-- 操作按钮 -->
+					<div id="tb">
+						<div style="background:#eaf2ff;overflow:hidden;margin-top:5px">
+							<div style="padding:5px;vertical-align: middle;">
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addResources()">添加</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="edit()">修改</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteRow()">删除</a>
+							</div>
+						</div>
+					</div>
+		            <!------------------ 在这里填写你的datagrid -------------------->
+					<table id="grid_resources" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+					</table>
+		        </div>  
+			</div> 	
+		</div>
+	</div>
+	
+</body>
+</html>

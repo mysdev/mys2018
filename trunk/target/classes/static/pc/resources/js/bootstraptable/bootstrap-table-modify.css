@@ -1,0 +1,18 @@
+﻿.bootstrap-table .table>thead>tr>th{
+    background:#cccccc;
+    color:#fff;
+}
+.fixed-table-container{
+    border-radius:0px!important;
+    -webkit-border-radius: 0px!important;
+    -moz-border-radius: 0px!important;
+}
+.fixed-table-container thead th:first-child{
+    border-left: none; 
+    border-top-left-radius: 0!important; 
+    -webkit-border-top-left-radius: 0!important; 
+    -moz-border-radius-topleft: 0!important;
+}
+.fixed-table-body tr{
+    cursor:pointer;
+}

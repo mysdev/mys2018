@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+<script type="text/javascript" src="../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zui/css/zui.css" /> 
+<script type="text/javascript" src="../../../resources/js/plugins/zui/js/zui.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zui/lib/uploader/zui.uploader.css" />
+<script type="text/javascript" src="../../../resources/js/plugins/zui/lib/uploader/zui.uploader.js"></script>
+<!--   图片放大切换 -->
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zoom/zoom.css" />
+<script type="text/javascript" src="../../../resources/js/plugins/zoom/zoom.min.js"></script> 
+<script>
+	
+	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
+	var fid = Faith.getQueryStringByName("fid");//  如果有值 就是修改  没有值就是添加
+
+	var options = {
+		formid : "form_filed",
+		tableKey : "ffid",
+		listTitle:'字段配置',
+		addTitle:'添加字段',
+		updateTitle:'修改字段',
+		addAction : Faith.projectName + "/sys/form/filed/add",
+		updateAction : Faith.projectName + "/sys/form/filed/update",
+		viewAction : Faith.projectName + "/sys/form/filed/index/" + pkVal,
+		pkVal : pkVal,
+		saveButtonId:'btn_save'
+	};
+
+	//alert(pkVal);
+	$(function() {
+
+		$("#fid").val(fid);
+		
+		//字段类型
+		Faith.initCombobox('ftype', '9113');
+		
+		Faith.initCombobox('isMust', '1001');
+		Faith.initCombobox('isList', '1001');
+		Faith.initCombobox('isQuery', '1001');
+		
+
+		//提交按钮点击
+		Faith.doSave(options);
+		  
+		//如果是修改  则填充数据
+		if (pkVal != null && pkVal != "") {
+			$.get(options.viewAction, {}, function(rs) {
+				if (rs.code == 1) {
+					Faith.setFormData(options.formid, rs.data);
+				} else {
+					$.messager.alert("提示", rs.message);
+				}
+			}, 'json');
+		}
+	});
+	
+
+</script>
+
+</head>
+
+<body>
+	<div class="form_ww_st" style="overflow: hidden">
+		<div class="col-sm-12 from_title" style="padding: 0">
+			<div class="col-sm-12">
+				<h4 style="font-weight: bold;">动态表单配置</h4>
+			</div>
+		</div>
+		<!--添加表单容器-->
+<form id="form_filed" class="fromstyle">
+  	 	<input type="hidden" id="ffid" name="ffid" />
+  	 	<input type="hidden" id="fid" name="fid" />
+	
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">字段名<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="fname" name="fname"  placeholder="请输入字段名">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">字段类型<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="ftype" name="ftype"  placeholder="请输入字段类型">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">是否查询条件<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="isQuery" name="isQuery"  placeholder="请输入是否查询条件">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">是否必填<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="isMust" name="isMust"  placeholder="请输入是否必填">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">是否列表显示<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="isList" name="isList"  placeholder="请输入是否列表显示">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">字段长度<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="length" name="length"  placeholder="请输入字段长度">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">列表宽度<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="width" name="width"  placeholder="请输入列表宽度">
+  	</div>
+  	<div class="form-group col-sm-6">
+  	 	<label for="tableName">表单控件宽度<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="formWidth" name="formWidth"  placeholder="请输入列表宽度">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">字段排序<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="seq" name="seq"  placeholder="请输入字段排序">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">数据字典组CODE</label>
+  	 	<input type="text" class="form-control"  id="dictCode" name="dictCode"  placeholder="请输入数据字典组CODE">
+  	</div>
+	<div class="form-group col-sm-12 padding-4">
+		<div class="text-center">
+			<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>
+			<button type="button" data-loading-text="正在提交" class="btn btn-danger  btn_w" id="btn_save">保存</button>
+		</div>
+	</div>
+</form>
+</div>
+</body>
+</html>

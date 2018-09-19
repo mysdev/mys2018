@@ -1,0 +1,17 @@
+<script>
+$(document).ready(function () {	
+		$("#Gcode").val(groupCode);
+		$("#Gdesc").val(groupDesc);
+		$("#Gcode").attr("disabled", true);
+})
+</script>
+<form id="form_dictionary" class="fromstyle">
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">编码<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="Gcode" name="Gcode"  placeholder="请输入组编号">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">值<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="Gdesc" name="Gdesc"  placeholder="请输入描述">
+  	</div>
+</form>

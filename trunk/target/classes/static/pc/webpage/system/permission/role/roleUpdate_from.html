@@ -1,0 +1,32 @@
+<script>
+$(function() {
+	$("#form_role #roleId").attr("disabled", true);
+});
+</script>
+<form id="form_role" class="fromstyle">
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">角色ID</label>
+  	 	<input type="text" class="form-control easyui-validatebox"  id="roleId" name="roleId"  placeholder="请输入角色ID">
+  	 </div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">角色名称</label>
+  	 	<input type="text" class="form-control easyui-validatebox"  id="roleName" name="roleName"  placeholder="请输入角色名称">
+  	 </div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">角色别名</label>
+  	 	<input type="text" class="form-control easyui-validatebox"  id="roleTitle" name="roleTitle"  placeholder="请输入角色别名">
+  	 </div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">部门编号</label>
+  	 	<input type="text" class="form-control easyui-validatebox"  id="deptCode" name="deptCode"  placeholder="请输入部门编号">
+  	 </div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">上级角色</label>
+  	 	<input type="text" class="form-control easyui-validatebox"  id="parentRole" name="parentRole"  placeholder="请输入上级角色">
+  	 </div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">是否启用</label>
+  	 	<input type="radio"  id="status" name="status" value="1">是
+  	 	<input type="radio"  id="status" name="status" value="0">否
+  	</div>
+</form>

@@ -1,0 +1,36 @@
+<script>
+$(document).ready(function () {	
+		$("#codeu").val(upCode);
+		$("#valueu").val(upValue);
+		$("#groupCode").val(upGroupCode);
+		$("#sortu").val(upSort);
+		$("#glagu").val(upflag);
+		$("#groupCode").attr("disabled", true);
+		$("#codeu").attr("disabled", true);
+})
+</script>
+<form id="form_dictionary" class="fromstyle">
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">编码<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="codeu" name="codeu"  placeholder="请输入编码">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">值</label>
+  	 	<input type="text" class="form-control"  id="valueu" name="valueu"  placeholder="请输入值">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">分组编码<span style="color:red">*</span></label>
+  	 	<input type="text" class="form-control"  id="groupCode" name="groupCode"  placeholder="请输入分组编码">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">排序</label>
+  	 	<input type="text" class="form-control"  id="sortu" name="sortu"  placeholder="请输入排序">
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">状态</label>
+  	 	<select  class="form-control"  id="glagu" name="glagu" >
+  	 		<option value="1">启用</option>
+  	 		<option value="0">停用</option>
+  	 	</select>
+  	</div>
+</form>
