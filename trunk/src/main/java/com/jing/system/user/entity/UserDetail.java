@@ -17,7 +17,26 @@ public class UserDetail extends User {
 	private String remediation;//政治面貌
 	private String scope;//管理范围
 	private Integer familyNumber;//管理户数
+	
+	
+	private String deptName;
+	private String roleName;
+	
+	public String getDeptName() {
+		return deptName;
+	}
 
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 
 	public String getPhone() {
 		return phone;

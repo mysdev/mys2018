@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.faith.framework.dept.dao.DeptStaffDao">
+<mapper namespace="com.jing.system.dept.dao.DeptStaffDao">
 
 	<!-- Result Map -->
 	<resultMap id="DeptStaffResultMap" type="com.jing.system.dept.entity.DeptStaff">

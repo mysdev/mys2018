@@ -19,6 +19,7 @@ import com.jing.system.logger.DbLogger;
 import com.jing.system.login.session.Config;
 import com.jing.system.user.entity.User;
 import com.jing.system.user.entity.UserDept;
+import com.jing.system.user.entity.UserDetail;
 import com.jing.system.user.uitl.UserDeptMapper;
 
 public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler
@@ -34,7 +35,7 @@ implements AuthenticationSuccessHandler{
 		HttpSession hs = request.getSession();
 		if (authentication != null && authentication.getPrincipal() != null) {
 			User user = (User) authentication.getPrincipal();
-			User ud = new User();
+			UserDetail ud = new UserDetail();
 			try {
 				String deptCode = (String)request.getSession().getAttribute("deptCode");
 				if(deptCode!=null && !"".equals(deptCode)){
@@ -45,8 +46,7 @@ implements AuthenticationSuccessHandler{
 						user.setDeptCode(list.get(0).getDeptCode());
 					}
 				}
-				BeanUtils.copyProperties(ud, user);
-				
+				BeanUtils.copyProperties(ud, user);				
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {

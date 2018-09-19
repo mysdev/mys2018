@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.jing.config.web.security.SecurityRoleDetail;
 import com.jing.config.web.security.SecurityUserDetail;
+import com.jing.system.dept.entity.Dept;
+import com.jing.system.dept.util.DeptMapper;
 import com.jing.system.permission.entity.Role;
 import com.jing.system.permission.entity.UserRole;
+import com.jing.system.user.uitl.UserDeptMapper;
 
 /**
  * 用户 实体类
@@ -24,10 +27,31 @@ public class User extends SecurityUserDetail {
 	private Integer status; // 账号状态
 	private Integer loginStatus; // 登录状态
 	private String clintId; // 客户端标识	
-	private Integer deptCode;
+	
+	private Integer deptCode;	
+	private Dept dept;    //部门对象;
+	private List<Dept> depts;//关联部门
 	
 	private List<Role> userRole;
 	private List<UserRole> userRoles;
+	
+	public Dept getDept() {
+		if(getDeptCode()!=null){
+			return DeptMapper.getObj(getDeptCode());
+		}
+		return dept;
+	}
+	
+	public List<Dept> getDepts() {
+		List<UserDept> list = UserDeptMapper.getObj(getUserId());
+		if(list !=null && list.size()>0){
+			depts = new ArrayList<Dept>();
+			for (UserDept userDept : list) {
+				depts.add(DeptMapper.getObj(userDept.getDeptCode()));
+			}
+		}
+		return depts;
+	}
 
 	public List<UserRole> getUserRoles() {
 		return userRoles;

@@ -5,7 +5,7 @@
 	<!-- Result Map -->
 	<resultMap id="UserResultMap" type="com.jing.system.user.entity.User">
 		<id column="userId" property="userId" />
-		<result column="userName" property="userName" />
+		<result column="userName" property="username" />
 	<!-- <result column="password" property="password" /> -->	
 		<result column="nickName" property="nickName" />
 		<result column="status" property="status" />

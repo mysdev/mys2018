@@ -5,7 +5,7 @@
 	<!-- Result Map -->
 	<resultMap id="UserResultMap" type="com.jing.system.user.entity.User">
 		<id column="userId" property="userId" />
-		<result column="userName" property="userName" />
+		<result column="userName" property="username" />
 	<!-- <result column="password" property="password" /> -->	
 		<result column="nickName" property="nickName" />
 		<result column="status" property="status" />
@@ -47,7 +47,7 @@
 		</selectKey>
 		INSERT INTO sys_user (userId ,userName ,password ,nickName ,status ,loginStatus ,clintId ) 
 		values
-		(#{userId},#{userName},#{password},#{nickName},#{status},#{loginStatus},#{clintId})
+		(#{userId},#{username},#{password},#{nickName},#{status},#{loginStatus},#{clintId})
 	</insert>
 
 	<!-- 修改用户 -->
@@ -55,7 +55,7 @@
 		UPDATE sys_user
 		<set> 
 			<if test="userName != null" >
-				userName = #{userName},
+				userName = #{username},
 			</if>
 			<if test="password != null" >
 				password = #{password},

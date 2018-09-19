@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -30,56 +29,53 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public SpringContextHolder springContextHolder;
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests() //拦截请求
-		.antMatchers("/home").permitAll() //访问白名单		
-		.anyRequest().authenticated().and()//其他请求都要过滤
-		.formLogin().loginPage("/pc/login.html").defaultSuccessUrl("/home").permitAll().failureHandler(loginFailureHandler()).successHandler(loginSuccessHandler()).and() // 登录
-		.logout().logoutSuccessUrl("/pc/login.html").permitAll().and()// 注销
-		.csrf().disable(); //默认开启,我们关闭
-		
-//		http.authenticationProvider(authenticationProvider());
+		http.authorizeRequests() // 拦截请求
+				.antMatchers("/home.html").permitAll() // 访问白名单
+				.anyRequest().authenticated().and()// 其他请求都要过滤
+				.formLogin().loginPage("/pc/login.html").successHandler(loginSuccessHandler()).permitAll().and() // 登录
+				.logout().invalidateHttpSession(true).logoutSuccessUrl("/logout").permitAll().and()// 注销
+				.headers().frameOptions().sameOrigin().and()
+				.csrf().disable(); // 默认开启,我们关闭
 		http.addFilterBefore(requestHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(springSecurityFilterPermission(), FilterSecurityInterceptor.class);
 	}
-	
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		 // 设置不拦截规则  
-		web.ignoring().antMatchers("/pc/**","/**/images/**","/**/css/**","**/js/**","/**/checkcode");
-//		super.configure(web);
+		// 设置不拦截规则
+		web.ignoring().antMatchers("/pc/**", "/**/images/**", "/**/css/**", "**/js/**", "/**/checkcode","/loginSuccess");
+		// super.configure(web);
 	}
-	
-	@Bean
+
 	public PermissionSecurityFilter springSecurityFilterPermission() {
 		PermissionSecurityFilter filter = new PermissionSecurityFilter();
 		filter.setAuthenticationManager(authenticationManager());
 		List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<AccessDecisionVoter<? extends Object>>();
 		decisionVoters.add(new RoleVoter());
-		AffirmativeBased accessDecisionManager= new AffirmativeBased(decisionVoters);
+		AffirmativeBased accessDecisionManager = new AffirmativeBased(decisionVoters);
 		filter.setAccessDecisionManager(accessDecisionManager);
 		filter.setSecurityMetadataSource(new PermissionSecurityMetadataSource());
-		filter.setDefaultURL("/pc/index.html");
+		filter.setDefaultURL("/pc/home.html");
 		filter.setErrorPage("/error");
 		filter.setLogoutURL("/logout");
 		return filter;
 	}
-	
-	@Bean
+
 	public RequestHeaderProcessingFilter requestHeaderFilter() {
-		RequestHeaderProcessingFilter requestHeaderFilter = new RequestHeaderProcessingFilter("/j_spring_security_check");
+		RequestHeaderProcessingFilter requestHeaderFilter = new RequestHeaderProcessingFilter(
+				"/j_spring_security_check");
 		requestHeaderFilter.setLoginFailureHandler(loginFailureHandler());
 		requestHeaderFilter.setLoginSuccessHandler(loginSuccessHandler());
 		requestHeaderFilter.setAuthenticationManager(authenticationManager());
 		requestHeaderFilter.setLogoutURL("/logout");
 		requestHeaderFilter.setLoginFailPageURL("/logout");
 		requestHeaderFilter.setLoginPageURL("/pc/login.html");
+		requestHeaderFilter.afterPropertiesSet();
 		return requestHeaderFilter;
 	}
-	
-	@Bean
+
 	public AuthenticationManager authenticationManager() {
 		DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher = new DefaultAuthenticationEventPublisher();
 		List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
@@ -88,20 +84,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		manager.setAuthenticationEventPublisher(defaultAuthenticationEventPublisher);
 		return manager;
 	}
-	
-	@Bean
+
 	public AuthenticationProvider permissionUserDetailsAuthenticationProvider() {
 		return new PermissionUserDetailsAuthenticationProvider();
 	}
 
-	@Bean
 	public LoginSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler();
+		LoginSuccessHandler s= new LoginSuccessHandler();
+		s.setSuccessUrl("/loginSuccess");
+		return s;
 	}
 
-	@Bean
 	public LoginFailureHandler loginFailureHandler() {
-		return new LoginFailureHandler();
+		LoginFailureHandler f = new LoginFailureHandler();
+		f.setDefaultFailureUrl("/login");
+		return f;
 	}
 
 }

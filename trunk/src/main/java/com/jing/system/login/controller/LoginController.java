@@ -2,6 +2,7 @@ package com.jing.system.login.controller;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +23,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jing.config.web.Result;
 import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
+import com.jing.system.permission.entity.UserRole;
 import com.jing.system.user.entity.User;
+import com.jing.system.user.entity.UserDetail;
+import com.jing.system.user.service.UserDetailService;
 import com.jing.utils.BaseController;
 import com.jing.utils.VerifyCodeIcon;
 
 @Controller
 public class LoginController extends BaseController {
+	@Autowired
+	private UserDetailService userDetailService;
 
 	@RequestMapping(value = "/logout")
 	public @ResponseBody boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -74,14 +81,12 @@ public class LoginController extends BaseController {
 	}
 
 	@RequestMapping(value = "/login/user", method = RequestMethod.POST)
-	public @ResponseBody User getUser(@SessionAttr(Config.USER_INFO) User user) throws Exception {
-		// Area area = areaService.queryAreaInfoByAreaID(user.getAreaId());
-		// user.setAreaName(area.getAreaName());
-//		UserDetail ud = userDetailService.getUserDetailById(user.getUserId());
-//		ud.setDeptCode(user.getDeptCode());
-//		List roles = user.getUserRole();
-//		ud.setUserRole(roles);
-		return user;
+	public @ResponseBody UserDetail getUser(@SessionAttr(Config.USER_INFO) User user) throws Exception {
+		UserDetail ud = userDetailService.getUserDetailById(user.getUserId());
+		ud.setDeptCode(user.getDeptCode());
+		List roles = user.getUserRole();
+		ud.setUserRole(roles);
+		return ud;
 	}
 	
 	@RequestMapping(value = "/login/setDept", method = RequestMethod.POST)
@@ -91,7 +96,21 @@ public class LoginController extends BaseController {
 		map.put("userName",user.getUsername());
 		map.put("userId",user.getUserId());
 		map.put("nickName",user.getNickName());
-		map.put("deptCode",deptCode);	
+		map.put("deptCode",deptCode);
+		map.put("deptName",user.getDept().getDeptName());
+		map.put("headimg",((UserDetail) user).getImage());
+		map.put("phone",((UserDetail) user).getPhone());
+		
+		List<UserRole> list = user.getUserRoles();		
+		if(list.size()>0 ){
+			for(UserRole userRole : list){
+				if(userRole.getDeptCode()!=null){
+					if(deptCode==userRole.getDeptCode()){
+						map.put("UserRole",userRole);
+					}
+				}	
+			}
+		}
 		return Result.getDefaultSuccMsgResult(map);
 	}
 
