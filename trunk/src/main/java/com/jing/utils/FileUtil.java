@@ -1,6 +1,16 @@
 package com.jing.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.StringTokenizer;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ClassName: FileUtil
@@ -133,6 +143,103 @@ public class FileUtil {
             return false;
         }
 	}
+	
+	/**
+	 * @Description: 将文件从path1转移到path2 ,如果path2不存在就新建path2目录
+	 * @author EX-LIFENG001
+	 * @date 2013-3-11下午01:18:11
+	 * @param path1
+	 * @param path2
+	 *            void
+	 * @throws IOException
+	 */
+	public static void move(String path1, String path2) throws IOException {
+		copy(path1, path2);
+		deleteFile(path1);
+	}
+	
+	/**
+	 * @Description: 将文件从path1拷贝到path2 ,如果path2不存在就新建path2目录
+	 * @author EX-LIFENG001
+	 * @date 2013-3-11下午01:18:11
+	 * @param path1
+	 * @param path2
+	 *            void
+	 * @throws IOException
+	 */
+	public static void copy(String path1, String path2) throws IOException {
+		if (path1.equals(path2)) {
+			return;
+		}
 
+		FileUtil.mkdirs(path2);
+		FileInputStream fileInputStream = new FileInputStream(path1);
+		BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+		FileOutputStream fileOutputStream = new FileOutputStream(path2);
+		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+		IOUtils.copy(bufferedInputStream, bufferedOutputStream);
+		bufferedInputStream.close();
+		fileOutputStream.flush();
+		fileInputStream.close();
+		bufferedOutputStream.close();
+		fileOutputStream.flush();
+		fileOutputStream.close();
+	}
+
+	/**
+	 * @Description: 创建目录（多层） ,如果最后一个层次中带有‘.’号则不会被创建。
+	 * @author EX-LIFENG001
+	 * @date 2013-3-12下午02:54:51
+	 * @param path
+	 *            void
+	 */
+	public static void mkdirs(String path) throws IOException {
+		String[] tmp = path.split("/");
+		if (tmp != null && tmp.length > 0) {
+			if (tmp[tmp.length - 1].indexOf(".") > 0) {
+				path = path.substring(0, path.lastIndexOf("/"));
+			}
+		}
+		StringTokenizer st = new StringTokenizer(path, "/");
+		StringBuffer pathBuf = new StringBuffer();
+		pathBuf.append(st.nextToken()).append("/");
+		while (st.hasMoreTokens()) {
+			File inbox = new File(pathBuf.append(st.nextToken()).append("/").toString());
+			if (!inbox.exists() && !inbox.mkdir())
+				throw new IOException("make dir error!path = " + pathBuf.toString());
+		}
+	}
+	
+	/**
+	 * @Description: 读取文件全部内容到字节数据
+	 * @author EX-LIFENG001
+	 * @date 2013-3-9下午04:42:33
+	 * @param filePath
+	 * @return
+	 * @throws IOException
+	 *             byte[]
+	 */
+	public static byte[] readFileToBytes(String filePath) throws IOException {
+		FileInputStream fis = new FileInputStream(filePath);
+		byte[] res = IOUtils.toByteArray(fis);
+		fis.close();
+		return res;
+	}
+	
+	
+	public static void writeMultipartFile(String filePath, MultipartFile file) throws IOException {
+		InputStream stream = file.getInputStream();
+		// 读入多个字节到字节数组中，byteread为一次读入的字节数
+		FileUtil.mkdirs(filePath);
+		FileOutputStream fs = new FileOutputStream(filePath, true);
+		byte[] buffer = new byte[10240];
+		int byteread = 0;
+		while ((byteread = stream.read(buffer)) != -1) {
+			fs.write(buffer, 0, byteread);
+			fs.flush();
+		}
+		fs.close();
+		stream.close();
+	}
 
 }
