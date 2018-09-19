@@ -91,11 +91,11 @@
     right:5px;
 }
 .icon_u{
-    background:url('/web/lib/images/login/username.svg') no-repeat;
+    background:url('../images/login/username.svg') no-repeat;
     background-size:25px 25px;
 }
 .icon_p{
-    background:url('/web/lib/images/login/password.svg') no-repeat;
+    background:url('../images/login/password.svg') no-repeat;
     background-size:25px 25px;
 }
 .form-group-t{

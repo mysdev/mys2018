@@ -35,9 +35,8 @@ public class LoginController extends BaseController {
 	@Autowired
 	private UserDetailService userDetailService;
 
-	@RequestMapping(value = "/logout")
+	@RequestMapping(value = "/logoutSuccess")
 	public @ResponseBody boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		User user = (User) request.getSession().getAttribute(Config.USER_INFO);
 		clean(request, response, request.getSession());
 		return true;
 	}
@@ -80,7 +79,7 @@ public class LoginController extends BaseController {
 		return true;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/login/user", method = RequestMethod.POST)
 	public @ResponseBody UserDetail getUser(@SessionAttr(Config.USER_INFO) User user) throws Exception {
 		UserDetail ud = userDetailService.getUserDetailById(user.getUserId());

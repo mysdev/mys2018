@@ -35,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/home.html").permitAll() // 访问白名单
 				.anyRequest().authenticated().and()// 其他请求都要过滤
 				.formLogin().loginPage("/pc/login.html").successHandler(loginSuccessHandler()).permitAll().and() // 登录
-				.logout().invalidateHttpSession(true).logoutSuccessUrl("/logout").permitAll().and()// 注销
+				.logout().invalidateHttpSession(true).logoutSuccessUrl("/logoutSuccess").permitAll().and()// 注销
 				.headers().frameOptions().sameOrigin().and()
 				.csrf().disable(); // 默认开启,我们关闭
 		http.addFilterBefore(requestHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -45,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// 设置不拦截规则
-		web.ignoring().antMatchers("/pc/**", "/**/images/**", "/**/css/**", "**/js/**", "/**/checkcode","/loginSuccess");
+		web.ignoring().antMatchers("/pc/**", "/**/images/**", "/**/css/**", "**/js/**", "/**/checkcode","/loginSuccess","/logoutSuccess");
 		// super.configure(web);
 	}
 
