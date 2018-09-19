@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/datepicker/skin/WdatePicker.css"/>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+	<script type="text/javascript" src="../../../resources/js/common.js"></script>
+	<script type="text/javascript" src="../../../resources/js/pagecommon.js"></script>
+	<script type="text/javascript"  src="../../../resources/js/plugins/datepicker/WdatePicker.js"></script>
+	<!--zTree组件start-->
+    <link rel="stylesheet" href="../../../resources/js/plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">	
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.excheck-3.5.js"></script>
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.exedit-3.5.js"></script>
+    <!--zTree组件end-->
+		<script>
+			var dictionary_columns = [
+				{field:'code', title:'编码', width:260, align:'center'  },
+				{field:'value', title:'值', width:500, align:'center'  },
+				{field:'groupCode', title:'分组编码', width:180, align:'center'  },
+				{field:'sort', title:'排序', width:36, align:'center'  },
+				{field:'flag', title:'状态', width:120, align:'center'  ,
+					formatter: function(value,row,index){
+						if(row.flag == 1){
+							return '启用';
+						}else{
+							return '停用';
+						}
+					}
+				}
+			];
+			
+			var modelPath = '/sys/dictionary'; //模块目录
+			var tablename = 'dictionary';// 表名---用于表格加载刷新
+			var dialogtitle = '数据字典';// 表中文名---弹窗标题
+			var tablekey = 'code';// 表主鍵列名--修改/删除时Id
+			var formpage = 'dictionary_from.html'; // 静态表单页面---弹窗load时表单页面
+			var detailpage = 'dictionary_detail.html'; // 静态详情单页面---弹窗load时详情单页面
+			var groupCode = '';
+			var groupDesc = '';
+			var upCode = '';
+			var upValue ='';
+			var upSort ='';
+			var upflag ='';
+			var upGroupCode='';
+			$(document).ready(function () {	 
+				loadingTree();			 
+			});
+			function loadingTree(){
+				$.ajax({
+					url:projectName+modelPath+'/groupTree',
+					type:"get",
+					dataType: 'json',
+					success:function(data){
+						loadOrgStructure(data.data);//左边的资源树   	   
+					}
+				});
+			}
+			//同步加载树
+			var setting = {
+				data: {
+					simpleData:{
+						enable:true,
+						idKey:'code'
+					},key:{
+						name:"desc"
+					}
+				},view: {
+					selectedMulti: false 
+				 },callback: {
+					onClick:getResourcesStructure,
+					onNodeCreated: orgStructureLoadSuccess
+				} 
+			};
+			//左边的资源树
+			function loadOrgStructure(zNodes){
+				$.fn.zTree.init($("#dictionaryTree"), setting,zNodes);
+			}
+			//鼠标单击字典组，刷新字典数据
+			function getResourcesStructure(event, treeId, treeNode) {
+				var searchData = [];
+				searchData.groupCode = treeNode.code;
+				groupCode = treeNode.code;
+				groupDesc = treeNode.desc;
+				$('#grid_' + tablename).datagrid('load', searchData);				
+				
+			};
+			//加载成功回调
+			function orgStructureLoadSuccess(){
+				var zTree = $.fn.zTree.getZTreeObj("dictionaryTree");
+				expandOrgStructureNodes(zTree.getNodes());
+				var node = zTree.getNodes()[0];				
+			    zTree.selectNode(node);//选择节点			   
+			}
+			function expandOrgStructureNodes(nodes) {
+				if (!nodes) return;
+				var zTree = $.fn.zTree.getZTreeObj("dictionaryTree");
+				for (var i=0, l=nodes.length; i<l; i++) {
+					zTree.expandNode(nodes[i], true, false, false);
+				}
+			}
+			$(function() {	
+				var options = {
+					tableId : tablename,
+					url : projectName+modelPath+'/page',
+					columns : [ window[tablename + "_columns"] ],
+					onDblClickRow : function(rowIndex, rowData) {
+						detail(rowData.code);
+					}
+				};
+				// 加载表格
+				initGrid(options);	
+				
+				//初始化搜索收缩
+				searchDown_Up("down_up","search_Secondary");
+			});
+			
+			//新增字典组
+			function addDictionaryGroup(){			
+				var add_options = {
+						api : projectName+modelPath,
+						title : '添加' + dialogtitle+'组',
+						formpage : 'dictionaryGroup_from.html',
+						buttons : [ {
+							text : '保存',
+							handler : function() {	
+								
+								var Gcode = $("#Gcode").val();
+								var Gdesc = $("#Gdesc").val();
+								if(Gcode != '' && Gdesc != ''){
+									$.ajax({
+										 url:projectName+'/sys/dictionary/group/save',
+										 data:{'code':Gcode,'desc':Gdesc},
+										 type:"post",
+										 dataType: 'json',
+										 success:function(data){
+											 $.messager.alert("保存成功", "保存成功");  
+											 loadingTree();
+											}
+									 }); 
+								}else{
+									alert("您的输入有误请核对后输入");
+								}
+								
+								dialog.dialog('destroy');// 销毁							
+							}
+						} ]
+					};
+					add_options.callback=function(){
+						if (dialog) {
+							dialog.dialog('destroy');// 销毁
+						} 
+					 
+					}		
+					openForm(add_options);
+			}
+			//修改字典组
+			function updateGroup(){	
+				var add_options = {
+						api : projectName+modelPath,
+						title : '修改' + dialogtitle+'组',
+						formpage : 'dictionaryGroupUp_from.html',
+						buttons : [ {
+							text : '保存',
+							handler : function() {								
+								var Gcode = $("#Gcode").val();
+								var Gdesc = $("#Gdesc").val();
+								if(Gcode != '' && Gdesc != ''){
+									 $.ajax({
+										 url:projectName+'/sys/dictionary/group/update',
+										 data:{'code':Gcode,'desc':Gdesc},
+										 type:"post",
+										 dataType: 'json',
+										 success:function(data){
+											 $.messager.alert("保存成功", "保存成功");  
+											 loadingTree();
+											}
+									 });
+								}else{
+									alert("您的输入有误请核对后输入");
+								}
+								dialog.dialog('destroy');// 销毁							
+							}
+						} ]
+					};
+					add_options.callback=function(){
+						if (dialog) {
+							dialog.dialog('destroy');// 销毁
+						} 
+					 
+					}		
+					openForm(add_options);
+			}
+			
+			function deleteGroup(){
+				if(groupCode == ''){
+					return $.messager.alert("错误提示", "请在左边选择需要删除的字典组");
+				}
+				$.messager.confirm('提示', '确定删除该字典组吗？', function(b){  
+				       if (b){  
+				    	   $.ajax({
+								url:projectName+modelPath+'/deleteGroup/'+groupCode,
+								type:"get",
+								dataType: 'json',
+								success:function(data){
+									loadingTree();
+									return $.messager.alert("成功提示", "删除成功!");	   					
+								}
+							});
+				       }
+				});
+				
+			}
+			
+			// 搜索方法
+			function SearchDictionary(searchId) {
+				var searchData = getFormDataBySeach(searchId);
+				searchData.groupCode = searchData.groupCodes;
+				delete searchData["groupCodes"];
+				$('#grid_' + tablename).datagrid('load', searchData);
+			}
+			function update(){
+				var row = $('#grid_' + tablename).datagrid("getSelected");
+				if(row == null){
+					return $.messager.alert("提示", "请选择一行数据后操作!");	
+				}
+				console.log(row);
+				upCode = row.code;
+				upValue = row.value;
+				upSort = row.sort;
+				upflag = row.flag;
+				upGroupCode = row.groupCode;
+				var add_options = {
+						api : projectName+modelPath,
+						title : '修改' + dialogtitle,
+						formpage : 'dictionaryUpdate_from.html',
+						buttons : [ {
+							text : '保存',
+							handler : function() {
+								var data ={};
+								data["code"] = upCode;
+								data["groupCode"] = upGroupCode;
+								//$("#codeu").val();
+								data["value"]=$("#valueu").val();
+								//$("#groupCode").val();
+								data["sort"]=$("#sortu").val();
+								data["flag"]=$("#glagu").val();								
+									  $.ajax({
+										 url:projectName+'/sys/dictionary/update',
+										 data:data,
+										 type:"post",
+										 dataType: 'json',
+										 success:function(data){
+											 $.messager.alert("保存成功", "保存成功");  
+											 $('#grid_' + tablename).datagrid('load');
+											}
+									 }); 
+								
+								dialog.dialog('destroy');// 销毁							
+							}
+						} ]
+					};
+					add_options.callback=function(){
+						if (dialog) {
+							dialog.dialog('destroy');// 销毁
+						} 
+						$('#grid_' + tablename).datagrid('load');
+					}		
+					openForm(add_options);
+			}
+			function addDiction(){
+				if(groupCode == ''){
+					return $.messager.alert("错误提示", "请在左边选取字典组后新增");
+				}
+				add();
+			}
+			//刷新字典
+			function ACTION120314(){
+				var url = "/sys/dictionary/refresh/file";
+				getAjaxGet(url ,function(data){
+					if(data.code>=0){
+						$.messager.alert("成功提示", "成功刷新字典数据,如果无效，请清除浏览器缓存后重试！");
+					}else{
+						$.messager.alert("错误提示", "刷新字典失败");
+					}
+				});
+			}
+			
+			function deleteDic(){
+				var url = projectName+modelPath+'/delete';
+				
+				
+				var row = $('#grid_' + tablename).datagrid("getSelected");
+				if (row) {
+					var code = row.code;
+					var groupCode=row.groupCode;
+					$.messager.confirm('警告', '您确定要删除此条数据字典吗?', function(r) {
+						if (r) {
+							// 加载数据
+							$.ajax({
+								type : "get",
+								url : url,
+								data : {"code":code,"groupCode":groupCode},
+								dataType : 'json',
+								success : function(rs) {
+									if (rs.code == "1") {
+										$.messager.alert('操作成功', '删除成功');
+										$('#grid_' + tablename).datagrid('load');
+									} else {
+										$.messager.alert('操作失败', rs.message);
+									}
+								}
+							});
+						}
+					});
+				} else {
+					$.messager.alert('操作错误', '请选择一条数据!', 'error');
+				}
+				
+			}
+			/* 
+			请求Ajax 带返回值 同步
+			*/
+			function getAjaxGet(url, callBack) {
+			    $.ajax({
+			        type: 'get',
+			        dataType: "text",
+			        url:projectName+url,
+			        dataType: "json",
+			        cache: false,
+			        async: false,
+			        success: function (data) {
+			            callBack(data);
+			            Loading(false);
+			        },
+			        error: function (data) {
+			            alert("error:" + JSON.stringify(data));
+			            Loading(false);
+			        }
+			    });
+			}
+		</script>
+		
+		<style type="text/css">
+		.yyy{height: 940px}
+		@media screen and (max-width:1400px){
+	    .yyy{height: 800px}
+	    }
+		</style>
+</head>
+<body style="height:100%">
+<div style="margin:20px 0;"></div>
+	<div class="easyui-layout yyy" style="width:100%;">
+		<div id="p" data-options="region:'west'" title="字典组目录" style="width:20%;padding:10px">
+			<ul id="dictionaryTree" class="ztree"></ul>
+		</div>
+		<div data-options="region:'center'" title="字典列表">
+		
+			<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+				<div class="easyui-layout layout easyui-fluid">
+		   			<!-- 搜索容器 -->
+					<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+						<form class="form-horizontal" style="width:100%">
+						<div class="cl-9 ">
+							<!-- 必要搜索条件 -->
+							<input id="code" name="code" class="search_input_imp" placeholder="请输入编码">
+							<input id="value" name="value" class="search_input_imp" placeholder="请输入值">
+							<input id="groupCodes" name="groupCodes" class="search_input_imp" placeholder="请输入分组编码">
+							<input id="sort" name="sort" class="search_input_imp" placeholder="请输入排序">
+							<input id="glag" name="glag" class="search_input_imp" placeholder="请输入状态">
+						</div>
+						<div class="cl-1" style="margin-top:10px">
+							<a href="#" class="searchbox-but" plain="true" onclick="SearchDictionary('search_wrap')">搜索</a>
+							<span class="down_up" style="float:right"></span>
+						</div>
+						</form>
+					</div>
+				</div>
+				<div style="margin-top:5px;">	 
+		        	<!-- 操作按钮 -->
+					<div id="tb">
+						<div style="background:#eaf2ff;overflow:hidden;margin-top:5px">
+							<div style="padding:5px;vertical-align: middle;">
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addDiction()">添加字典</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="update()">修改字典</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteDic()">删除字典</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addDictionaryGroup()">添加字典组</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="updateGroup()">修改字典组</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteGroup()">删除字典组</a>
+							 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="ACTION120314()">刷新字典缓存</a>
+							</div>
+						</div>
+					</div>
+		            <!------------------ 在这里填写你的datagrid -------------------->
+					<table id="grid_dictionary" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+					</table>
+		        </div>  
+			</div> 	
+	</div>
+</div>
+	
+</body>
+</html>

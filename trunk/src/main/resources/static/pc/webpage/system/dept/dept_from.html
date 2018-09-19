@@ -1,0 +1,24 @@
+<style type="text/css">
+	#ps{
+	border:1px solid #cceff5;
+	background:#fafcfd;
+	margin-left:15px;
+	position:fixed; 
+	}
+</style>
+<form id="form_dept" class="fromstyle">
+ 	<input type="hidden" id="deptCode" name="deptCode" >
+ 	<input type="hidden" class="form-control"  id="pid" name="pid"  placeholder="请输入上级部门">
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">部门名称</label>
+  	 	<input type="text" class="form-control"  id="deptName" name="deptName"  placeholder="请输入部门名称">
+  	</div>
+	<div class="form-group col-sm-12">
+  	 	<label for="tableName">部门简介</label>
+  		<textArea class="form-control" id="remark" name="remark"  placeholder="请选择部门简介" ></textArea>
+  	</div>
+	<div class="form-group col-sm-6">
+  	 	<label for="tableName">排序</label>
+  	 	<input type="number" class="form-control" name="sort">
+  	</div>
+</form>

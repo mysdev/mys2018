@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.dictionary.dao.DictionaryDao">
+
+	<!-- Result Map -->
+	<resultMap id="DictionaryResultMap" type="com.jing.system.dictionary.entity.Dictionary">
+		<id column="code" property="code" />
+		<result column="value" property="value" />
+		<result column="groupCode" property="groupCode" />
+		<result column="sort" property="sort" />
+		<result column="flag" property="flag" />
+		<result column="createdBy" property="createdBy" />
+		<result column="createdDate" property="createdDate" />
+		<result column="updatedBy" property="updatedBy" />
+		<result column="updatedDate" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_dict_Property" >
+		<where>
+			<if test="param.code != null and param.code != ''">
+				and code = #{param.code}
+			</if>
+			<if test="param.value != null and param.value != ''">
+				and value = #{param.value}
+			</if>
+			<if test="param.groupCode != null and param.groupCode != ''">
+				and groupCode = #{param.groupCode}
+			</if>
+			<if test="param.sort != null ">
+				and sort = #{param.sort}
+			</if>
+			<if test="param.flag != null">
+				and flag = #{param.flag}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 数据字典 -->
+	<insert id="addDictionary" parameterType="com.jing.system.dictionary.entity.Dictionary">
+		<![CDATA[
+			INSERT INTO sys_dictionary(CODE,value,groupCode ,sort ,flag,CREATEDDATE,UPDATEDDATE) 
+			VALUES(#{code},#{value},#{groupCode},#{sort},#{flag},now(),now())
+		]]>		
+	</insert>
+
+	<!-- 修改数据字典 -->
+	<update id="updateDictionary" parameterType="Map">
+		UPDATE sys_dictionary
+		<set> 
+			<if test="value != null" >
+				value = #{value},
+			</if>
+			<if test="sort != null" >
+				sort = #{sort},
+			</if>
+			<if test="flag != null" >
+				flag = #{flag},
+			</if>
+		</set>
+		WHERE	code = #{code} and groupCode=#{groupCode}
+	</update>
+	
+	<!-- 根据ID删除数据字典 -->
+	<delete id="deleteDictionary"  parameterType="com.jing.system.dictionary.entity.Dictionary">
+		DELETE FROM sys_dictionary WHERE code = #{value} and groupCode=#{groupCode}
+	</delete>
+	
+	<!-- 根据ID查询数据字典 -->
+	<select id="getDictionaryById" resultMap="DictionaryResultMap" parameterType="String">
+		SELECT code,value,groupCode,sort,flag FROM sys_dictionary WHERE code = #{value}
+	</select>
+	
+	<select id="findDictionaryListPage" resultMap="DictionaryResultMap">
+		SELECT code,value,groupCode,sort,flag FROM sys_dictionary
+		<include refid="query_dict_Property" />
+	</select>
+	
+	<select id="findDictionaryList" resultMap="DictionaryResultMap">
+		SELECT * FROM sys_dictionary
+		<include refid="query_dict_Property" />
+	</select>
+	
+	
+	<select id="findAllDictionary" resultMap="DictionaryResultMap">
+		SELECT code,value,groupCode,sort,flag FROM sys_dictionary
+	</select>
+	
+	<!-- Result Map -->
+	<resultMap id="DictionaryGroupResultMap" type="com.jing.system.dictionary.entity.DictionaryGroup">
+		<id column="code" property="code" />
+		<result column="desc" property="desc" />
+		<result column="createdBy" property="createdBy" />
+		<result column="createdDate" property="createdDate" />
+		<result column="updatedBy" property="updatedBy" />
+		<result column="updatedDate" property="updatedDate" />
+	</resultMap>
+	
+	 <resultMap id="DictionaryGroupFullResult" type="com.jing.system.dictionary.entity.DictionaryGroup">
+		<id column="code" property="code" />
+		<result column="desc" property="desc" />
+		<collection property="dictionarys" column="Code" ofType="com.jing.system.dictionary.entity.Dictionary" select="findDictionaryByGroupCode">
+		<id column="code" property="code" />
+		<result column="value" property="value" />
+		<result column="sort" property="sort" />
+		<result column="flag" property="flag" />
+		</collection>
+    </resultMap>
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.code != null and param.code != ''">
+				and code = #{param.code}
+			</if>
+			<if test="param.desc != null and param.desc != ''">
+				and desc = #{param.desc}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and createdBy = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and createdDate = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updatedBy = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updatedDate = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 数据字典组 -->
+	<insert id="addDictionaryGroup">
+	<![CDATA[
+		INSERT INTO sys_dictionary_group (`code`,`desc` ,createdBy,createdDate,updatedDate,updatedBy) 
+		values
+		(#{code},#{desc},#{name},now(),now(),#{name})
+		]]>	
+	</insert>
+	
+	<select id="findAllDictionaryGroup" resultMap="DictionaryGroupFullResult">
+		<![CDATA[
+		SELECT `code`,`desc` FROM sys_dictionary_group			
+		]]>	
+	</select>
+	<select id="findDictionaryByGroupCode" parameterType="string" resultMap="DictionaryResultMap">
+		<![CDATA[
+			SELECT `code`,`value`,sort,flag,groupCode FROM sys_dictionary WHERE GROUPCODE=#{value}  and flag=1 ORDER BY SORT ASC
+		]]>	
+	</select>
+	<!-- 修改数据字典组 -->
+	<update id="modDictionaryGroup" >
+	<![CDATA[
+		UPDATE sys_dictionary_group set `desc` = #{desc},updatedBy = #{name}
+		WHERE	`code` = #{code}
+		]]>
+	</update>
+	
+	<!-- 根据ID删除数据字典组 -->
+	<delete id="deleteDictionaryGroupById"  parameterType="String">
+		DELETE FROM sys_dictionary_group WHERE code = #{value}
+	</delete>
+	
+	<!-- 根据ID查询数据字典组 -->
+	<select id="getDictionaryGroupById" resultMap="DictionaryGroupResultMap" parameterType="String">
+		SELECT * FROM sys_dictionary_group WHERE code = #{value}
+	</select>
+	
+	<select id="findDictionaryGroupListPage" resultMap="DictionaryGroupResultMap">
+		SELECT `code`,`desc` FROM sys_dictionary_group
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findDictionaryGroupList" resultMap="DictionaryGroupResultMap">
+		SELECT * FROM sys_dictionary_group
+		<include refid="query_tables_Property" />
+	</select>
+	<select id="getDictionaryGroupList" resultMap="DictionaryGroupResultMap">
+	<![CDATA[
+		SELECT `code`,`desc` FROM sys_dictionary_group
+	]]>	
+	</select>
+</mapper>

@@ -80,6 +80,7 @@ public class LoginController extends BaseController {
 		return true;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/login/user", method = RequestMethod.POST)
 	public @ResponseBody UserDetail getUser(@SessionAttr(Config.USER_INFO) User user) throws Exception {
 		UserDetail ud = userDetailService.getUserDetailById(user.getUserId());

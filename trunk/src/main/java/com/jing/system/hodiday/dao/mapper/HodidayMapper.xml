@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.system.hodiday.dao.HodidayDao">
+
+	<!-- Result Map -->
+	<resultMap id="HodidayResultMap" type="com.jing.system.hodiday.entity.Hodiday">
+		<id column="hid" property="hid" />
+		<result column="htype" property="htype" />
+		<result column="hdate" property="hdate" />
+		<result column="hnumber" property="hnumber" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.hid != null">
+				and hid = #{param.hid}
+			</if>
+			<if test="param.htype != null">
+				and htype = #{param.htype}
+			</if>
+			<if test="param.hdate != null">
+				and hdate = #{param.hdate}
+			</if>
+			<if test="param.hnumber != null">
+				and hnumber = #{param.hnumber}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 节假日 -->
+	<insert id="addHodiday" parameterType="com.jing.system.hodiday.entity.Hodiday">
+		INSERT INTO sys_hodiday_pub (hid ,htype ,hdate ,hnumber ) 
+		values
+		(#{hid},#{htype},#{hdate},#{hnumber})
+	</insert>
+
+	<!-- 修改节假日 -->
+	<update id="updateHodiday" parameterType="com.jing.system.hodiday.entity.Hodiday">
+		UPDATE sys_hodiday_pub
+		<set> 
+			<if test="htype != null" >
+				htype = #{htype},
+			</if>
+			<if test="hdate != null" >
+				hdate = #{hdate},
+			</if>
+			<if test="hnumber != null" >
+				hnumber = #{hnumber},
+			</if>
+		</set>
+		WHERE	hid = #{hid}
+	</update>
+	
+	<!-- 根据ID删除节假日 -->
+	<delete id="deleteHodidayById"  parameterType="String">
+		DELETE FROM sys_hodiday_pub WHERE hid = #{value}
+	</delete>
+	
+	<!-- 根据ID查询节假日 -->
+	<select id="getHodidayById" resultMap="HodidayResultMap" parameterType="String">
+		SELECT * FROM sys_hodiday_pub WHERE hid = #{value}
+	</select>
+	
+	<select id="findHodidayListPage" resultMap="HodidayResultMap">
+		SELECT * FROM sys_hodiday_pub
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findHodidayList" resultMap="HodidayResultMap">
+		SELECT * FROM sys_hodiday_pub
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

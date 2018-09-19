@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/datepicker/skin/WdatePicker.css"/>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+	<script type="text/javascript" src="../../../resources/js/common.js"></script>
+	<script type="text/javascript" src="../../../resources/js/pagecommon.js"></script>
+	<script type="text/javascript"  src="../../../resources/js/plugins/datepicker/WdatePicker.js"></script>
+		<script>
+			var sysConfig_columns = [
+				{field:'pid', hidden:true, title:'主键', width:416, align:'center'  },
+				{field:'pcode', title:'编码', width:200, align:'center'  },
+				{field:'pvalue', title:'值', width:500, align:'center'  },
+				{field:'desc', title:'描述', width:500, align:'center'  },
+				{field:'createdBy',hidden:true, title:'创建人', width:39, align:'center'  },
+				{field:'createdDate',hidden:true, title:'创建时间', width:52, align:'center'  },
+				{field:'updatedBy',hidden:true, title:'修改人', width:39, align:'center' ,hidden:true },
+				{field:'updatedDate',hidden:true, title:'修改时间', width:52, align:'center' ,hidden:true }
+			];
+			
+			var modelPath = '/sys/sysConfig'; //模块目录
+			var tablename = 'sysConfig';// 表名---用于表格加载刷新
+			var dialogtitle = '系统参数';// 表中文名---弹窗标题
+			var tablekey = 'pid';// 表主鍵列名--修改/删除时Id
+			var formpage = 'sysConfig_from.html'; // 静态表单页面---弹窗load时表单页面
+			var detailpage = 'sysConfig_detail.html'; // 静态详情单页面---弹窗load时详情单页面
+			
+			
+			$(function() {	
+				var options = {
+					tableId : tablename,
+					url : projectName+modelPath+'/page',
+					columns : [ window[tablename + "_columns"] ],
+					onDblClickRow : function(rowIndex, rowData) {
+						detail(rowData.pid);
+					}
+				};
+				// 加载表格
+				initGrid(options);	
+				
+				//初始化搜索收缩
+				searchDown_Up("down_up","search_Secondary");
+			});
+		</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="pid" name="pid" class="search_input_imp" placeholder="请输入主键">
+					<input id="pcode" name="pcode" class="search_input_imp" placeholder="请输入编码">
+					<input id="pvalue" name="pvalue" class="search_input_imp" placeholder="请输入值">
+					<input id="desc" name="desc" class="search_input_imp" placeholder="请输入描述">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">	 
+        	<!-- 操作按钮 -->
+			<div id="tb">
+				<div style="background:#eaf2ff;overflow:hidden;margin-top:5px">
+					<div style="padding:5px;vertical-align: middle;">
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add()">添加</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="edit()">修改</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteRow()">删除</a>
+					</div>
+				</div>
+			</div>
+            <!------------------ 在这里填写你的datagrid -------------------->
+			<table id="grid_sysConfig" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

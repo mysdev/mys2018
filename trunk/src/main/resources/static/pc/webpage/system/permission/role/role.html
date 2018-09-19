@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../../resources/js/easyui/easyui_add.css" />
+<link rel="stylesheet" type="text/css" href="../../../../resources/js/plugins/datepicker/skin/WdatePicker.css" />
+<script type="text/javascript" src="../../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../../resources/js/easyui/validatebox.js"></script>
+<script type="text/javascript" src="../../../../resources/js/common.js"></script>
+<script type="text/javascript" src="../../../../resources/js/pagecommon.js"></script>
+<script type="text/javascript" src="../../../../resources/js/plugins/datepicker/WdatePicker.js"></script>
+<!--zTree组件start-->
+<link rel="stylesheet" href="../../../../resources/js/plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="../../../../resources/js/plugins/ztree/js/jquery.ztree.exedit-3.5.js"></script>
+<!--zTree组件end-->
+<script>
+			var role_columns = [
+				{field : 'roleId',	title : '角色ID', align : 'center' ,width : '12%' },
+				{field : 'roleName',	title : '角色名称', align : 'center',width : '12%'  },
+				{field : 'roleTitle',	title : '角色别名', align : 'center',width : '12%'  },
+				{field : 'deptCode',	title : '部门编号', align : 'center' ,width : '12%' },
+				{field : 'parentRole',	title : '上级角色', align : 'center' ,width : '12%' },
+				{field : 'status',	title : '状态', align : 'center',width : '8%' ,
+					formatter: function(value,row,index){
+						if(row.status == 1){
+							return '启用';
+						}else{
+							return '未知或停用';
+						}
+					} 
+				}
+			];
+			
+			var modelPath = '/sys/permission/role'; //模块目录
+			var tablename = 'role';// 表名---用于表格加载刷新
+			var dialogtitle = '角色';// 表中文名---弹窗标题
+			var tablekey = 'roleId';// 表主鍵列名--修改/删除时Id
+			var formpage = 'role_from.html'; // 静态表单页面---弹窗load时表单页面
+			var detailpage = 'role_detail.html'; // 静态详情单页面---弹窗load时详情单页面
+			var roleIds = '';//角色id
+			//同步加载树
+			var setting = {
+				data: {
+					simpleData:{
+						enable:true,
+						idKey:'resId',
+						pIdKey:'parentId',
+						rootPId: "0"
+					},key:{
+						name:"resName"
+					}
+				},view: {
+					selectedMulti: false 
+				},check:{
+					enable:true,
+					chkStyle:"checkbox",
+					//chkboxType:{"Y":"p","N":"p"},
+					 chkboxType: { "Y": "ps", "N": "s" } 
+				},callback: {
+					//onClick:getResourcesStructure
+					 onNodeCreated: orgStructureLoadSuccess
+				}
+			};
+			
+			//页面加载数据
+			$(function() {	
+				var options = {
+					tableId : tablename,
+					url : projectName+modelPath+'/page',
+					columns : [ window[tablename + "_columns"] ],					
+					onDblClickRow : function(rowIndex, rowData) {
+						detail(rowData.id);
+					},queryParams:{
+						parentId : '0'
+					}
+				};
+					// 加载表格
+					initGrid(options);	
+					
+					//初始化搜索收缩
+					searchDown_Up("down_up","search_Secondary");
+				});
+			
+			//资源树
+			function loadOrgStructure(zNodes){
+				
+				
+				
+				//var treeObj =$.fn.zTree.init($("#rolePermissionTree"), setting,zNodes);
+				//获取ztree对象
+				// $.fn.zTree.getZTreeObj("rolePermissionTree");
+				//加载后填充角色当前权限
+				$.ajax({
+			    	url:projectName+'/sys/permission/index/'+roleIds,					
+					type:"get",
+					dataType: 'json',
+					success:function(rs){
+						if(rs.code==1){
+							  var treeObj = $.fn.zTree.getZTreeObj("rolePermissionTree");
+			                  if (treeObj) {
+			                      treeObj.destroy();
+			                  }
+			                  $.fn.zTree.init($("#rolePermissionTree"), setting, rs.data);
+
+						}else{
+							$.messager.alert(rs.message);
+						}
+						
+		                  
+						
+					/* 	for(var i =0;i<data.data.length;i++){
+							var node = treeObj.getNodeByParam("resId", data.data[i].resId, null);
+							if(node){								
+								treeObj.checkNode(treeObj.getNodeByParam("resId", data.data[i].resId, null), true, true);
+							}
+						}	 */			       
+					}
+			    });
+			}
+			//鼠标单击资源结构树
+			function getResourcesStructure(event, treeId, treeNode) {
+				var searchData = [];
+				
+			};
+			//获取复选框的值并提交给服务器
+			function GetCheckedAll() {
+				 var nodesResId='';
+				 var treeObjCheck = $.fn.zTree.getZTreeObj("rolePermissionTree");
+				 var nodes = treeObjCheck.getCheckedNodes(true);
+				 for (var i = 0; i < nodes.length; i++) {
+					 nodesResId += nodes[i].resId+',';
+				 }
+				 if(nodes.length == 0){
+					 $.messager.confirm('提示', '确定取消该角色所有权限吗', function(b){  
+					       if (b){  
+					    	   $.ajax({
+									 url:projectName+'/sys/permission/addPermission',
+									 data:{'roleId':roleIds,'resId':"0"},
+									 type:"post",
+									 dataType: 'json',
+									 success:function(data){
+										 $.messager.alert("保存成功", "保存成功");   
+										}
+								 });   
+					       }else{  
+					            
+					       }  
+					 });  
+				 }								 
+					 $.ajax({
+						 url:projectName+'/sys/permission/addPermission',
+						 data:{'roleId':roleIds,'resId':nodesResId},
+						 type:"post",
+						 dataType: 'json',
+						 success:function(data){
+							 $.messager.alert("保存成功", "保存成功");   
+							}
+					 });  				 
+					  				 				 
+			 }
+			//加载成功后显示
+			function orgStructureLoadSuccess(){
+				var zTree = $.fn.zTree.getZTreeObj("rolePermissionTree");
+				expandOrgStructureNodes(zTree.getNodes());
+				var node = zTree.getNodes()[0];				
+			    zTree.selectNode(node);//选择节点			   			  			    
+			}
+			
+			function expandOrgStructureNodes(nodes) {
+				if (!nodes) return;
+				var zTree = $.fn.zTree.getZTreeObj("rolePermissionTree");
+				for (var i=0, l=nodes.length; i<l; i++) {
+					zTree.expandNode(nodes[i], true, false, false);
+				}
+			}
+			
+			function lodingRoleTree(roleId){
+				//加载权限资源树
+				 $.ajax({
+						url:projectName+'/sys/permission/resources/listWithRole',
+						type:"get",
+						dataType: 'json',
+						async:false,
+						data:{roleId:roleId},
+						success:function(rs){ 
+							//loadOrgStructure(data.data);//左边的资源树   	   
+							
+							var treeObj = $.fn.zTree.getZTreeObj("rolePermissionTree");
+			                  if (treeObj) {
+			                      treeObj.destroy();
+			                  }
+			                  $.fn.zTree.init($("#rolePermissionTree"), setting, rs.data);
+							
+						}				 	
+					});
+			}
+			//给角色添加权限
+			function RoleAllotPermission(){
+				var row = $('#grid_' + tablename).datagrid("getSelected");
+				roleIds = row.roleId;
+				var roleId=row.roleId;
+				if(row == null ){
+					return $.messager.alert("请选择一条数据", "请选择一条数据");
+				}
+				if(row.status != '1'){
+					return $.messager.alert("角色未启用", "角色未启用");
+				}
+				if(row.roleId == 'ROLE0'){
+					return $.messager.alert("角色“所有用户”不允许配置.", "不允许配置");
+				}
+				
+				var add_options = {
+						api : projectName+modelPath+'/add',
+						title : '添加' + dialogtitle+'权限',
+						formpage : 'role_permission_from.html',
+						buttons : [ {
+							text : '保存',
+							handler : function() {
+								GetCheckedAll();																
+								dialog.dialog('destroy');// 销毁							
+							}
+						} ]
+					};
+					add_options.callback=function(){
+						if (dialog) {
+							dialog.dialog('destroy');// 销毁
+						} 
+					 
+						$('#grid_' + tablename).datagrid('load');
+					}				
+					openForm(add_options);
+					
+					setTimeout(function(){
+						lodingRoleTree(roleId);
+					}, 1000);
+			}
+			
+			// 修改方法 
+			function update(str1,str2) {
+				var row = $('#grid_' + tablename).datagrid("getSelected");
+				if (row) {
+					var update_options = {
+						api : projectName+modelPath+'/update',
+						title : '修改' + dialogtitle,
+						formpage : 'roleUpdate_from.html'
+					};
+					var key_val = row[window["tablekey"]];
+					update_options[window["tablekey"]] = key_val;
+					update_options.initData = function() {
+						$.get(projectName+modelPath+'/index/' + key_val, {}, function(rs) {
+							setFormData("form_" + tablename, rs.data);
+							
+							
+						}, 'json');
+					};
+					update_options.buttons = [ {
+						text : '保存',
+						handler : function() {
+							submitForm(update_options,str1,str2);
+						}
+					} ];
+					update_options.callback=function(){
+						if (dialog) {
+							dialog.dialog('destroy');// 销毁
+						}  
+						$('#grid_' + tablename).datagrid('load');
+					}
+					
+
+					openForm(update_options);
+				} else {
+					$.messager.alert('错误操作', '请选择一条数据!', 'error');
+				}
+			}
+		</script>
+
+
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border: 1px solid #e0e0e0; overflow: hidden;">
+				<form class="form-horizontal" style="width: 100%">
+					<div class="cl-9 ">
+						<!-- 必要搜索条件 -->
+						<input id="roleId" name="roleId" class="search_input_imp" placeholder="请输入角色ID"> <input id="roleName" name="roleName" class="search_input_imp" placeholder="请输入角色名称"> <input id="roleTitle" name="roleTitle" class="search_input_imp" placeholder="请输入角色别名"> <input id="deptCode" name="deptCode" class="search_input_imp" placeholder="请输入部门编号"> <input id="parentRole" name="parentRole" class="search_input_imp" placeholder="请输入上级角色">
+						<!-- <label for="tableName">是否启用</label>
+			  	 	<input type="radio"  id="status" name="status" value="1">是
+			  	 	<input type="radio"  id="status" name="status" value="0">否 -->
+					</div>
+					<div class="cl-1" style="margin-top: 10px">
+						<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a> <span class="down_up" style="float: right"></span>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top: 5px;">
+			<!-- 操作按钮 -->
+			<div id="tb">
+				<div style="background: #eaf2ff; overflow: hidden; margin-top: 5px">
+					<div style="padding: 5px; vertical-align: middle;">
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add()">添加</a> <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="update()">修改</a> <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteRow()">删除</a> <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="RoleAllotPermission()">角色权限</a>
+					</div>
+				</div>
+			</div>
+			<!------------------ 在这里填写你的datagrid -------------------->
+			<table id="grid_role" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width: 800px">
+			</table>
+		</div>
+	</div>
+</body>
+</html>

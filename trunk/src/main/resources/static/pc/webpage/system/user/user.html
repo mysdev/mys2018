@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css"/> 
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/datepicker/skin/WdatePicker.css"/>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+	<script type="text/javascript" src="../../../resources/js/common.js"></script>
+	<script type="text/javascript" src="../../../resources/js/pagecommon.js"></script>
+	<script type="text/javascript"  src="../../../resources/js/plugins/datepicker/WdatePicker.js"></script>
+	
+	<!--zTree组件start-->
+    <link rel="stylesheet" href="../../../resources/js/plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">	
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.excheck-3.5.js"></script>
+	<script type="text/javascript" src="../../../resources/js/plugins/ztree/js/jquery.ztree.exedit-3.5.js"></script>
+    <!--zTree组件end-->
+	<script>
+		var user_columns = [
+			//{field:'userId', title:'用户ID', width:52, align:'center'  },
+			{field:'username', title:'用户名', width:150, align:'center'  },
+			//{field:'password', title:'密码', width:120, align:'center'  },
+			{field:'nickName', title:'昵称', width:150, align:'center'  },
+			{field:'status', title:'账号状态', width:82, align:'center' ,
+				formatter: function(value,row,index){
+					if(row.status == 1){
+						return '启用';
+					}else{
+						return '未知或停用';
+					}
+				}
+			},
+			{field:'loginStatus', title:'登录状态', width:82, align:'center'  },
+			{field:'clintId', title:'客户端标识', width:100, align:'center'  }
+		];
+		 
+		var modelPath = '/sys/user'; //模块目录
+		var tablename = 'user';// 表名---用于表格加载刷新
+		var dialogtitle = '用户';// 表中文名---弹窗标题
+		var tablekey = 'userId';// 表主鍵列名--修改/删除时Id
+		var formpage = 'user_from.html'; // 静态表单页面---弹窗load时表单页面
+		var detailpage = 'user_detail.html'; // 静态详情单页面---弹窗load时详情单页面
+		var deptCodeUser ='';//用户部门
+		var userId ='';//分配角色时的id
+		//异步加载树
+		var setting = {
+			data: {
+				simpleData:{
+					enable:true,
+					idKey:'deptCode',
+					pIdKey:'pid',
+					rootPId: 0
+				},
+				key:{
+					name:"deptName"
+				}
+			},async: {
+				enable: true,
+				url: projectName+"/sys/dept/tree?"+Math.random(),
+				autoParam:["deptCode=pid"],
+				type:"get",
+				dataType: "json",
+				dataFilter:filter
+			},view: {
+				selectedMulti: false 
+			},callback: {
+				onClick:getResourcesStructure,
+				onNodeCreated: orgStructureLoadSuccess
+			}
+		};
+		
+		function filter(treeId, parentNode, childNodes) {
+			if (!childNodes) return null;
+			for (var i=0, l=childNodes.length; i<l; i++) {
+				childNodes[i].isParent = true;					
+			}
+			return childNodes;
+		}
+					
+		//左边的资源树
+		function loadOrgStructure(){
+			$.fn.zTree.init($("#orgStructureTree"), setting);
+		}
+		var deptCode;
+		
+		//鼠标单击组织机构--刷新用户列表
+		function getResourcesStructure(event, treeId, treeNode) {
+			deptCode = treeNode.deptCode;
+			var searchData = [];
+			searchData.deptCode = treeNode.deptCode;
+			deptCodeUser = searchData.deptCode;
+			$('#grid_' + tablename).datagrid('load', searchData);					
+			
+		};
+		//组织机构加载成功回调
+		function orgStructureLoadSuccess(){
+			var zTree = $.fn.zTree.getZTreeObj("orgStructureTree");
+			expandOrgStructureNodes(zTree.getNodes());
+			var node = zTree.getNodes()[0];				
+		    zTree.selectNode(node);//选择节点
+		    
+		    var searchData = [];
+			searchData.deptCode = node.deptCode;
+			deptCodeUser = searchData.deptCode;
+			$('#grid_' + tablename).datagrid('load', searchData); 
+		   
+		}
+		function expandOrgStructureNodes(nodes) {
+			if (!nodes) return;
+			var zTree = $.fn.zTree.getZTreeObj("orgStructureTree");
+			for (var i=0, l=nodes.length; i<l; i++) {
+				zTree.expandNode(nodes[i], true, false, false);
+			}
+		}
+		
+		$(function() {	
+			var options = {
+				tableId : tablename,
+				url : projectName+modelPath+'/page',
+				columns : [ window[tablename + "_columns"] ],
+				onDblClickRow : function(rowIndex, rowData) {
+					detail(rowData.userId);
+				}
+			};
+			
+			loadOrgStructure();
+			// 加载表格
+			initGrid(options);	
+			
+			//初始化搜索收缩
+			searchDown_Up("down_up","search_Secondary");
+		});
+		
+		//给用户分配角色
+		function ACTION5109() {
+			var row = $('#grid_' + tablename).datagrid("getSelected");	
+			if(row == null ){
+				return $.messager.alert("请选择一条数据", "请选择一条数据");
+			}
+			userId = row.userId;				
+			if(row.status != '1'){
+				return $.messager.alert("用户未启用", "用户未启用");
+			} 
+			//sessionStorage.setItem("userId",row.userId);  
+			var add_options = {
+					api : projectName+modelPath+'/add',
+					title : '添加' + dialogtitle+'角色',
+					formpage : 'user_role_from.html',
+					buttons : [ {
+						text : '保存',
+						handler : function() {
+							$.messager.alert("保存成功", "保存成功");
+							dialog.dialog('destroy');// 销毁							
+						}
+					} ]
+			};
+			add_options.callback=function(){
+					if (dialog) {
+						dialog.dialog('destroy');// 销毁
+					} 
+				 
+					$('#grid_' + tablename).datagrid('load');
+			}				
+			openForm(add_options);
+			//查出所有角色
+			setTimeout(function(){
+				$.ajax({
+					url:projectName+'/sys/permission/role/selectRole',
+					data:{'deptCode':deptCodeUser},
+					type:"post",
+					dataType: 'json',
+					success:function(data){
+						var htm = '';
+						for(var i =0;i<data.data.length;i++){
+							if(data.data[i].roleId !='ROLE0'){
+								 htm +='<div class="form-group col-sm-6">';
+								 htm +='<input type="checkbox" value="'+data.data[i].roleId+'" onclick="onClickHander(this)"> '+data.data[i].roleTitle;
+								 htm +='</div>';
+							}
+						}
+						$("#userRoleDiv").append(htm);
+						selectUserRole(userId);
+					}
+				});            
+		                        
+		    },500);
+			
+		}
+		
+		//查出用户拥有的角色
+		function selectUserRole(userId){
+			//var userId = sessionStorage.getItem('userId');//获得用户id
+			$.ajax({
+				url:projectName+'/sys/permission/userRole/getUserRole',
+				data:{'userId':userId},
+				type:"post",
+				dataType: 'json',
+				success:function(data){
+					for(var i = 0; i<data.data.length;i++){
+						if(data.data[i].deptCode== deptCodeUser || data.data[i].deptCode== null){
+							$("input[value="+data.data[i].roleId+"]").attr("checked", true);
+						}
+					}
+
+				}
+			});
+		}
+		//选中或者取消选中角色
+		function onClickHander(obj){
+			//选中了复选框
+			if(obj.checked){					
+				 $.ajax({
+					 	url:projectName+'/sys/permission/userRole/add',
+						data:{userId:userId,roleId:obj.value,deptCode:deptCodeUser},
+						type:"post",
+						dataType: 'json',
+						success:function(data){
+							
+						} 
+				 });
+            }else{
+               	$.ajax({
+               		url:projectName+'/sys/permission/userRole/delete',
+               		data:{userId:userId,roleId:obj.value,deptCode:deptCodeUser},
+               		type:'post',
+               		dataType:'json',
+               		success:function(data){
+               			$.messager.alert("角色取消成功", "角色取消成功");
+               		}
+               	});
+               	
+            }
+
+		}
+		//添加用户
+		function addUser(str1,str2){
+			if(deptCodeUser == ''){
+				return $.messager.alert("请选择一个部门", "请先在左侧选择部门后操作");
+			} 
+			var add_options = {
+					api : projectName+modelPath+'/add/'+deptCodeUser,
+					title : '添加' + dialogtitle,
+					formpage : 'user_from.html',
+					buttons : [ {
+						text : '保存',
+						handler : function() {
+							submitForm(add_options,str1,str2);							
+							$('#grid_' + tablename).datagrid('load');						
+						}
+					} ]
+				};
+				add_options.callback=function(){
+					if (dialog) {
+						dialog.dialog('destroy');// 销毁
+					} 
+				 
+					$('#grid_' + tablename).datagrid('load');
+				}				
+				openForm(add_options);
+		}		
+		
+		function restPassword(){			
+			var row = $('#grid_' + tablename).datagrid("getSelected");
+			if (row) {
+				var nickName = row.nickName;
+				var title = "重置用户【"+nickName+"】的密码为123456";
+				$.messager.confirm('警告', '您确定要' + title + '吗?', function(r) {
+					if (r) {
+						// 加载数据
+						$.ajax({
+							type : "post",
+							url : projectName+'/sys/user/restPassword',
+							data : {"userId":row.userId},
+							dataType : 'json',
+							success : function(rs) {
+								if (rs.code == "1") {
+									$.messager.alert('提示', title + '成功');
+									$('#grid_' + tablename).datagrid('reload');
+								} else {
+									$.messager.alert('提示', rs.message);
+								}
+							}
+						});
+					}
+				});
+			} else {
+				$.messager.alert('操作错误', '请选择一条数据!', 'error');
+			}		
+			
+		}
+		
+		
+		// 删除方法
+		function deleteRow() {
+			var row = $('#grid_' + tablename).datagrid("getSelected");
+			if (row) {
+				var id = row[tablekey];
+				$.messager.confirm('警告', '您确定要删除此条数据吗?', function(r) {
+					if (r) {
+						// 加载数据
+						$.ajax({
+							type : "get",
+							url : projectName+modelPath+'/delete/' + id,
+							data : {deptCode:deptCode},
+							dataType : 'json',
+							success : function(rs) {
+								if (rs.code == "1") {
+									$.messager.alert('操作成功', '删除成功');
+									$('#grid_' + tablename).datagrid('load');
+								}else{
+									$.messager.alert('操作失败', rs.message);
+								}
+							}
+						});
+					}
+				});
+			} else {
+				$.messager.alert('操作错误', '请选择一条数据!', 'error');
+			}
+		}
+	</script>
+	
+	<style type="text/css">
+	.yyy{height: 940px}
+	@media screen and (max-width:1400px){
+    .yyy{height: 800px}
+    }
+	</style>
+</head>
+<body  style="height:100%">
+	<div class="easyui-layout yyy" style="width:100%;">
+		<div id="p" data-options="region:'west'" title="用户部门" style="width:20%;padding:10px">
+			<ul id="orgStructureTree" class="ztree"></ul>
+		</div>
+		<div data-options="region:'center'" title="详细列表">
+			<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<!-- <input id="userId" name="userId" class="search_input_imp" placeholder="请输入用户ID"> -->
+					<input id="username" name="username" class="search_input_imp" placeholder="请输入用户名">
+					<!-- <input id="password" name="password" class="search_input_imp" placeholder="密码"> -->
+					<input id="nickName" name="nickName" class="search_input_imp" placeholder="请输入昵称">
+					<input id="status" name="status" class="search_input_imp" placeholder="请输入账号状态">
+					<input id="loginStatus" name="loginStatus" class="search_input_imp" placeholder="请输入登录状态">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">	 
+        	<!-- 操作按钮 -->
+			<div id="tb">
+				<div style="background:#eaf2ff;overflow:hidden;margin-top:5px">
+					<div style="padding:5px;vertical-align: middle;">
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUser()">添加</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="edit()">修改</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="deleteRow()">删除</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="ACTION5109()">用户角色</a>
+					 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="restPassword()">重置密码</a>
+					</div>
+				</div>
+			</div>
+            <!------------------ 在这里填写你的datagrid -------------------->
+			<table id="grid_user" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 		
+		</div>
+	</div>
+
+	
+</body>
+</html>

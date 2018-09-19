@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8" />
+<title>动态表单设置</title>
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+		<script>
+			var columns = [
+				{field:'ffid', title:'字段ID', width:52, align:'center'  },
+				{field:'fid', title:'表单ID', width:52, align:'center'  },
+				{field:'ftype', title:'字段类型', width:130, align:'center'   ,formatter : function(value, row, index) {
+					return Faith.dictionaryToChinese('9113', row.ftype);
+				}},
+				{field:'fname', title:'字段名', width:150, align:'center'  },
+				{field:'isQuery', title:'是否查询条件', width:78, align:'center'  ,formatter : function(value, row, index) {
+					return Faith.dictionaryToChinese('1001', row.isQuery);
+				}},
+				{field:'isMust', title:'是否必填', width:52, align:'center'  ,formatter : function(value, row, index) {
+					return Faith.dictionaryToChinese('1001', row.isMust);
+				}},
+				{field:'isList', title:'是否列表显示', width:78, align:'center'  ,formatter : function(value, row, index) {
+					return Faith.dictionaryToChinese('1001', row.isList);
+				}},
+				{field:'length', title:'字段长度', width:52, align:'center'  },
+				{field:'width', title:'列表宽度', width:52, align:'center'  },
+				{field:'formWidth', title:'表单控件宽度', width:52, align:'center'  },
+				{field:'seq', title:'字段排序', width:52, align:'center'  },
+				{field:'dictCode', title:'数据字典组CODE', width:150, align:'center'  }
+				
+			];
+			var fid = Faith.getQueryStringByName("pkVal");
+			
+			//接收 菜单id
+			var resId = 473;//当前页面id
+			//配置页面参数
+			$.extend(true, Faith, {
+				gridOptions : {
+					gridId : 'grid_filed', //表格容器id
+					tableKey : "ffid",
+					resId:resId,
+					pageButtonKey:'',
+					isToolBar:true,
+					url : Faith.projectName + '/sys/form/filed/page?fid='+fid, //列表接口
+					columns : [ columns ],//数据列
+					onDblClickRow : function(rowIndex, rowData) {
+						Faith.doView();
+					}
+				},
+				addOptions : {
+					title : "添加字段",
+					addUrl : "/webpage/system/form/filed_form.html?fid="+ fid
+				},
+				updateOptions : {
+					title : "修改字段",
+					updateUrl : "/webpage/system/form/filed_form.html?fid="+fid
+				},
+				deleteOptions : {
+					deleteAction : Faith.projectName + '/sys/form/filed/delete/'
+				},
+				viewOptions : {
+					viewUrl : "/webpage/system/form/filed_detail.html"
+				}
+			});
+
+			$(function() {
+				//加载按钮工具条
+				//Faith.initToolBar("tb", resId, "");
+
+				// 加载表格
+				Faith.initGrid(Faith.gridOptions);
+
+				//查询条件
+				Faith.initSelectArea('areaCode', { 
+					required : false,
+					height:28
+				});//初始化区域选择
+
+				//初始化搜索收缩
+				//searchDown_Up("down_up", "search_Secondary");
+			});
+			
+		</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="ffid" name="ffid" class="search_input_imp" placeholder="请输入字段ID">
+					<input id="fid" name="fid" class="search_input_imp" placeholder="请输入表单ID">
+					<input id="ftype" name="ftype" class="search_input_imp" placeholder="请输入字段类型">
+					<input id="fname" name="fname" class="search_input_imp" placeholder="请输入字段名">
+					<input id="isQuery" name="isQuery" class="search_input_imp" placeholder="请输入是否查询条件">
+					<input id="isMust" name="isMust" class="search_input_imp" placeholder="请输入是否必填">
+					<input id="isList" name="isList" class="search_input_imp" placeholder="请输入是否列表显示">
+					<input id="length" name="length" class="search_input_imp" placeholder="请输入字段长度">
+					<input id="width" name="width" class="search_input_imp" placeholder="请输入列表宽度">
+					<input id="seq" name="seq" class="search_input_imp" placeholder="请输入字段排序">
+					<input id="dictCode" name="dictCode" class="search_input_imp" placeholder="请输入数据字典组CODE">
+					<input id="createdBy" name="createdBy" class="search_input_imp" placeholder="请输入创建人">
+					<input id="createdDate" name="createdDate" class="search_input_imp" placeholder="请输入创建时间">
+					<input id="updatedBy" name="updatedBy" class="search_input_imp" placeholder="请输入修改人">
+					<input id="updatedDate" name="updatedDate" class="search_input_imp" placeholder="请输入修改时间">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">	 
+        	<!-- 操作按钮 -->
+			<div id="tb"></div>
+            <!------------------ 在这里填写你的datagrid -------------------->
+			<table id="grid_filed" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>
