@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.codeing.dao.ColumnsDao">
+	<!-- Result Map -->
+	<resultMap id="ColumnsMap" type="com.jing.codeing.entity.Columns">
+		<result column="cid" property="cid" />
+		<result column="tid" property="tid" />
+		<result column="columnName" property="columnName" />
+		<result column="columnLabel" property="columnLabel" />
+		<result column="columnComment" property="columnComment" />
+		<result column="columnType" property="columnType" />
+		<result column="length" property="length" />
+		<result column="isSearch" property="isSearch" />
+		<result column="isList" property="isList" />
+		<result column="listSort" property="listSort" />
+		<result column="listWidth" property="listWidth" />
+		<result column="isForm" property="isForm" />
+		<result column="formType" property="formType" />
+		<result column="groupCode" property="groupCode" />
+		<result column="formClass" property="formClass" />
+		<result column="formValidate" property="formValidate" />
+		<result column="fromWidth" property="fromWidth" />
+		<result column="spacing" property="spacing" />
+		<result column="isNewLine" property="isNewLine" />
+		<result column="scale" property="scale" />
+		<result column="precision" property="precision" />
+		<result column="nullable" property="nullable" />
+		<result column="filedType" property="filedType" />
+	</resultMap>
+	
+	<sql id="query_Columns_Property" >
+		<if test="param.columnName != null and param.columnName!=''">
+			and columnName = #{param.columnName}
+		</if>
+		<if test="param.columnType != null and param.columnType!=''">
+			and columnType = #{param.columnType}
+		</if>
+		<if test="param.tid != null and param.tid!=''">
+			and tid = #{param.tid}
+		</if>
+	</sql>
+
+	<insert id="addColumns" parameterType="com.jing.codeing.entity.Columns">
+		<selectKey keyProperty="cid" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into code_culums(tid,
+		columnName,
+		columnLabel,
+		columnComment,
+		columnType,
+		scale,
+		`precision`,
+		foreignKey,
+		nullable,
+		filedType,
+		length,
+		isSearch,
+		isList,
+		listSort,
+		listWidth,
+		isForm,
+		formType,
+		groupCode,
+		formClass,
+		formValidate,
+		fromWidth,
+		spacing,
+		isNewLine
+		)
+		 values
+		(#{tid},
+		#{columnName,jdbcType=VARCHAR},
+	    #{columnLabel,jdbcType=VARCHAR},
+	    #{columnComment,jdbcType=VARCHAR},
+	    #{columnType,jdbcType=VARCHAR},
+	    #{scale,jdbcType=VARCHAR},
+	    #{precision,jdbcType=VARCHAR},
+	    #{foreignKey,jdbcType=VARCHAR},
+	    #{nullable,jdbcType=VARCHAR},
+	    #{filedType,jdbcType=VARCHAR},
+	    #{length,jdbcType=INTEGER},
+	    #{isSearch,jdbcType=INTEGER},
+	    #{isList,jdbcType=INTEGER},
+	    #{listSort,jdbcType=INTEGER},
+	    #{listWidth,jdbcType=INTEGER},
+	    #{isForm,jdbcType=INTEGER},
+	    #{formType,jdbcType=INTEGER},
+	    #{groupCode,jdbcType=VARCHAR},
+	    #{formClass,jdbcType=VARCHAR},
+	    #{formValidate,jdbcType=VARCHAR},
+	    #{fromWidth,jdbcType=INTEGER},
+	    #{spacing,jdbcType=INTEGER},
+	    #{isNewLine,jdbcType=INTEGER}
+	    )
+	</insert>
+	
+	<update id="updateColumns" parameterType="com.jing.codeing.entity.Columns">
+		UPDATE code_culums
+		set tid=#{tid,jdbcType=INTEGER},
+	    	columnName = #{columnName,jdbcType=VARCHAR},
+	      	columnLabel = #{columnLabel,jdbcType=VARCHAR},
+	      	columnComment = #{columnComment,jdbcType=VARCHAR},
+	      	columnType = #{columnType,jdbcType=VARCHAR},
+	      	scale = #{scale,jdbcType=VARCHAR},
+	      	`precision` = #{precision,jdbcType=VARCHAR},
+	      	nullable = #{nullable,jdbcType=VARCHAR},
+	      	filedType = #{filedType,jdbcType=VARCHAR},
+	      	length = #{length,jdbcType=INTEGER},
+	      	isSearch = #{isSearch,jdbcType=INTEGER},
+	      	isList = #{isList,jdbcType=INTEGER},
+	      	listSort = #{listSort,jdbcType=INTEGER},
+	      	listWidth = #{listWidth,jdbcType=INTEGER},
+	      	isForm = #{isForm,jdbcType=INTEGER},
+	      	formType = #{formType,jdbcType=INTEGER},
+	      	groupCode = #{groupCode,jdbcType=VARCHAR},
+	      	formClass = #{formClass,jdbcType=VARCHAR},
+	      	formValidate = #{formValidate,jdbcType=VARCHAR},
+	      	fromWidth = #{fromWidth,jdbcType=INTEGER},
+	      	spacing = #{spacing,jdbcType=INTEGER},
+	      	isNewLine = #{isNewLine,jdbcType=INTEGER},
+	      	foreignKey=#{foreignKey}
+	      	where
+			cid = #{cid,jdbcType=INTEGER}
+	</update>
+	
+	<select id="getColumnsById" resultMap="ColumnsMap" parameterType="java.lang.String">
+		select * from code_culums where cid=#{cid}
+	</select>
+	
+	<select id="findColumnsByProperty" resultMap="ColumnsMap">
+		select * from code_culums
+		<where>
+			<include refid="query_Columns_Property" />
+		</where>
+	</select>
+	
+	<select id="findColumnsListPage" resultMap="ColumnsMap">
+		select * from code_culums
+		<where>
+			<include refid="query_Columns_Property" />
+		</where>
+	</select>
+	
+	<delete id="deleteColumnsById" parameterType="java.lang.String">
+		delete from code_culums WHERE cid = #{cid}
+	</delete>
+	
+	<!-- 根据表格tid删除所有列 -->
+	<delete id="deleteColumnsByTid" parameterType="java.lang.String">
+		delete from code_culums WHERE tid = #{tid}
+	</delete>
+
+</mapper>   

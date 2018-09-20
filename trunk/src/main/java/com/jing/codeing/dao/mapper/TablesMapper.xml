@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.codeing.dao.TablesDao">
+	<!-- Result Map-->
+	<resultMap id="TableResultMap" type="com.jing.codeing.entity.Tables">
+		<result column="tid" property="tid"/>
+		<result column="tableName" property="tableName"/>
+		<result column="tableComment" property="tableComment"/>
+		<result column="isCode" property="isCode"/>
+		<result column="pakageURL" property="pakageURL"/>
+		<result column="className" property="className"/>
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<if test="param.tableName != null and param.tableName neq ''">
+			and tableName = #{param.tableName}
+		</if>
+		<if test="param.isCode != null and param.isCode neq ''">
+			and isCode = #{param.isCode}
+		</if>
+		<if test="param.tableComment != null and param.tableComment neq ''">
+			and tableComment = #{param.tableComment}
+		</if>
+		<if test="param.className != null and param.className neq ''">
+			and className = #{param.className}
+		</if>
+	</sql>
+	
+	<insert id="addTables" parameterType="com.jing.codeing.entity.Tables" >
+		<selectKey keyProperty="tid" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	 	INSERT INTO code_tables (tableName,tableComment,isCode,pakageURL,className) values (#{tableName},#{tableComment},#{isCode},#{pakageURL},#{className})
+	</insert>
+	
+	<update id="updateTables" parameterType="com.jing.codeing.entity.Tables">
+		UPDATE code_tables
+	    set tableName=#{tableName,jdbcType=VARCHAR},
+	    	tableComment = #{tableComment,jdbcType=VARCHAR},
+	      	pakageURL = #{pakageURL,jdbcType=VARCHAR},
+	      	className = #{className,jdbcType=VARCHAR} 
+	      	where
+			tid = #{tid,jdbcType=INTEGER}
+	        
+	</update>
+	
+	<delete id="deleteTablesById" parameterType="java.lang.String">
+		delete from code_tables WHERE tid = #{tid}
+	</delete>
+	
+	<select id="getTablesById"  resultMap="TableResultMap" parameterType="java.lang.String">
+		SELECT * FROM code_tables WHERE tid = #{tid}
+	</select>
+	
+	<select id="findTablesByProperty"  resultMap="TableResultMap" parameterType="java.util.Map">
+		SELECT * FROM code_tables 
+		<where>
+			<include refid="query_tables_Property"></include>
+		</where>
+	</select>
+	
+	<!-- 插件式分页查询测试 -->
+	<select id="findTablesListPage" resultMap="TableResultMap" >
+		SELECT * FROM code_tables
+		<where>
+			<include refid="query_tables_Property"></include>
+		</where>
+	</select>
+
+</mapper>   
