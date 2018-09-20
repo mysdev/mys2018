@@ -11,5 +11,9 @@
     <plugin interceptor="com.jing.utils.paginator.OffsetLimitInterceptor">
         <property name="dialectClass" value="com.jing.utils.paginator.dialect.MySQLDialect"/>
     </plugin>
+    <plugin interceptor="com.jing.config.web.page.PagePlugin">
+    	<property name="pageSqlId" value=".*ListPage*."/>
+    	<property name="dialect" value="mysql"/>
+    </plugin>
 </plugins>
 </configuration>
