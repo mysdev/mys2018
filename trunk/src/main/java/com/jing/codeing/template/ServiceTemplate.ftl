@@ -3,9 +3,8 @@ package ${packge}.service;
 import java.util.List;
 import java.util.Map;
 
-import com.faith.framework.core.web.page.PageInfo;
-
-import ${packge}.entity.${className};
+import com.jing.config.web.page.PageInfo;
+import ${packge}.model.entity.${className};
 
 public interface ${className}Service {
 

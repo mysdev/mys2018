@@ -36,24 +36,24 @@
 <!-- 查询条件 无WHERE -->
 <sql id="sql_member_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="member.memberId != null">AND member_id like concat(#{member.memberId}, '%') </if>
-		<if test="member.memberName != null">AND member_name like concat(#{member.memberName}, '%') </if>
-		<if test="member.pinyin != null">AND pinyin like concat(#{member.pinyin}, '%') </if>
-		<if test="member.status != null">AND status = #{member.status} </if>
-		<if test="member.rfm != null">AND rfm = #{member.rfm} </if>
-		<if test="member.levelId != null">AND level_id = #{member.levelId} </if>
-		<if test="member.memberCard != null">AND member_card like concat(#{member.memberCard}, '%') </if>
-		<if test="member.memberPassword != null">AND member_password like concat(#{member.memberPassword}, '%') </if>
-		<if test="member.integral != null">AND integral = #{member.integral} </if>
-		<if test="member.mobile != null">AND mobile like concat(#{member.mobile}, '%') </if>
-		<if test="member.mail != null">AND mail like concat(#{member.mail}, '%') </if>
-		<if test="member.storeId != null">AND store_id like concat(#{member.storeId}, '%') </if>
-		<if test="member.sex != null">AND sex = #{member.sex} </if>
-		<if test="member.address != null">AND address like concat(#{member.address}, '%') </if>
-		<if test="member.cardType != null">AND card_type = #{member.cardType} </if>
-		<if test="member.cardNo != null">AND card_no like concat(#{member.cardNo}, '%') </if>
-		<if test="member.createdBy != null">AND created_by like concat(#{member.createdBy}, '%') </if>
-		<if test="member.updatedBy != null">AND updated_by like concat(#{member.updatedBy}, '%') </if>
+		<if test="param.memberId != null">AND member_id like concat(#{param.memberId}, '%') </if>
+		<if test="param.memberName != null">AND member_name like concat(#{param.memberName}, '%') </if>
+		<if test="param.pinyin != null">AND pinyin like concat(#{param.pinyin}, '%') </if>
+		<if test="param.status != null">AND status = #{param.status} </if>
+		<if test="param.rfm != null">AND rfm = #{param.rfm} </if>
+		<if test="param.levelId != null">AND level_id = #{param.levelId} </if>
+		<if test="param.memberCard != null">AND member_card like concat(#{param.memberCard}, '%') </if>
+		<if test="param.memberPassword != null">AND member_password like concat(#{param.memberPassword}, '%') </if>
+		<if test="param.integral != null">AND integral = #{param.integral} </if>
+		<if test="param.mobile != null">AND mobile like concat(#{param.mobile}, '%') </if>
+		<if test="param.mail != null">AND mail like concat(#{param.mail}, '%') </if>
+		<if test="param.storeId != null">AND store_id like concat(#{param.storeId}, '%') </if>
+		<if test="param.sex != null">AND sex = #{param.sex} </if>
+		<if test="param.address != null">AND address like concat(#{param.address}, '%') </if>
+		<if test="param.cardType != null">AND card_type = #{param.cardType} </if>
+		<if test="param.cardNo != null">AND card_no like concat(#{param.cardNo}, '%') </if>
+		<if test="param.createdBy != null">AND created_by like concat(#{param.createdBy}, '%') </if>
+		<if test="param.updatedBy != null">AND updated_by like concat(#{param.updatedBy}, '%') </if>
 	</trim>
 </sql>
    
@@ -113,7 +113,7 @@
 </insert>
 
 <!-- 根据标识，修改 会员 -->  
-<update id="modifyMember" parameterType="com.jing.core.model.entity.Member" >
+<update id="updateMember" parameterType="com.jing.core.model.entity.Member" >
   	UPDATE tb_member SET
 	<trim suffixOverrides=",">
 		<if test="memberName != null"> member_name = #{memberName},</if>
@@ -142,19 +142,19 @@
 </update>
  
 <!-- 删除 会员 -->
-<delete id="dropMemberByMemberId" parameterType="java.lang.String">
+<delete id="deleteMemberById" parameterType="java.lang.String">
 	DELETE FROM tb_member WHERE member_id = #{memberId}
 </delete> 
 
 <!-- 根据标识查询 会员 -->
-<select id="queryMemberByMemberId"  resultMap="MemberResultMap" parameterType="java.lang.String">
+<select id="getMemberById"  resultMap="MemberResultMap" parameterType="java.lang.String">
 	SELECT 
 	<include refid="sql_member_item"/>
 	FROM tb_member WHERE member_id = #{memberId}
 </select>
 
 <!-- 根据属性查询会员 -->
-<select id="queryMemberByProperty"  resultMap="MemberResultMap" parameterType="java.util.Map">
+<select id="findMemberList"  resultMap="MemberResultMap" parameterType="java.util.Map">
 	SELECT 
 	<include refid="sql_member_item"/>
 	FROM tb_member 
@@ -164,7 +164,7 @@
 </select>
 
 <!-- 根据会员属性与分页信息分页查询会员信息 -->
-<select id="queryMemberForPage"  resultMap="MemberResultMap" > 
+<select id="findMemberListPage"  resultMap="MemberResultMap" > 
 	SELECT 
 	<include refid="sql_member_item"/>
 	FROM tb_member 

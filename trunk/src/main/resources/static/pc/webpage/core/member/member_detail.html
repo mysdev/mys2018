@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8" />
+<title>单位详情</title>
+<link rel="stylesheet" type="text/css" href="../../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../../resources/css/public_style.css" />
+<link href="../../../../resources/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../../resources/js/Faith.js"></script>
+<!--   图片放大切换 -->
+<link rel="stylesheet" type="text/css" href="../../../../resources/plugins/zoom/zoom.css" />
+<script type="text/javascript" src="../../../../resources/plugins/zoom/zoom.min.js"></script> 
+<script src="http://api.tianditu.gov.cn/api?v=4.0" type="text/javascript"></script>
+
+<script type="text/javascript">
+	var pkVal = Faith.getQueryStringByName("pkVal");
+
+	function initData(id) {
+		$.get(Faith.projectName + "/base/unit/index/" + id, {}, function(rs) {
+			if (rs.code == 1) { 
+				Faith.setTableData("maintable", rs.data); 
+ 				if(rs.data.point&&rs.data.point!=""){
+ 					Faith.addMarker(rs.data.point);
+ 				}
+			} else {
+				$.messager.alert("提示", rs.message);
+			}
+		}, 'json');
+	}
+
+	$(function() {
+		Faith.initMap('allmap');
+		initData(pkVal);
+	});
+</script>
+</head>
+<body>
+<div id="detail_member" class="fromstyle">
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">会员标识:</label>
+			<div class="column_z column_title" id="memberId" name="memberId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">会员名称:</label>
+			<div class="column_z column_title" id="memberName" name="memberName"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">拼音:</label>
+			<div class="column_z column_title" id="pinyin" name="pinyin"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">状态 0正常:</label>
+			<div class="column_z column_title" id="status" name="status"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">会员成长值:</label>
+			<div class="column_z column_title" id="rfm" name="rfm"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">会员等级:</label>
+			<div class="column_z column_title" id="levelId" name="levelId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">卡号:</label>
+			<div class="column_z column_title" id="memberCard" name="memberCard"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">会员密码:</label>
+			<div class="column_z column_title" id="memberPassword" name="memberPassword"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">积分:</label>
+			<div class="column_z column_title" id="integral" name="integral"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">余额:</label>
+			<div class="column_z column_title" id="balance" name="balance"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">手机号:</label>
+			<div class="column_z column_title" id="mobile" name="mobile"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">邮箱地址:</label>
+			<div class="column_z column_title" id="mail" name="mail"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">生日:</label>
+			<div class="column_z column_title" id="birthday" name="birthday"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">开卡门店:</label>
+			<div class="column_z column_title" id="storeId" name="storeId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">总花费:</label>
+			<div class="column_z column_title" id="totalFee" name="totalFee"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">性别 0男1女:</label>
+			<div class="column_z column_title" id="sex" name="sex"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">住址:</label>
+			<div class="column_z column_title" id="address" name="address"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">证件类型 0身份证:</label>
+			<div class="column_z column_title" id="cardType" name="cardType"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">证件号码:</label>
+			<div class="column_z column_title" id="cardNo" name="cardNo"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">创建人员:</label>
+			<div class="column_z column_title" id="createdBy" name="createdBy"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">创建时间:</label>
+			<div class="column_z column_title" id="createdDate" name="createdDate"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">修订人员:</label>
+			<div class="column_z column_title" id="updatedBy" name="updatedBy"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">修订时间:</label>
+			<div class="column_z column_title" id="updatedDate" name="updatedDate"></div>
+		</div>
+	</div>
+ </div>
+ </body>
+</html>

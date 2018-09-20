@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'memberId', title:'会员标识', width:416, align:'center'  },
+				{field:'memberName', title:'会员名称', width:500, align:'center'  },
+				{field:'pinyin', title:'拼音', width:416, align:'center'  },
+				{field:'status', title:'状态 0正常', width:78, align:'center'  },
+				{field:'rfm', title:'会员成长值', width:65, align:'center'  },
+				{field:'levelId', title:'会员等级', width:52, align:'center'  },
+				{field:'memberCard', title:'卡号', width:208, align:'center'  },
+				{field:'memberPassword', title:'会员密码', width:416, align:'center'  },
+				{field:'integral', title:'积分', width:26, align:'center'  },
+				{field:'balance', title:'余额', width:26, align:'center'  },
+				{field:'mobile', title:'手机号', width:208, align:'center'  },
+				{field:'mail', title:'邮箱地址', width:500, align:'center'  },
+				{field:'birthday', title:'生日', width:26, align:'center'  },
+				{field:'storeId', title:'开卡门店', width:416, align:'center'  },
+				{field:'totalFee', title:'总花费', width:39, align:'center'  },
+				{field:'sex', title:'性别 0男1女', width:91, align:'center'  },
+				{field:'address', title:'住址', width:500, align:'center'  },
+				{field:'cardType', title:'证件类型 0身份证', width:117, align:'center'  },
+				{field:'cardNo', title:'证件号码', width:416, align:'center'  },
+				{field:'createdBy', title:'创建人员', width:416, align:'center'  },
+				{field:'createdDate', title:'创建时间', width:52, align:'center'  },
+				{field:'updatedBy', title:'修订人员', width:416, align:'center'  },
+				{field:'updatedDate', title:'修订时间', width:52, align:'center'  }
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_member', //表格容器id
+			tableKey : "memberId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/core/member/page', //列表接口
+			sortName : 'member_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加数据表",
+			addUrl : "/pc/webpage/core/member/member_form.html"
+		},
+		updateOptions : {
+			title : "修改数据表",
+			updateUrl : "/pc/webpage/core/member/member_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/core/member/delete/'
+		},
+		viewOptions : {
+			title:'查看数据表',
+			viewUrl : "/pc/webpage/core/member/member_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="memberId" name="memberId" class="search_input_imp" placeholder="请输入会员标识">
+					<input id="memberName" name="memberName" class="search_input_imp" placeholder="请输入会员名称">
+					<input id="pinyin" name="pinyin" class="search_input_imp" placeholder="请输入拼音">
+					<input id="status" name="status" class="search_input_imp" placeholder="请输入状态 0正常">
+					<input id="rfm" name="rfm" class="search_input_imp" placeholder="请输入会员成长值">
+					<input id="levelId" name="levelId" class="search_input_imp" placeholder="请输入会员等级">
+					<input id="memberCard" name="memberCard" class="search_input_imp" placeholder="请输入卡号">
+					<input id="memberPassword" name="memberPassword" class="search_input_imp" placeholder="请输入会员密码">
+					<input id="integral" name="integral" class="search_input_imp" placeholder="请输入积分">
+					<input id="balance" name="balance" class="search_input_imp" placeholder="请输入余额">
+					<input id="mobile" name="mobile" class="search_input_imp" placeholder="请输入手机号">
+					<input id="mail" name="mail" class="search_input_imp" placeholder="请输入邮箱地址">
+					<input id="birthday" name="birthday" class="search_input_imp" placeholder="请输入生日">
+					<input id="storeId" name="storeId" class="search_input_imp" placeholder="请输入开卡门店">
+					<input id="totalFee" name="totalFee" class="search_input_imp" placeholder="请输入总花费">
+					<input id="sex" name="sex" class="search_input_imp" placeholder="请输入性别 0男1女">
+					<input id="address" name="address" class="search_input_imp" placeholder="请输入住址">
+					<input id="cardType" name="cardType" class="search_input_imp" placeholder="请输入证件类型 0身份证">
+					<input id="cardNo" name="cardNo" class="search_input_imp" placeholder="请输入证件号码">
+					<input id="createdBy" name="createdBy" class="search_input_imp" placeholder="请输入创建人员">
+					<input id="createdDate" name="createdDate" class="search_input_imp" placeholder="请输入创建时间">
+					<input id="updatedBy" name="updatedBy" class="search_input_imp" placeholder="请输入修订人员">
+					<input id="updatedDate" name="updatedDate" class="search_input_imp" placeholder="请输入修订时间">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_member" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

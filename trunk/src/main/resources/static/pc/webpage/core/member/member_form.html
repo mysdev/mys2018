@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
+
+	var options = {
+		formid : "form_member",
+		tableKey : "memberId",
+		addAction : Faith.projectName + "/core/member/add",
+		updateAction : Faith.projectName + "/core/member/update",
+		viewAction : Faith.projectName + "/core/member/index/" + pkVal,
+		pkVal : pkVal,
+		saveButtonId : 'btn_save',
+		cancelButtonId : 'btn_cancel'
+	};
+
+	$(function() {
+		Faith.initCombobox('sex', '0001');
+		//提交按钮点击
+		Faith.doSave(options);
+		//如果是修改  则填充数据
+		if (pkVal != null && pkVal != "") {
+			$.get(options.viewAction, {}, function(rs) {
+				if (rs.code == 1) {
+					Faith.setFormData(options.formid, rs.data);
+				} else {
+					$.messager.alert("提示", rs.message);
+				}
+			}, 'json');
+		}
+	});
+</script>
+</head>
+<body>
+	<form id="form_member" class="fromstyle">
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员标识<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="memberId" name="memberId"  placeholder="请输入会员标识">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员名称<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="memberName" name="memberName"  placeholder="请输入会员名称">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">拼音</label>
+	  	 	<input type="text" class="form-control"  id="pinyin" name="pinyin"  placeholder="请输入拼音">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员成长值</label>
+	  	 	<input type="text" class="form-control"  id="rfm" name="rfm"  placeholder="请输入会员成长值">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员等级<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="levelId" name="levelId"  placeholder="请输入会员等级">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">卡号</label>
+	  	 	<input type="text" class="form-control"  id="memberCard" name="memberCard"  placeholder="请输入卡号">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员密码</label>
+	  	 	<input type="text" class="form-control"  id="memberPassword" name="memberPassword"  placeholder="请输入会员密码">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">积分</label>
+	  	 	<input type="text" class="form-control"  id="integral" name="integral"  placeholder="请输入积分">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">余额<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="balance" name="balance"  placeholder="请输入余额">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">手机号<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="mobile" name="mobile"  placeholder="请输入手机号">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">邮箱地址</label>
+	  	 	<input type="text" class="form-control"  id="mail" name="mail"  placeholder="请输入邮箱地址">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">出生年月日</label>
+	  	 	<input type="text" class="form-control easyui-datebox"  id="birthday" name="birthday"  placeholder="请输入生日" onfocus="WdatePicker({maxDate:'%y-%M-%d'})">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">总花费</label>
+	  	 	<input type="text" class="form-control"  id="totalFee" name="totalFee"  placeholder="请输入总花费">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">性别 0男1女</label>
+	  	 	<input type="text" class="form-control"  id="sex" name="sex"  placeholder="请输入性别 0男1女">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">住址</label>
+	  	 	<input type="text" class="form-control"  id="address" name="address"  placeholder="请输入住址">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">证件类型 0身份证</label>
+	  	 	<input type="text" class="form-control"  id="cardType" name="cardType"  placeholder="请输入证件类型 0身份证">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">证件号码</label>
+	  	 	<input type="text" class="form-control"  id="cardNo" name="cardNo"  placeholder="请输入证件号码">
+	  	</div>
+
+		<div class="form-group col-sm-12 padding-4">
+			<div class="text-center">
+				<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>
+				<button type="button" data-loading-text="正在提交" class="btn btn-danger  btn_w" id="btn_save">保存</button>
+			</div>
+		</div>	
+	</form>
+</body>

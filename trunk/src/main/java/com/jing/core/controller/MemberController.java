@@ -1,139 +1,87 @@
 package com.jing.core.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.core.model.entity.Member;
 import com.jing.core.service.MemberService;
-import com.jing.utils.ClassUtil;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: MemberController
- * @Description: 会员HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * <br>
+ * <b>功能：</b>会员 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="会员", tags={"CoreMember"})
-public class MemberController{
+@Controller
+@RequestMapping("/core/member")
+public class MemberController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private MemberService memberService;
-
 	
-	@ApiOperation(value = "新增 添加会员信息", notes = "添加会员信息")
-	@RequestMapping(value = "/member", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addMember(HttpServletResponse response,
-			@ApiParam(value = "member") @RequestBody Member member) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(member, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		member.setMemberId(null);
+	@ApiOperation(value = "新增会员", notes = "添加会员")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(Member member,@SessionAttr(Config.USER_INFO) User user) {
+		member.setCreatedBy(user.getUserId());
+		member.setCreatedDateNow();
+		member.setUpdatedBy(user.getUserId());
+		member.setUpdatedDateNow();
 		memberService.addMember(member);
-		return member;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据会员标识更新会员信息", notes = "根据会员标识更新会员信息")
-	@RequestMapping(value = "/member/{memberId:.+}", method = RequestMethod.PUT)
-	public Object modifyMemberById(HttpServletResponse response,
-			@PathVariable String memberId,
-			@ApiParam(value = "member", required = true) @RequestBody Member member
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(member, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改会员", notes = "修改会员")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(Member member,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(member==null || member.getMemberId()==null || "".equals(member.getMemberId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		Member tempMember = memberService.queryMemberByMemberId(memberId);
-		member.setMemberId(memberId);
-		if(null == tempMember){
-			throw new NotFoundException("会员");
-		}
-		return memberService.modifyMember(member);
+		member.setUpdatedBy(user.getUserId());
+		member.setUpdatedDateNow();
+		memberService.updateMember(member);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据会员标识删除会员信息", notes = "根据会员标识删除会员信息")
-	@RequestMapping(value = "/member/{memberId:.+}", method = RequestMethod.DELETE)
-	public Object dropMemberByMemberId(HttpServletResponse response, @PathVariable String memberId) {
-		Member member = memberService.queryMemberByMemberId(memberId);
-		if(null == member){
-			throw new NotFoundException("会员");
+	@ApiOperation(value = "删除 根据ID删除会员", notes = "根据ID删除会员")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return memberService.dropMemberByMemberId(memberId);
+		memberService.deleteMemberById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据会员标识查询会员信息", notes = "根据会员标识查询会员信息")
-	@RequestMapping(value = "/member/{memberId:.+}", method = RequestMethod.GET)
-	public Object queryMemberById(HttpServletResponse response,
-			@PathVariable String memberId) {
-		Member member = memberService.queryMemberByMemberId(memberId);
-		if(null == member){
-			throw new NotFoundException("会员");
+	@ApiOperation(value = "根据ID查询会员", notes = "根据ID查询会员")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return member;
+		return Result.getDefaultSuccMsgResult(memberService.getMemberById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据会员属性查询会员信息列表", notes = "根据会员属性查询会员信息列表")
-	@RequestMapping(value = "/member", method = RequestMethod.GET)
-	public Object queryMemberList(HttpServletResponse response,
-			Member member) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return memberService.queryMemberByProperty(ClassUtil.transBean2Map(member, false));
-	}
-	
-	@ApiOperation(value = "查询分页 根据会员属性分页查询会员信息列表", notes = "根据会员属性分页查询会员信息列表")
-	@RequestMapping(value = "/members", method = RequestMethod.GET)
-	public Object queryMemberPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, Member member) {				
-		return memberService.queryMemberForPage(pagenum, pagesize, sort, member);
-	}
-	
-	/**
-	 * 会员充值
-	 * @param memberId
-	 * @param amount
-	 * @return
-	 */
-	@ApiOperation(value = "会员充值", notes = "会员充值")
-	@RequestMapping(value = "/member/recharge", method = RequestMethod.POST)
-	public Object recharge(@RequestParam String memberId,@RequestParam Integer amount) {
-		return memberService.recharge(memberId, amount);
 		
+	@ApiOperation(value = "分页查询会员", notes = "分页查询会员")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return memberService.findMemberListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询 根据会员标识查询会员信息", notes = "根据会员标识查询会员信息")
-	@RequestMapping(value = "/member/cardNo/{memberId:.+}", method = RequestMethod.GET)
-	public Object findMemberByCard(HttpServletResponse response,
-			@PathVariable String cardNo) {
-		Member member = memberService.findMemberByCard(cardNo);
-		if(null == member){
-			throw new NotFoundException("会员");
-		}
-		return member;
-	}
-
 }

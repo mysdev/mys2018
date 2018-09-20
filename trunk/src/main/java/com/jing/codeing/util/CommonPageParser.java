@@ -26,7 +26,7 @@ public class CommonPageParser
   {
     try
     {
-      String templateBasePath =  TemplatePath.class.getResource("").getPath() + "";
+      String templateBasePath =  TemplatePath.class.getResource("").getPath().substring(1, TemplatePath.class.getResource("").getPath().length()-1);
       Properties properties = new Properties();
       properties.setProperty("resource.loader", "file");
       properties.setProperty("file.resource.loader.description", "Velocity File Resource Loader");

@@ -20,6 +20,7 @@ public class Columns implements Serializable {
 	private String precision;// 精度
 	private String nullable;//是否不可以为空Y/N
 	private boolean foreignKey = false;//是否外键
+	private String filedName;//字段名
 	private String filedType;//Java类型【String\Integer\Date】
 	private Integer length;// 字段长度
 	private Integer isSearch=1;// 是否查询条件
@@ -36,11 +37,33 @@ public class Columns implements Serializable {
 	private Integer isNewLine=0;// 是否换行
 	private String method;//方法名称
 	
+	public static void main(String[] args) {
+		
+		
+		
+	}
+	
+	public String getFiledName() {
+		if(columnName != null) {
+			String s[]  = columnName.split("_");
+			StringBuffer sbf = new StringBuffer();
+			for(int i=0;i<s.length;i++) {
+				if(i>0) {
+					sbf.append(s[i].substring(0, 1).toUpperCase() + s[i].substring(1, s[i].length()));
+				}else {
+					sbf.append(s[i]);
+				}
+			}
+			return sbf.toString();
+		}
+		return filedName;
+	}
+
 	public String getMethod() {
 		//columnName
 		if(method==null){
-			String maxChar = getColumnName().substring(0, 1).toUpperCase();
-			method = maxChar + getColumnName().substring(1, getColumnName().length());
+			String maxChar = getFiledName().substring(0, 1).toUpperCase();
+			method = maxChar + getFiledName().substring(1, getFiledName().length());
 		}
 		return method;
 	}
@@ -273,7 +296,7 @@ public class Columns implements Serializable {
 
 	public String getFiledStr() {
 		if(filedStr==null){
-			return "private " + this.getFiledType()+" " + this.getColumnName()+";" + "   // "+ this.getColumnLabel()+ (this.getColumnComment().equals(this.getColumnLabel())?"":":"+this.getColumnComment());
+			return "private " + this.getFiledType()+" " + this.getFiledName()+";" + "   // "+ this.getColumnLabel()+ (this.getColumnComment().equals(this.getColumnLabel())?"":":"+this.getColumnComment());
 		}
 		return filedStr;
 	}
@@ -283,7 +306,7 @@ public class Columns implements Serializable {
 			//首字母大写
 			StringBuffer str = new StringBuffer();
 			str.append("\r\t").append("public ").append(getFiledType() + " ").append("get" +getMethod() + "() {\r\t");
-			str.append("    return this.").append(getColumnName()).append(";\r\t}");
+			str.append("    return this.").append(getFiledName()).append(";\r\t}");
 			return str.toString();
 			
 		}
@@ -294,8 +317,8 @@ public class Columns implements Serializable {
 		if(setMethodStr==null){
 			//首字母大写
 			StringBuffer str = new StringBuffer();
-			str.append("\r\t").append("public ").append("void ").append("set" + getMethod() + "(").append(getFiledType() +" " + getColumnName()+ ")" ).append("{\r\t");
-			str.append("this.").append(getColumnName() +" = "+ getColumnName()).append(";\r\t}");
+			str.append("\r\t").append("public ").append("void ").append("set" + getMethod() + "(").append(getFiledType() +" " + getFiledName()+ ")" ).append("{\r\t");
+			str.append("this.").append(getFiledName() +" = "+ getFiledName()).append(";\r\t}");
 			return str.toString();
 		}
 		return setMethodStr;

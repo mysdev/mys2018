@@ -7,17 +7,17 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.faith.framework.core.web.page.PageInfo;
+import com.jing.config.web.page.PageInfo;
 
-import ${packge}.entity.${className};
-import ${packge}.dao.${className}Dao;
+import ${packge}.model.entity.${className};
+import ${packge}.dao.${className}Mapper;
 import ${packge}.service.${className}Service;
 
 @Service("${lowerName}Service")
 public class ${className}ServiceImpl implements ${className}Service{
 
 	@Resource
-	private ${className}Dao ${lowerName}Dao;
+	private ${className}Mapper ${lowerName}Mapper;
 
 	/**
 	* 添加 ${comment}
@@ -25,13 +25,13 @@ public class ${className}ServiceImpl implements ${className}Service{
 	@Override
 #if($!pkType == 'Intger')
 	public Intger add${className}(${className} ${lowerName}){
-		int id = ${lowerName}Dao.add${className}(${lowerName});
+		int id = ${lowerName}Mapper.add${className}(${lowerName});
 		${lowerName}.set${primaryKey.method}(id);
 		return ${lowerName};
 	}
 #else
 	public void add${className}(${className} ${lowerName}){
-		${lowerName}Dao.add${className}(${lowerName});
+		${lowerName}Mapper.add${className}(${lowerName});
 	}
 #end
 	
@@ -40,7 +40,7 @@ public class ${className}ServiceImpl implements ${className}Service{
 	*/
 	@Override
 	public void update${className}(${className} ${lowerName}){
-		${lowerName}Dao.update${className}(${lowerName});
+		${lowerName}Mapper.update${className}(${lowerName});
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class ${className}ServiceImpl implements ${className}Service{
 	*/
 	@Override
 	public void delete${className}ById(${primaryKey.filedType} id){
-		${lowerName}Dao.delete${className}ById(id);
+		${lowerName}Mapper.delete${className}ById(id);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class ${className}ServiceImpl implements ${className}Service{
 	*/
 	@Override
 	public ${className} get${className}ById(${primaryKey.filedType} id){
-		return ${lowerName}Dao.get${className}ById(id);
+		return ${lowerName}Mapper.get${className}ById(id);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class ${className}ServiceImpl implements ${className}Service{
 	*/
 	@Override
 	public PageInfo find${className}ListPage(PageInfo page, Map<String, Object> param){
-		return page.setRows(${lowerName}Dao.find${className}ListPage(page,param));
+		return page.setRows(${lowerName}Mapper.find${className}ListPage(page,param));
 	}
 	
 #if($!foreignKey)
@@ -73,12 +73,12 @@ public class ${className}ServiceImpl implements ${className}Service{
 	*/
 	@Override
 	public void delete${className}By${foreignKey.method}Id(${foreignKey.filedType} ${foreignKey.method}Id){
-		${lowerName}Dao.delete${className}By${foreignKey.method}Id(${foreignKey.method}Id);
+		${lowerName}Mapper.delete${className}By${foreignKey.method}Id(${foreignKey.method}Id);
 	}
 	
 	@Override
 	public List<${className}> find${className}ListBy${foreignKey.method}Id(${foreignKey.filedType} ${foreignKey.method}Id)){
-		return ${lowerName}Dao.find${className}ListBy${foreignKey.method}Id(${foreignKey.method}Id);
+		return ${lowerName}Mapper.find${className}ListBy${foreignKey.method}Id(${foreignKey.method}Id);
 	}
 #end
 	
@@ -89,7 +89,7 @@ public class ${className}ServiceImpl implements ${className}Service{
 	 */
 	 @Override
 	public List<${className}> find${className}List(Map<String, Object> param){
-		return ${lowerName}Dao.find${className}List(param);
+		return ${lowerName}Mapper.find${className}List(param);
 	}
 	
 }

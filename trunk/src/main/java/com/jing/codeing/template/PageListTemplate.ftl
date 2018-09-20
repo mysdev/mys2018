@@ -13,7 +13,7 @@
 <script>
 	var columns = [
 #foreach( $col in $!{columns} ) 
-			{field:'${col.columnName}', title:'${col.columnLabel}', width:${col.listWidth}, align:'center' #if($!col.isList == 0 ),hidden:true#end }#if($columns.size() > $velocityCount ),
+			{field:'${col.filedName}', title:'${col.columnLabel}', width:${col.listWidth}, align:'center' #if($!col.isList == 0 ),hidden:true#end }#if($columns.size() > $velocityCount ),
 	#else 
 
 #end
@@ -26,13 +26,13 @@
 	//配置页面参数
 	$.extend(true, Faith, {
 		gridOptions : {
-			gridId : 'grid_tables', //表格容器id
-			tableKey : "tid",
+			gridId : 'grid_${lowerName}', //表格容器id
+			tableKey : "${primaryKey.filedName}",
 			resId:resId,
 			pageButtonKey:'',
 			isToolBar:true,
 			url : Faith.projectName + '/${model}/${lowerName}/page', //列表接口
-			sortName : 'tid',
+			sortName : '${primaryKey.columnName}',
 			sortOrder : 'desc',
 			columns : [ columns ],//数据列
 			onDblClickRow : function(rowIndex, rowData) {
@@ -41,18 +41,18 @@
 		},
 		addOptions : {
 			title : "添加数据表",
-			addUrl : "/pc/webpage/codeing/tables_form.html"
+			addUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		updateOptions : {
 			title : "修改数据表",
-			updateUrl : "/pc/webpage/codeing/tables_form.html"
+			updateUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		deleteOptions : {
 			deleteAction : Faith.projectName + '/${model}/${lowerName}/delete/'
 		},
 		viewOptions : {
 			title:'查看数据表',
-			viewUrl : "/pc/webpage/codeing/tables_detail.html"
+			viewUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_detail.html"
 		}
 	});
 	$(function() {
@@ -75,10 +75,10 @@
 #foreach( $col in $!{columns} ) 
 #if($!col.isSearch == 1 )
 #if($!col.formType == 1 )
-					<input id="${col.columnName}" name="${col.columnName}" class="search_input_imp" placeholder="请输入${col.columnLabel}">
+					<input id="${col.filedName}" name="${col.filedName}" class="search_input_imp" placeholder="请输入${col.columnLabel}">
 #end
 #if($!col.formType == 4 )
-					<select id="${col.columnName}" name="${col.columnName}" class="search_input_imp  select_sty">
+					<select id="${col.filedName}" name="${col.filedName}" class="search_input_imp  select_sty">
 						<option value="-1">请选择${col.columnLabel}</option>
 					</select>
 #end
