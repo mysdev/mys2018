@@ -5,6 +5,126 @@
 <title>深圳市迈斯优科技有限公司</title>
 <link rel="stylesheet" type="text/css" href="pc/resources/login/css/style.css" />
 <link rel="stylesheet" type="text/css" href="pc/resources/login/css/body.css"/> 
+<script src="/mys/pc/resources/js/jquery-1.11.1.min.js" type="text/javascript"> </script> 
+<script src="/mys/pc/resources/js/common.js" type="text/javascript"> </script> 
+<script type="text/javascript"> 
+            function checklogin() {
+                var name = $("#username");
+                var pwd = $("#password");
+                var code = $("#checkcode");
+                if (name.val().length == 0 || name.val() == "请输入用户名...") {
+                	$.messager.alert('错误操作', '"请输入用户名...', 'error');
+                    name.focus();
+                    return false;
+                }
+                if (pwd.val().length == 0 || pwd.val() == "请输入密码...") {
+                	$.messager.alert('错误操作', '"请输入密码...', 'error');
+                    pwd.focus();
+                    return false;
+                }
+                if (code.val().length == 0 || code.val()=="请输入验证码...") {
+                	$.messager.alert('错误操作', '请输入验证码...', 'error');
+        			document.getElementById("code").focus();
+        			return false;
+        		}
+                return true;
+            }
+
+            $(function () {
+                //手机二维码显示
+                $(".code_div").click(function () {
+                    var Eposition = parseFloat($(this).css("right"));
+                    if (Eposition < 0) {
+                        $(this).css("right", "0");
+                    } else {
+                        $(this).css("right", "-135px");
+                    }
+
+                });
+
+                if (self != top) {
+                    top.location = self.location;
+                }
+                
+                $("#username").val("admin");
+                $("#password").val("123456");
+                $("#code").val("5C5384F865C945CD");
+                
+                $("#loginbtn").click(function() {
+                	
+                    if (checklogin()) {
+                    	var postData = {
+               				"j_username": $('#username').val(),
+               				"j_password": escape($('#password').val()),
+               				"clientid": '',
+               				"clientType": 'PC',
+               				"validateCode":$('#code').val() 
+               			};
+                    	
+                        $.ajax({
+                            type: 'post',
+                            cache: false,
+                            dataType: 'json',
+                            url: '/mys/j_spring_security_check',
+                            data: postData,
+                            success: function(rs) {
+                                if (rs == true) {
+                                	
+                                	//获取用户信息
+                                	$.ajax({
+							   			url:Faith.projectName+'/login/user',
+							   			type:'post',
+							   			//async:false,
+							   			dataType:'json',
+							   			success:function(rs){
+							   				$.extend(Faith.currentUser,rs);
+							   				//console.log(JSON.stringify(rs))
+							   				//多个单位
+							   	     		if(rs.depts.length>1){
+							   	     	    	 var options={
+							   	     	     			formpage:'/mys/pc/webpage/selectOpet.html',
+							   	     	     			width:500,
+							   	     	     			height:250,
+							   	     	     			title:"选择操作"
+							   	     	     		 }
+							   	     	     	Faith.openForm(options);
+							   	     		}else{
+							   	     			location.href = '/mys';
+							   	     		}
+							   			},
+							   			error: function() {
+			                            	$.messager.alert('操作提示',"系统错误，请与管理员联系!",'error');
+			                            	$("#loginbtn").val('登录');
+			                            },
+			                            beforeSend: function() {
+			                                $("#loginbtn").attr("disabled", true);
+			                                $("#loginbtn").val('正在登录…');
+			                            },
+			                            complete: function() {
+			                                $("#loginbtn").attr("disabled", false);
+			                            }
+   									}); 	
+                                }
+                            },
+                        });
+                    }
+                });
+                
+              //验证码
+        		$(".coder").click(function() {
+        			$("#coderimg").attr("src", "/mys/login/checkcode?" + Math.random());
+        		});
+
+            });
+            document.onkeydown = function(e) {
+                var theEvent = window.event || e;
+                var code = theEvent.keyCode || theEvent.which;
+                if (code == 13) {
+                    $("#loginbtn").click();
+                }
+            };
+
+</script>
 </head>
 <body>
 <div class="container">
