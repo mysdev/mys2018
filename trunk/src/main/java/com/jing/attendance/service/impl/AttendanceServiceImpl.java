@@ -150,7 +150,6 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put("attendanceId", attendanceId);
 		ab.setAttTime(attendanceTimeMapper.queryAttendanceTimeByProperty(query));
-		ab.setStoreName(storeMapper.queryStoreByStoreId(ab.getStoreId()).getStoreName());
 		return ab;
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	 
@@ -168,12 +167,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
 		pageBounds.setOrdersByJson(sort, Attendance.class);
-		List<Attendance> entityList = attendanceMapper.queryAttendanceForPage(pageBounds, attendance);
-		if(!entityList.isEmpty()){
-			for(Attendance ad : entityList){
-				ad.setStoreName(storeMapper.queryStoreByStoreId(ad.getStoreId()).getStoreName());
-			}
-		}
+		List<Attendance> entityList = attendanceMapper.queryAttendanceForPage(pageBounds, attendance);		
 		//if (!entityList.isEmpty()) {
 			PageList<Attendance> pagelist = (PageList<Attendance>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
@@ -189,12 +183,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	 */
 	@Override
 	public List<Attendance> queryAttendanceByProperty(Map<String, Object> map){
-		List<Attendance> ret = attendanceMapper.queryAttendanceByProperty(map);
-		if(!ret.isEmpty()){
-			for(Attendance ad : ret){
-				ad.setStoreName(storeMapper.queryStoreByStoreId(ad.getStoreId()).getStoreName());
-			}
-		}
+		List<Attendance> ret = attendanceMapper.queryAttendanceByProperty(map);		
 		return ret;
 	}
 

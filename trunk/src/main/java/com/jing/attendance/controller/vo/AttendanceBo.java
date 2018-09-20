@@ -29,7 +29,6 @@ public class AttendanceBo extends Attendance{
 	public AttendanceBo(Attendance attendance){
 		super();
 		this.setAttendanceId(attendance.getAttendanceId());
-		this.setStoreId(attendance.getStoreId());
 		this.setAttendanceName(attendance.getAttendanceName());
 		this.setSignCt(attendance.getSignCt());
 		this.setOutCt(attendance.getOutCt());

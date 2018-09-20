@@ -5,7 +5,6 @@
 <!-- Result Map-->
 <resultMap id="AttendanceResultMap" type="com.jing.attendance.model.entity.Attendance">
 	<id column="attendance_id" property="attendanceId"/>
-	<result column="store_id" property="storeId"/>
 	<result column="attendance_name" property="attendanceName"/>
 	<result column="status" property="status"/>
 	<result column="types" property="types"/>
@@ -19,14 +18,13 @@
 </resultMap>
 
 <sql id="sql_attendance_item">
-	attendance_id, store_id, attendance_name, status, types, attendance, sign_ct, out_ct, created_by, created_date, updated_by, updated_date
+	attendance_id, attendance_name, status, types, attendance, sign_ct, out_ct, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
 <sql id="sql_attendance_query_nowhere">
 	<trim prefix=" " prefixOverrides="AND|OR">
 		<if test="attendance.attendanceId != null">AND attendance_id = #{attendance.attendanceId} </if>
-		<if test="attendance.storeId != null">AND store_id like concat(#{attendance.storeId}, '%') </if>
 		<if test="attendance.attendanceName != null">AND attendance_name like concat(#{attendance.attendanceName}, '%') </if>
 		<if test="attendance.status != null">AND status = #{attendance.status} </if>
 		<if test="attendance.types != null">AND types = #{attendance.types} </if>
@@ -46,7 +44,6 @@
  	INSERT INTO tw_attendance 
 	<trim prefix=" (" suffix=")" suffixOverrides=",">
 		<if test="attendanceId != null"> attendance_id,</if>
-		<if test="storeId != null"> store_id,</if>
 		<if test="attendanceName != null"> attendance_name,</if>
 		<if test="status != null"> status,</if>
 		<if test="types != null"> types,</if>
@@ -60,7 +57,6 @@
 	</trim>	 	
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
 		<if test="attendanceId != null"> #{attendanceId},</if>
-		<if test="storeId != null"> #{storeId},</if>
 		<if test="attendanceName != null"> #{attendanceName},</if>
 		<if test="status != null"> #{status},</if>
 		<if test="types != null"> #{types},</if>
@@ -78,7 +74,6 @@
 <update id="modifyAttendance" parameterType="com.jing.attendance.model.entity.Attendance" >
   	UPDATE tw_attendance SET
 	<trim suffixOverrides=",">
-		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="attendanceName != null"> attendance_name = #{attendanceName},</if>
 		<if test="status != null"> status = #{status},</if>
 		<if test="types != null"> types = #{types},</if>

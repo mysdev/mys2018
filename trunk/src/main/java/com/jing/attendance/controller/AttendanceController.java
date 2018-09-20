@@ -31,13 +31,13 @@ import io.swagger.annotations.ApiParam;
 
 /**
  * @ClassName: AttendanceController
- * @Description: 门店考勤HTTP接口
+ * @Description: 考勤HTTP接口
  * @author: Jinlong He
  * @email: mailto:jinlong_he@126.com
  * @date: 2018年01月11日 15时03分
  */
 @RestController
-@Api(description="门店考勤规则", tags={"AttendanceTime"})
+@Api(description="考勤规则", tags={"AttendanceTime"})
 public class AttendanceController{
 
 	@Autowired
@@ -47,28 +47,19 @@ public class AttendanceController{
 	private AttendanceService attendanceService;
 		
 	@Autowired
-	private AttendanceTimeService attendanceTimeService;
-	
-	@Autowired
-	private StoreService storeService;
-	
+	private AttendanceTimeService attendanceTimeService;	
+
 	private static final Integer MAX_TIME_PER_ATT = 3;
 	
 	
-	@ApiOperation(value = "新增 添加门店考勤信息", notes = "添加门店考勤信息 暂时只支持type=2详情")
+	@ApiOperation(value = "新增 添加考勤信息", notes = "添加考勤信息 暂时只支持type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
 			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		attendance.setTypes(2); //暂时只支持2
 		attendance.setStatus(0);
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);
-		Store store = storeService.queryStoreByStoreId(attendance.getStoreId());
-		if(store==null) {
-			Map<String, String> e = new HashMap<String, String>();
-			e.put("field", "storeId");
-			e.put("message", "无法找到相应的门店。");
-			errors.add(e);
-		}		
+		
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
@@ -93,13 +84,12 @@ public class AttendanceController{
 	}
 	
 	
-	@ApiOperation(value = "更新 根据门店考勤标识更新门店考勤信息", notes = "根据门店考勤标识更新门店考勤信息")
+	@ApiOperation(value = "更新 根据考勤标识更新考勤信息", notes = "根据考勤标识更新考勤信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.PUT)
 	public Object modifyAttendanceById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		attendance.setStoreId(null);//不允许变更门店
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);		
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
@@ -115,7 +105,7 @@ public class AttendanceController{
 		}		
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
 		if(null == tempAttendance){
-			throw new NotFoundException("门店考勤");
+			throw new NotFoundException("考勤");
 		}
 		if(attendance.getTypes()!=null && attendance.getTypes().intValue()!=tempAttendance.getTypes().intValue()){
 			throw new ParameterException("types","考勤类型不允许变更。");
@@ -126,31 +116,31 @@ public class AttendanceController{
 		return attendanceService.modifyAttendance(attendance);
 	}
 
-	@ApiOperation(value = "删除 根据门店考勤标识删除门店考勤信息", notes = "根据门店考勤标识删除门店考勤信息")
+	@ApiOperation(value = "删除 根据考勤标识删除考勤信息", notes = "根据考勤标识删除考勤信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.DELETE)
 	public Object dropAttendanceByAttendanceId(HttpServletResponse response, @PathVariable Integer attendanceId) {
 		Attendance attendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		if(null == attendance){
-			throw new NotFoundException("门店考勤");
+			throw new NotFoundException("考勤");
 		}
 		if(attendanceId.intValue()==1) {
-			throw new ParameterException("attendanceId", "全局门店考勤规则不允许删除。");
+			throw new ParameterException("attendanceId", "全局考勤规则不允许删除。");
 		}
 		return attendanceService.dropAttendanceByAttendanceId(attendanceId);
 	}
 	
-	@ApiOperation(value = "查询 根据门店考勤标识查询门店考勤信息", notes = "根据门店考勤标识查询门店考勤信息")
+	@ApiOperation(value = "查询 根据考勤标识查询考勤信息", notes = "根据考勤标识查询考勤信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.GET)
 	public Object queryAttendanceById(HttpServletResponse response,
 			@PathVariable Integer attendanceId) {
 		AttendanceBo attendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		if(null == attendance){
-			throw new NotFoundException("门店考勤");
+			throw new NotFoundException("考勤");
 		}
 		return attendance;
 	}
 	
-//	@ApiOperation(value = "查询 根据门店考勤属性查询门店考勤信息列表", notes = "根据门店考勤属性查询门店考勤信息列表")
+//	@ApiOperation(value = "查询 根据考勤属性查询考勤信息列表", notes = "根据考勤属性查询考勤信息列表")
 //	@RequestMapping(value = "/attendance", method = RequestMethod.GET)
 //	public Object queryAttendanceList(HttpServletResponse response,
 //			Attendance attendance) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
@@ -163,7 +153,7 @@ public class AttendanceController{
 //		return attendanceService.queryAttendanceByProperty(ClassUtil.transBean2Map(attendance, false));
 //	}
 	
-	@ApiOperation(value = "查询分页 根据门店考勤属性分页查询门店考勤信息列表", notes = "根据门店考勤属性分页查询门店考勤信息列表")
+	@ApiOperation(value = "查询分页 根据考勤属性分页查询考勤信息列表", notes = "根据考勤属性分页查询考勤信息列表")
 	@RequestMapping(value = "/attendances", method = RequestMethod.GET)
 	public Object queryAttendancePage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
@@ -180,7 +170,7 @@ public class AttendanceController{
 			@ApiParam(value = "attendanceTime") @RequestBody AttendanceTime attendanceTime) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
 		if(null == tempAttendance){
-			throw new NotFoundException("门店考勤规则");
+			throw new NotFoundException("考勤规则");
 		}
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendanceTime, true);
 		Map<String, Object> query = new HashMap<String, Object>();
@@ -254,7 +244,7 @@ public class AttendanceController{
 			@PathVariable Integer attendanceId) {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
 		if(null == tempAttendance){
-			throw new NotFoundException("门店考勤规则");
+			throw new NotFoundException("考勤规则");
 		}
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put("attendanceId", attendanceId);

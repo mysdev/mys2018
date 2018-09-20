@@ -21,11 +21,6 @@ public class Attendance extends BaseEntity {
 
 	private Integer attendanceId;	//tw_attendance:attendance_id  考勤方案标识  
 
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String storeId;	//tw_attendance:store_id  门店标识  
-	
-	private String storeName;
-
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String attendanceName;	//tw_attendance:attendance_name  考勤方案名称  
@@ -65,23 +60,6 @@ public class Attendance extends BaseEntity {
 	*/
 	public void setAttendanceId(Integer attendanceId){
 		this.attendanceId = attendanceId;	
-	}	
-	/**
-	* @DatabasetableColumnName: tw_attendance:store_id
-	* @Description: 获取属性        门店标识
-	* @return: String
-	*/
-	public String getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: tw_attendance:store_id
-	* @Description: 设置属性        门店标识
-	* @return: String
-	*/
-	public void setStoreId(String storeId){
-		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tw_attendance:attendance_name
@@ -186,15 +164,6 @@ public class Attendance extends BaseEntity {
 	public void setOutCt(Integer outCt){
 		this.outCt = outCt;	
 	}
-
-	public String getStoreName() {
-		return storeName;
-	}
-
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}	
-	
 	
 	
 	
