@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../resources/js/Faith.js"></script>
+<script>
+var tid=Faith.getQueryStringByName("tId");
+var columns = [ 
+		{field: 'cid', 		title: 'cid',		align: 'center', 		hidden: true,		editor: 'text' 		},
+		{field: 'tid', 		title: 'tid',		align: 'center', 		hidden: true,		editor: 'text' 		},
+		{field: 'columnName',		title: '字段名', 		align: 'center', 		editor: 'text' 		},
+		{field: 'columnLabel', 		title: '显示名', 		align: 'center', 		editor: 'text' 		},
+		{field: 'columnComment', 		title: '字段注释', 		align: 'center', 		editor: 'text' 		},
+		{field: 'columnType', 		title: '字段类型', 		align: 'center', 		editor: 'text' 		},
+		{field: 'scale', 		title: '规模', 		align: 'center', 		editor: 'text' 		},
+		{field: 'precision', 		title: '精度', 		align: 'center', 		editor: 'text' 		},
+		{field: 'nullable', 			title: '是否可以为空Y/N', 			align: 'center', 			editor: 'text' 			},
+		{field: 'filedType', 			title: 'Java类型', 			align: 'center', 			editor: 'text' 			},
+		{field: 'length', 		title: '字段长度', 		align: 'center', 		editor: 'text' 		},
+		{field: 'isSearch', 		title: '是否查询条件', 		align: 'center', 		editor: 'text' ,		formatter:function(value,row,index){
+			if(row.isSearch!=null){
+				if(row.isSearch=="1"){
+					return "是";
+				}else{
+					return "否";
+				}
+			}
+		}
+		},		
+		{field: 'isList', 		title: '是否列表显示', 		align: 'center', 		editor: 'text',		formatter:function(value,row,index){
+			if(row.isList!=null){
+				if(row.isList=="1"){
+					return "是";
+				}else{
+					return "否";
+				}
+			}
+		}
+		},		
+		{field: 'listSort', 		title: '列表顺序', 		align: 'center', 		editor: 'text'		},
+		{field: 'listWidth', 		title: '列表宽度', 		align: 'center', 		editor: 'text' 		},
+		{field: 'isForm', 		title: '是否表单显示', 		align: 'center', 		editor: 'text',		formatter:function(value,row,index){
+			if(row.isForm!=null){
+				if(row.isForm=="1"){
+					return "是";
+				}else{
+					return "否";
+				}
+			}
+		}
+		},		
+		{field: 'formType', 		title: '表单控件类型', 		align: 'center', 		editor: 'text',		formatter:function(value,row,index){
+			if(row.formType!=null){
+				if(row.formType=="0"){
+					return "hidden";
+				}if(row.formType=="1"){
+					return "text";
+				}if(row.formType=="2"){
+					return "radio";
+				}if(row.formType=="3"){
+					return "checkbox";
+				}if(row.formType=="4"){
+					return "select";
+				}if(row.formType=="5"){
+					return "date";
+				}if(row.formType=="6"){
+					return "textarea";
+				}if(row.formType=="7"){
+					return "number";
+				}
+			}
+		}
+		},
+		{field: 'groupCode', 		title: '数据字典', 		align: 'center', 		editor: 'text' 		},
+		{field: 'formValidate', 		title: '表单校验', 		align: 'center', 		editor: 'text' 		},
+		{field: 'formClass', 		title: '表单Class', 		align: 'center', 		editor: 'text'		},
+		{field: 'fromWidth', 		title: '控件宽度', 		align: 'center', 		editor: 'text' 		},
+		{field: 'spacing', 		title: '间隔宽度', 		align: 'center',		editor: 'text' 		},
+		{field: 'isNewLine', 		title: '是否换行', 		align: 'center', 		editor: 'text',		formatter:function(value,row,index){
+			if(row.isNewLine!=null){
+				if(row.isNewLine=="1"){
+					return "是";
+				}else{
+					return "否";
+				}
+			}
+		}
+		}
+		
+      ];
+      
+      var resId = 929;
+      
+    //配置页面参数
+  	$.extend(true, Faith, {
+  		gridOptions : {
+  			gridId : 'grid_columns', //表格容器id
+  			tableKey : "cid",
+  			resId:resId,
+  			pageButtonKey:'',
+  			isToolBar:true,
+  			url : Faith.projectName + '/codeing/columns/page', //列表接口
+  			sortName : 'cid',
+  			sortOrder : 'asc',
+  			pageSize: 50,
+  			columns : [ columns ],//数据列
+  			queryParams:{
+  				tid:tid
+  			},
+  			onDblClickRow : function(rowIndex, rowData) {
+  				Faith.doView();
+  			}
+  		},
+  		addOptions : {
+  			title : "添加数据列",
+  			addUrl : "/pc/webpage/codeing/columns_form.html"
+  		},
+  		updateOptions : {
+  			title : "修改数据列",
+  			updateUrl : "/pc/webpage/codeing/columns_form.html"
+  		},
+  		deleteOptions : {
+  			deleteAction : '/codeing/columns/delete/'
+  		},
+  		viewOptions : {
+  			title:'查看数据列',
+  			viewUrl : "/pc/webpage/codeing/columns_detail.html"
+  		}
+  	});
+
+$(function(){
+	// 加载表格
+	Faith.initGrid(Faith.gridOptions);
+})
+
+</script>
+</head>
+<body>
+<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+	 <div style="margin-top:5px;">	 
+		<table id="grid_columns" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,autoRowHeight:false,pagination:true" >
+		</table>
+	</div>
+</div>
+
+</body>
+</html>
