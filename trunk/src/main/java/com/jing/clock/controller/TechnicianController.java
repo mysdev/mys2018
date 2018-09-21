@@ -1,11 +1,14 @@
 package com.jing.clock.controller;
 
-import java.util.Map;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,16 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import com.jing.core.model.entity.Employee;
-import com.jing.core.model.entity.Store;
-import com.jing.core.service.EmployeeService;
-import com.jing.core.service.StoreService;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
 import com.jing.clock.model.entity.ClockSkill;
 import com.jing.clock.model.entity.Technician;
 import com.jing.clock.model.entity.TechnicianSkill;
@@ -31,6 +24,11 @@ import com.jing.clock.service.ClockSkillService;
 import com.jing.clock.service.TechnicianService;
 import com.jing.clock.service.TechnicianSkillService;
 import com.jing.clock.service.bo.TechnicianSkillBo;
+import com.jing.config.validation.BeanValidator;
+import com.jing.config.web.exception.NotFoundException;
+import com.jing.config.web.exception.ParameterException;
+import com.jing.core.model.entity.Employee;
+import com.jing.core.service.EmployeeService;
 import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
@@ -57,8 +55,6 @@ public class TechnicianController{
 	@Autowired
 	private TechnicianSkillService technicianSkillService;
 	
-	@Autowired
-	private StoreService storeService;
 	
 	@Autowired
 	private EmployeeService employeeService;
@@ -81,11 +77,6 @@ public class TechnicianController{
 				throw new NotFoundException("员工");
 			}
 			technician.setStoreId(employee.getStoreId());
-		}else{
-			Store store = storeService.queryStoreByStoreId(technician.getStoreId());
-			if(store==null){
-				throw new NotFoundException("门店");
-			}
 		}
 		technician.setTechnicianId(null);
 		technicianService.addTechnician(technician);

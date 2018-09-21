@@ -22,8 +22,6 @@ import com.jing.attendance.service.AttendanceTimeService;
 import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
-import com.jing.core.model.entity.Store;
-import com.jing.core.service.StoreService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,11 +50,11 @@ public class AttendanceController{
 	private static final Integer MAX_TIME_PER_ATT = 3;
 	
 	
-	@ApiOperation(value = "新增 添加考勤信息", notes = "添加考勤信息 暂时只支持type=2详情")
+	@ApiOperation(value = "新增 添加考勤信息", notes = "添加考勤信息 暂时后台固定为type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
 			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		attendance.setTypes(2); //暂时只支持2
+		attendance.setTypes(2); //暂时只支持2     考勤方案方案 0休天数 1考勤天数 2详情
 		attendance.setStatus(0);
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);
 		

@@ -19,7 +19,6 @@ import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceTime;
 import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
-import com.jing.core.model.dao.StoreMapper;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
@@ -55,8 +54,6 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	@Autowired
 	private AttendanceDiaryMapper attendanceDiaryMapper;
 	
-	@Autowired
-	private StoreMapper storeMapper;
     
 	@Autowired
 	private PageService pageService; // 分页器
