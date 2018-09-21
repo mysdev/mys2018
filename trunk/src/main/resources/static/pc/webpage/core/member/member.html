@@ -9,6 +9,7 @@
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 <script>
 	var columns = [
@@ -22,15 +23,15 @@
 						return '无效';
 					}
 				}},
-				{field:'rfm', title:'会员成长值', width:65, align:'center'  },
-				{field:'levelId', title:'会员等级', width:52, align:'center'  },
-				{field:'memberCard', title:'卡号', width:208, align:'center'  },
+				{field:'rfm', title:'会员成长值', width:80, align:'center'  },
+				{field:'levelId', title:'会员等级', width:80, align:'center'  },
+				{field:'memberCard', title:'卡号', width:120, align:'center'  },
 				{field:'integral', title:'积分', width:50, align:'center'  },
 				{field:'balance', title:'余额', width:50, align:'center'  },
 				{field:'mobile', title:'手机号', width:100, align:'center'  },
 				{field:'mail', title:'邮箱地址', width:100, align:'center'  },
 				{field:'birthday', title:'生日', width:100, align:'center'  },
-				{field:'totalFee', title:'总花费', width:50, align:'center'  },
+				{field:'totalFee', title:'总花费', width:80, align:'center'  },
 				{field:'sex', title:'性别', width:91, align:'center' ,
 					formatter: function(value, row, index) {
 						return Faith.dictionaryToChinese('0001', row.sex);
