@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
 	private String pinyin;	//tb_member:pinyin  拼音  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer status;	//tb_member:status  状态 0正常  
+	private Integer status=0;	//tb_member:status  状态 0正常  
 
 	private Integer rfm;	//tb_member:rfm  会员成长值  
 

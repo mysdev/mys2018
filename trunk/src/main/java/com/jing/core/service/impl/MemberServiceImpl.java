@@ -11,6 +11,7 @@ import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.dao.MemberMapper;
 import com.jing.core.model.entity.Member;
 import com.jing.core.service.MemberService;
+import com.jing.utils.PrimaryKey;
 
 @Service("memberService")
 public class MemberServiceImpl implements MemberService {
@@ -23,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public void addMember(Member member) {
+		member.setMemberId(PrimaryKey.getUUID());
 		memberMapper.addMember(member);
 	}
 
