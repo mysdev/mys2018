@@ -222,12 +222,12 @@ public class CodeingServiceImpl implements CodeingService {
 			}
 		}
 		// entity
-		String entityFilePath= rootPath + "/entity/";
+		String entityFilePath= rootPath + "/model/entity/";
 		CommonPageParser.WriterPage(context, "EntityTemplate.ftl", entityFilePath, className+".java");
 		// dao
-		String daoFilePath= rootPath + "/dao/";
-		String mapperFilePath= rootPath + "/dao/mapper/";
-		CommonPageParser.WriterPage(context, "DaoTemplate.ftl", daoFilePath, className+"Dao.java");
+		String daoFilePath= rootPath + "/model/dao/";
+		String mapperFilePath= rootPath + "/model/mapper/";
+		CommonPageParser.WriterPage(context, "DaoTemplate.ftl", daoFilePath, className+"Mapper.java");
 		CommonPageParser.WriterPage(context, "MapperTemplate.ftl", mapperFilePath, className+"Mapper.xml");
 		
 		// service

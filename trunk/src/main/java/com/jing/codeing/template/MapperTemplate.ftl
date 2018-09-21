@@ -6,9 +6,9 @@
 	<resultMap id="${className}ResultMap" type="${packge}.entity.${className}">
 #foreach( $col in $!{columns} ) 
 #if($!col.cid == $!primaryKey.cid)
-		<id column="${col.columnName}" property="${col.columnName}" />
+		<id column="${col.columnName}" property="${col.filedName}" />
 #else
-		<result column="${col.columnName}" property="${col.columnName}" />
+		<result column="${col.columnName}" property="${col.filedName}" />
 #end
 #end
 	</resultMap>
@@ -16,8 +16,8 @@
 	<sql id="query_tables_Property" >
 		<where>
 #foreach( $col in $!{columns} ) 
-			<if test="param.${col.columnName} != null and param.${col.columnName} != ''">
-				and ${col.columnName} = #{param.${col.columnName}}
+			<if test="param.${col.filedName} != null and param.${col.filedName} != ''">
+				and ${col.columnName} = #{param.${col.filedName}}
 			</if>
 #end
 		</where>
@@ -26,14 +26,14 @@
 	<!-- 添加 ${comment} -->
 	<insert id="add${className}" parameterType="${packge}.entity.${className}">
 #if($!primaryKey.filedType == "Integer")
-		<selectKey keyProperty="${primaryKey.columnName}" order="AFTER" resultType="java.lang.Integer">
+		<selectKey keyProperty="${primaryKey.filedName}" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 #end
 		INSERT INTO ${tableName} (#foreach( $col in $!{columns} )#if($!col.cid != $!primaryKey.cid),#end${col.columnName} #end) 
 		values
 		(#foreach( $col in $!{columns} )
-#if($!col.cid != $!primaryKey.cid),#end#{${col.columnName}}#end)
+#if($!col.cid != $!primaryKey.cid),#end#{${col.filedName}}#end)
 	</insert>
 
 	<!-- 修改${comment} -->
@@ -41,14 +41,14 @@
 		UPDATE ${tableName}
 		<set> 
 #foreach( $col in $!{columns} )
-#if(${col.columnName} != ${primaryKey.columnName})
+#if(${col.filedName} != ${primaryKey.filedName})
 			<if test="${col.columnName} != null" >
-				${col.columnName} = #{${col.columnName}},
+				${col.columnName} = #{${col.filedName}},
 			</if>
 #end
 #end
 		</set>
-		WHERE	${primaryKey.columnName} = #{${primaryKey.columnName}}
+		WHERE	${primaryKey.columnName} = #{${primaryKey.filedName}}
 	</update>
 	
 	<!-- 根据ID删除${comment} -->

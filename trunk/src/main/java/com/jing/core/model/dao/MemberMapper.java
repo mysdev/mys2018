@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.jing.utils.paginator.domain.PageBounds;
+import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.entity.Member;
 
 /**
@@ -21,52 +21,37 @@ import com.jing.core.model.entity.Member;
 public interface MemberMapper {
 
 	/**
-	 * @Title: addMember
-	 * @Description:添加会员
-	 * @param member 实体
-	 * @return Integer
-	 */
-	Integer addMember(Member member);
+	* 添加 会员
+	*/
+	void addMember(Member member);
 	
 	/**
-	 * @Title modifyMember
-	 * @Description:修改会员
-	 * @param member 实体
-	 * @return Integer
-	 */
-	Integer modifyMember(Member member);
+	* 修改 会员
+	*/
+	void updateMember(Member member);
 	
 	/**
-	 * @Title: dropMemberByMemberId
-	 * @Description:删除会员
-	 * @param memberId 实体标识
-	 * @return Integer
-	 */
-	Integer dropMemberByMemberId(String memberId);
+	*根据ID删除记录
+	*/
+	void deleteMemberById(String id);	
 	
 	/**
-	 * @Title: queryMemberByMemberId
-	 * @Description:根据实体标识查询会员
-	 * @param memberId 实体标识
-	 * @return Member
-	 */
-	Member queryMemberByMemberId(String memberId);
-	 
+	*根据ID查询记录
+	*/
+	Member getMemberById(String id);
+	
 	/**
-	 * @Title: queryMemberForPage
-	 * @Description: 根据会员属性与分页信息分页查询会员信息
-	 * @param pageBounds 分页信息
-	 * @param member 实体
-	 * @return List<Member>
+	* 分页查询
+	*/
+	List<Member> findMemberListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
+	
+	
+	/**
+	 * 根据属性查询会员
+	 * @param param
+	 * @return
 	 */
-	List<Member> queryMemberForPage(PageBounds pageBounds, @Param("member") Member member);
-	 
-	 /**
-	  * @Title: queryMemberByProperty
-	  * @Description:根据属性查询会员
-	  * @return List<Member>
-	  */
-	 List<Member> queryMemberByProperty(@Param("member") Map<String, Object> map);
+	List<Member> findMemberList(@Param("param") Map<String, Object> param);	
 	 
 	 
 	 
