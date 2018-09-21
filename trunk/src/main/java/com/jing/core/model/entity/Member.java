@@ -8,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.jing.core.util.MemberLevelCache;
 import com.jing.utils.BaseEntity;
 
 /**
@@ -38,6 +39,7 @@ public class Member extends BaseEntity {
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer levelId;	//tb_member:level_id  会员等级  
+	private String levelName;
 
 	@Length(min=0, max=16, message="{org.hibernate.validator.constraints.Length.message}")
 	private String memberCard;	//tb_member:member_card  卡号  
@@ -75,6 +77,14 @@ public class Member extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String cardNo;	//tb_member:card_no  证件号码  
 
+	
+
+	public String getLevelName() {
+		if(getLevelId() !=null) {
+			return MemberLevelCache.getName(getLevelId());
+		}
+		return levelName;
+	}
 
 	/**
 	* @DatabasetableColumnName: tb_member:member_id
