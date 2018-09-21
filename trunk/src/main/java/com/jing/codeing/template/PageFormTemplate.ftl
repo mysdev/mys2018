@@ -76,7 +76,7 @@
 #if( $!col.formType == 5 )
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">${col.columnLabel}#if( $!col.nullable == 'N' )<span style="color:red">*</span>#end</label>
-	  	 	<input type="" class="form-control from_wrap_input" id="${col.filedName}" id="${col.filedName}" name="${col.filedName}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+	  	 	<input type="text" class="form-control easyui-datebox"  id="${col.filedName}" name="${col.filedName}"  placeholder="请选择${col.columnLabel}" data-options="height:'34',width:'100%'">
 	  	</div>
 #end
 #if( $!col.formType == 6 )

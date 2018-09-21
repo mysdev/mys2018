@@ -45,7 +45,7 @@ public class Member extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String memberPassword;	//tb_member:member_password  会员密码  
 
-	private Integer integral;	//tb_member:integral  积分  
+	private Integer integral=0;	//tb_member:integral  积分  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.math.BigDecimal balance;	//tb_member:balance  余额  

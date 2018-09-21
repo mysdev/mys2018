@@ -19,9 +19,8 @@ import com.jing.config.web.page.PageRequestUtils;
 import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
-import com.jing.core.model.entity.MemberLevel;
-import com.jing.core.service.MemberLevelService;
-import com.jing.core.util.MemberLevelCache;
+import com.jing.core.model.entity.MemberMoneyRecord;
+import com.jing.core.service.MemberMoneyRecordService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,68 +28,62 @@ import io.swagger.annotations.ApiParam;
 
 /**
  * <br>
- * <b>功能：</b>会员体系 WEB接口<br>
+ * <b>功能：</b>会员金额流水 WEB接口<br>
  * <br>
  */
 @Controller
-@RequestMapping("/core/memberLevel")
-public class MemberLevelController extends BaseController{
+@RequestMapping("/core/memberMoneyRecord")
+public class MemberMoneyRecordController extends BaseController{
 
 	@Autowired
-	private MemberLevelService memberLevelService;
+	private MemberMoneyRecordService memberMoneyRecordService;
 	
-	@ApiOperation(value = "新增会员体系", notes = "添加会员体系")
+	@ApiOperation(value = "新增会员金额流水", notes = "添加会员金额流水")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public @ResponseBody Result add(MemberLevel memberLevel,@SessionAttr(Config.USER_INFO) User user) {
-		memberLevel.setCreatedBy(user.getUserId());
-		memberLevel.setCreatedDateNow();
-		memberLevel.setUpdatedBy(user.getUserId());
-		memberLevel.setUpdatedDateNow();
-		memberLevelService.addMemberLevel(memberLevel);
+	public @ResponseBody Result add(MemberMoneyRecord memberMoneyRecord,@SessionAttr(Config.USER_INFO) User user) {
+		memberMoneyRecord.setCreatedBy(user.getUserId());
+		memberMoneyRecord.setCreatedDateNow();
+		memberMoneyRecord.setUpdatedBy(user.getUserId());
+		memberMoneyRecord.setUpdatedDateNow();
+		memberMoneyRecordService.addMemberMoneyRecord(memberMoneyRecord);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "修改会员体系", notes = "修改会员体系")
+	@ApiOperation(value = "修改会员金额流水", notes = "修改会员金额流水")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public @ResponseBody Result update(MemberLevel memberLevel,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		if(memberLevel==null || memberLevel.getLevelId()==null || "".equals(memberLevel.getLevelId())){
+	public @ResponseBody Result update(MemberMoneyRecord memberMoneyRecord,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(memberMoneyRecord==null || memberMoneyRecord.getRecordId()==null || "".equals(memberMoneyRecord.getRecordId())){
 			throw new CustomException("缺失修改参数.");
 		}
-		memberLevel.setUpdatedBy(user.getUserId());
-		memberLevel.setUpdatedDateNow();
-		memberLevelService.updateMemberLevel(memberLevel);
+		memberMoneyRecord.setUpdatedBy(user.getUserId());
+		memberMoneyRecord.setUpdatedDateNow();
+		memberMoneyRecordService.updateMemberMoneyRecord(memberMoneyRecord);
 		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据ID删除会员体系", notes = "根据ID删除会员体系")
+	@ApiOperation(value = "删除 根据ID删除会员金额流水", notes = "根据ID删除会员金额流水")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result delete(@PathVariable("id") Integer id){
-		if(id==null){
+		if(id==null || "".equals(id)){
 			throw new CustomException("缺失删除参数.");
 		}
-		memberLevelService.deleteMemberLevelById(id);
+		memberMoneyRecordService.deleteMemberMoneyRecordById(id);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "根据ID查询会员体系", notes = "根据ID查询会员体系")
+	@ApiOperation(value = "根据ID查询会员金额流水", notes = "根据ID查询会员金额流水")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result get(@PathVariable("id") Integer id){
-		if(id==null ){
+		if(id==null || "".equals(id)){
 			throw new CustomException("缺失查询参数.");
 		}
-		return Result.getDefaultSuccMsgResult(memberLevelService.getMemberLevelById(id));
-	}
-	
-	@ApiOperation(value = "查询会员体系", notes = "查询会员体系")
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public @ResponseBody Result all(){
-		return Result.getDefaultSuccMsgResult(MemberLevelCache.getAll());
+		return Result.getDefaultSuccMsgResult(memberMoneyRecordService.getMemberMoneyRecordById(id));
 	}
 		
-	@ApiOperation(value = "分页查询会员体系", notes = "分页查询会员体系")
+	@ApiOperation(value = "分页查询会员金额流水", notes = "分页查询会员金额流水")
 	@RequestMapping(value = "/page", method = RequestMethod.POST)
 	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
 		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
-		return memberLevelService.findMemberLevelListPage(PageRequestUtils.getPageBean(request), map);
+		return memberMoneyRecordService.findMemberMoneyRecordListPage(PageRequestUtils.getPageBean(request), map);
 	}
 }

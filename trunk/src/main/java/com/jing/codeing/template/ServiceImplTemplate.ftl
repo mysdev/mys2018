@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jing.config.web.page.PageInfo;
 
 import ${packge}.model.entity.${className};
-import ${packge}.dao.${className}Mapper;
+import ${packge}.model.dao.${className}Mapper;
 import ${packge}.service.${className}Service;
 
 @Service("${lowerName}Service")

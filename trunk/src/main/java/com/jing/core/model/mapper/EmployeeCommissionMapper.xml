@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.EmployeeCommissionMapper">
+
+	<!-- Result Map -->
+	<resultMap id="EmployeeCommissionResultMap" type="com.jing.core.model.entity.EmployeeCommission">
+		<id column="cid" property="cid" />
+		<result column="employee_id" property="employeeId" />
+		<result column="money" property="money" />
+		<result column="cause" property="cause" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.cid != null and param.cid != ''">
+				and cid = #{param.cid}
+			</if>
+			<if test="param.employeeId != null and param.employeeId != ''">
+				and employee_id = #{param.employeeId}
+			</if>
+			<if test="param.money != null and param.money != ''">
+				and money = #{param.money}
+			</if>
+			<if test="param.cause != null and param.cause != ''">
+				and cause = #{param.cause}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.remark != null and param.remark != ''">
+				and remark = #{param.remark}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 员工提成 -->
+	<insert id="addEmployeeCommission" parameterType="com.jing.core.model.entity.EmployeeCommission">
+		<selectKey keyProperty="cid" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tb_employee_commission (cid ,employee_id ,money ,cause ,created_by ,created_date ,remark ) 
+		values
+		(#{cid},#{employeeId},#{money},#{cause},#{createdBy},#{createdDate},#{remark})
+	</insert>
+
+	<!-- 修改员工提成 -->
+	<update id="updateEmployeeCommission" parameterType="com.jing.core.model.entity.EmployeeCommission">
+		UPDATE tb_employee_commission
+		<set> 
+			<if test="employeeId != null" >
+				employee_id = #{employeeId},
+			</if>
+			<if test="money != null" >
+				money = #{money},
+			</if>
+			<if test="cause != null" >
+				cause = #{cause},
+			</if>
+			<if test="remark != null" >
+				remark = #{remark},
+			</if>
+		</set>
+		WHERE	cid = #{cid}
+	</update>
+	
+	<!-- 根据ID删除员工提成 -->
+	<delete id="deleteEmployeeCommissionById"  parameterType="Integer">
+		DELETE FROM tb_employee_commission WHERE cid = #{value}
+	</delete>
+	
+	<!-- 根据ID查询员工提成 -->
+	<select id="getEmployeeCommissionById" resultMap="EmployeeCommissionResultMap" parameterType="Integer">
+		SELECT * FROM tb_employee_commission WHERE cid = #{value}
+	</select>
+	
+	<select id="findEmployeeCommissionListPage" resultMap="EmployeeCommissionResultMap">
+		SELECT * FROM tb_employee_commission
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findEmployeeCommissionList" resultMap="EmployeeCommissionResultMap">
+		SELECT * FROM tb_employee_commission
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

@@ -1,4 +1,4 @@
-package ${packge}.dao;
+package ${packge}.model.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.jing.config.web.page.PageInfo;
-import ${packge}.entity.${className};
+import ${packge}.model.entity.${className};
 
 @Mapper
-public interface ${className}Dao {
+public interface ${className}Mapper {
 
 	/**
 	* 添加 ${comment}

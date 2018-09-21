@@ -14,8 +14,13 @@ public class CodeingTest {
 	@Autowired
 	private CodeingService codeingService;
 
-	@Test
+	//@Test
 	public void generate() throws Exception {
 		codeingService.generate("158");
+	}
+	
+	@Test
+	public void readDbTable() throws Exception {
+		codeingService.readDbTable("tb_employee");
 	}
 }

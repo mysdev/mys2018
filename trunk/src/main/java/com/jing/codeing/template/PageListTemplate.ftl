@@ -40,18 +40,18 @@
 			}
 		},
 		addOptions : {
-			title : "添加数据表",
+			title : "添加${comment}",
 			addUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		updateOptions : {
-			title : "修改数据表",
+			title : "修改${comment}",
 			updateUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		deleteOptions : {
 			deleteAction : Faith.projectName + '/${model}/${lowerName}/delete/'
 		},
 		viewOptions : {
-			title:'查看数据表',
+			title:'查看${comment}',
 			viewUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_detail.html"
 		}
 	});

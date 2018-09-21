@@ -9,33 +9,33 @@ import com.jing.core.model.entity.Member;
 public interface MemberService {
 
 	/**
-	* 添加 会员
-	*/
+	 * 添加 会员
+	 */
 	void addMember(Member member);
-	
+
 	/**
-	* 修改 会员
-	*/
+	 * 修改 会员
+	 */
 	void updateMember(Member member);
-	
+
 	/**
-	*根据ID删除记录
-	*/
-	void deleteMemberById(String id);	
-	
+	 * 根据ID删除记录
+	 */
+	void deleteMemberById(String id);
+
 	/**
-	*根据ID查询记录
-	*/
+	 * 根据ID查询记录
+	 */
 	Member getMemberById(String id);
-	
+
 	/**
-	* 分页查询
-	*/
+	 * 分页查询
+	 */
 	PageInfo findMemberListPage(PageInfo page, Map<String, Object> param);
-	
 
 	/**
 	 * 根据属性查询会员
+	 * 
 	 * @param param
 	 * @return
 	 */
