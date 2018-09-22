@@ -1,4 +1,4 @@
-package ${packge}.entity;
+package ${packge}.model.entity;
 
 import com.jing.utils.BaseEntity;
 

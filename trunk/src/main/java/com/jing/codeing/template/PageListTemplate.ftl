@@ -2,14 +2,14 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/public_style.css" />
-<link rel="stylesheet" type="text/css" href="../../resources/js/easyui/easyui_add.css" /> 
-<link href="../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../../resources/js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="../../resources/js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="../../resources/js/Faith.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 <script>
 	var columns = [
 #foreach( $col in $!{columns} ) 

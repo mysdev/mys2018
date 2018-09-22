@@ -50,9 +50,6 @@ public class Employee extends BaseEntity {
 	}
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String storeId;	//tb_employee:store_id  所属门店  
-
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private Integer dptId;	//tb_employee:dpt_id  所属部门  '
 	private Dept dept;
 	public Dept getDept() {
@@ -164,23 +161,6 @@ public class Employee extends BaseEntity {
 	*/
 	public void setUserId(Integer userId){
 		this.userId = userId;	
-	}	
-	/**
-	* @DatabasetableColumnName: tb_employee:store_id
-	* @Description: 获取属性        所属门店
-	* @return: String
-	*/
-	public String getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: tb_employee:store_id
-	* @Description: 设置属性        所属门店
-	* @return: String
-	*/
-	public void setStoreId(String storeId){
-		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: tb_employee:dpt_id

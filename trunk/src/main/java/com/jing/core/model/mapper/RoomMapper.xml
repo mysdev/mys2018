@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.RoomMapper">
+
+	<!-- Result Map -->
+	<resultMap id="RoomResultMap" type="com.jing.core.model.entity.Room">
+		<id column="room_id" property="roomId" />
+		<result column="types" property="types" />
+		<result column="area" property="area" />
+		<result column="room_no" property="roomNo" />
+		<result column="room_name" property="roomName" />
+		<result column="status" property="status" />
+		<result column="room_status" property="roomStatus" />
+		<result column="chair" property="chair" />
+		<result column="bed" property="bed" />
+		<result column="mark" property="mark" />
+		<result column="phone" property="phone" />
+		<result column="is_consumption" property="isConsumption" />
+		<result column="commodity" property="commodity" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.roomId != null and param.roomId != ''">
+				and room_id = #{param.roomId}
+			</if>
+			<if test="param.types != null and param.types != ''">
+				and types = #{param.types}
+			</if>
+			<if test="param.area != null and param.area != ''">
+				and area = #{param.area}
+			</if>
+			<if test="param.roomNo != null and param.roomNo != ''">
+				and room_no = #{param.roomNo}
+			</if>
+			<if test="param.roomName != null and param.roomName != ''">
+				and room_name = #{param.roomName}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.roomStatus != null and param.roomStatus != ''">
+				and room_status = #{param.roomStatus}
+			</if>
+			<if test="param.chair != null and param.chair != ''">
+				and chair = #{param.chair}
+			</if>
+			<if test="param.bed != null and param.bed != ''">
+				and bed = #{param.bed}
+			</if>
+			<if test="param.mark != null and param.mark != ''">
+				and mark = #{param.mark}
+			</if>
+			<if test="param.phone != null and param.phone != ''">
+				and phone = #{param.phone}
+			</if>
+			<if test="param.isConsumption != null and param.isConsumption != ''">
+				and is_consumption = #{param.isConsumption}
+			</if>
+			<if test="param.commodity != null and param.commodity != ''">
+				and commodity = #{param.commodity}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 房间 -->
+	<insert id="addRoom" parameterType="com.jing.core.model.entity.Room">
+		INSERT INTO tb_room (room_id ,types ,area ,room_no ,room_name ,status ,room_status ,chair ,bed ,mark ,phone ,is_consumption ,commodity ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{roomId},#{types},#{area},#{roomNo},#{roomName},#{status},#{roomStatus},#{chair},#{bed},#{mark},#{phone},#{isConsumption},#{commodity},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
+
+	<!-- 修改房间 -->
+	<update id="updateRoom" parameterType="com.jing.core.model.entity.Room">
+		UPDATE tb_room
+		<set> 
+			<if test="types != null" >
+				types = #{types},
+			</if>
+			<if test="area != null" >
+				area = #{area},
+			</if>
+			<if test="roomNo != null" >
+				room_no = #{roomNo},
+			</if>
+			<if test="roomName != null" >
+				room_name = #{roomName},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="roomStatus != null" >
+				room_status = #{roomStatus},
+			</if>
+			<if test="chair != null" >
+				chair = #{chair},
+			</if>
+			<if test="bed != null" >
+				bed = #{bed},
+			</if>
+			<if test="mark != null" >
+				mark = #{mark},
+			</if>
+			<if test="phone != null" >
+				phone = #{phone},
+			</if>
+			<if test="isConsumption != null" >
+				is_consumption = #{isConsumption},
+			</if>
+			<if test="commodity != null" >
+				commodity = #{commodity},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	room_id = #{roomId}
+	</update>
+	
+	<!-- 根据ID删除房间 -->
+	<delete id="deleteRoomById"  parameterType="String">
+		DELETE FROM tb_room WHERE room_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询房间 -->
+	<select id="getRoomById" resultMap="RoomResultMap" parameterType="String">
+		SELECT * FROM tb_room WHERE room_id = #{value}
+	</select>
+	
+	<select id="findRoomListPage" resultMap="RoomResultMap">
+		SELECT * FROM tb_room
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findRoomList" resultMap="RoomResultMap">
+		SELECT * FROM tb_room
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

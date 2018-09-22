@@ -4,20 +4,21 @@
 
 <head>
 <meta charset="utf-8" />
-<title>员工详情</title>
+<title>单位详情</title>
 <link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
 <link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/dictionary.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
 <script type="text/javascript">
 	var pkVal = Faith.getQueryStringByName("pkVal");
 
 	function initData(id) {
-		$.get(Faith.projectName + "/core/employee/index/" + id, {}, function(rs) {
+		$.get(Faith.projectName + "/base/unit/index/" + id, {}, function(rs) {
 			if (rs.code == 1) { 
-				Faith.setTableData("detail_employee", rs.data); 
+				Faith.setTableData("detail_room", rs.data); 
  				if(rs.data.point&&rs.data.point!=""){
  					Faith.addMarker(rs.data.point);
  				}
@@ -33,77 +34,83 @@
 </script>
 </head>
 <body>
-<div id="detail_employee" class="fromstyle">
+<div id="detail_room" class="fromstyle">
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">员工标识:</label>
-			<div class="column_z column_title" id="empId" name="empId"></div>
+			<label class="column_t">房间标识:</label>
+			<div class="column_z column_title" id="roomId" name="roomId"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">员工姓名:</label>
-			<div class="column_z column_title" id="empName" name="empName"></div>
+			<label class="column_t">房间类型:</label>
+			<div class="column_z column_title" id="types" name="types"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">员工拼音:</label>
-			<div class="column_z column_title" id="pinyin" name="pinyin"></div>
+			<label class="column_t">归属区域:</label>
+			<div class="column_z column_title" id="area" name="area"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">员工工号:</label>
-			<div class="column_z column_title" id="empNo" name="empNo"></div>
+			<label class="column_t">房间编号:</label>
+			<div class="column_z column_title" id="roomNo" name="roomNo"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">员工卡号:</label>
-			<div class="column_z column_title" id="empCard" name="empCard"></div>
+			<label class="column_t">房间名称:</label>
+			<div class="column_z column_title" id="roomName" name="roomName"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">关联用户:</label>
-			<div class="column_z column_title" id="userId" name="userId"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">所属门店:</label>
-			<div class="column_z column_title" id="storeId" name="storeId"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">所属部门:</label>
-			<div class="column_z column_title" id="dptId" name="dptId"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">入职时间:</label>
-			<div class="column_z column_title" id="entryDate" name="entryDate"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">离职时间:</label>
-			<div class="column_z column_title" id="quitDate" name="quitDate"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">员工状态 0正常:</label>
+			<label class="column_t">状态 0正常:</label>
 			<div class="column_z column_title" id="status" name="status"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">是否管理 0否:</label>
-			<div class="column_z column_title" id="isManager" name="isManager"></div>
+			<label class="column_t">自身状态:</label>
+			<div class="column_z column_title" id="roomStatus" name="roomStatus"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">椅子数量:</label>
+			<div class="column_z column_title" id="chair" name="chair"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">床数量:</label>
+			<div class="column_z column_title" id="bed" name="bed"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">标记:</label>
+			<div class="column_z column_title" id="mark" name="mark"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">房间分机:</label>
+			<div class="column_z column_title" id="phone" name="phone"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">是否包含基础消费:</label>
+			<div class="column_z column_title" id="isConsumption" name="isConsumption"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品id，逗号分隔:</label>
+			<div class="column_z column_title" id="commodity" name="commodity"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">

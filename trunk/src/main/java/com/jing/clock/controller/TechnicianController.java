@@ -76,7 +76,7 @@ public class TechnicianController{
 			if(employee==null){
 				throw new NotFoundException("员工");
 			}
-			technician.setStoreId(employee.getStoreId());
+//			technician.setStoreId(employee.getStoreId());
 		}
 		technician.setTechnicianId(null);
 		technicianService.addTechnician(technician);
@@ -92,7 +92,7 @@ public class TechnicianController{
 		if(employee==null){
 			throw new NotFoundException("员工");
 		}
-		technician.setStoreId(employee.getStoreId());
+//		technician.setStoreId(employee.getStoreId());
 		technician.setEmpId(empId);
 		technician.setTechName(employee.getEmpName());
 		if(technician.getTechCard()==null){

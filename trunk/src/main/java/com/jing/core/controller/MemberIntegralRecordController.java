@@ -31,6 +31,7 @@ import io.swagger.annotations.ApiParam;
  * <b>功能：</b>会员积分流水 WEB接口<br>
  * <br>
  */
+@Api("会员积分流水")
 @Controller
 @RequestMapping("/core/memberIntegralRecord")
 public class MemberIntegralRecordController extends BaseController{
@@ -63,7 +64,7 @@ public class MemberIntegralRecordController extends BaseController{
 
 	@ApiOperation(value = "删除 根据ID删除会员积分流水", notes = "根据ID删除会员积分流水")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-	public @ResponseBody Result delete(@PathVariable("id") Integer id){
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
 		if(id==null || "".equals(id)){
 			throw new CustomException("缺失删除参数.");
 		}
@@ -73,7 +74,7 @@ public class MemberIntegralRecordController extends BaseController{
 	
 	@ApiOperation(value = "根据ID查询会员积分流水", notes = "根据ID查询会员积分流水")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
-	public @ResponseBody Result get(@PathVariable("id") Integer id){
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
 		if(id==null || "".equals(id)){
 			throw new CustomException("缺失查询参数.");
 		}
