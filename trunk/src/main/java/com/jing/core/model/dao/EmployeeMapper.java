@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.jing.utils.paginator.domain.PageBounds;
+import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.entity.Employee;
 
 /**
@@ -19,38 +19,40 @@ import com.jing.core.model.entity.Employee;
  */
 @Mapper
 public interface EmployeeMapper {
+	
+	/**
+	* 添加 员工
+	*/
+	void addEmployee(Employee employee);
+	
+	/**
+	* 修改 员工
+	*/
+	void updateEmployee(Employee employee);
+	
+	/**
+	*根据ID删除记录
+	*/
+	void deleteEmployeeById(String id);	
+	
+	/**
+	*根据ID查询记录
+	*/
+	Employee getEmployeeById(String id);
+	
+	/**
+	* 分页查询
+	*/
+	List<Employee> findEmployeeListPage(@Param("page") PageInfo page, @Param("employee") Map<String, Object> employee);
+	
+	
+	/**
+	 * 根据属性查询员工
+	 * @param param
+	 * @return
+	 */
+	List<Employee> findEmployeeList(@Param("employee") Map<String, Object> employee);	
 
-	/**
-	 * @Title: addEmployee
-	 * @Description:添加员工
-	 * @param employee 实体
-	 * @return Integer
-	 */
-	Integer addEmployee(Employee employee);
-	
-	/**
-	 * @Title modifyEmployee
-	 * @Description:修改员工
-	 * @param employee 实体
-	 * @return Integer
-	 */
-	Integer modifyEmployee(Employee employee);
-	
-	/**
-	 * @Title: dropEmployeeByEmpId
-	 * @Description:删除员工
-	 * @param empId 实体标识
-	 * @return Integer
-	 */
-	Integer dropEmployeeByEmpId(String empId);
-	
-	/**
-	 * @Title: queryEmployeeByEmpId
-	 * @Description:根据实体标识查询员工
-	 * @param empId 实体标识
-	 * @return Employee
-	 */
-	Employee queryEmployeeByEmpId(String empId);
 	
 	/** 
 	* @Title: queryEmployeeByEmpCard 
@@ -61,22 +63,7 @@ public interface EmployeeMapper {
 	*/
 	Employee queryEmployeeByEmpCard(String empCard);
 	 
-	/**
-	 * @Title: queryEmployeeForPage
-	 * @Description: 根据员工属性与分页信息分页查询员工信息
-	 * @param pageBounds 分页信息
-	 * @param employee 实体
-	 * @return List<Employee>
-	 */
-	List<Employee> queryEmployeeForPage(PageBounds pageBounds, @Param("employee") Employee employee);
-	 
-	 /**
-	  * @Title: queryEmployeeByProperty
-	  * @Description:根据属性查询员工
-	  * @return List<Employee>
-	  */
-	 List<Employee> queryEmployeeByProperty(@Param("employee") Map<String, Object> map);
-
+	
 	/** 
 	* @Title: queryEmployeeByEmpIds 
 	* @Description: 根据员工标识查询员工信息

@@ -31,6 +31,7 @@ import io.swagger.annotations.ApiParam;
  * <b>功能：</b>${comment} WEB接口<br>
  * <br>
  */
+@Api("${comment}")
 @Controller
 @RequestMapping("/${model}/${lowerName}")
 public class ${className}Controller extends BaseController{
@@ -63,7 +64,7 @@ public class ${className}Controller extends BaseController{
 
 	@ApiOperation(value = "删除 根据ID删除${comment}", notes = "根据ID删除${comment}")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-	public @ResponseBody Result delete(@PathVariable("id") ${primaryKey.filedType} id){
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") ${primaryKey.filedType} id){
 		if(id==null || "".equals(id)){
 			throw new CustomException("缺失删除参数.");
 		}
@@ -73,7 +74,7 @@ public class ${className}Controller extends BaseController{
 	
 	@ApiOperation(value = "根据ID查询${comment}", notes = "根据ID查询${comment}")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
-	public @ResponseBody Result get(@PathVariable("id") ${primaryKey.filedType} id){
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") ${primaryKey.filedType} id){
 		if(id==null || "".equals(id)){
 			throw new CustomException("缺失查询参数.");
 		}

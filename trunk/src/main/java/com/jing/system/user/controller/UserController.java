@@ -20,6 +20,7 @@ import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
 import com.jing.system.user.service.UserService;
+import com.jing.system.user.uitl.UserMapper;
 import com.jing.utils.BaseController;
 
 import io.swagger.annotations.ApiOperation;
@@ -87,6 +88,20 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result get(@PathVariable("id") int id) throws CustomException {
 		return Result.getDefaultSuccMsgResult(userService.getUserById(id));
+	}
+	
+	/**
+	 * ID查询
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getByUsername", method = RequestMethod.GET)
+	public @ResponseBody Result getByUsername(@RequestParam("username") String username) throws CustomException {
+		if(UserMapper.getObj(username) != null) {
+			return Result.getDefaultSuccMsgResult(UserMapper.getObj(username));
+		}else {
+			return Result.getWaringMsgResult("用户不存在.");
+		}
 	}
 
 	/**

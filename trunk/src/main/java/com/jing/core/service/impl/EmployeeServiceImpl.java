@@ -1,24 +1,23 @@
 package com.jing.core.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.dao.EmployeeMapper;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployeeService;
-import com.jing.utils.Constant;
-import com.jing.utils.paginator.domain.PageBounds;
-import com.jing.utils.paginator.domain.PageList;
-import com.jing.utils.paginator.domain.PageService;
+import com.jing.system.user.entity.User;
+import com.jing.system.user.service.UserService;
+import com.jing.utils.PrimaryKey;
 
 /**
  * @ClassName: Employee
@@ -28,128 +27,109 @@ import com.jing.utils.paginator.domain.PageService;
  * @date: 2018年01月11日 15时02分
  */
 @Service("employeeService")
-@Transactional(readOnly=true)
-public class  EmployeeServiceImpl implements EmployeeService {	
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
-	
+@Transactional(readOnly = true)
+public class EmployeeServiceImpl implements EmployeeService {
+
+	@Resource
+	private EmployeeMapper employeeMapper;
 	@Autowired
-    private EmployeeMapper employeeMapper;   
-    
-	@Autowired
-	private PageService pageService; // 分页器
-	
-	
+	private UserService userService;
+
 	/**
-	 * @Title: addEmployee
-	 * @Description:添加员工
-	 * @param employee 实体
-	 * @return Integer
+	 * 添加 员工
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Employee addEmployee(Employee employee){
-		employee.setEmpId(UUID.randomUUID().toString().replaceAll("-", "").toUpperCase());
-		int ret = employeeMapper.addEmployee(employee);
-		if(ret>0){
-			return employee;
-		}
-		return null;
+	public void addEmployee(Employee employee) {
+		employee.setEmpId(PrimaryKey.getUUID());
+		employeeMapper.addEmployee(employee);
 	}
-	
+
 	/**
-	 * @Title modifyEmployee
-	 * @Description:修改员工
-	 * @param employee 实体
-	 * @return Integer
+	 * 修改 员工
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyEmployee(Employee employee){
-		return employeeMapper.modifyEmployee(employee);
+	public void updateEmployee(Employee employee) {
+		employeeMapper.updateEmployee(employee);
 	}
-	
+
 	/**
-	 * @Title: dropEmployeeByEmpId
-	 * @Description:删除员工
-	 * @param empId 实体标识
-	 * @return Integer
+	 * 根据ID删除记录
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropEmployeeByEmpId(String empId){
-		return employeeMapper.dropEmployeeByEmpId(empId);
+	public void deleteEmployeeById(String id) {
+		employeeMapper.deleteEmployeeById(id);
 	}
-	
+
 	/**
-	 * @Title: queryEmployeeByEmpId
-	 * @Description:根据实体标识查询员工
-	 * @param empId 实体标识
-	 * @return Employee
+	 * 根据ID查询记录
 	 */
 	@Override
-	public Employee queryEmployeeByEmpId(String empId){
-		return employeeMapper.queryEmployeeByEmpId(empId);
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-	 
-	/**
-	 * @Title: queryEmployeeForPage
-	 * @Description: 根据员工属性与分页信息分页查询员工信息
-	 * @param pagenum 页 
-	 * @param pagesize 页大小 
-	 * @param sort 排序
-	 * @param employee 实体
-	 * @return List<Employee>
-	 */
-	@Override
-	public Map<String, Object> queryEmployeeForPage(Integer pagenum, Integer pagesize, String sort, Employee employee){
-		HashMap<String, Object> returnMap = new HashMap<String, Object>();
-		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, Employee.class);
-		List<Employee> entityList = employeeMapper.queryEmployeeForPage(pageBounds, employee);
-		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, Employee.class);
-		}
-		if (!entityList.isEmpty()) {
-			PageList<Employee> pagelist = (PageList<Employee>) entityList;
-			returnMap.put(Constant.PAGELIST, entityList);
-			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
-		return returnMap;
+	public Employee getEmployeeById(String id) {
+		return employeeMapper.getEmployeeById(id);
 	}
-	 
+
 	/**
-	 * @Title: queryEmployeeByProperty
-	 * @Description:根据属性查询员工
-	 * @return List<Employee>
+	 * 分页查询
 	 */
 	@Override
-	public List<Employee> queryEmployeeByProperty(Map<String, Object> map){
-		return employeeMapper.queryEmployeeByProperty(map);
+	public PageInfo findEmployeeListPage(PageInfo page, Map<String, Object> param) {
+		return page.setRows(employeeMapper.findEmployeeListPage(page, param));
+	}
+
+	/**
+	 * 根据属性查询员工
+	 * 
+	 * @param param
+	 * @return
+	 */
+	@Override
+	public List<Employee> findEmployeeList(Map<String, Object> param) {
+		return employeeMapper.findEmployeeList(param);
 	}
 
 	@Override
 	public List<Employee> queryEmployeeByEmpIds(String empIds) {
-		if(empIds==null || empIds.length()==0){
+		if (empIds == null || empIds.length() == 0) {
 			return new ArrayList<Employee>();
 		}
 		empIds = empIds.replaceAll("，", ",");
 		String[] temp = empIds.split(",");
 		List<String> query = new ArrayList<String>();
-		for(int i=0; i<temp.length; i++){
-			if(temp[i]!=null && temp[i].trim().length()>0){
+		for (int i = 0; i < temp.length; i++) {
+			if (temp[i] != null && temp[i].trim().length() > 0) {
 				query.add(temp[i]);
 			}
 		}
-		if(query.size()==0){
+		if (query.size() == 0) {
 			return new ArrayList<Employee>();
 		}
 		return employeeMapper.queryEmployeeByEmpIds(query);
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public void toUser(String empId, String username) {
+		Employee employee = this.getEmployeeById(empId);
+		if(employee ==null) {
+			throw new CustomException("员工信息不存在.");
+		}else if(employee.getUserId() !=null) {
+			throw new CustomException("该员工已同步用户.");
+		}
+		
+		User user = new User();
+		user.setUsername(username);
+		user.setNickName(employee.getEmpName());
+		user = userService.addUser(user, employee.getDptId());
+		employee.setUserId(user.getUserId());
+		this.updateEmployee(employee);
 	}
 
 	@Override
 	public Employee queryEmployeeByEmpCard(String empCard) {
 		return employeeMapper.queryEmployeeByEmpCard(empCard);
 	}
-
 
 }

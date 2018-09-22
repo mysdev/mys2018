@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.jing.core.util.MemberLevelCache;
 import com.jing.utils.BaseEntity;
+import com.jing.utils.ChineseToPinyin;
 
 /**
  * @ClassName: Member
@@ -126,6 +127,9 @@ public class Member extends BaseEntity {
 	* @return: String
 	*/
 	public String getPinyin(){
+		if(getMemberName()!=null && pinyin ==null) {
+			return ChineseToPinyin.getPingYinHeadUpper(getMemberName());
+		}
 		return pinyin;	
 	}
 	

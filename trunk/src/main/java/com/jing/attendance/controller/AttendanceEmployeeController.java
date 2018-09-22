@@ -70,7 +70,7 @@ public class AttendanceEmployeeController{
 		int i=1;
 		List<String> empList = new ArrayList<String>();
 		for(String empId : employeeIds){
-			Employee emp = employeeService.queryEmployeeByEmpId(empId);
+			Employee emp = employeeService.getEmployeeById(empId);
 			if(emp==null){
 				Map<String, String> e0 = new HashMap<String, String>();
 				e0.put("index", ""+i);
@@ -108,7 +108,7 @@ public class AttendanceEmployeeController{
 	public Object queryAttendanceEmployeeById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@PathVariable String empId) {
-		Employee emp = employeeService.queryEmployeeByEmpId(empId);
+		Employee emp = employeeService.getEmployeeById(empId);
 		if(emp==null){
 			throw new NotFoundException("员工找不到");
 		}

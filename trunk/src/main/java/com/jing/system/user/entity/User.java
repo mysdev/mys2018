@@ -10,6 +10,7 @@ import com.jing.system.dept.util.DeptMapper;
 import com.jing.system.permission.entity.Role;
 import com.jing.system.permission.entity.UserRole;
 import com.jing.system.user.uitl.UserDeptMapper;
+import com.jing.utils.CustomizedDES;
 
 /**
  * 用户 实体类
@@ -144,7 +145,7 @@ public class User extends SecurityUserDetail {
 
 	@Override
 	public String getPassword() {
-		return password;
+		return CustomizedDES.getEncodeText(password);
 	}
 
 	@Override

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'empId', title:'员工标识', width:416, align:'center' ,hidden:true },
+				{field:'empName', title:'员工姓名', width:120, align:'center'  },
+				{field:'pinyin', title:'员工拼音', width:80, align:'center'  },
+				{field:'empNo', title:'员工工号', width:100, align:'center'  },
+				{field:'empCard', title:'员工卡号', width:100, align:'center'  },
+				{field:'userId', title:'关联帐号', width:100, align:'center' ,formatter:function(value,row,index){
+					if(row.user){
+						return row.user.username;
+					}
+				} },
+				{field:'dptId', title:'所属部门', width:100, align:'center',formatter:function(value,row,index){
+					if(row.dept){
+						return row.dept.deptName;
+					}
+				} },
+				{field:'entryDate', title:'入职时间', width:120, align:'center'  },
+				{field:'quitDate', title:'离职时间', width:120, align:'center'  },
+				{field:'status', title:'员工状态', width:120, align:'center',
+					formatter:function(value,row,index){
+						if(row.status!=null){
+							if(row.status=="1"){
+								return "异常";
+							}else{
+								return "正常";
+							}
+						}
+					}	
+				},
+				{field:'isManager', title:'是否管理', width:120, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.isManager);
+					}
+				}
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_employee', //表格容器id
+			tableKey : "empId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/core/employee/page', //列表接口
+			sortName : 'created_date',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加员工",
+			addUrl : "/pc/webpage/core/employee/employee_form.html"
+		},
+		updateOptions : {
+			title : "修改员工",
+			updateUrl : "/pc/webpage/core/employee/employee_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/core/employee/delete/'
+		},
+		viewOptions : {
+			title:'查看员工',
+			viewUrl : "/pc/webpage/core/employee/employee_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+	
+	
+	function toUser(){
+		var row = $('#grid_employee').datagrid("getSelected");
+		if (row) {
+			if(row.userId){
+				$.messager.alert('操作错误', '该员工已同步用户!', 'error');
+				return;
+			}
+			
+			var id = row.empId;
+			var pinyin = row.pinyin;
+			//判断pingyin是不是已存在帐号
+			$.ajax({
+				type : "get",
+				url : Faith.projectName+"/sys/user/getByUsername",
+				data : {username:pinyin},
+				dataType : 'json',
+				success : function(rs) {
+					if (rs.code == "1") {
+						$.messager.prompt('同步用户', pinyin+'重复，请输入新的用户帐号', function(username){
+							if (username){
+								saveUser(id,username);
+							}
+						});
+					}else{
+						saveUser(id,pinyin)
+					}
+				}
+			});
+			
+		} else {
+			$.messager.alert('操作错误', '请选择一条数据!', 'error');
+		}
+	}
+	
+	
+	function saveUser(id,username){
+		$.ajax({
+			type : "post",
+			url : Faith.projectName+"/core/employee/toUser",
+			data : {empId:id,username:username},
+			dataType : 'json',
+			success : function(rs) {
+				if (rs.code == "1") {
+					$.messager.alert('操作成功', '操作成功');
+					$('#grid_employee').datagrid('load');
+				}else{
+					$.messager.alert('操作错误', rs.message,'error');
+				}
+			}
+	});
+	}
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="empName" name="empName" class="search_input_imp" placeholder="请输入员工姓名">
+					<input id="pinyin" name="pinyin" class="search_input_imp" placeholder="请输入员工拼音">
+					<input id="empNo" name="empNo" class="search_input_imp" placeholder="请输入员工工号">
+					<input id="empCard" name="empCard" class="search_input_imp" placeholder="请输入员工卡号">
+					<input id="userId" name="userId" class="search_input_imp" placeholder="请输入关联用户">
+					<input id="dptId" name="dptId" class="search_input_imp" placeholder="请输入所属部门">
+					<input id="entryDate" name="entryDate" class="search_input_imp" placeholder="请输入入职时间">
+					<input id="quitDate" name="quitDate" class="search_input_imp" placeholder="请输入离职时间">
+					<input id="status" name="status" class="search_input_imp" placeholder="请输入员工状态 0正常">
+					<input id="isManager" name="isManager" class="search_input_imp" placeholder="请输入是否管理 0否">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_employee" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

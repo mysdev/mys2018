@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiParam;
  * <b>功能：</b>会员体系 WEB接口<br>
  * <br>
  */
+@Api("会员体系")
 @Controller
 @RequestMapping("/core/memberLevel")
 public class MemberLevelController extends BaseController{
@@ -74,7 +75,7 @@ public class MemberLevelController extends BaseController{
 	
 	@ApiOperation(value = "根据ID查询会员体系", notes = "根据ID查询会员体系")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
-	public @ResponseBody Result get(@PathVariable("id") Integer id){
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
 		if(id==null ){
 			throw new CustomException("缺失查询参数.");
 		}

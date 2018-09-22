@@ -72,7 +72,7 @@ public class TechnicianController{
 			throw new ParameterException(errors);
 		}
 		if(technician.getEmpId()!=null){
-			Employee employee = employeeService.queryEmployeeByEmpId(technician.getEmpId());
+			Employee employee = employeeService.getEmployeeById(technician.getEmpId());
 			if(employee==null){
 				throw new NotFoundException("员工");
 			}
@@ -88,7 +88,7 @@ public class TechnicianController{
 	public Object addTechnicianEmployee(HttpServletResponse response,
 			@PathVariable String empId,
 			@ApiParam(value = "technician") @RequestBody Technician technician) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		Employee employee = employeeService.queryEmployeeByEmpId(empId);
+		Employee employee = employeeService.getEmployeeById(empId);
 		if(employee==null){
 			throw new NotFoundException("员工");
 		}

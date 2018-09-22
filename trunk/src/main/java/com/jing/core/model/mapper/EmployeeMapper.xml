@@ -86,7 +86,7 @@
 </insert>
 
 <!-- 根据标识，修改 员工 -->  
-<update id="modifyEmployee" parameterType="com.jing.core.model.entity.Employee" >
+<update id="updateEmployee" parameterType="com.jing.core.model.entity.Employee" >
   	UPDATE tb_employee SET
 	<trim suffixOverrides=",">
 		<if test="empName != null"> emp_name = #{empName},</if>
@@ -108,7 +108,7 @@
 </update>
  
 <!-- 删除 员工 -->
-<delete id="dropEmployeeByEmpId" parameterType="java.lang.String">
+<delete id="deleteEmployeeById" parameterType="java.lang.String">
 	DELETE FROM tb_employee WHERE emp_id = #{empId}
 </delete> 
 
@@ -124,7 +124,7 @@
 </select>
 
 <!-- 根据标识查询 员工 -->
-<select id="queryEmployeeByEmpId"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
+<select id="getEmployeeById"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee WHERE emp_id = #{empId}
@@ -136,7 +136,7 @@
 </select>
 
 <!-- 根据属性查询员工 -->
-<select id="queryEmployeeByProperty"  resultMap="EmployeeResultMap" parameterType="java.util.Map">
+<select id="findEmployeeList"  resultMap="EmployeeResultMap" parameterType="java.util.Map">
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee 
@@ -146,7 +146,7 @@
 </select>
 
 <!-- 根据员工属性与分页信息分页查询员工信息 -->
-<select id="queryEmployeeForPage"  resultMap="EmployeeResultMap" > 
+<select id="findEmployeeListPage"  resultMap="EmployeeResultMap" > 
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee 

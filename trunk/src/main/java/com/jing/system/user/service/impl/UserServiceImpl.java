@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	public void addUser(User user){
+		user.setStatus(1);
 		userDao.addUser(user);
 		if(UserMapper.getObj(user.getUsername()) != null){
 			throw new CustomException("账号重复.");
