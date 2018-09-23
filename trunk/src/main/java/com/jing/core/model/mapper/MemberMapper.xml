@@ -2,175 +2,200 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.core.model.dao.MemberMapper">
 
-<!-- Result Map-->
-<resultMap id="MemberResultMap" type="com.jing.core.model.entity.Member">
-	<id column="member_id" property="memberId"/>
-	<result column="member_name" property="memberName"/>
-	<result column="pinyin" property="pinyin"/>
-	<result column="status" property="status"/>
-	<result column="rfm" property="rfm"/>
-	<result column="level_id" property="levelId"/>
-	<result column="member_card" property="memberCard"/>
-	<result column="member_password" property="memberPassword"/>
-	<result column="integral" property="integral"/>
-	<result column="balance" property="balance"/>
-	<result column="mobile" property="mobile"/>
-	<result column="mail" property="mail"/>
-	<result column="birthday" property="birthday"/>
-	<result column="store_id" property="storeId"/>
-	<result column="total_fee" property="totalFee"/>
-	<result column="sex" property="sex"/>
-	<result column="address" property="address"/>
-	<result column="card_type" property="cardType"/>
-	<result column="card_no" property="cardNo"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="MemberResultMap" type="com.jing.core.model.entity.Member">
+		<id column="member_id" property="memberId" />
+		<result column="member_name" property="memberName" />
+		<result column="pinyin" property="pinyin" />
+		<result column="status" property="status" />
+		<result column="rfm" property="rfm" />
+		<result column="level_id" property="levelId" />
+		<result column="member_card" property="memberCard" />
+		<result column="member_password" property="memberPassword" />
+		<result column="integral" property="integral" />
+		<result column="balance" property="balance" />
+		<result column="mobile" property="mobile" />
+		<result column="mail" property="mail" />
+		<result column="birthday" property="birthday" />
+		<result column="store_id" property="storeId" />
+		<result column="total_fee" property="totalFee" />
+		<result column="sex" property="sex" />
+		<result column="address" property="address" />
+		<result column="card_type" property="cardType" />
+		<result column="card_no" property="cardNo" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.memberId != null and param.memberId != ''">
+				and member_id = #{param.memberId}
+			</if>
+			<if test="param.memberName != null and param.memberName != ''">
+				and member_name = #{param.memberName}
+			</if>
+			<if test="param.pinyin != null and param.pinyin != ''">
+				and pinyin = #{param.pinyin}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.rfm != null and param.rfm != ''">
+				and rfm = #{param.rfm}
+			</if>
+			<if test="param.levelId != null and param.levelId != ''">
+				and level_id = #{param.levelId}
+			</if>
+			<if test="param.memberCard != null and param.memberCard != ''">
+				and member_card = #{param.memberCard}
+			</if>
+			<if test="param.memberPassword != null and param.memberPassword != ''">
+				and member_password = #{param.memberPassword}
+			</if>
+			<if test="param.integral != null and param.integral != ''">
+				and integral = #{param.integral}
+			</if>
+			<if test="param.balance != null and param.balance != ''">
+				and balance = #{param.balance}
+			</if>
+			<if test="param.mobile != null and param.mobile != ''">
+				and mobile = #{param.mobile}
+			</if>
+			<if test="param.mail != null and param.mail != ''">
+				and mail = #{param.mail}
+			</if>
+			<if test="param.birthday != null and param.birthday != ''">
+				and birthday = #{param.birthday}
+			</if>
+			<if test="param.storeId != null and param.storeId != ''">
+				and store_id = #{param.storeId}
+			</if>
+			<if test="param.totalFee != null and param.totalFee != ''">
+				and total_fee = #{param.totalFee}
+			</if>
+			<if test="param.sex != null and param.sex != ''">
+				and sex = #{param.sex}
+			</if>
+			<if test="param.address != null and param.address != ''">
+				and address = #{param.address}
+			</if>
+			<if test="param.cardType != null and param.cardType != ''">
+				and card_type = #{param.cardType}
+			</if>
+			<if test="param.cardNo != null and param.cardNo != ''">
+				and card_no = #{param.cardNo}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_member_item">
-	member_id, member_name, pinyin, status, rfm, level_id, member_card, member_password, integral, balance, mobile, mail, birthday, store_id, total_fee, sex, address, card_type, card_no, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_member_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="param.memberId != null">AND member_id like concat(#{param.memberId}, '%') </if>
-		<if test="param.memberName != null">AND member_name like concat(#{param.memberName}, '%') </if>
-		<if test="param.pinyin != null">AND pinyin like concat(#{param.pinyin}, '%') </if>
-		<if test="param.status != null">AND status = #{param.status} </if>
-		<if test="param.rfm != null">AND rfm = #{param.rfm} </if>
-		<if test="param.levelId != null">AND level_id = #{param.levelId} </if>
-		<if test="param.memberCard != null">AND member_card like concat(#{param.memberCard}, '%') </if>
-		<if test="param.memberPassword != null">AND member_password like concat(#{param.memberPassword}, '%') </if>
-		<if test="param.integral != null">AND integral = #{param.integral} </if>
-		<if test="param.mobile != null">AND mobile like concat(#{param.mobile}, '%') </if>
-		<if test="param.mail != null">AND mail like concat(#{param.mail}, '%') </if>
-		<if test="param.storeId != null">AND store_id like concat(#{param.storeId}, '%') </if>
-		<if test="param.sex != null">AND sex = #{param.sex} </if>
-		<if test="param.address != null">AND address like concat(#{param.address}, '%') </if>
-		<if test="param.cardType != null">AND card_type = #{param.cardType} </if>
-		<if test="param.cardNo != null">AND card_no like concat(#{param.cardNo}, '%') </if>
-		<if test="param.createdBy != null">AND created_by like concat(#{param.createdBy}, '%') </if>
-		<if test="param.updatedBy != null">AND updated_by like concat(#{param.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 会员 -->
-<insert id="addMember" parameterType="com.jing.core.model.entity.Member" >
- 	INSERT INTO tb_member 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="memberId != null"> member_id,</if>
-		<if test="memberName != null"> member_name,</if>
-		<if test="pinyin != null"> pinyin,</if>
-		<if test="status != null"> status,</if>
-		<if test="rfm != null"> rfm,</if>
-		<if test="levelId != null"> level_id,</if>
-		<if test="memberCard != null"> member_card,</if>
-		<if test="memberPassword != null"> member_password,</if>
-		<if test="integral != null"> integral,</if>
-		<if test="balance != null"> balance,</if>
-		<if test="mobile != null"> mobile,</if>
-		<if test="mail != null"> mail,</if>
-		<if test="birthday != null"> birthday,</if>
-		<if test="storeId != null"> store_id,</if>
-		<if test="totalFee != null"> total_fee,</if>
-		<if test="sex != null"> sex,</if>
-		<if test="address != null"> address,</if>
-		<if test="cardType != null"> card_type,</if>
-		<if test="cardNo != null"> card_no,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="memberId != null"> #{memberId},</if>
-		<if test="memberName != null"> #{memberName},</if>
-		<if test="pinyin != null"> #{pinyin},</if>
-		<if test="status != null"> #{status},</if>
-		<if test="rfm != null"> #{rfm},</if>
-		<if test="levelId != null"> #{levelId},</if>
-		<if test="memberCard != null"> #{memberCard},</if>
-		<if test="memberPassword != null"> #{memberPassword},</if>
-		<if test="integral != null"> #{integral},</if>
-		<if test="balance != null"> #{balance},</if>
-		<if test="mobile != null"> #{mobile},</if>
-		<if test="mail != null"> #{mail},</if>
-		<if test="birthday != null"> #{birthday},</if>
-		<if test="storeId != null"> #{storeId},</if>
-		<if test="totalFee != null"> #{totalFee},</if>
-		<if test="sex != null"> #{sex},</if>
-		<if test="address != null"> #{address},</if>
-		<if test="cardType != null"> #{cardType},</if>
-		<if test="cardNo != null"> #{cardNo},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 会员 -->
+	<insert id="addMember" parameterType="com.jing.core.model.entity.Member">
+		INSERT INTO tb_member (member_id ,member_name ,pinyin ,status ,rfm ,level_id ,member_card ,member_password ,integral ,balance ,mobile ,mail ,birthday ,store_id ,total_fee ,sex ,address ,card_type ,card_no ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{memberId},#{memberName},#{pinyin},#{status},#{rfm},#{levelId},#{memberCard},#{memberPassword},#{integral},#{balance},#{mobile},#{mail},#{birthday},#{storeId},#{totalFee},#{sex},#{address},#{cardType},#{cardNo},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 会员 -->  
-<update id="updateMember" parameterType="com.jing.core.model.entity.Member" >
-  	UPDATE tb_member SET
-	<trim suffixOverrides=",">
-		<if test="memberName != null"> member_name = #{memberName},</if>
-		<if test="pinyin != null"> pinyin = #{pinyin},</if>
-		<if test="status != null"> status = #{status},</if>
-		<if test="rfm != null"> rfm = #{rfm},</if>
-		<if test="levelId != null"> level_id = #{levelId},</if>
-		<if test="memberCard != null"> member_card = #{memberCard},</if>
-		<if test="memberPassword != null"> member_password = #{memberPassword},</if>
-		<if test="integral != null"> integral = #{integral},</if>
-		<if test="balance != null"> balance = #{balance},</if>
-		<if test="mobile != null"> mobile = #{mobile},</if>
-		<if test="mail != null"> mail = #{mail},</if>
-		<if test="birthday != null"> birthday = #{birthday},</if>
-		<if test="storeId != null"> store_id = #{storeId},</if>
-		<if test="totalFee != null"> total_fee = #{totalFee},</if>
-		<if test="sex != null"> sex = #{sex},</if>
-		<if test="address != null"> address = #{address},</if>
-		<if test="cardType != null"> card_type = #{cardType},</if>
-		<if test="cardNo != null"> card_no = #{cardNo},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE member_id = #{memberId}
-</update>
- 
-<!-- 删除 会员 -->
-<delete id="deleteMemberById" parameterType="java.lang.String">
-	DELETE FROM tb_member WHERE member_id = #{memberId}
-</delete> 
-
-<!-- 根据标识查询 会员 -->
-<select id="getMemberById"  resultMap="MemberResultMap" parameterType="java.lang.String">
-	SELECT 
-	<include refid="sql_member_item"/>
-	FROM tb_member WHERE member_id = #{memberId}
-</select>
-
-<!-- 根据属性查询会员 -->
-<select id="findMemberList"  resultMap="MemberResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_member_item"/>
-	FROM tb_member 
-	<where>
-		<include refid="sql_member_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据会员属性与分页信息分页查询会员信息 -->
-<select id="findMemberListPage"  resultMap="MemberResultMap" > 
-	SELECT 
-	<include refid="sql_member_item"/>
-	FROM tb_member 
-	<where>
-		<include refid="sql_member_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改会员 -->
+	<update id="updateMember" parameterType="com.jing.core.model.entity.Member">
+		UPDATE tb_member
+		<set> 
+			<if test="memberName != null" >
+				member_name = #{memberName},
+			</if>
+			<if test="pinyin != null" >
+				pinyin = #{pinyin},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="rfm != null" >
+				rfm = #{rfm},
+			</if>
+			<if test="levelId != null" >
+				level_id = #{levelId},
+			</if>
+			<if test="memberCard != null" >
+				member_card = #{memberCard},
+			</if>
+			<if test="memberPassword != null" >
+				member_password = #{memberPassword},
+			</if>
+			<if test="integral != null" >
+				integral = #{integral},
+			</if>
+			<if test="balance != null" >
+				balance = #{balance},
+			</if>
+			<if test="mobile != null" >
+				mobile = #{mobile},
+			</if>
+			<if test="mail != null" >
+				mail = #{mail},
+			</if>
+			<if test="birthday != null" >
+				birthday = #{birthday},
+			</if>
+			<if test="storeId != null" >
+				store_id = #{storeId},
+			</if>
+			<if test="totalFee != null" >
+				total_fee = #{totalFee},
+			</if>
+			<if test="sex != null" >
+				sex = #{sex},
+			</if>
+			<if test="address != null" >
+				address = #{address},
+			</if>
+			<if test="cardType != null" >
+				card_type = #{cardType},
+			</if>
+			<if test="cardNo != null" >
+				card_no = #{cardNo},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	member_id = #{memberId}
+	</update>
+	
+	<!-- 根据ID删除会员 -->
+	<delete id="deleteMemberById"  parameterType="String">
+		DELETE FROM tb_member WHERE member_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询会员 -->
+	<select id="getMemberById" resultMap="MemberResultMap" parameterType="String">
+		SELECT * FROM tb_member WHERE member_id = #{value}
+	</select>
+	
+	<select id="findMemberListPage" resultMap="MemberResultMap">
+		SELECT * FROM tb_member
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findMemberList" resultMap="MemberResultMap">
+		SELECT * FROM tb_member
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

@@ -9,33 +9,39 @@
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 <script>
 	var columns = [
-			{field:'memberId', title:'会员标识', width:416, align:'center'  },
-				{field:'memberName', title:'会员名称', width:500, align:'center'  },
-				{field:'pinyin', title:'拼音', width:416, align:'center'  },
-				{field:'status', title:'状态 0正常', width:78, align:'center'  },
-				{field:'rfm', title:'会员成长值', width:65, align:'center'  },
-				{field:'levelId', title:'会员等级', width:52, align:'center'  },
-				{field:'memberCard', title:'卡号', width:208, align:'center'  },
-				{field:'memberPassword', title:'会员密码', width:416, align:'center'  },
-				{field:'integral', title:'积分', width:26, align:'center'  },
-				{field:'balance', title:'余额', width:26, align:'center'  },
-				{field:'mobile', title:'手机号', width:208, align:'center'  },
-				{field:'mail', title:'邮箱地址', width:500, align:'center'  },
-				{field:'birthday', title:'生日', width:26, align:'center'  },
-				{field:'storeId', title:'开卡门店', width:416, align:'center'  },
-				{field:'totalFee', title:'总花费', width:39, align:'center'  },
-				{field:'sex', title:'性别 0男1女', width:91, align:'center'  },
-				{field:'address', title:'住址', width:500, align:'center'  },
-				{field:'cardType', title:'证件类型 0身份证', width:117, align:'center'  },
-				{field:'cardNo', title:'证件号码', width:416, align:'center'  },
-				{field:'createdBy', title:'创建人员', width:416, align:'center'  },
-				{field:'createdDate', title:'创建时间', width:52, align:'center'  },
-				{field:'updatedBy', title:'修订人员', width:416, align:'center'  },
-				{field:'updatedDate', title:'修订时间', width:52, align:'center'  }
-			];
+			{field:'memberId', title:'会员标识', width:416, align:'center',hidden : true  },
+				{field:'memberName', title:'会员名称', width:120, align:'center'  },
+				{field:'pinyin', title:'拼音', width:100, align:'center'  },
+				{field:'status', title:'状态 ', width:78, align:'center'  ,formatter: function(value,row,index){
+					if(row.status == 0){
+						return '正常';
+					} else if(row.status == 1){
+						return '无效';
+					}
+				}},
+				{field:'rfm', title:'会员成长值', width:80, align:'center'  },
+				{field:'levelName', title:'会员等级', width:80, align:'center'  },
+				{field:'memberCard', title:'卡号', width:120, align:'center'  },
+				{field:'integral', title:'积分', width:50, align:'center'  },
+				{field:'balance', title:'余额', width:50, align:'center'  },
+				{field:'mobile', title:'手机号', width:100, align:'center'  },
+				{field:'mail', title:'邮箱地址', width:100, align:'center'  },
+				{field:'birthday', title:'生日', width:100, align:'center'  },
+				{field:'totalFee', title:'总花费', width:80, align:'center'  },
+				{field:'sex', title:'性别', width:91, align:'center' ,
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('0001', row.sex);
+					}
+				},
+				{field:'address', title:'住址', width:120, align:'center'  },
+				{field:'cardType', title:'证件类型 ', width:117, align:'center'  },
+				{field:'cardNo', title:'证件号码', width:416, align:'center'  }
+				
+	];
 			
 	//接收 菜单id
 	var resId = Faith.getQueryStringByName("resId");//当前页面id
@@ -49,7 +55,7 @@
 			pageButtonKey:'',
 			isToolBar:true,
 			url : Faith.projectName + '/core/member/page', //列表接口
-			sortName : 'member_id',
+			sortName : 'created_date',
 			sortOrder : 'desc',
 			columns : [ columns ],//数据列
 			onDblClickRow : function(rowIndex, rowData) {
@@ -57,18 +63,18 @@
 			}
 		},
 		addOptions : {
-			title : "添加数据表",
+			title : "添加会员",
 			addUrl : "/pc/webpage/core/member/member_form.html"
 		},
 		updateOptions : {
-			title : "修改数据表",
+			title : "修改会员",
 			updateUrl : "/pc/webpage/core/member/member_form.html"
 		},
 		deleteOptions : {
 			deleteAction : Faith.projectName + '/core/member/delete/'
 		},
 		viewOptions : {
-			title:'查看数据表',
+			title:'查看会员',
 			viewUrl : "/pc/webpage/core/member/member_detail.html"
 		}
 	});

@@ -1,115 +1,90 @@
 package com.jing.core.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.core.model.entity.Room;
 import com.jing.core.service.RoomService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: RoomController
- * @Description: 房间HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
+ * <br>
+ * <b>功能：</b>房间 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="房间", tags={"CoreRoom"})
-public class RoomController{
+@Api("客房")
+@Controller
+@RequestMapping("/core/room")
+public class RoomController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private RoomService roomService;
-
 	
-	@ApiOperation(value = "新增 添加房间信息", notes = "添加房间信息")
-	@RequestMapping(value = "/room", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addRoom(HttpServletResponse response,
-			@ApiParam(value = "room") @RequestBody Room room) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(room, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		room.setRoomId(null);
+	@ApiOperation(value = "新增房间", notes = "添加房间")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(Room room,@SessionAttr(Config.USER_INFO) User user) {
+		room.setCreatedBy(user.getUserId());
+		room.setCreatedDateNow();
+		room.setUpdatedBy(user.getUserId());
+		room.setUpdatedDateNow();
 		roomService.addRoom(room);
-		return room;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据房间标识更新房间信息", notes = "根据房间标识更新房间信息")
-	@RequestMapping(value = "/room/{roomId:.+}", method = RequestMethod.PUT)
-	public Object modifyRoomById(HttpServletResponse response,
-			@PathVariable String roomId,
-			@ApiParam(value = "room", required = true) @RequestBody Room room
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(room, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改房间", notes = "修改房间")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(Room room,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(room==null || room.getRoomId()==null || "".equals(room.getRoomId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		Room tempRoom = roomService.queryRoomByRoomId(roomId);
-		room.setRoomId(roomId);
-		if(null == tempRoom){
-			throw new NotFoundException("房间");
-		}
-		return roomService.modifyRoom(room);
+		room.setUpdatedBy(user.getUserId());
+		room.setUpdatedDateNow();
+		roomService.updateRoom(room);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据房间标识删除房间信息", notes = "根据房间标识删除房间信息")
-	@RequestMapping(value = "/room/{roomId:.+}", method = RequestMethod.DELETE)
-	public Object dropRoomByRoomId(HttpServletResponse response, @PathVariable String roomId) {
-		Room room = roomService.queryRoomByRoomId(roomId);
-		if(null == room){
-			throw new NotFoundException("房间");
+	@ApiOperation(value = "删除 根据ID删除房间", notes = "根据ID删除房间")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return roomService.dropRoomByRoomId(roomId);
+		roomService.deleteRoomById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据房间标识查询房间信息", notes = "根据房间标识查询房间信息")
-	@RequestMapping(value = "/room/{roomId:.+}", method = RequestMethod.GET)
-	public Object queryRoomById(HttpServletResponse response,
-			@PathVariable String roomId) {
-		Room room = roomService.queryRoomByRoomId(roomId);
-		if(null == room){
-			throw new NotFoundException("房间");
+	@ApiOperation(value = "根据ID查询房间", notes = "根据ID查询房间")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return room;
+		return Result.getDefaultSuccMsgResult(roomService.getRoomById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据房间属性查询房间信息列表", notes = "根据房间属性查询房间信息列表")
-	@RequestMapping(value = "/room", method = RequestMethod.GET)
-	public Object queryRoomList(HttpServletResponse response,
-			Room room) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return roomService.queryRoomByProperty(ClassUtil.transBean2Map(room, false));
+		
+	@ApiOperation(value = "分页查询房间", notes = "分页查询房间")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return roomService.findRoomListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询分页 根据房间属性分页查询房间信息列表", notes = "根据房间属性分页查询房间信息列表")
-	@RequestMapping(value = "/rooms", method = RequestMethod.GET)
-	public Object queryRoomPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, Room room) {				
-		return roomService.queryRoomForPage(pagenum, pagesize, sort, room);
-	}
-
 }

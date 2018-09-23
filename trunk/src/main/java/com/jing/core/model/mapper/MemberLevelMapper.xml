@@ -2,106 +2,99 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.core.model.dao.MemberLevelMapper">
 
-<!-- Result Map-->
-<resultMap id="MemberLevelResultMap" type="com.jing.core.model.entity.MemberLevel">
-	<id column="level_id" property="levelId"/>
-	<result column="level_name" property="levelName"/>
-	<result column="level_rfm" property="levelRfm"/>
-	<result column="parent_id" property="parentId"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="MemberLevelResultMap" type="com.jing.core.model.entity.MemberLevel">
+		<id column="level_id" property="levelId" />
+		<result column="level_name" property="levelName" />
+		<result column="level_rfm" property="levelRfm" />
+		<result column="parent_id" property="parentId" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.levelId != null and param.levelId != ''">
+				and level_id = #{param.levelId}
+			</if>
+			<if test="param.levelName != null and param.levelName != ''">
+				and level_name = #{param.levelName}
+			</if>
+			<if test="param.levelRfm != null and param.levelRfm != ''">
+				and level_rfm = #{param.levelRfm}
+			</if>
+			<if test="param.parentId != null and param.parentId != ''">
+				and parent_id = #{param.parentId}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_memberLevel_item">
-	level_id, level_name, level_rfm, parent_id, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_memberLevel_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="memberLevel.levelId != null">AND level_id = #{memberLevel.levelId} </if>
-		<if test="memberLevel.levelName != null">AND level_name like concat(#{memberLevel.levelName}, '%') </if>
-		<if test="memberLevel.levelRfm != null">AND level_rfm = #{memberLevel.levelRfm} </if>
-		<if test="memberLevel.parentId != null">AND parent_id = #{memberLevel.parentId} </if>
-		<if test="memberLevel.createdBy != null">AND created_by like concat(#{memberLevel.createdBy}, '%') </if>
-		<if test="memberLevel.updatedBy != null">AND updated_by like concat(#{memberLevel.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 会员体系 -->
-<insert id="addMemberLevel" parameterType="com.jing.core.model.entity.MemberLevel" >
-	<selectKey keyProperty="levelId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO tb_member_level 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="levelId != null"> level_id,</if>
-		<if test="levelName != null"> level_name,</if>
-		<if test="levelRfm != null"> level_rfm,</if>
-		<if test="parentId != null"> parent_id,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="levelId != null"> #{levelId},</if>
-		<if test="levelName != null"> #{levelName},</if>
-		<if test="levelRfm != null"> #{levelRfm},</if>
-		<if test="parentId != null"> #{parentId},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 会员体系 -->
+	<insert id="addMemberLevel" parameterType="com.jing.core.model.entity.MemberLevel">
+		<selectKey keyProperty="levelId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tb_member_level (level_id ,level_name ,level_rfm ,parent_id ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{levelId},#{levelName},#{levelRfm},#{parentId},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 会员体系 -->  
-<update id="modifyMemberLevel" parameterType="com.jing.core.model.entity.MemberLevel" >
-  	UPDATE tb_member_level SET
-	<trim suffixOverrides=",">
-		<if test="levelName != null"> level_name = #{levelName},</if>
-		<if test="levelRfm != null"> level_rfm = #{levelRfm},</if>
-		<if test="parentId != null"> parent_id = #{parentId},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE level_id = #{levelId}
-</update>
- 
-<!-- 删除 会员体系 -->
-<delete id="dropMemberLevelByLevelId" parameterType="java.lang.Integer">
-	DELETE FROM tb_member_level WHERE level_id = #{levelId}
-</delete> 
-
-<!-- 根据标识查询 会员体系 -->
-<select id="queryMemberLevelByLevelId"  resultMap="MemberLevelResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_memberLevel_item"/>
-	FROM tb_member_level WHERE level_id = #{levelId}
-</select>
-
-<!-- 根据属性查询会员体系 -->
-<select id="queryMemberLevelByProperty"  resultMap="MemberLevelResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_memberLevel_item"/>
-	FROM tb_member_level 
-	<where>
-		<include refid="sql_memberLevel_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据会员体系属性与分页信息分页查询会员体系信息 -->
-<select id="queryMemberLevelForPage"  resultMap="MemberLevelResultMap" > 
-	SELECT 
-	<include refid="sql_memberLevel_item"/>
-	FROM tb_member_level 
-	<where>
-		<include refid="sql_memberLevel_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改会员体系 -->
+	<update id="updateMemberLevel" parameterType="com.jing.core.model.entity.MemberLevel">
+		UPDATE tb_member_level
+		<set> 
+			<if test="levelName != null" >
+				level_name = #{levelName},
+			</if>
+			<if test="levelRfm != null" >
+				level_rfm = #{levelRfm},
+			</if>
+			<if test="parentId != null" >
+				parent_id = #{parentId},
+			</if>
+		
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	level_id = #{levelId}
+	</update>
+	
+	<!-- 根据ID删除会员体系 -->
+	<delete id="deleteMemberLevelById"  parameterType="Integer">
+		DELETE FROM tb_member_level WHERE level_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询会员体系 -->
+	<select id="getMemberLevelById" resultMap="MemberLevelResultMap" parameterType="Integer">
+		SELECT * FROM tb_member_level WHERE level_id = #{value}
+	</select>
+	
+	<select id="findMemberLevelListPage" resultMap="MemberLevelResultMap">
+		SELECT * FROM tb_member_level
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findMemberLevelList" resultMap="MemberLevelResultMap">
+		SELECT * FROM tb_member_level
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

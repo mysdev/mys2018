@@ -1,6 +1,6 @@
-package ${packge}.entity;
+package ${packge}.model.entity;
 
-import com.faith.framework.core.base.BaseEntity;
+import com.jing.utils.BaseEntity;
 
 /**
  * ${comment} 实体类

@@ -67,6 +67,8 @@
 </head>
 <body>
 	<form id="form_columns" class="fromstyle">
+		<input type="hidden" id="cid" name="cid"/>
+		<input type="hidden" id="tid" name="tid"/>
 		<div class="form-group col-sm-6">
 			<label for="columnName">字段名<span style="color: red">*</span></label>
 			<input type="text" class="form-control easyui-validatebox"
@@ -79,7 +81,7 @@
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="columnComment">字段注释<span style="color: red">*</span></label>
-			<input type="text" class="form-control" id="columnComment" placeholder="请输入字段注释">
+			<input type="text" class="form-control" id="columnComment" name="columnComment" placeholder="请输入字段注释">
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="columnType">字段类型</label> <input type="text"
@@ -158,6 +160,11 @@
 			<label for="isNewLine">是否换行</label> 
 			<input class="form-control " id="isNewLine" name="isNewLine"/>
 		</div>
-
+		<div class="form-group col-sm-12 padding-4">
+			<div class="text-center">
+				<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>
+				<button type="button" data-loading-text="正在提交" class="btn btn-danger  btn_w" id="btn_save">保存</button>
+			</div>
+		</div>
 	</form>
 </body>

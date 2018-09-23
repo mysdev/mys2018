@@ -8,7 +8,9 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.jing.core.util.MemberLevelCache;
 import com.jing.utils.BaseEntity;
+import com.jing.utils.ChineseToPinyin;
 
 /**
  * @ClassName: Member
@@ -32,12 +34,13 @@ public class Member extends BaseEntity {
 	private String pinyin;	//tb_member:pinyin  拼音  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer status;	//tb_member:status  状态 0正常  
+	private Integer status=0;	//tb_member:status  状态 0正常  
 
 	private Integer rfm;	//tb_member:rfm  会员成长值  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private Integer levelId;	//tb_member:level_id  会员等级  
+	private String levelName;
 
 	@Length(min=0, max=16, message="{org.hibernate.validator.constraints.Length.message}")
 	private String memberCard;	//tb_member:member_card  卡号  
@@ -45,7 +48,7 @@ public class Member extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String memberPassword;	//tb_member:member_password  会员密码  
 
-	private Integer integral;	//tb_member:integral  积分  
+	private Integer integral=0;	//tb_member:integral  积分  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.math.BigDecimal balance;	//tb_member:balance  余额  
@@ -75,6 +78,14 @@ public class Member extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String cardNo;	//tb_member:card_no  证件号码  
 
+	
+
+	public String getLevelName() {
+		if(getLevelId() !=null) {
+			return MemberLevelCache.getName(getLevelId());
+		}
+		return levelName;
+	}
 
 	/**
 	* @DatabasetableColumnName: tb_member:member_id
@@ -116,6 +127,9 @@ public class Member extends BaseEntity {
 	* @return: String
 	*/
 	public String getPinyin(){
+		if(getMemberName()!=null && pinyin ==null) {
+			return ChineseToPinyin.getPingYinHeadUpper(getMemberName());
+		}
 		return pinyin;	
 	}
 	

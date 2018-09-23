@@ -28,6 +28,24 @@
 
 	$(function() {
 		Faith.initCombobox('sex', '0001');
+		
+		$('#cardType').combobox({
+			data : [{code:"0",value:"身份证"},{code:"1",value:"其他"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
+			height : 34
+		});
+		
+		Faith.initComboboxUrl({
+			id : 'levelId',
+			url : '/core/memberLevel/all',
+			valueField : 'levelId',
+			textField : 'levelName',
+			height : 34
+		});
+		
 		//提交按钮点击
 		Faith.doSave(options);
 		//如果是修改  则填充数据
@@ -45,25 +63,14 @@
 </head>
 <body>
 	<form id="form_member" class="fromstyle">
-		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">会员标识<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="memberId" name="memberId"  placeholder="请输入会员标识">
-	  	</div>
+		<input type="hidden" name ="memberId" id="memberId">
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">会员名称<span style="color:red">*</span></label>
 	  	 	<input type="text" class="form-control"  id="memberName" name="memberName"  placeholder="请输入会员名称">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">拼音</label>
-	  	 	<input type="text" class="form-control"  id="pinyin" name="pinyin"  placeholder="请输入拼音">
-	  	</div>
-		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">会员成长值</label>
-	  	 	<input type="text" class="form-control"  id="rfm" name="rfm"  placeholder="请输入会员成长值">
-	  	</div>
-		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">会员等级<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="levelId" name="levelId"  placeholder="请输入会员等级">
+	  	 	<label for="tableName">手机号<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="mobile" name="mobile"  placeholder="请输入手机号">
 	  	</div>
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">卡号</label>
@@ -74,16 +81,16 @@
 	  	 	<input type="text" class="form-control"  id="memberPassword" name="memberPassword"  placeholder="请输入会员密码">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">积分</label>
-	  	 	<input type="text" class="form-control"  id="integral" name="integral"  placeholder="请输入积分">
+	  	 	<label for="tableName">会员等级<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="levelId" name="levelId"  placeholder="请输入会员等级">
 	  	</div>
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">余额<span style="color:red">*</span></label>
 	  	 	<input type="text" class="form-control"  id="balance" name="balance"  placeholder="请输入余额">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手机号<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="mobile" name="mobile"  placeholder="请输入手机号">
+	  	 	<label for="tableName">会员成长值</label>
+	  	 	<input type="text" class="form-control"  id="rfm" name="rfm"  placeholder="请输入会员成长值">
 	  	</div>
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">邮箱地址</label>
@@ -91,14 +98,10 @@
 	  	</div>
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">出生年月日</label>
-	  	 	<input type="text" class="form-control easyui-datebox"  id="birthday" name="birthday"  placeholder="请输入生日" onfocus="WdatePicker({maxDate:'%y-%M-%d'})">
+	  	 	<input type="text" class="form-control easyui-datebox"  id="birthday" name="birthday"  placeholder="出生年月日" data-options="height:'34',width:'100%'">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">总花费</label>
-	  	 	<input type="text" class="form-control"  id="totalFee" name="totalFee"  placeholder="请输入总花费">
-	  	</div>
-		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">性别 0男1女</label>
+	  	 	<label for="tableName">性别</label>
 	  	 	<input type="text" class="form-control"  id="sex" name="sex"  placeholder="请输入性别 0男1女">
 	  	</div>
 		<div class="form-group col-sm-6">
@@ -106,7 +109,7 @@
 	  	 	<input type="text" class="form-control"  id="address" name="address"  placeholder="请输入住址">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">证件类型 0身份证</label>
+	  	 	<label for="tableName">证件类型 </label>
 	  	 	<input type="text" class="form-control"  id="cardType" name="cardType"  placeholder="请输入证件类型 0身份证">
 	  	</div>
 		<div class="form-group col-sm-6">

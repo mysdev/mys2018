@@ -4,7 +4,7 @@
 
 <head>
 <meta charset="utf-8" />
-<title>单位详情</title>
+<title>会员详情</title>
 <link rel="stylesheet" type="text/css" href="../../../../resources/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="../../../../resources/css/public_style.css" />
 <link href="../../../../resources/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
@@ -22,7 +22,7 @@
 	function initData(id) {
 		$.get(Faith.projectName + "/base/unit/index/" + id, {}, function(rs) {
 			if (rs.code == 1) { 
-				Faith.setTableData("maintable", rs.data); 
+				Faith.setTableData("detail_member", rs.data); 
  				if(rs.data.point&&rs.data.point!=""){
  					Faith.addMarker(rs.data.point);
  				}

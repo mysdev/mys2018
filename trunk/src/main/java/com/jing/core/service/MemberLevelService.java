@@ -3,66 +3,41 @@ package com.jing.core.service;
 import java.util.List;
 import java.util.Map;
 
-
+import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.entity.MemberLevel;
 
-/**
- * @ClassName: MemberLevel
- * @Description: 会员体系服务接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时02分
- */
 public interface MemberLevelService {
 
-    /**
-	 * @Title: addMemberLevel
-	 * @Description:添加会员体系
-	 * @param memberLevel 实体
-	 * @return Integer
-	 */
-	MemberLevel addMemberLevel(MemberLevel memberLevel);
-	
 	/**
-	 * @Title modifyMemberLevel
-	 * @Description:修改会员体系
-	 * @param memberLevel 实体
-	 * @return Integer
+	 * 添加 会员体系
 	 */
-	Integer modifyMemberLevel(MemberLevel memberLevel);
-	
+	void addMemberLevel(MemberLevel memberLevel);
+
 	/**
-	 * @Title: dropMemberLevelByLevelId
-	 * @Description:删除会员体系
-	 * @param levelId 实体标识
-	 * @return Integer
+	 * 修改 会员体系
 	 */
-	Integer dropMemberLevelByLevelId(Integer levelId);
-	
+	void updateMemberLevel(MemberLevel memberLevel);
+
 	/**
-	 * @Title: queryMemberLevelByLevelId
-	 * @Description:根据实体标识查询会员体系
-	 * @param levelId 实体标识
-	 * @return MemberLevel
+	 * 根据ID删除记录
 	 */
-	MemberLevel queryMemberLevelByLevelId(Integer levelId);
-	 
+	void deleteMemberLevelById(Integer id);
+
 	/**
-	 * @Title: queryMemberLevelForPage
-	 * @Description: 根据会员体系属性与分页信息分页查询会员体系信息
-	 * @param pagenum 页 
-	 * @param pagesize 页大小 
-	 * @param sort 排序
-	 * @param memberLevel 实体
-	 * @return List<MemberLevel>
+	 * 根据ID查询记录
 	 */
-	Map<String, Object> queryMemberLevelForPage(Integer pagenum, Integer pagesize, String sort, MemberLevel memberLevel);
-	 
-	 /**
-	 * @Title: queryMemberLevelByProperty
-	 * @Description:根据属性查询会员体系
-	 * @return List<MemberLevel>
+	MemberLevel getMemberLevelById(Integer id);
+
+	/**
+	 * 分页查询
 	 */
-	 List<MemberLevel> queryMemberLevelByProperty(Map<String, Object> map);	 
-	 
+	PageInfo findMemberLevelListPage(PageInfo page, Map<String, Object> param);
+
+	/**
+	 * 根据属性查询会员体系
+	 * 
+	 * @param param
+	 * @return
+	 */
+	List<MemberLevel> findMemberLevelList(Map<String, Object> param);
 }

@@ -7,7 +7,12 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.jing.system.dept.entity.Dept;
+import com.jing.system.dept.util.DeptMapper;
+import com.jing.system.user.entity.User;
+import com.jing.system.user.uitl.UserMapper;
 import com.jing.utils.BaseEntity;
+import com.jing.utils.ChineseToPinyin;
 
 /**
  * @ClassName: Employee
@@ -35,20 +40,31 @@ public class Employee extends BaseEntity {
 	private String empNo;	//tb_employee:emp_no  员工工号  
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private Integer userId;	//tb_employee:user_id  关联用户  
+	private Integer userId;	//tb_employee:user_id  关联用户
+	private User user;
+	public User getUser() {
+		if(getUserId()!=null) {
+			return UserMapper.getObj(getUserId());
+		}
+		return user;
+	}
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String storeId;	//tb_employee:store_id  所属门店  
-
-	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String dptId;	//tb_employee:dpt_id  所属部门  
+	private Integer dptId;	//tb_employee:dpt_id  所属部门  '
+	private Dept dept;
+	public Dept getDept() {
+		if(dptId != null) {
+			return DeptMapper.getObj(dptId);
+		}
+		return dept;
+	}
 
 	private Date entryDate;	//tb_employee:entry_date  入职时间  
 
 	private Date quitDate;	//tb_employee:quit_date  离职时间  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer status;	//tb_employee:status  员工状态 0正常  
+	private Integer status=0;	//tb_employee:status  员工状态 0正常  
 
 	private Integer isManager;	//tb_employee:is_manager  是否管理 0否  
 	
@@ -98,6 +114,9 @@ public class Employee extends BaseEntity {
 	* @return: String
 	*/
 	public String getPinyin(){
+		if(getEmpName()!=null && pinyin ==null) {
+			return ChineseToPinyin.getPingYin(getEmpName(), "LOWERCASE");
+		}
 		return pinyin;	
 	}
 	
@@ -144,28 +163,11 @@ public class Employee extends BaseEntity {
 		this.userId = userId;	
 	}	
 	/**
-	* @DatabasetableColumnName: tb_employee:store_id
-	* @Description: 获取属性        所属门店
-	* @return: String
-	*/
-	public String getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: tb_employee:store_id
-	* @Description: 设置属性        所属门店
-	* @return: String
-	*/
-	public void setStoreId(String storeId){
-		this.storeId = storeId;	
-	}	
-	/**
 	* @DatabasetableColumnName: tb_employee:dpt_id
 	* @Description: 获取属性        所属部门
 	* @return: String
 	*/
-	public String getDptId(){
+	public Integer getDptId(){
 		return dptId;	
 	}
 	
@@ -174,7 +176,7 @@ public class Employee extends BaseEntity {
 	* @Description: 设置属性        所属部门
 	* @return: String
 	*/
-	public void setDptId(String dptId){
+	public void setDptId(Integer dptId){
 		this.dptId = dptId;	
 	}	
 	/**

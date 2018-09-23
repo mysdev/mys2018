@@ -3,7 +3,7 @@ package com.jing.core.service;
 import java.util.List;
 import java.util.Map;
 
-
+import com.jing.config.web.page.PageInfo;
 import com.jing.core.model.entity.Employee;
 
 /**
@@ -15,72 +15,56 @@ import com.jing.core.model.entity.Employee;
  */
 public interface EmployeeService {
 
-    /**
-	 * @Title: addEmployee
-	 * @Description:添加员工
-	 * @param employee 实体
-	 * @return Integer
-	 */
-	Employee addEmployee(Employee employee);
-	
 	/**
-	 * @Title modifyEmployee
-	 * @Description:修改员工
-	 * @param employee 实体
-	 * @return Integer
+	 * 添加 员工
 	 */
-	Integer modifyEmployee(Employee employee);
-	
+	void addEmployee(Employee employee);
+
 	/**
-	 * @Title: dropEmployeeByEmpId
-	 * @Description:删除员工
-	 * @param empId 实体标识
-	 * @return Integer
+	 * 修改 员工
 	 */
-	Integer dropEmployeeByEmpId(String empId);
-	
+	void updateEmployee(Employee employee);
+
 	/**
-	 * @Title: queryEmployeeByEmpId
-	 * @Description:根据实体标识查询员工
-	 * @param empId 实体标识
-	 * @return Employee
+	 * 根据ID删除记录
 	 */
-	Employee queryEmployeeByEmpId(String empId);
-	
-	/** 
-	* @Title: queryEmployeeByEmpCard 
-	* @Description: 根据实体标识查询员工
-	* @param empCard 用户卡号
-	* @return  Employee    返回类型 
-	* @throws 
-	*/
+	void deleteEmployeeById(String id);
+
+	/**
+	 * 根据ID查询记录
+	 */
+	Employee getEmployeeById(String id);
+
+	/**
+	 * 分页查询
+	 */
+	PageInfo findEmployeeListPage(PageInfo page, Map<String, Object> param);
+
+	/**
+	 * 根据属性查询员工
+	 * 
+	 * @param param
+	 * @return
+	 */
+	List<Employee> findEmployeeList(Map<String, Object> param);
+
+	/**
+	 * @Title: queryEmployeeByEmpCard @Description: 根据实体标识查询员工 @param empCard
+	 * 用户卡号 @return Employee 返回类型 @throws
+	 */
 	Employee queryEmployeeByEmpCard(String empCard);
-	 
+
 	/**
-	 * @Title: queryEmployeeForPage
-	 * @Description: 根据员工属性与分页信息分页查询员工信息
-	 * @param pagenum 页 
-	 * @param pagesize 页大小 
-	 * @param sort 排序
-	 * @param employee 实体
-	 * @return List<Employee>
+	 * @Title: queryEmployeeByEmpIds @Description: 根据员工标识查询员工信息 @param empIds
+	 * 员工标识,多个员工号之间以逗号分隔 @return List<Employee> 返回类型 @throws
 	 */
-	Map<String, Object> queryEmployeeForPage(Integer pagenum, Integer pagesize, String sort, Employee employee);
-	 
-	 /**
-	 * @Title: queryEmployeeByProperty
-	 * @Description:根据属性查询员工
-	 * @return List<Employee>
-	 */
-	 List<Employee> queryEmployeeByProperty(Map<String, Object> map);	
-	 
-	 /** 
-	* @Title: queryEmployeeByEmpIds 
-	* @Description: 根据员工标识查询员工信息
-	* @param empIds 员工标识,多个员工号之间以逗号分隔
-	* @return  List<Employee>    返回类型 
-	* @throws 
-	*/
 	List<Employee> queryEmployeeByEmpIds(String empIds);
-	 
+	
+	/**
+	 * 员工同步用户 
+	 * @param empId
+	 * @param username
+	 */
+	void toUser(String empId,String username);
+
 }

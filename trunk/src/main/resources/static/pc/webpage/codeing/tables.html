@@ -108,7 +108,7 @@ function loadTable(){
 				success : function(rs) {
 					if (rs.code == "1") {
 						$.messager.alert('操作成功', '操作成功');
-						$('#grid_' + tablename).datagrid('load');
+						$('#grid_tables').datagrid('load');
 					}else{
 						$.messager.alert('错误', rs.message,'error');
 					}

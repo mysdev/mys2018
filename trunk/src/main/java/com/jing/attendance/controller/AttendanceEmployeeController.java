@@ -70,7 +70,7 @@ public class AttendanceEmployeeController{
 		int i=1;
 		List<String> empList = new ArrayList<String>();
 		for(String empId : employeeIds){
-			Employee emp = employeeService.queryEmployeeByEmpId(empId);
+			Employee emp = employeeService.getEmployeeById(empId);
 			if(emp==null){
 				Map<String, String> e0 = new HashMap<String, String>();
 				e0.put("index", ""+i);

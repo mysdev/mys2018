@@ -9,7 +9,6 @@
 	<result column="pinyin" property="pinyin"/>
 	<result column="emp_no" property="empNo"/>
 	<result column="user_id" property="userId"/>
-	<result column="store_id" property="storeId"/>
 	<result column="dpt_id" property="dptId"/>
 	<result column="entry_date" property="entryDate"/>
 	<result column="quit_date" property="quitDate"/>
@@ -23,7 +22,7 @@
 </resultMap>
 
 <sql id="sql_employee_item">
-	emp_id, emp_name, pinyin, emp_no, emp_card, user_id, store_id, dpt_id, entry_date, quit_date, status, is_manager, created_by, created_date, updated_by, updated_date
+	emp_id, emp_name, pinyin, emp_no, emp_card, user_id, dpt_id, entry_date, quit_date, status, is_manager, created_by, created_date, updated_by, updated_date
 </sql>
        
 <!-- 查询条件 无WHERE -->
@@ -35,7 +34,6 @@
 		<if test="employee.empNo != null">AND emp_no like concat(#{employee.empNo}, '%') </if>
 		<if test="employee.empCard != null">AND emp_card like concat(#{employee.empCard}, '%') </if>
 		<if test="employee.userId != null">AND user_id = #{employee.userId} </if>
-		<if test="employee.storeId != null">AND store_id = #{employee.storeId} </if>
 		<if test="employee.dptId != null">AND dpt_id = #{employee.dptId} </if>
 		<if test="employee.status != null">AND status = #{employee.status} </if>
 		<if test="employee.isManager != null">AND is_manager = #{employee.isManager} </if>
@@ -54,7 +52,6 @@
 		<if test="empNo != null"> emp_no,</if>
 		<if test="empCard != null"> emp_card,</if>
 		<if test="userId != null"> user_id,</if>
-		<if test="storeId != null"> store_id,</if>
 		<if test="dptId != null"> dpt_id,</if>
 		<if test="entryDate != null"> entry_date,</if>
 		<if test="quitDate != null"> quit_date,</if>
@@ -72,7 +69,6 @@
 		<if test="empNo != null"> #{empNo},</if>
 		<if test="empCard != null"> #{empCard},</if>
 		<if test="userId != null"> #{userId},</if>
-		<if test="storeId != null"> #{storeId},</if>
 		<if test="dptId != null"> #{dptId},</if>
 		<if test="entryDate != null"> #{entryDate},</if>
 		<if test="quitDate != null"> #{quitDate},</if>
@@ -86,7 +82,7 @@
 </insert>
 
 <!-- 根据标识，修改 员工 -->  
-<update id="modifyEmployee" parameterType="com.jing.core.model.entity.Employee" >
+<update id="updateEmployee" parameterType="com.jing.core.model.entity.Employee" >
   	UPDATE tb_employee SET
 	<trim suffixOverrides=",">
 		<if test="empName != null"> emp_name = #{empName},</if>
@@ -94,7 +90,6 @@
 		<if test="empNo != null"> emp_no = #{empNo},</if>
 		<if test="empCard != null"> emp_card = #{empCard},</if>
 		<if test="userId != null"> user_id = #{userId},</if>
-		<if test="storeId != null"> store_id = #{storeId},</if>
 		<if test="dptId != null"> dpt_id = #{dptId},</if>
 		<if test="entryDate != null"> entry_date = #{entryDate},</if>
 		<if test="quitDate != null"> quit_date = #{quitDate},</if>
@@ -108,7 +103,7 @@
 </update>
  
 <!-- 删除 员工 -->
-<delete id="dropEmployeeByEmpId" parameterType="java.lang.String">
+<delete id="deleteEmployeeById" parameterType="java.lang.String">
 	DELETE FROM tb_employee WHERE emp_id = #{empId}
 </delete> 
 
@@ -124,7 +119,7 @@
 </select>
 
 <!-- 根据标识查询 员工 -->
-<select id="queryEmployeeByEmpId"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
+<select id="getEmployeeById"  resultMap="EmployeeResultMap" parameterType="java.lang.String">
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee WHERE emp_id = #{empId}
@@ -136,7 +131,7 @@
 </select>
 
 <!-- 根据属性查询员工 -->
-<select id="queryEmployeeByProperty"  resultMap="EmployeeResultMap" parameterType="java.util.Map">
+<select id="findEmployeeList"  resultMap="EmployeeResultMap" parameterType="java.util.Map">
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee 
@@ -146,7 +141,7 @@
 </select>
 
 <!-- 根据员工属性与分页信息分页查询员工信息 -->
-<select id="queryEmployeeForPage"  resultMap="EmployeeResultMap" > 
+<select id="findEmployeeListPage"  resultMap="EmployeeResultMap" > 
 	SELECT 
 	<include refid="sql_employee_item"/>
 	FROM tb_employee 

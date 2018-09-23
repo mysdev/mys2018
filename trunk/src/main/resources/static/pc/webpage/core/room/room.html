@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'roomId', title:'房间标识', hidden:true },
+				{field:'types', title:'房间类型', width:52, align:'center'  },
+				{field:'area', title:'归属区域', width:104, align:'center'  },
+				{field:'roomNo', title:'房间编号', width:104, align:'center'  },
+				{field:'roomName', title:'房间名称', width:180, align:'center'  },
+				{field:'status', title:'状态', width:80, align:'center'  },
+				{field:'roomStatus', title:'自身状态', width:52, align:'center'  },
+				{field:'chair', title:'椅子数量', width:52, align:'center'  },
+				{field:'bed', title:'床数量', width:39, align:'center'  },
+				{field:'mark', title:'标记', width:120, align:'center'  },
+				{field:'phone', title:'房间分机', width:108, align:'center'  },
+				{field:'isConsumption', title:'是否包含基础消费', width:104, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.isConsumption);
+					}	
+				},
+				{field:'commodity', title:'商品id', width:100, align:'center'  }
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_room', //表格容器id
+			tableKey : "roomId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/core/room/page', //列表接口
+			sortName : 'room_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加房间",
+			addUrl : "/pc/webpage/core/room/room_form.html"
+		},
+		updateOptions : {
+			title : "修改房间",
+			updateUrl : "/pc/webpage/core/room/room_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/core/room/delete/'
+		},
+		viewOptions : {
+			title:'查看房间',
+			viewUrl : "/pc/webpage/core/room/room_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+		
+		Faith.initCombobox('isConsumption', '1001',28);//是否
+	});	
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search" class="search wrap_border">
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="types" name="types" class="search_input_imp" placeholder="请输入房间类型">
+					<input id="area" name="area" class="search_input_imp" placeholder="请输入归属区域">
+					<input id="roomNo" name="roomNo" class="search_input_imp" placeholder="请输入房间编号">
+					<input id="roomName" name="roomName" class="search_input_imp" placeholder="请输入房间名称">
+					<input id="status" name="status" class="search_input_imp" placeholder="请输入状态 0正常">
+					<input id="roomStatus" name="roomStatus" class="search_input_imp" placeholder="请输入自身状态">
+					<input id="bed" name="bed" class="search_input_imp" placeholder="请输入床数量">
+					<input id="mark" name="mark" class="search_input_imp" placeholder="请输入标记">
+					<input id="phone" name="phone" class="search_input_imp" placeholder="请输入房间分机">
+					<div>
+						<input id="isConsumption" name="isConsumption" label="是否包含基础消费" labelWidth="80">
+					</div>
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_room" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

@@ -90,9 +90,9 @@ public class UserMapper implements CacheObserver {
 
 	}
 
-	public static User getObj(String userName) {
-		if (unmapper.get(userName) != null) {
-			return objMapper.get(unmapper.get(userName));
+	public static User getObj(String username) {
+		if (unmapper.get(username) != null) {
+			return objMapper.get(unmapper.get(username));
 		} else {
 			return null;
 		}

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${packge}.dao.${className}Dao">
+<mapper namespace="${packge}.model.dao.${className}Mapper">
 
 	<!-- Result Map -->
-	<resultMap id="${className}ResultMap" type="${packge}.entity.${className}">
+	<resultMap id="${className}ResultMap" type="${packge}.model.entity.${className}">
 #foreach( $col in $!{columns} ) 
 #if($!col.cid == $!primaryKey.cid)
 		<id column="${col.columnName}" property="${col.filedName}" />
@@ -24,7 +24,7 @@
 	</sql>
 
 	<!-- 添加 ${comment} -->
-	<insert id="add${className}" parameterType="${packge}.entity.${className}">
+	<insert id="add${className}" parameterType="${packge}.model.entity.${className}">
 #if($!primaryKey.filedType == "Integer")
 		<selectKey keyProperty="${primaryKey.filedName}" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
@@ -37,12 +37,12 @@
 	</insert>
 
 	<!-- 修改${comment} -->
-	<update id="update${className}" parameterType="${packge}.entity.${className}">
+	<update id="update${className}" parameterType="${packge}.model.entity.${className}">
 		UPDATE ${tableName}
 		<set> 
 #foreach( $col in $!{columns} )
 #if(${col.filedName} != ${primaryKey.filedName})
-			<if test="${col.columnName} != null" >
+			<if test="${col.filedName} != null" >
 				${col.columnName} = #{${col.filedName}},
 			</if>
 #end

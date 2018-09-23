@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
+
+	var options = {
+		formid : "form_employee",
+		tableKey : "empId",
+		addAction : Faith.projectName + "/core/employee/add",
+		updateAction : Faith.projectName + "/core/employee/update",
+		viewAction : Faith.projectName + "/core/employee/index/" + pkVal,
+		pkVal : pkVal,
+		saveButtonId : 'btn_save',
+		cancelButtonId : 'btn_cancel'
+	};
+
+	$(function() {
+		Faith.initCombobox('isManager', '1001');
+		Faith.initSelectDept('dptId', {
+			required : false,
+			multiple : true,
+			cascadeCheck : false,
+			isLeafOnly:false,
+			height : 28
+		});
+		
+		//提交按钮点击
+		Faith.doSave(options);
+		//如果是修改  则填充数据
+		if (pkVal != null && pkVal != "") {
+			$.get(options.viewAction, {}, function(rs) {
+				if (rs.code == 1) {
+					Faith.setFormData(options.formid, rs.data);
+				} else {
+					$.messager.alert("提示", rs.message);
+				}
+			}, 'json');
+		}
+	});
+</script>
+</head>
+<body>
+	<form id="form_employee" class="fromstyle">
+  	 	<input type="hidden" id="empId" name="empId" />
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">员工姓名<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="empName" name="empName"  placeholder="请输入员工姓名">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">员工拼音<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="pinyin" name="pinyin"  placeholder="请输入员工拼音">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">员工工号</label>
+	  	 	<input type="text" class="form-control"  id="empNo" name="empNo"  placeholder="请输入员工工号">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">员工卡号</label>
+	  	 	<input type="text" class="form-control"  id="empCard" name="empCard"  placeholder="请输入员工卡号">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">关联用户</label>
+	  	 	<input type="text" class="form-control"  id="userId" name="userId"  placeholder="请输入关联用户">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">所属门店</label>
+	  	 	<input type="text" class="form-control"  id="storeId" name="storeId"  placeholder="请输入所属门店">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">所属部门</label>
+	  	 	<input type="text" class="form-control"  id="dptId" name="dptId"  placeholder="请输入所属部门">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">入职时间</label>
+	  	 	<input type="text" class="form-control easyui-datebox"  id="entryDate" name="entryDate"  placeholder="请输入入职时间" data-options="height:'34',width:'100%'" />
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">是否管理</label>
+	  	 	<input type="text" class="form-control"  id="isManager" name="isManager"  placeholder="请输入是否管理 0否">
+	  	</div>
+		<div class="form-group col-sm-12 padding-4">
+			<div class="text-center">
+				<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>
+				<button type="button" data-loading-text="正在提交" class="btn btn-danger  btn_w" id="btn_save">保存</button>
+			</div>
+		</div>	
+	</form>
+</body>

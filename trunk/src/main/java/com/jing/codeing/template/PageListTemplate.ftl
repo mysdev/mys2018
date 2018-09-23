@@ -2,14 +2,14 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/public_style.css" />
-<link rel="stylesheet" type="text/css" href="../../resources/js/easyui/easyui_add.css" /> 
-<link href="../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../../resources/js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="../../resources/js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="../../resources/js/Faith.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 <script>
 	var columns = [
 #foreach( $col in $!{columns} ) 
@@ -40,18 +40,18 @@
 			}
 		},
 		addOptions : {
-			title : "添加数据表",
+			title : "添加${comment}",
 			addUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		updateOptions : {
-			title : "修改数据表",
+			title : "修改${comment}",
 			updateUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
 		},
 		deleteOptions : {
 			deleteAction : Faith.projectName + '/${model}/${lowerName}/delete/'
 		},
 		viewOptions : {
-			title:'查看数据表',
+			title:'查看${comment}',
 			viewUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_detail.html"
 		}
 	});
