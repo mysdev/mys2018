@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.StrapMapper">
+
+	<!-- Result Map -->
+	<resultMap id="StrapResultMap" type="com.jing.core.model.entity.Strap">
+		<id column="strap_id" property="strapId" />
+		<result column="strap_serial" property="strapSerial" />
+		<result column="strap_no" property="strapNo" />
+		<result column="types" property="types" />
+		<result column="status" property="status" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.strapId != null and param.strapId != ''">
+				and strap_id = #{param.strapId}
+			</if>
+			<if test="param.strapSerial != null and param.strapSerial != ''">
+				and strap_serial = #{param.strapSerial}
+			</if>
+			<if test="param.strapNo != null and param.strapNo != ''">
+				and strap_no = #{param.strapNo}
+			</if>
+			<if test="param.types != null and param.types != ''">
+				and types = #{param.types}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 手牌 -->
+	<insert id="addStrap" parameterType="com.jing.core.model.entity.Strap">
+		INSERT INTO tb_strap (strap_id ,strap_serial ,strap_no ,types ,status ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{strapId},#{strapSerial},#{strapNo},#{types},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
+
+	<!-- 修改手牌 -->
+	<update id="updateStrap" parameterType="com.jing.core.model.entity.Strap">
+		UPDATE tb_strap
+		<set> 
+			<if test="strapSerial != null" >
+				strap_serial = #{strapSerial},
+			</if>
+			<if test="strapNo != null" >
+				strap_no = #{strapNo},
+			</if>
+			<if test="types != null" >
+				types = #{types},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	strap_id = #{strapId}
+	</update>
+	
+	<!-- 根据ID删除手牌 -->
+	<delete id="deleteStrapById"  parameterType="String">
+		DELETE FROM tb_strap WHERE strap_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询手牌 -->
+	<select id="getStrapById" resultMap="StrapResultMap" parameterType="String">
+		SELECT * FROM tb_strap WHERE strap_id = #{value}
+	</select>
+	
+	<select id="findStrapListPage" resultMap="StrapResultMap">
+		SELECT * FROM tb_strap
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findStrapList" resultMap="StrapResultMap">
+		SELECT * FROM tb_strap
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

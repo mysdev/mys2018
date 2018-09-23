@@ -18,7 +18,13 @@
 				{field:'area', title:'归属区域', width:104, align:'center'  },
 				{field:'roomNo', title:'房间编号', width:104, align:'center'  },
 				{field:'roomName', title:'房间名称', width:180, align:'center'  },
-				{field:'status', title:'状态', width:80, align:'center'  },
+				{field:'status', title:'状态', width:80, align:'center'  ,formatter: function(value,row,index){
+					if(row.status == 0){
+						return '正常';
+					} else if(row.status == 1){
+						return '无效';
+					}
+				}},
 				{field:'roomStatus', title:'自身状态', width:52, align:'center'  },
 				{field:'chair', title:'椅子数量', width:52, align:'center'  },
 				{field:'bed', title:'床数量', width:39, align:'center'  },
