@@ -78,7 +78,12 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceDetail(AttendanceDetail attendanceDetail){
-		disableTodayBeforeDetail();//锁定用户当天及以前的考勤		
+		disableTodayBeforeDetail();//锁定用户当天及以前的考勤	
+		if(attendanceDetail.getTimeId().intValue()==0) {
+			attendanceDetail.setTimeId(null);
+			attendanceDetail.setSignTime(null);
+			attendanceDetail.setOutTime(null);
+		}
 		attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
 		// 要求影响员工考勤
 		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceDetail.getAttendanceId());
@@ -92,6 +97,11 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		int ret = 0;
 		Integer attendanceId = attendanceList[0].getAttendanceId();
 		for(AttendanceDetail ad : attendanceList){
+			if(ad.getTimeId().intValue()==0) {
+				ad.setTimeId(null);
+				ad.setSignTime(null);
+				ad.setOutTime(null);
+			}
 			ret+=modifyAttendanceDetail(ad);//attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
 		}
 		// 执行员工末来考勤数据初始化

@@ -94,8 +94,11 @@
 		<if test="attDay != null"> att_day = #{attDay},</if>
 		<if test="attendance != null"> attendance = #{attendance},</if>
 		<if test="timeId != null"> time_id=#{timeId},</if>
+		<if test="timeId == null"> time_id=null,</if>
 		<if test="signTime != null"> sign_time=#{signTime},</if>
+		<if test="signTime == null"> sign_time=null,</if>
 		<if test="outTime != null"> out_time=#{outTime},</if>
+		<if test="outTime == null"> out_time=null,</if>
 		<if test="editable != null"> editable=#{editable},</if>
 		<if test="createdBy != null"> created_by = #{createdBy},</if>
 		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
