@@ -52,21 +52,22 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	private PageService pageService; // 分页器
 	
 	
-	/**
-	 * @Title: addAttendanceDetail
-	 * @Description:添加门店考勤详情
-	 * @param attendanceDetail 实体
-	 * @return Integer
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	public AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail){
-		int ret = attendanceDetailMapper.addAttendanceDetail(attendanceDetail);
-		if(ret>0){
-			return attendanceDetail;
-		}
-		return null;
-	}
+//	/**
+//	 * @Title: addAttendanceDetail
+//	 * @Description:添加门店考勤详情
+//	 * @param attendanceDetail 实体
+//	 * @return Integer
+//	 */
+//	@Override
+//	@Transactional(readOnly = false)
+//	public AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail){
+//		int ret = attendanceDetailMapper.addAttendanceDetail(attendanceDetail);
+//		if(ret>0){
+//			//TODO 要求影响员工考勤
+//			return attendanceDetail;
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * @Title modifyAttendanceDetail
@@ -77,23 +78,42 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceDetail(AttendanceDetail attendanceDetail){
-		return attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
+		disableTodayBeforeDetail();//锁定用户当天及以前的考勤		
+		attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
+		// 要求影响员工考勤
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceDetail.getAttendanceId());
+		return 1;
 	}
 	
-	/**
-	 * @Title: dropAttendanceDetailByAttId
-	 * @Description:删除门店考勤详情
-	 * @param attId 实体标识
-	 * @return Integer
-	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropAttendanceDetailByAttId(Integer attId){
-		//TODO 执行员工末来考勤数据初始化
-		Integer ret = attendanceDetailMapper.dropAttendanceDetailByAttId(attId);
-		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attId);
+	public Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList) {
+		disableTodayBeforeDetail();//锁定用户当天及以前的考勤		
+		int ret = 0;
+		Integer attendanceId = attendanceList[0].getAttendanceId();
+		for(AttendanceDetail ad : attendanceList){
+			ret+=modifyAttendanceDetail(ad);//attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
+		}
+		// 执行员工末来考勤数据初始化
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
 		return ret;
 	}
+	
+//	/**
+//	 * @Title: dropAttendanceDetailByAttId
+//	 * @Description:删除门店考勤详情
+//	 * @param attId 实体标识
+//	 * @return Integer
+//	 */
+//	@Override
+//	@Transactional(readOnly = false)
+//	public Integer dropAttendanceDetailByAttId(Integer attId){
+//		//TODO 执行员工末来考勤数据初始化
+//		//Integer ret = attendanceDetailMapper.dropAttendanceDetailByAttId(attId);
+//		//publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attId);
+//		//不对外开放，无此操作
+//		return ret;
+//	}
 	
 
 	/**
@@ -103,8 +123,8 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer disableDetailEditable(){
-		return attendanceDetailMapper.disableDetailEditable();
+	public Integer disableTodayBeforeDetail(){
+		return attendanceDetailMapper.disableTodayBeforeDetail();
 	}
 	
 	/**
@@ -136,11 +156,11 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		if(null!=sort && sort.length()>0){
 			pageBounds.setOrdersByJson(sort, AttendanceDetail.class);
 		}
-		if (!entityList.isEmpty()) {
+		//if (!entityList.isEmpty()) {
 			PageList<AttendanceDetail> pagelist = (PageList<AttendanceDetail>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
+		//}
 		return returnMap;
 	}
 	 
@@ -167,6 +187,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Override
 	@Transactional(readOnly = false)
 	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth){
+		//处理日期，如果为空取当月 如2018-09
 		if(yearMonth==null || yearMonth.length()!=7){
 			yearMonth = DateUtil.getDate();
 			yearMonth = yearMonth.substring(0, yearMonth.lastIndexOf("-"));
@@ -179,10 +200,27 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 			return ret;//已有数据，不再生成
 		}
 		
+		ret = createAttendanceDetail(attendanceId, yearMonth);
+		//执行员工末来考勤数据初始化
+		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
+		return ret;
+	}
+	
+	/** 
+	* @Title: createAttendanceDetail 
+	* @Description: 生成指定考勤规则下某月的考勤数据
+	* @param attendanceId
+	* @param yearMonth
+	* @return  
+	* List<AttendanceDetail>    返回类型 
+	* @throws 
+	*/
+	@Transactional(readOnly = false)
+	public List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth) {
 		AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		AttendanceTime at = ab.getAttTime().get(0);
 		
-		ret = new ArrayList<AttendanceDetail>();
+		List<AttendanceDetail> ret = new ArrayList<AttendanceDetail>();
 		try {
 			Calendar cal = DateUtil.getCalendar(yearMonth);
 			int maxDay = cal.getActualMaximum(Calendar.DATE);
@@ -214,11 +252,9 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 				ad.setAttDay(i+1);
 				ad.setAttDate(cal.getTime());
 				cal.add(Calendar.DATE, 1);
-				addAttendanceDetail(ad);
+				attendanceDetailMapper.addAttendanceDetail(ad);
 				ret.add(ad);
-			}
-			//TODO 执行员工末来考勤数据初始化
-			publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
+			}			
 		} catch (ParseException e) {			
 			logger.error("(yyyy-MM)年月格式转换异常，参数："+yearMonth, e);
 			throw new CustomException(400, "参数错误", "yearMonth", "格式非七位(yyyy-MM)日期。");
@@ -231,18 +267,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		return attendanceDetailMapper.queryAttendanceDetailHistory(attendanceId);
 	}
 
-	@Override
-	@Transactional(readOnly = false)
-	public Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList) {
-		int ret = 0;
-		Integer attendanceId = attendanceList[0].getAttendanceId();
-		for(AttendanceDetail ad : attendanceList){
-			ret+=attendanceDetailMapper.modifyAttendanceDetail(ad);
-		}
-		//TODO 执行员工末来考勤数据初始化
-		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
-		return ret;
-	}
+	
 
 	/*
 	 * @Title: modifyAttendanceDetailChange
@@ -256,58 +281,32 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	 * @return
 	 * @see com.jing.attendance.service.AttendanceDetailService#modifyAttendanceDetailChange(java.lang.Integer, com.jing.attendance.model.entity.AttendanceTime)
 	 */ 
-	@Override
-	public Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId) {
-		if(attendanceTime==null || attendanceTime.getId()==null) {
-			AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
-			attendanceTime = ab.getAttTime().get(0);
-		}
-		if(attendanceTime==null) {
-			attendanceTime = new AttendanceTime();
-		}
-		if(attendanceTime.getSignTime()==null) attendanceTime.setSignTime("08:30:00");
-		if(attendanceTime.getOutTime()==null) attendanceTime.setOutTime("17:30:00");
-		attendanceTime.setAttendanceId(attendanceId);
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("attendanceId", attendanceTime.getAttendanceId());
-		params.put("signTime", attendanceTime.getSignTime());
-		params.put("outTime", attendanceTime.getOutTime());
-		params.put("timeId", attendanceTime.getId());
-		if(oldId!=null && oldId.intValue()>0) {
-			params.put("oldTimeId", oldId);
-		}
-		Integer ret = attendanceDetailMapper.modifyAttendanceDetailChange(params);
-		attendanceDetailMapper.modifyOutTimeBefore();
-		//TODO 执行员工末来考勤数据初始化
-		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
-		return ret;
-	}
-	
-//	
-//	public static void main(String[] arg) {
-//		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-//		String startTime ="21:30:00";
-//		String endTime = "08:30:00";
-//		try {
-//			Date startDate = DateUtil.String2DateTime("2018-02-05 "+startTime);
-//			Date endDate = DateUtil.String2DateTime("2018-02-05 "+endTime);
-//			
-//			if(startDate.getTime()>endDate.getTime()) {
-//				//结束时间  跨天处理
-//				Calendar cala = Calendar.getInstance();
-//				cala.setTime(endDate);
-//				cala.set(Calendar.DATE, cala.get(Calendar.DATE)+1);
-//				endDate = cala.getTime();
-//			}
-//			
-//			System.out.println(format.format(startDate));
-//			System.out.println(format.format(endDate));
-//			
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//	@Override
+//	public Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId) {
+//		if(attendanceTime==null || attendanceTime.getId()==null) {
+//			AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
+//			attendanceTime = ab.getAttTime().get(0);
 //		}
+//		if(attendanceTime==null) {
+//			attendanceTime = new AttendanceTime();
+//		}
+//		if(attendanceTime.getSignTime()==null) attendanceTime.setSignTime("08:30:00");
+//		if(attendanceTime.getOutTime()==null) attendanceTime.setOutTime("17:30:00");
+//		attendanceTime.setAttendanceId(attendanceId);
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("attendanceId", attendanceTime.getAttendanceId());
+//		params.put("signTime", attendanceTime.getSignTime());
+//		params.put("outTime", attendanceTime.getOutTime());
+//		params.put("timeId", attendanceTime.getId());
+//		if(oldId!=null && oldId.intValue()>0) {
+//			params.put("oldTimeId", oldId);
+//		}
+//		Integer ret = attendanceDetailMapper.modifyAttendanceDetailChange(params);
+//		attendanceDetailMapper.modifyOutTimeBefore();
+//		//TODO 执行员工末来考勤数据初始化
+//		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
+//		return ret;
 //	}
-	
+
 
 }

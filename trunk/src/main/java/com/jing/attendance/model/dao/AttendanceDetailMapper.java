@@ -92,7 +92,7 @@ public interface AttendanceDetailMapper {
 	* @return  Integer    返回类型 
 	* @throws 
 	*/
-	Integer disableDetailEditable();
+	Integer disableTodayBeforeDetail();
 
 	/** 
 	* @Title: modifyAttendanceDetailChange 

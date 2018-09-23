@@ -27,13 +27,13 @@ public interface AttendanceDetailService {
 	*/
 	List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth);
 
-    /**
-	 * @Title: addAttendanceDetail
-	 * @Description:添加门店考勤详情
-	 * @param attendanceDetail 实体
-	 * @return Integer
-	 */
-	AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail);	
+//    /**
+//	 * @Title: addAttendanceDetail
+//	 * @Description:添加门店考勤详情
+//	 * @param attendanceDetail 实体
+//	 * @return Integer
+//	 */
+//	AttendanceDetail addAttendanceDetail(AttendanceDetail attendanceDetail);	
 	
 	/**
 	 * @Title modifyAttendanceDetail
@@ -49,15 +49,15 @@ public interface AttendanceDetailService {
 	 * @param attId 实体标识
 	 * @return Integer
 	 */
-	Integer dropAttendanceDetailByAttId(Integer attId);
+//	Integer dropAttendanceDetailByAttId(Integer attId);
 	
 	/** 
-	* @Title: disableDetailEditable 
+	* @Title: disableTodayBeforeDetail 
 	* @Description: 锁定当天考勤详情
 	* @return  Integer    返回类型 
 	* @throws 
 	*/
-	Integer disableDetailEditable();
+	Integer disableTodayBeforeDetail();
 	
 	/**
 	 * @Title: queryAttendanceDetailByAttId
@@ -112,6 +112,6 @@ public interface AttendanceDetailService {
 	* @return void    返回类型 
 	* @throws 
 	*/
-	Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId);	 
+	//Integer modifyAttendanceDetailChange(Integer attendanceId, AttendanceTime attendanceTime, Integer oldId);	 
 	 
 }

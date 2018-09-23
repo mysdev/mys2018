@@ -78,7 +78,7 @@ public class PublicAttendanceServiceImpl implements PublicAttendanceService {
 	 */ 
 	@Override
 	@Transactional(readOnly = false)
-	public void doAndRedoPersonAttendanceByAttendanceId(Integer attendanceId) {
+	public void doAndRedoPersonAttendanceByAttendanceId(Integer attendanceId) {		
 		//清空第二天以后规则下所有员工考勤数据
 		attendanceDiaryService.clearFutureDiaryRecordByAttendanceId(attendanceId);
 		//重新写入

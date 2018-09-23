@@ -48,19 +48,19 @@ public class AttendanceDetailController{
 	private AttendanceService attendanceService;
 	
 
-	@ApiOperation(value = "查询 带详情的考勤规则设定历史信息", notes = "返回有数据记录的月份")
-	@RequestMapping(value = "/attendance/{attendanceId:.+}/details/yearmonth", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public Object queryAttendanceDetail(HttpServletResponse response,
-			@PathVariable Integer attendanceId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
-		if(null == tempAttendance){
-			throw new NotFoundException("门店考勤规则");
-		}
-		if(tempAttendance.getTypes()==null || tempAttendance.getTypes().intValue()!=2){
-			throw new CustomException(400, "参数错误", "attendanceId", "此考勤规则不支持详情设置。");
-		}		
-		return attendanceDetailService.queryAttendanceDetailHistory(attendanceId);
-	}
+//	@ApiOperation(value = "查询 带详情的考勤规则设定历史信息", notes = "返回有数据记录的月份")
+//	@RequestMapping(value = "/attendance/{attendanceId:.+}/details/yearmonth", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+//	public Object queryAttendanceDetail(HttpServletResponse response,
+//			@PathVariable Integer attendanceId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+//		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
+//		if(null == tempAttendance){
+//			throw new NotFoundException("门店考勤规则");
+//		}
+//		if(tempAttendance.getTypes()==null || tempAttendance.getTypes().intValue()!=2){
+//			throw new CustomException(400, "参数错误", "attendanceId", "此考勤规则不支持详情设置。");
+//		}		
+//		return attendanceDetailService.queryAttendanceDetailHistory(attendanceId);
+//	}
 	
 	@ApiOperation(value = "查询 初始带详情的考勤规则信息", notes = "未初始的月份初始化并返回带详情-已初始过的直接返回详情")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
@@ -81,58 +81,76 @@ public class AttendanceDetailController{
 		return attendanceDetailService.queryAttendanceDetail(attendanceId, yearMonth);
 	}
 	
-	@ApiOperation(value = "更新 根据门店考勤详情标识更新门店考勤详情信息", notes = "根据门店考勤详情标识更新门店考勤详情信息")
+	@ApiOperation(value = "更新 根据门店考勤详情标识更新门店考勤详情信息", notes = "timeId为0时不考勤，其它为考勤")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/detail/{attId:.+}", method = RequestMethod.PUT)
 	public Object modifyAttendanceDetailById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@PathVariable Integer attId,
-			@RequestParam(value = "attendance", required = true) Integer attendance
+			@RequestParam(value = "timeId", required = true) Integer timeId
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		AttendanceDetail attendanceDetail = new AttendanceDetail();
-		attendanceDetail.setAttendance(attendance);
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendanceDetail, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+		if(null==timeId && timeId.intValue()<0) {
+			throw new CustomException(400, "参数错误", "timeId", "时段参数必传，休息时传0。");
+		}
+		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
+		if(null == tempAttendance){
+			throw new NotFoundException("门店考勤规则");
 		}
 		AttendanceDetail tempAttendanceDetail = attendanceDetailService.queryAttendanceDetailByAttId(attId);
-		attendanceDetail.setAttId(attId);
 		if(null == tempAttendanceDetail){
 			throw new NotFoundException("门店考勤详情");
 		}
 		if(tempAttendanceDetail.getAttendanceId().intValue()!=attendanceId.intValue()){
 			throw new CustomException(400, "参数错误", "attId", "详情与规则不匹配。");
 		}
+		
+		AttendanceDetail attendanceDetail = new AttendanceDetail();		
+		attendanceDetail.setAttendanceId(attendanceId);
+		attendanceDetail.setAttId(attId);
+		attendanceDetail.setTimeId(timeId);
+		attendanceDetail.setAttendance(timeId.intValue()==0?0:1);
+		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendanceDetail, false);
+		if(!errors.isEmpty()){
+			throw new ParameterException(errors);
+		}
 		attendanceDetail.setEditable(null);
 		return attendanceDetailService.modifyAttendanceDetail(attendanceDetail);
 	}
 	
 	
-	@ApiOperation(value = "更新 批量根据门店考勤详情标识更新门店考勤详情信息", notes = "批量根据门店考勤详情标识更新门店考勤详情信息")
+	@ApiOperation(value = "更新 批量根据门店考勤详情标识更新门店考勤详情信息", notes = "只接受同一规则里详情的批量修订")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.PUT)
 	public Object modifyAttendanceDetailBatchById(HttpServletResponse response,
 			@PathVariable Integer attendanceId, @RequestBody AttendanceDetail[] attendanceList
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
+		if(null == tempAttendance){
+			throw new NotFoundException("门店考勤规则");
+		}
 		List<Map<String, String>> errors = new ArrayList<Map<String, String>>();
 		
 		//循环处理内部数据有效性
 		for(int i=0; i<attendanceList.length; i++){
-			if(attendanceList[i]==null || attendanceList[i].getAttId()==null || attendanceList[i].getAttendance()==null
-					|| (attendanceList[i].getAttendance().intValue()!=0 && attendanceList[i].getAttendance().intValue()!=1)){
+			if(attendanceList[i]==null || attendanceList[i].getAttId()==null || attendanceList[i].getTimeId()==null
+					|| attendanceList[i].getTimeId().intValue()<0){
 				Map<String, String> e0 = new HashMap<String, String>();
 				e0.put("index", ""+i);
-				e0.put("filed", "attId\\attendance");
-				e0.put("message", "标识与是否考勤(0或1)为必传参数。");
+				e0.put("filed", "attId\\timeId");
+				e0.put("message", "标识与考勤时段(0为休息)为必传参数。");
+				errors.add(e0);
 				continue;
 			}			
-			AttendanceDetail ad = attendanceDetailService.queryAttendanceDetailByAttId(attendanceList[0].getAttId());
-			if(ad==null || ad.getAttendanceId().intValue()!=attendanceId.intValue()){
+			if(attendanceId.intValue()!=attendanceId.intValue()){
 				Map<String, String> e = new HashMap<String, String>();
 				e.put("index", ""+i);
 				e.put("filed", "attId");
 				e.put("message", "详情不存在或归属规则不匹配。");
+				errors.add(e);
 				continue;
 			}
-			//清空无关参数
+			attendanceList[i].setAttendanceId(attendanceId);
+			attendanceList[i].setTimeId(attendanceList[i].getTimeId());
+			attendanceList[i].setAttendance(attendanceList[i].getTimeId().intValue()==0?0:1);
+			//清空已经固定无无须修订的参数
 			attendanceList[i].setAttDate(null);
 			attendanceList[i].setAttDay(null);
 			attendanceList[i].setAttMonth(null);

@@ -27,13 +27,13 @@ public class SchedulingConfig {
 	private AttendanceDetailService attendanceDetailService;
 	/** 
 	* @Title: initAttendanceDayWork 
-	* @Description: 定时任务-0点7分
+	* @Description: 定时任务-8点7分
 	* @throws 
 	*/
-	@Scheduled(cron = "0 7 0 * * ?")
+	@Scheduled(cron = "8 7 0 * * ?")
 	public void initAttendanceDayWork() {
 		logger.info("定时任务启动：锁定当天考勤详情。");
-		attendanceDetailService.disableDetailEditable();
+		attendanceDetailService.disableTodayBeforeDetail();
 		logger.info("定时任务完成：锁定当天考勤详情。");
 	}
 	

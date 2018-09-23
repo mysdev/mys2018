@@ -37,7 +37,7 @@ public class ApplicationStartup implements ApplicationRunner{
     public void run(ApplicationArguments var1) throws Exception{
     	logger.info("**********************系统启动完成-执行必要初始化开始*************************");
     	logger.info("1、锁定当天及以前考勤详情信息");
-    	attendanceDetailService.disableDetailEditable();
+    	attendanceDetailService.disableTodayBeforeDetail();
     	logger.info("**********************系统启动完成-执行必要初始化成功*************************");
     }
 }
