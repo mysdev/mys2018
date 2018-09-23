@@ -72,28 +72,15 @@ public interface AttendanceEmployeeService {
 	 * @param employeeAttendance 实体
 	 * @return List<AttendanceEmployee>
 	 */
-	Map<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, AttendanceEmployee employeeAttendance);
+	HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, Integer attendanceId,
+			Map<String, Object> params);
 	 
 	 /**
 	 * @Title: queryAttendanceEmployeeByProperty
 	 * @Description:根据属性查询员工考勤关系
-	 * @return List<AttendanceEmployee>
+	 * @return List<Map<String, String>>
 	 */
-	List<AttendanceEmployee> queryAttendanceEmployeeByProperty(Map<String, Object> map);
-
-	/** 
-	* @Title: queryAttendanceEmployeeForPage 
-	* @Description: 根据考勤或员工属性查询信息
-	* @param pagenum
-	* @param pagesize
-	* @param sort
-	* @param attendanceId 考勤标识 -1未分配 0全部 其它为指定考勤规则
-	* @param params 员工属性 namePYJob 员工姓名、拼音、工号 dptId部门标识 storeId门店标识
-	* @return  List<AttendanceEmployeeBo>    返回类型 
-	* @throws 
-	*/
-	HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, Integer attendanceId,
-			Map<String, Object> params);
+	List<Map<String, String>> queryAttendanceEmployeeByProperty(Integer attendanceId);
 
 	/** 
 	* @Title: bindAttendanceEmployee 

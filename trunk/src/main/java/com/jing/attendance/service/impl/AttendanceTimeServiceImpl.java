@@ -32,8 +32,8 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	@Autowired
     private AttendanceTimeMapper attendanceTimeMapper;  
 	
-	@Autowired
-	private AttendanceDetailService attendanceDetailService;
+//	@Autowired
+//	private AttendanceDetailService attendanceDetailService;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -65,7 +65,7 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceTime(AttendanceTime attendanceTime){		
 		Integer ret = attendanceTimeMapper.modifyAttendanceTime(attendanceTime);
-		attendanceDetailService.modifyAttendanceDetailChange(attendanceTime.getAttendanceId(), this.queryAttendanceTimeById(attendanceTime.getId()), null);
+//		attendanceDetailService.modifyAttendanceDetailChange(attendanceTime.getAttendanceId(), this.queryAttendanceTimeById(attendanceTime.getId()), null);
 		return ret;
 	}
 	
@@ -77,10 +77,11 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer dropAttendanceTimeById(Integer id){
-		AttendanceTime at = this.queryAttendanceTimeById(id);
+	public Integer dropAttendanceTimeById(Integer id){		
 		Integer ret = attendanceTimeMapper.dropAttendanceTimeById(id);
-		attendanceDetailService.modifyAttendanceDetailChange(at.getAttendanceId(), null, id);
+		// TODO 详情规则操作暂时不处理
+//		AttendanceTime at = this.queryAttendanceTimeById(id);
+//		attendanceDetailService.modifyAttendanceDetailChange(at.getAttendanceId(), null, id);
 		return ret;
 	}
 	
@@ -113,11 +114,11 @@ public class  AttendanceTimeServiceImpl implements AttendanceTimeService {
 		if(null!=sort && sort.length()>0){
 			pageBounds.setOrdersByJson(sort, AttendanceTime.class);
 		}
-		if (!entityList.isEmpty()) {
+//		if (!entityList.isEmpty()) {
 			PageList<AttendanceTime> pagelist = (PageList<AttendanceTime>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
+//		}
 		return returnMap;
 	}
 	 

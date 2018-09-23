@@ -91,98 +91,45 @@
 </select>
 
 <!-- 根据属性查询员工考勤关系 -->
-<select id="queryAttendanceEmployeeByProperty"  resultMap="AttendanceEmployeeResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_attendanceEmployee_item"/>
-	FROM tw_attendance_employee 
-	<where>
-		<include refid="sql_attendanceEmployee_query_nowhere"/>
-	</where>
+<select id="queryAttendanceEmployeeByProperty"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
+	select t.*, e.emp_name as empName, e.emp_no as empNo, e.pinyin from (
+		SELECT link_id as linkId, emp_id as empId from tw_attendance_employee where attendance_id=#{attendanceId}) t
+	left OUTER join tb_employee e on t.empId=e.emp_id ORDER BY e.pinyin asc
+</select>
+<select id="queryAttendanceEmployeeFree"  resultMap="AttendanceEmployeeResultMap">
+	select * from (
+		select e.emp_id as empId, e.emp_name, e.emp_no, e.pinyin, t.link_id as linkId from tb_employee e
+		left outer join tw_attendance_employee t on e.emp_id = t.emp_id
+	) l where linkId is null ORDER BY pinyin asc
 </select>
 
 <!-- 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息 -->
-<select id="queryAttendanceEmployeeForPage"  resultMap="AttendanceEmployeeResultMap" > 
-	SELECT 
-	<include refid="sql_attendanceEmployee_item"/>
-	FROM tw_attendance_employee 
-	<where>
-		<include refid="sql_attendanceEmployee_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据员工考勤关系、员工、考勤规则属性与分页信息分页查询员工考勤信息 -->
-<select id="queryAttendanceEmployeeAllForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
-	select * from (
-		select l.*, a.attendance_name attendanceName, e.emp_name empName, e.emp_no empNo, e.pinyin pinyin, e.store_id storeId, e.dpt_id dptId from 
-		(select link_id linkId, emp_id empId, attendance_id attendanceId, created_by createdBy, created_date createdDate,
-			updated_by updatedBy, updated_date updatedDate from tw_attendance_employee 
-			<where> 
-				<if test="param.attendanceId != null"> attendance_id = #{param.attendanceId}</if>
-			</where>
-		) l
-		left OUTER join tw_attendance a on l.attendanceId=a.attendance_id
-		left outer join tb_employee e on l.empId=e.emp_id
-	) t 
-	<where> 
-		`status`=0
-		<if test="param.storeId != null"> and storeId = #{param.storeId}</if>
-		<if test="param.namePYJob != null">
-			AND (
-				empName like concat('%', #{param.namePYJob}, '%') 
-				or pinyin like concat('%', #{param.namePYJob}, '%')
-				or empNo like concat('%', #{param.namePYJob}, '%')
-			) 
-		</if>
-		<if test="param.dptId != null">AND dptId = #{param.dptId} </if>
-	</where>
-</select>
-<!-- 未关联考勤规则用户 -->
-<select id="queryAttendanceEmployeeNotForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
-	select * from (
-		select e.*, l.link_id linkId from (
-			select emp_id empId, emp_name empName, emp_no empNo, pinyin pinyin, store_id storeId, dpt_Id dptId 
-			from tb_employee 
-			<where> 
-				<if test="param.storeId != null"> store_id = #{param.storeId}</if>
-				<if test="param.namePYJob != null">
-					AND (
-						emp_name like concat('%', #{param.namePYJob}, '%') 
-						or pinyin like concat('%', #{param.namePYJob}, '%')
-						or emp_no like concat('%', #{param.namePYJob}, '%')
-					) 
-				</if>
-				<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
-			</where>
-		) e LEFT OUTER JOIN tw_attendance_employee l on e.empId = l.emp_id
-	) t where linkId is null	
-</select>
-
-<!-- 查询所有员工考勤规则 -->
-<select id="queryAttendanceEmployeeTotalForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
+<select id="queryAttendanceEmployeeForPage" parameterType="java.util.Map" resultType="java.util.Map"> 
 select * from (
-	select s.store_name storeName, e.*, a.link_id linkId, a.attendance_id attendanceId, d.attendance_name attendanceName, a.created_by createdBy, 
-	a.created_date createdDate, a.updated_By updatedBy, a.updated_Date updatedDate from (
-		select store_id storeId, emp_id empId, emp_name empName, emp_no empNo, pinyin pinyin, dpt_Id dptId from tb_employee 
-			<where> 
-				`status`=0
-				<if test="param.storeId != null"> and store_id = #{param.storeId}</if>
-				<if test="param.namePYJob != null">
-					AND (
-						emp_name like concat('%', #{param.namePYJob}, '%') 
-						or pinyin like concat('%', #{param.namePYJob}, '%')
-						or emp_no like concat('%', #{param.namePYJob}, '%')
-					) 
-				</if>
-				<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
-			</where>
-	) e LEFT OUTER JOIN tb_store s on e.storeId=s.store_id
-	LEFT OUTER JOIN tw_attendance_employee a on e.empId=a.emp_id
-	LEFT OUTER JOIN tw_attendance d on a.attendance_id=d.attendance_id
-) t
-<where> 
-	<if test="param.attendanceId != null"> attendanceId = #{param.attendanceId}</if>
-</where>
-
+	select l.*, a.attendance_name as attendanceName, isnull(linkId) as linkStatus from (
+	select e.emp_id as empId, e.emp_name, e.emp_no empNo, e.pinyin, t.link_id as linkId, t.attendance_id as attendanceId, t.created_by as createdBy, 
+	t.created_date as createdDate, t.updated_by as updatedBy, t.updated_date as updatedDate from
+		(select * from tb_employee
+				<where> 
+					<if test="param.namePYJob != null">
+						AND (
+							emp_name like concat('%', #{param.namePYJob}, '%') 
+							or pinyin like concat('%', #{param.namePYJob}, '%')
+							or emp_no like concat('%', #{param.namePYJob}, '%')
+						) 
+					</if>
+					<if test="param.dptId != null">AND dpt_id = #{param.dptId} </if>
+				</where>
+		)e
+	left outer join tw_attendance_employee t on e.emp_id = t.emp_id
+	where e.status =0
+	) l LEFT OUTER JOIN tw_attendance a on l.attendanceId = a.attendance_id
+) h  
+	<where> 
+		<if test="param.attendanceId != null"> attendanceId = #{param.attendanceId}</if>
+		<if test="param.showAll != null"> linkStatus = #{param.showAll}</if>
+	</where>
+ORDER BY updatedDate desc 
 </select>
 
 

@@ -48,7 +48,7 @@ public class AttendanceDetailController{
 	private AttendanceService attendanceService;
 	
 
-	@ApiOperation(value = "查询 带详情的考勤规则设定历史信息", notes = "查询带详情的考勤规则设定历史")
+	@ApiOperation(value = "查询 带详情的考勤规则设定历史信息", notes = "返回有数据记录的月份")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details/yearmonth", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public Object queryAttendanceDetail(HttpServletResponse response,
 			@PathVariable Integer attendanceId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
@@ -62,7 +62,7 @@ public class AttendanceDetailController{
 		return attendanceDetailService.queryAttendanceDetailHistory(attendanceId);
 	}
 	
-	@ApiOperation(value = "查询 初始带详情的考勤规则信息", notes = "初始带详情的考勤规则信息-已初始过的返回详情")
+	@ApiOperation(value = "查询 初始带详情的考勤规则信息", notes = "未初始的月份初始化并返回带详情-已初始过的直接返回详情")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public Object queryAttendanceDetail(HttpServletResponse response,
 			@PathVariable Integer attendanceId, String yearMonth) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {

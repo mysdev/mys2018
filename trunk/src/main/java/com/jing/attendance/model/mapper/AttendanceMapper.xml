@@ -107,6 +107,7 @@
 	<where>
 		<include refid="sql_attendance_query_nowhere"/>
 	</where>
+	order by attendance_name asc
 </select>
 
 <!-- 根据门店考勤属性与分页信息分页查询门店考勤信息 -->

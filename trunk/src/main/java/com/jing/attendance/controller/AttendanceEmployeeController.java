@@ -54,7 +54,7 @@ public class AttendanceEmployeeController{
 	private EmployeeService employeeService;
 
 	
-	@ApiOperation(value = "绑定 绑定员工考勤关系信息", notes = "绑定员工考勤关系信息-如存在则修订考勤关系")
+	@ApiOperation(value = "绑定 绑定员工考勤关系信息", notes = "考勤规则下添加员工时调用-非全量操作接口")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendanceEmployee(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
@@ -87,7 +87,6 @@ public class AttendanceEmployeeController{
 		return attendanceEmployeeService.bindAttendanceEmployee(0, attendanceId, empList);
 	}
 
-
 	@ApiOperation(value = "删除 根据员工标识删除员工考勤关系信息", notes = "根据员工标识删除员工考勤关系信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee/{empId:.+}", method = RequestMethod.DELETE)
 	public Object dropAttendanceEmployeeByLinkId(HttpServletResponse response,
@@ -103,42 +102,17 @@ public class AttendanceEmployeeController{
 		return attendanceEmployeeService.dropAttendanceEmployeeByLinkId(attendanceEmployee.getLinkId());//.dropAttendanceEmployeeByEmpId(empId);
 	}
 	
-	@ApiOperation(value = "查询 根据员工标识查询员工考勤信息", notes = "根据员工标识查询员工考勤信息-attendanceId不作强制校验")
-	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee/{empId:.+}", method = RequestMethod.GET)
-	public Object queryAttendanceEmployeeById(HttpServletResponse response,
-			@PathVariable Integer attendanceId,
-			@PathVariable String empId) {
-		Employee emp = employeeService.queryEmployeeByEmpId(empId);
-		if(emp==null){
-			throw new NotFoundException("员工找不到");
+	@ApiOperation(value = "查询 根据考勤标识查询员工考勤关系信息列表", notes = "标识大于0时查询指定规则下的员工清单，否则查询未绑定员工清单")
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee", method = RequestMethod.GET)
+	public Object queryAttendanceEmployeeList(HttpServletResponse response,
+			@PathVariable Integer attendanceId)  {	
+		if(attendanceId==null || attendanceId.intValue()<1){
+			attendanceId = 0;
 		}
-		AttendanceEmployee attendanceEmployee = attendanceEmployeeService.queryAttendanceEmployeeByEmpId(empId);
-		if(null == attendanceEmployee){
-			throw new NotFoundException("员工考勤关系");
-		}
-		return attendanceService.queryAttendanceByAttendanceId(attendanceEmployee.getAttendanceId());
+		return attendanceEmployeeService.queryAttendanceEmployeeByProperty(attendanceId);		
 	}
 	
-//	@ApiOperation(value = "查询 根据考勤标识查询员工考勤关系信息列表", notes = "根据考勤标识查询员工考勤关系信息列表 attendanceId=0")
-//	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee", method = RequestMethod.GET)
-//	public Object queryAttendanceEmployeeList(HttpServletResponse response,
-//			@PathVariable Integer attendanceId) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {	
-//		Map<String, Object> query = new HashMap<String, Object>();
-//		if(attendanceId!=null && attendanceId.intValue()!=0){
-//			query.put("attendanceId", attendanceId);
-//		}
-//		List<AttendanceEmployee> eaList = attendanceEmployeeService.queryAttendanceEmployeeByProperty(query);
-//		if(eaList!=null && eaList.size()>0){
-//			String empIds = "";
-//			for(AttendanceEmployee ea: eaList){
-//				empIds += (ea.getEmpId()+",");
-//			}
-//			return employeeService.queryEmployeeByEmpIds(empIds);
-//		} 
-//		return new ArrayList();
-//	}
-	
-	@ApiOperation(value = "查询分页 查询员工考勤关系信息列表", notes = "查询员工考勤关系信息列表 attendanceId 考勤标识 -1未分配  0全部    其它为指定考勤规则")
+	@ApiOperation(value = "查询分页 查询员工考勤关系信息列表", notes = "查询员工考勤关系信息列表 attendanceId 0   全部， showAll 0已匹配 1未匹配")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employees", method = RequestMethod.GET)
 	public Object queryAttendanceEmployeePage(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
@@ -147,16 +121,20 @@ public class AttendanceEmployeeController{
 			@RequestParam(value = "sort", required = false) String sort, 
 			@RequestParam(value = "namePYJob", required = false) String namePYJob,
 			@RequestParam(value = "dptId", required = false) Integer dptId,
-			@RequestParam(value = "storeId", required = false) String storeId) {	
+			@RequestParam(value = "showAll", required = false) Integer showAll) {	
 		Map<String, Object> query = new HashMap<String, Object>();
 		if(namePYJob!=null && namePYJob.trim().length()>0){
 			query.put("namePYJob", namePYJob.trim());
 		}
+		if(attendanceId!=null && attendanceId.intValue()>0){
+			query.put("attendanceId", attendanceId);
+		}
 		if(dptId!=null && dptId.intValue()>0){
 			query.put("dptId", dptId);
 		}
-		if(storeId!=null && storeId.trim().length()>0){
-			query.put("storeId", storeId.trim());
+		if(showAll!=null && (showAll.intValue()==0 || showAll.intValue()==0)) {
+			//0匹配 1未匹配
+			query.put("showAll", showAll);
 		}
 		return attendanceEmployeeService.queryAttendanceEmployeeForPage(pagenum, pagesize, sort, attendanceId, query);
 	}

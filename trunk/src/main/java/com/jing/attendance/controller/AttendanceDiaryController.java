@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
 public class AttendanceDiaryController{
 
 	@Autowired
-	BeanValidator beanValidator;
+	BeanValidator beanValidator;	
 	
 	@Autowired
 	private AttendanceDiaryService attendanceDiaryService;

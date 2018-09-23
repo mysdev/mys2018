@@ -12,6 +12,7 @@ import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.entity.AttendanceEmployee;
 import com.jing.attendance.service.AttendanceEmployeeService;
 import com.jing.attendance.service.PublicAttendanceService;
+import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
 import com.jing.utils.paginator.domain.PageList;
@@ -50,6 +51,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	public AttendanceEmployee addAttendanceEmployee(AttendanceEmployee employeeAttendance){
 		int ret = employeeAttendanceMapper.addAttendanceEmployee(employeeAttendance);
 		if(ret>0){
+			publicAttendanceService.doAndRedoPersonAttendanceByEmpId(employeeAttendance.getEmpId()); //初始化末来考勤数据
 			return employeeAttendance;
 		}
 		return null;
@@ -64,7 +66,13 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceEmployee(AttendanceEmployee employeeAttendance){
-		return employeeAttendanceMapper.modifyAttendanceEmployee(employeeAttendance);
+		AttendanceEmployee ae = queryAttendanceEmployeeByLinkId(employeeAttendance.getLinkId());		
+		if(employeeAttendance.getEmpId()==null || !ae.getEmpId().equals(employeeAttendance.getEmpId())) {
+			throw new CustomException(400, "参数错误", "empId", "员工号为空或员工号发生改变"); //员工
+		}
+		employeeAttendanceMapper.modifyAttendanceEmployee(employeeAttendance);
+		publicAttendanceService.doAndRedoPersonAttendanceByEmpId(ae.getEmpId()); //初始化末来考勤数据
+		return 1;
 	}
 	
 	/**
@@ -77,8 +85,9 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceEmployeeByLinkId(Integer linkId){
 		AttendanceEmployee ae = queryAttendanceEmployeeByLinkId(linkId);
+		employeeAttendanceMapper.dropAttendanceEmployeeByLinkId(linkId);
 		publicAttendanceService.doAndRedoPersonAttendanceByEmpId(ae.getEmpId()); //初始化末来考勤数据
-		return employeeAttendanceMapper.dropAttendanceEmployeeByLinkId(linkId);
+		return 1;
 	}
 	
 	/**
@@ -99,33 +108,38 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	 * @param pagesize 页大小 
 	 * @param sort 排序
 	 * @param employeeAttendance 实体
-	 * @return List<AttendanceEmployee>
+	 * @return HashMap<String, Object>
 	 */
 	@Override
-	public Map<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort, AttendanceEmployee employeeAttendance){
+	public HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort,
+			Integer attendanceId, Map<String, Object> params) {
+		if(params==null){
+			params = new HashMap<String, Object>();
+		}
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJson(sort, AttendanceEmployee.class);
-		List<AttendanceEmployee> entityList = employeeAttendanceMapper.queryAttendanceEmployeeForPage(pageBounds, employeeAttendance);
-		if(null!=sort && sort.length()>0){
-			pageBounds.setOrdersByJson(sort, AttendanceEmployee.class);
-		}
-		if (!entityList.isEmpty()) {
-			PageList<AttendanceEmployee> pagelist = (PageList<AttendanceEmployee>) entityList;
+		pageBounds.setOrdersByJsonForMap(sort);
+		List<Map<String, Object>> entityList = employeeAttendanceMapper.queryAttendanceEmployeeForPage(pageBounds, params);		
+//		if (!entityList.isEmpty()) {
+			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
 			returnMap.put(Constant.PAGELIST, entityList);
 			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-		}
+//		}
 		return returnMap;
 	}
 	 
 	/**
 	 * @Title: queryAttendanceEmployeeByProperty
-	 * @Description:根据属性查询员工考勤关系
+	 * @Description:根据属性查询员工考勤关系 为0时查询未绑定员工，其它查询考勤规则下的员工
 	 * @return List<AttendanceEmployee>
 	 */
 	@Override
-	public List<AttendanceEmployee> queryAttendanceEmployeeByProperty(Map<String, Object> map){
-		return employeeAttendanceMapper.queryAttendanceEmployeeByProperty(map);
+	public List<Map<String, String>> queryAttendanceEmployeeByProperty(Integer attendanceId){
+		if(attendanceId.intValue()>0) {
+			return employeeAttendanceMapper.queryAttendanceEmployeeByProperty(attendanceId);
+		}else {
+			return employeeAttendanceMapper.queryAttendanceEmployeeFree();
+		}		
 	}
 
 	@Override
@@ -137,36 +151,11 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceEmployeeByEmpId(String empId) {
 		AttendanceEmployee employeeAttendance = queryAttendanceEmployeeByEmpId(empId);
-		return employeeAttendance==null?0:dropAttendanceEmployeeByLinkId(employeeAttendance.getLinkId());
-	}
-
-	@Override
-	public HashMap<String, Object> queryAttendanceEmployeeForPage(Integer pagenum, Integer pagesize, String sort,
-			Integer attendanceId, Map<String, Object> params) {
-		if(params==null){
-			params = new HashMap<String, Object>();
+		if(employeeAttendance!=null) {
+			dropAttendanceEmployeeByLinkId(employeeAttendance.getLinkId());
+			publicAttendanceService.doAndRedoPersonAttendanceByEmpId(empId); //初始化末来考勤数据
 		}
-		HashMap<String, Object> returnMap = new HashMap<String, Object>();
-		PageBounds pageBounds = pageService.getPageBounds(pagenum, pagesize, null, true, false);
-		pageBounds.setOrdersByJsonForMap(sort);
-		List<Map<String, Object>> entityList;
-		if(attendanceId!=null && attendanceId.intValue()==-1){
-			//查询未分配考勤员工
-			entityList = employeeAttendanceMapper.queryAttendanceEmployeeNotForPage(pageBounds, params);
-		}else{
-			//查询已分配考勤员工
-			if(attendanceId!=null && attendanceId.intValue()>0) {
-				params.put("attendanceId", attendanceId);
-			}
-			//查询所有员工
-			entityList = employeeAttendanceMapper.queryAttendanceEmployeeTotalForPage(pageBounds, params);
-		}
-//		if (!entityList.isEmpty()) {
-			PageList<Map<String, Object>> pagelist = (PageList<Map<String, Object>>) entityList;
-			returnMap.put(Constant.PAGELIST, entityList);
-			returnMap.put(Constant.PAGINATOR, pagelist.getPaginator());
-//		}
-		return returnMap;
+		return employeeAttendance==null?0:1;
 	}
 
 	@Override

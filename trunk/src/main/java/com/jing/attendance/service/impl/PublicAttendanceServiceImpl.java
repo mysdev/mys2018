@@ -45,6 +45,7 @@ public class PublicAttendanceServiceImpl implements PublicAttendanceService {
 	@Autowired
 	private AttendanceService attendanceService;
 	
+	
 	/*
 	 * @Title: doAndRedoPersonAttendance
 	 * @Description: 
@@ -103,6 +104,32 @@ public class PublicAttendanceServiceImpl implements PublicAttendanceService {
 			//重新写入
 			attendanceDiaryService.insertFutureDiaryRecordByEmployeeId(empId);
 		}
+	}
+
+	
+	/*
+	 * @Title: initAttendanceDayWork
+	 * @Description: 
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceService#initAttendanceDayWork()
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Boolean initAttendanceDayWork() {
+		//查询、生成所有考勤规则当月数据		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		List<Attendance> attList = attendanceMapper.queryAttendanceByProperty(map );
+//		for(Attendance att : attList) {
+//			attendanceDetailService.queryAttendanceDetail(att.getAttendanceId(), null);
+//		}
+//		attendanceDetailMapper.disableDetailEditable(); //锁定当日考勤详情
+//		if(attendanceDiaryMapper.queryEmployeeCountsToday().intValue()==0) {
+//			attendanceDiaryMapper.initEmployeeBindingData(); //生成当日绑定规则员工考勤详情
+//			attendanceDiaryMapper.initEmployeeNotBindingData();//生成当日未绑定规则员工考勤详情
+//		}
+		return null;
 	}
 
 

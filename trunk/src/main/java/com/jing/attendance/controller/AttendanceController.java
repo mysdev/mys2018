@@ -56,8 +56,7 @@ public class AttendanceController{
 			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		attendance.setTypes(2); //暂时只支持2     考勤方案方案 0休天数 1考勤天数 2详情
 		attendance.setStatus(0);
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);
-		
+		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);		
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}
@@ -75,42 +74,54 @@ public class AttendanceController{
 			throw new ParameterException("attendance","类型为0休天数或1考勤天数时，对应天数必传且不能为零。");
 		}		
 		attendance.setAttendanceId(null);
-		attendance.setOutCt(null);
-		attendance.setSignCt(null);
+		attendance.setOutCt(null);//允许考勤提前时间
+		attendance.setSignCt(null);//允许考勤推迟时间
 		attendanceService.addAttendance(attendance);
 		return attendance;
 	}
 	
 	
-	@ApiOperation(value = "更新 根据考勤标识更新考勤信息", notes = "根据考勤标识更新考勤信息")
+	@ApiOperation(value = "更新 根据考勤标识更新考勤信息", notes = "请注意，时段修订时必须传入时段标识，否则认作新增")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.PUT)
 	public Object modifyAttendanceById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);		
+		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);				
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
 			Map<String, String> e = new HashMap<String, String>();
 			e.put("field", "attTime");
 			e.put("message", "每考勤规则限定最多"+MAX_TIME_PER_ATT+"个时间段。");
 			errors.add(e);			
 		}
-		if(attendance.getAttTime()!=null && attendance.getAttTime().size()!=0) {
-			errors.addAll(beanValidator.validateClassAuto(attendance.getAttTime(), true));
-		}
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}		
-		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
+		AttendanceBo tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);	
 		if(null == tempAttendance){
 			throw new NotFoundException("考勤");
 		}
+		if(attendance.getAttTime()!=null && attendance.getAttTime().size()!=0) {
+			errors.addAll(beanValidator.validateClassAuto(attendance.getAttTime(), true));
+			if(tempAttendance.getAttTime()!=null ) {
+				int i = tempAttendance.getAttTime().size();
+				for(AttendanceTime atttt: attendance.getAttTime()) {
+					if(atttt.getId()==null) {i++;} //有新增考勤时段
+				}
+				if(i>MAX_TIME_PER_ATT.intValue()) {
+					Map<String, String> e = new HashMap<String, String>();
+					e.put("field", "attTime");
+					e.put("message", "每考勤规则限定最多"+MAX_TIME_PER_ATT+"个时间段。");
+					errors.add(e);	
+				}
+			}
+		}
+		if(!errors.isEmpty()){
+			throw new ParameterException(errors);
+		}	
 		if(attendance.getTypes()!=null && attendance.getTypes().intValue()!=tempAttendance.getTypes().intValue()){
 			throw new ParameterException("types","考勤类型不允许变更。");
 		}
 		attendance.setAttendanceId(attendanceId);
-		attendance.setOutCt(null);
-		attendance.setSignCt(null);
+		attendance.setOutCt(null);//允许考勤提前时间
+		attendance.setSignCt(null);//允许考勤推迟时间
 		return attendanceService.modifyAttendance(attendance);
 	}
 
@@ -121,9 +132,9 @@ public class AttendanceController{
 		if(null == attendance){
 			throw new NotFoundException("考勤");
 		}
-		if(attendanceId.intValue()==1) {
-			throw new ParameterException("attendanceId", "全局考勤规则不允许删除。");
-		}
+//		if(attendanceId.intValue()==1) {
+//			throw new ParameterException("attendanceId", "全局考勤规则不允许删除。");
+//		}
 		return attendanceService.dropAttendanceByAttendanceId(attendanceId);
 	}
 	
@@ -136,20 +147,7 @@ public class AttendanceController{
 			throw new NotFoundException("考勤");
 		}
 		return attendance;
-	}
-	
-//	@ApiOperation(value = "查询 根据考勤属性查询考勤信息列表", notes = "根据考勤属性查询考勤信息列表")
-//	@RequestMapping(value = "/attendance", method = RequestMethod.GET)
-//	public Object queryAttendanceList(HttpServletResponse response,
-//			Attendance attendance) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-//		if(attendance==null){
-//			attendance = new Attendance();			
-//		}
-////		if(attendance.getStatus()==null){
-////			attendance.setStatus(0);//默认只查询正在使用的规则
-////		}
-//		return attendanceService.queryAttendanceByProperty(ClassUtil.transBean2Map(attendance, false));
-//	}
+	}	
 	
 	@ApiOperation(value = "查询分页 根据考勤属性分页查询考勤信息列表", notes = "根据考勤属性分页查询考勤信息列表")
 	@RequestMapping(value = "/attendances", method = RequestMethod.GET)

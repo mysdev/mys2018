@@ -11,13 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jing.attendance.controller.vo.AttendanceBo;
 import com.jing.attendance.model.dao.AttendanceDetailMapper;
-import com.jing.attendance.model.dao.AttendanceDiaryMapper;
 import com.jing.attendance.model.dao.AttendanceEmployeeMapper;
 import com.jing.attendance.model.dao.AttendanceMapper;
 import com.jing.attendance.model.dao.AttendanceTimeMapper;
 import com.jing.attendance.model.entity.Attendance;
 import com.jing.attendance.model.entity.AttendanceTime;
-import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
 import com.jing.utils.Constant;
 import com.jing.utils.paginator.domain.PageBounds;
@@ -37,23 +35,16 @@ public class  AttendanceServiceImpl implements AttendanceService {
 //	private static final Logger logger = LoggerFactory.getLogger(AttendanceServiceImpl.class);
 	
 	@Autowired
-    private AttendanceMapper attendanceMapper;  
-	
-	@Autowired
-	private AttendanceDetailMapper attendanceDetailMapper;
-	
-	@Autowired
-	private AttendanceDetailService attendanceDetailService;
-	
-	@Autowired
-	private AttendanceEmployeeMapper employeeAttendanceMapper;
-	
+    private AttendanceMapper attendanceMapper;	
+
 	@Autowired
 	private AttendanceTimeMapper attendanceTimeMapper;
 	
 	@Autowired
-	private AttendanceDiaryMapper attendanceDiaryMapper;
+	private AttendanceDetailMapper attendanceDetailMapper;	
 	
+	@Autowired
+	private AttendanceEmployeeMapper employeeAttendanceMapper;
     
 	@Autowired
 	private PageService pageService; // 分页器
@@ -61,7 +52,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	
 	/**
 	 * @Title: addAttendance
-	 * @Description:添加门店考勤
+	 * @Description:添加门店考勤-包含时段
 	 * @param attendance 实体
 	 * @return Integer
 	 */
@@ -71,8 +62,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		int ret = attendanceMapper.addAttendance(attendance);
 		if(ret>0){
 			if(attendance.getAttTime()!=null && attendance.getAttTime().size()>0){
-				for(AttendanceTime at : attendance.getAttTime()){
-					
+				for(AttendanceTime at : attendance.getAttTime()){					
 					at.setAttendanceId(attendance.getAttendanceId()); //回填标识
 					attendanceTimeMapper.addAttendanceTime(at);
 				}
@@ -105,12 +95,14 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	@Transactional(readOnly = false)
 	public Integer modifyAttendance(AttendanceBo attendance){
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>0){
-			attendanceTimeMapper.dropAttendanceTimeByAttendanceId(attendance.getAttendanceId());
 			for(AttendanceTime at : attendance.getAttTime()){
-				at.setAttendanceId(attendance.getAttendanceId()); //回填标识
-				attendanceTimeMapper.addAttendanceTime(at);
+				at.setAttendanceId(attendance.getAttendanceId()); //回填考勤标识
+				if(at.getId()!=null) {
+					attendanceTimeMapper.modifyAttendanceTime(at);
+				}else {					
+					attendanceTimeMapper.addAttendanceTime(at);
+				}				
 			}
-			attendanceDetailService.modifyAttendanceDetailChange(attendance.getAttendanceId(), attendance.getAttTime().get(0), null);
 		}
 		return attendanceMapper.modifyAttendance(attendance);
 	}
@@ -124,16 +116,15 @@ public class  AttendanceServiceImpl implements AttendanceService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer dropAttendanceByAttendanceId(Integer attendanceId){
-		//详情清空
-		attendanceTimeMapper.dropAttendanceTimeByAttendanceId(attendanceId);
-		attendanceDetailMapper.dropAttendanceDetailByAttendanceId(attendanceId);
-		employeeAttendanceMapper.dropAttendanceEmployeeByAttendanceId(attendanceId);
-		return attendanceMapper.dropAttendanceByAttendanceId(attendanceId);
+		attendanceDetailMapper.dropAttendanceDetailByAttendanceId(attendanceId); //清空考勤详情配置
+		attendanceTimeMapper.dropAttendanceTimeByAttendanceId(attendanceId);//清空考勤时段
+		employeeAttendanceMapper.dropAttendanceEmployeeByAttendanceId(attendanceId);//清空员工考勤关系		
+		return attendanceMapper.dropAttendanceByAttendanceId(attendanceId);//删除考勤
 	}
 	
 	/**
 	 * @Title: queryAttendanceByAttendanceId
-	 * @Description:根据实体标识查询门店考勤
+	 * @Description:根据实体标识查询考勤
 	 * @param attendanceId 实体标识
 	 * @return Attendance
 	 */
@@ -148,7 +139,7 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		query.put("attendanceId", attendanceId);
 		ab.setAttTime(attendanceTimeMapper.queryAttendanceTimeByProperty(query));
 		return ab;
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	}
 	 
 	/**
 	 * @Title: queryAttendanceForPage
@@ -184,30 +175,6 @@ public class  AttendanceServiceImpl implements AttendanceService {
 		return ret;
 	}
 
-	/*
-	 * @Title: initAttendanceDayWork
-	 * @Description: 
-	 * @param @return    参数  
-	 * @author Jinlong He
-	 * @return
-	 * @see com.jing.attendance.service.AttendanceService#initAttendanceDayWork()
-	 */ 
-	@Override
-	@Transactional(readOnly = false)
-	public Boolean initAttendanceDayWork() {
-		//查询、生成所有考勤规则当月数据		
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Attendance> attList = attendanceMapper.queryAttendanceByProperty(map );
-		for(Attendance att : attList) {
-			attendanceDetailService.queryAttendanceDetail(att.getAttendanceId(), null);
-		}
-		attendanceDetailMapper.disableDetailEditable(); //锁定当日考勤详情
-		if(attendanceDiaryMapper.queryEmployeeCountsToday().intValue()==0) {
-			attendanceDiaryMapper.initEmployeeBindingData(); //生成当日绑定规则员工考勤详情
-			attendanceDiaryMapper.initEmployeeNotBindingData();//生成当日未绑定规则员工考勤详情
-		}
-		return null;
-	}
 
 
 }

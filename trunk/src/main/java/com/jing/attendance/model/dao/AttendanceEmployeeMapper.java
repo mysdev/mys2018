@@ -60,21 +60,21 @@ public interface AttendanceEmployeeMapper {
 	*/
 	AttendanceEmployee queryAttendanceEmployeeByEmpId(String empId);
 	 
-	/**
-	 * @Title: queryAttendanceEmployeeForPage
-	 * @Description: 根据员工考勤关系属性与分页信息分页查询员工考勤关系信息
-	 * @param pageBounds 分页信息
-	 * @param employeeAttendance 实体
-	 * @return List<AttendanceEmployee>
-	 */
-	List<AttendanceEmployee> queryAttendanceEmployeeForPage(PageBounds pageBounds, @Param("employeeAttendance") AttendanceEmployee employeeAttendance);
-	 
 	 /**
 	  * @Title: queryAttendanceEmployeeByProperty
-	  * @Description:根据属性查询员工考勤关系
+	  * @Description:查询已经绑定考勤关系的员工
 	  * @return List<AttendanceEmployee>
 	  */
-	 List<AttendanceEmployee> queryAttendanceEmployeeByProperty(@Param("employeeAttendance") Map<String, Object> map);
+	List<Map<String, String>> queryAttendanceEmployeeByProperty(Integer attendanceId);
+	
+	/** 
+	* @Title: queryAttendanceEmployeeFree 
+	* @Description: 查询没有绑定考勤的员工
+	* @return  
+	* List<Map<String,String>>    返回类型 
+	* @throws 
+	*/
+	List<Map<String, String>> queryAttendanceEmployeeFree();
 
 	/** 
 	* @Title: queryAttendanceEmployeeAllForPage 
@@ -95,17 +95,8 @@ public interface AttendanceEmployeeMapper {
 	* @return  List<AttendanceEmployeeBo>    返回类型 
 	* @throws 
 	*/
-	List<Map<String, Object>> queryAttendanceEmployeeNotForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
+	List<Map<String, Object>> queryAttendanceEmployeeForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
 	
-	/** 
-	* @Title: queryAttendanceEmployeeTotalForPage 
-	* @Description: 全部用户考勤规则
-	* @param pageBounds
-	* @param param
-	* @return  List<AttendanceEmployeeBo>    返回类型 
-	* @throws 
-	*/
-	List<Map<String, Object>> queryAttendanceEmployeeTotalForPage(PageBounds pageBounds, @Param("param") Map<String, Object> param);
 	
 	Integer dropAttendanceEmployeeByAttendanceId(Integer attendanceId);
 	 

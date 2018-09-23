@@ -44,4 +44,13 @@ public interface PublicAttendanceService {
 	* @throws 
 	*/
 	void doAndRedoPersonAttendanceByEmpId(String empId);
+	
+	
+    /** 
+	* @Title: initAttendanceDayWork 
+	* @Description: 执行考勤日常任务：  锁定当日考勤详情，根据当日考勤详情生成员工考勤详情
+	* @return  Boolean    返回类型 
+	* @throws 
+	*/
+	Boolean initAttendanceDayWork();
 }
