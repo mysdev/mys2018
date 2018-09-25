@@ -54,7 +54,7 @@ public class MemberLevelController extends BaseController{
 	@ApiOperation(value = "修改会员体系", notes = "修改会员体系")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Result update(MemberLevel memberLevel,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		if(memberLevel==null || memberLevel.getLevelId()==null || "".equals(memberLevel.getLevelId())){
+		if(memberLevel==null || memberLevel.getLevelId()==null){
 			throw new CustomException("缺失修改参数.");
 		}
 		memberLevel.setUpdatedBy(user.getUserId());

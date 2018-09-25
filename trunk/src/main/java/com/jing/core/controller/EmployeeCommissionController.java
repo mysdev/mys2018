@@ -53,7 +53,7 @@ public class EmployeeCommissionController extends BaseController{
 	@ApiOperation(value = "修改员工提成", notes = "修改员工提成")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Result update(EmployeeCommission employeeCommission,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		if(employeeCommission==null || employeeCommission.getCid()==null || "".equals(employeeCommission.getCid())){
+		if(employeeCommission==null || employeeCommission.getCid()==null){
 			throw new CustomException("缺失修改参数.");
 		}
 		employeeCommission.setUpdatedBy(user.getUserId());
@@ -65,7 +65,7 @@ public class EmployeeCommissionController extends BaseController{
 	@ApiOperation(value = "删除 根据ID删除员工提成", notes = "根据ID删除员工提成")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失删除参数.");
 		}
 		employeeCommissionService.deleteEmployeeCommissionById(id);
@@ -75,7 +75,7 @@ public class EmployeeCommissionController extends BaseController{
 	@ApiOperation(value = "根据ID查询员工提成", notes = "根据ID查询员工提成")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失查询参数.");
 		}
 		return Result.getDefaultSuccMsgResult(employeeCommissionService.getEmployeeCommissionById(id));

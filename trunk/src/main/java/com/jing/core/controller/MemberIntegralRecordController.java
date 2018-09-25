@@ -53,7 +53,7 @@ public class MemberIntegralRecordController extends BaseController{
 	@ApiOperation(value = "修改会员积分流水", notes = "修改会员积分流水")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Result update(MemberIntegralRecord memberIntegralRecord,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		if(memberIntegralRecord==null || memberIntegralRecord.getRecordId()==null || "".equals(memberIntegralRecord.getRecordId())){
+		if(memberIntegralRecord==null || memberIntegralRecord.getRecordId()==null){
 			throw new CustomException("缺失修改参数.");
 		}
 		memberIntegralRecord.setUpdatedBy(user.getUserId());
@@ -65,7 +65,7 @@ public class MemberIntegralRecordController extends BaseController{
 	@ApiOperation(value = "删除 根据ID删除会员积分流水", notes = "根据ID删除会员积分流水")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失删除参数.");
 		}
 		memberIntegralRecordService.deleteMemberIntegralRecordById(id);
@@ -75,7 +75,7 @@ public class MemberIntegralRecordController extends BaseController{
 	@ApiOperation(value = "根据ID查询会员积分流水", notes = "根据ID查询会员积分流水")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失查询参数.");
 		}
 		return Result.getDefaultSuccMsgResult(memberIntegralRecordService.getMemberIntegralRecordById(id));

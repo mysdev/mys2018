@@ -45,8 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// 设置不拦截规则
-		web.ignoring().antMatchers("/pc/**","**/syswhite/**", "/swagger-ui.html", "/**/images/**", "/**/css/**", "**/js/**", "/**/checkcode","/loginSuccess","/logoutSuccess");
-		// super.configure(web);
+		web.ignoring().antMatchers("/pc/**","**/syswhite/**","/swagger-resources/**","/swagger/**","/v2/**", "/**/images/**", "/**/css/**", "**/js/**", "/**/checkcode","/loginSuccess","/logoutSuccess");
 	}
 
 	public PermissionSecurityFilter springSecurityFilterPermission() {

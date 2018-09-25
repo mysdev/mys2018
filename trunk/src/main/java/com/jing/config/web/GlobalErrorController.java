@@ -81,8 +81,6 @@ public class GlobalErrorController implements ErrorController {
         return ERROR_PATH;
     }
 
-
-    @SuppressWarnings("unused")
 	private boolean getTraceParameter(HttpServletRequest request) {
         String parameter = request.getParameter("trace");
         if (parameter == null) {

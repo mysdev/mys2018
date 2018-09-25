@@ -53,7 +53,7 @@ public class MemberMoneyRecordController extends BaseController{
 	@ApiOperation(value = "修改会员金额流水", notes = "修改会员金额流水")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Result update(MemberMoneyRecord memberMoneyRecord,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		if(memberMoneyRecord==null || memberMoneyRecord.getRecordId()==null || "".equals(memberMoneyRecord.getRecordId())){
+		if(memberMoneyRecord==null || memberMoneyRecord.getRecordId()==null){
 			throw new CustomException("缺失修改参数.");
 		}
 		memberMoneyRecord.setUpdatedBy(user.getUserId());
@@ -65,7 +65,7 @@ public class MemberMoneyRecordController extends BaseController{
 	@ApiOperation(value = "删除 根据ID删除会员金额流水", notes = "根据ID删除会员金额流水")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失删除参数.");
 		}
 		memberMoneyRecordService.deleteMemberMoneyRecordById(id);
@@ -75,7 +75,7 @@ public class MemberMoneyRecordController extends BaseController{
 	@ApiOperation(value = "根据ID查询会员金额流水", notes = "根据ID查询会员金额流水")
 	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
 	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
-		if(id==null || "".equals(id)){
+		if(id==null){
 			throw new CustomException("缺失查询参数.");
 		}
 		return Result.getDefaultSuccMsgResult(memberMoneyRecordService.getMemberMoneyRecordById(id));
