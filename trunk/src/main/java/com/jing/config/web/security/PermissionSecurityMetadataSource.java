@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import com.jing.config.web.exception.CustomException;
 import com.jing.system.login.LoginService;
+import com.jing.system.permission.entity.Role;
 import com.jing.utils.SpringContextHolder;
 
 /**
@@ -167,7 +168,23 @@ public class PermissionSecurityMetadataSource implements FilterInvocationSecurit
 		if (resRoleList == null || resRoleList.size() == 0) {
 			String msg = "未设置此资源:" + requestUrl + " 的访问权限，请联系系统管理员进行处理，谢谢.";
 			this.logger.warn(msg);
-			throw new IllegalArgumentException(msg);
+			//throw new IllegalArgumentException(msg);
+			resRoleList = new ArrayList<SecurityRoleDetail>();
+			Role role = new Role();
+			role.setRoleName("ROLE_ADMIN");
+			resRoleList.add(role);
+		}else {
+			boolean isHaveAdmin = false;
+			for (SecurityRoleDetail securityRoleDetail : resRoleList) {
+				if("ROLE_ADMIN".equals(securityRoleDetail.getRoleName())) {
+					isHaveAdmin = true;
+				}
+			}
+			if(!isHaveAdmin) {
+				Role role = new Role();
+				role.setRoleName("ROLE_ADMIN");
+				resRoleList.add(role);
+			}
 		}
 	}
 
