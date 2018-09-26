@@ -22,10 +22,6 @@ public class Goods extends BaseEntity {
 	private String goodsId;	//to_goods:goods_id  商品标识  
 
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
-	@Length(min=1, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private String storeId;	//to_goods:store_id  归属门店  
-
-	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=128, message="{org.hibernate.validator.constraints.Length.message}")
 	private String goodsName;	//to_goods:goods_name  商品名称  
 
@@ -81,23 +77,6 @@ public class Goods extends BaseEntity {
 	*/
 	public void setGoodsId(String goodsId){
 		this.goodsId = goodsId;	
-	}	
-	/**
-	* @DatabasetableColumnName: to_goods:store_id
-	* @Description: 获取属性        归属门店
-	* @return: String
-	*/
-	public String getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: to_goods:store_id
-	* @Description: 设置属性        归属门店
-	* @return: String
-	*/
-	public void setStoreId(String storeId){
-		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: to_goods:goods_name

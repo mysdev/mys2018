@@ -58,12 +58,14 @@ public class DictionaryMapper implements CacheObserver {
 
 	public synchronized static void setValue(Dictionary dict) {
 		List<Dictionary> list = objMapper.get(dict.getGroupCode());
-		if (list == null) {
+		if (list == null || list.size()==0) {
 			list = new ArrayList<Dictionary>();
 			list.add(dict);
 			objMapper.put(dict.getGroupCode(), list,600000);
 		} else {
-			list.add(dict);
+			DictionaryService dictionaryService = (DictionaryService) SpringContextHolder.getBean("dictionaryService");
+			list = dictionaryService.findDictionaryByGroupCode(dict.getGroupCode());
+			objMapper.put(dict.getGroupCode(), list,600000);
 		}
 	}
 

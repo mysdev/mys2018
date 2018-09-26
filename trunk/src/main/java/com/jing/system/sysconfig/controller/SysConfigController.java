@@ -24,11 +24,14 @@ import com.jing.system.sysconfig.service.SysConfigService;
 import com.jing.system.user.entity.User;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>系统参数 WEB接口<br>
  * <br>
  */
+@Api("系统配置")
 @Controller
 @RequestMapping("/sys/sysConfig")
 public class SysConfigController extends BaseController{

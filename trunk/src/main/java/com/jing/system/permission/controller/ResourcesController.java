@@ -22,11 +22,14 @@ import com.jing.system.permission.entity.VResources;
 import com.jing.system.permission.service.ResourcesService;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>系统资源（菜单、按钮） WEB接口<br>
  * <br>
  */
+@Api("系统资源")
 @Controller
 @RequestMapping("/sys/permission/resources")
 public class ResourcesController extends BaseController{

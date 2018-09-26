@@ -30,11 +30,14 @@ import com.jing.system.document.util.DocumentUtils;
 import com.jing.utils.BaseController;
 import com.jing.utils.FileUtil;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>附件 WEB接口<br>
  * <br>
  */
+@Api("附件上传下载")
 @Controller
 @RequestMapping("/document")
 public class DocumentController extends BaseController {

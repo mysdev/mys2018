@@ -1,115 +1,90 @@
 package com.jing.settlement.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.settlement.model.entity.GoodsMaterial;
 import com.jing.settlement.service.GoodsMaterialService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: GoodsMaterialController
- * @Description: 基本原料HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * <br>
+ * <b>功能：</b>基本原料 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="基本原料", tags={"SettlementGoodsMaterial"})
-public class GoodsMaterialController{
+@Api("基本原料")
+@Controller
+@RequestMapping("/settlement/goodsMaterial")
+public class GoodsMaterialController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private GoodsMaterialService goodsMaterialService;
-
 	
-	@ApiOperation(value = "新增 添加基本原料信息", notes = "添加基本原料信息")
-	@RequestMapping(value = "/goodsmaterial", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addGoodsMaterial(HttpServletResponse response,
-			@ApiParam(value = "goodsMaterial") @RequestBody GoodsMaterial goodsMaterial) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(goodsMaterial, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		goodsMaterial.setMaterialId(null);
+	@ApiOperation(value = "新增基本原料", notes = "添加基本原料")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(GoodsMaterial goodsMaterial,@SessionAttr(Config.USER_INFO) User user) {
+		goodsMaterial.setCreatedBy(user.getUserId());
+		goodsMaterial.setCreatedDateNow();
+		goodsMaterial.setUpdatedBy(user.getUserId());
+		goodsMaterial.setUpdatedDateNow();
 		goodsMaterialService.addGoodsMaterial(goodsMaterial);
-		return goodsMaterial;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据基本原料标识更新基本原料信息", notes = "根据基本原料标识更新基本原料信息")
-	@RequestMapping(value = "/goodsmaterial/{materialId:.+}", method = RequestMethod.PUT)
-	public Object modifyGoodsMaterialById(HttpServletResponse response,
-			@PathVariable Integer materialId,
-			@ApiParam(value = "goodsMaterial", required = true) @RequestBody GoodsMaterial goodsMaterial
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(goodsMaterial, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改基本原料", notes = "修改基本原料")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(GoodsMaterial goodsMaterial,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(goodsMaterial==null || goodsMaterial.getMaterialId()==null || "".equals(goodsMaterial.getMaterialId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		GoodsMaterial tempGoodsMaterial = goodsMaterialService.queryGoodsMaterialByMaterialId(materialId);
-		goodsMaterial.setMaterialId(materialId);
-		if(null == tempGoodsMaterial){
-			throw new NotFoundException("基本原料");
-		}
-		return goodsMaterialService.modifyGoodsMaterial(goodsMaterial);
+		goodsMaterial.setUpdatedBy(user.getUserId());
+		goodsMaterial.setUpdatedDateNow();
+		goodsMaterialService.updateGoodsMaterial(goodsMaterial);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据基本原料标识删除基本原料信息", notes = "根据基本原料标识删除基本原料信息")
-	@RequestMapping(value = "/goodsmaterial/{materialId:.+}", method = RequestMethod.DELETE)
-	public Object dropGoodsMaterialByMaterialId(HttpServletResponse response, @PathVariable Integer materialId) {
-		GoodsMaterial goodsMaterial = goodsMaterialService.queryGoodsMaterialByMaterialId(materialId);
-		if(null == goodsMaterial){
-			throw new NotFoundException("基本原料");
+	@ApiOperation(value = "删除 根据ID删除基本原料", notes = "根据ID删除基本原料")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return goodsMaterialService.dropGoodsMaterialByMaterialId(materialId);
+		goodsMaterialService.deleteGoodsMaterialById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据基本原料标识查询基本原料信息", notes = "根据基本原料标识查询基本原料信息")
-	@RequestMapping(value = "/goodsmaterial/{materialId:.+}", method = RequestMethod.GET)
-	public Object queryGoodsMaterialById(HttpServletResponse response,
-			@PathVariable Integer materialId) {
-		GoodsMaterial goodsMaterial = goodsMaterialService.queryGoodsMaterialByMaterialId(materialId);
-		if(null == goodsMaterial){
-			throw new NotFoundException("基本原料");
+	@ApiOperation(value = "根据ID查询基本原料", notes = "根据ID查询基本原料")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return goodsMaterial;
+		return Result.getDefaultSuccMsgResult(goodsMaterialService.getGoodsMaterialById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据基本原料属性查询基本原料信息列表", notes = "根据基本原料属性查询基本原料信息列表")
-	@RequestMapping(value = "/goodsmaterial", method = RequestMethod.GET)
-	public Object queryGoodsMaterialList(HttpServletResponse response,
-			GoodsMaterial goodsMaterial) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return goodsMaterialService.queryGoodsMaterialByProperty(ClassUtil.transBean2Map(goodsMaterial, false));
+		
+	@ApiOperation(value = "分页查询基本原料", notes = "分页查询基本原料")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return goodsMaterialService.findGoodsMaterialListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询分页 根据基本原料属性分页查询基本原料信息列表", notes = "根据基本原料属性分页查询基本原料信息列表")
-	@RequestMapping(value = "/goodsmaterials", method = RequestMethod.GET)
-	public Object queryGoodsMaterialPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, GoodsMaterial goodsMaterial) {				
-		return goodsMaterialService.queryGoodsMaterialForPage(pagenum, pagesize, sort, goodsMaterial);
-	}
-
 }

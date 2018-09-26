@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'goodsId', title:'商品标识',hidden:true  },
+				{field:'goodsName', title:'商品名称', width:120, align:'center'  },
+				{field:'price', title:'商品售价', width:52, align:'center'  },
+				{field:'unitId', title:'商品单位', width:52, align:'center'  },
+				{field:'goodsTime', title:'服务时长（分）', width:78, align:'center'  },
+				{field:'classify', title:'商品小类', width:52, align:'center'  ,
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('2001', row.classify);
+					}	
+				},
+				{field:'materialTypes', title:'原料类型', width:182, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.materialTypes!=null){
+							if(row.materialTypes=="0"){
+								return "物品";
+							}else{
+								return "服务";
+							}
+						}
+					}	
+				},
+				{field:'materialId', title:'库存', width:52, align:'center'  },
+				{field:'note', title:'商品说明', width:200, align:'center'  },
+				{field:'materialCt', title:'消耗原料数量', width:80, align:'center'  },
+				{field:'status', title:'状态', width:78, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.status!=null){
+							if(row.status=="0"){
+								return "正常";
+							}else if(row.status=="1"){
+								return "下架";
+							}else if(row.status=="2"){
+								return "售罄";
+							}
+						}
+					}
+				},
+				{field:'saleStatus', title:'销售状态', width:80, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.saleStatus!=null){
+							if(row.saleStatus=="0"){
+								return "推荐";
+							}else{
+								return "热销";
+							}
+						}
+					}
+				},
+				{field:'isShow', title:'对客显示', width:91, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.isShow);
+					}
+				},
+				{field:'canCancel', title:'可否撤消 ', width:100, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.canCancel);
+					}
+				}
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_goods', //表格容器id
+			tableKey : "goodsId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/goods/page', //列表接口
+			sortName : 'goods_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加商品服务",
+			addUrl : "/pc/webpage/settlement/goods/goods_form.html"
+		},
+		updateOptions : {
+			title : "修改商品服务",
+			updateUrl : "/pc/webpage/settlement/goods/goods_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/goods/delete/'
+		},
+		viewOptions : {
+			title:'查看商品服务',
+			viewUrl : "/pc/webpage/settlement/goods/goods_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="goodsName" name="goodsName" class="search_input_imp" placeholder="请输入商品名称">
+					<input id="price" name="price" class="search_input_imp" placeholder="请输入商品售价">
+					<input id="unitId" name="unitId" class="search_input_imp" placeholder="请输入商品单位">
+					<input id="goodsTime" name="goodsTime" class="search_input_imp" placeholder="请输入服务时长 分">
+					<input id="classify" name="classify" class="search_input_imp" placeholder="请输入商品小类">
+					<input id="materialId" name="materialId" class="search_input_imp" placeholder="请输入原料标识">
+					<input id="materialTypes" name="materialTypes" class="search_input_imp" placeholder="请输入原料类型(冗) 0物品1服务">
+					<input id="materialCt" name="materialCt" class="search_input_imp" placeholder="请输入消耗原料数量 0不减库存">
+					<input id="status" name="status" class="search_input_imp" placeholder="请输入状态 0正常">
+					<input id="saleStatus" name="saleStatus" class="search_input_imp" placeholder="请输入销售状态 推荐热销">
+					<input id="note" name="note" class="search_input_imp" placeholder="请输入商品说明">
+					<input id="goodsImg" name="goodsImg" class="search_input_imp" placeholder="请输入商品图例">
+					<input id="isShow" name="isShow" class="search_input_imp" placeholder="请输入对客显示 0是">
+					<input id="canCancel" name="canCancel" class="search_input_imp" placeholder="请输入可否撤消 0是1否">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_goods" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

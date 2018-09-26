@@ -2,162 +2,178 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.settlement.model.dao.GoodsMapper">
 
-<!-- Result Map-->
-<resultMap id="GoodsResultMap" type="com.jing.settlement.model.entity.Goods">
-	<id column="goods_id" property="goodsId"/>
-	<result column="store_id" property="storeId"/>
-	<result column="goods_name" property="goodsName"/>
-	<result column="price" property="price"/>
-	<result column="unit_id" property="unitId"/>
-	<result column="goods_time" property="goodsTime"/>
-	<result column="classify" property="classify"/>
-	<result column="material_id" property="materialId"/>
-	<result column="material_types" property="materialTypes"/>
-	<result column="material_ct" property="materialCt"/>
-	<result column="status" property="status"/>
-	<result column="sale_status" property="saleStatus"/>
-	<result column="note" property="note"/>
-	<result column="goods_img" property="goodsImg"/>
-	<result column="is_show" property="isShow"/>
-	<result column="can_cancel" property="canCancel"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="GoodsResultMap" type="com.jing.settlement.model.entity.Goods">
+		<id column="goods_id" property="goodsId" />
+		<result column="goods_name" property="goodsName" />
+		<result column="price" property="price" />
+		<result column="unit_id" property="unitId" />
+		<result column="goods_time" property="goodsTime" />
+		<result column="classify" property="classify" />
+		<result column="material_id" property="materialId" />
+		<result column="material_types" property="materialTypes" />
+		<result column="material_ct" property="materialCt" />
+		<result column="status" property="status" />
+		<result column="sale_status" property="saleStatus" />
+		<result column="note" property="note" />
+		<result column="goods_img" property="goodsImg" />
+		<result column="is_show" property="isShow" />
+		<result column="can_cancel" property="canCancel" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.goodsId != null and param.goodsId != ''">
+				and goods_id = #{param.goodsId}
+			</if>
+			<if test="param.goodsName != null and param.goodsName != ''">
+				and goods_name = #{param.goodsName}
+			</if>
+			<if test="param.price != null and param.price != ''">
+				and price = #{param.price}
+			</if>
+			<if test="param.unitId != null and param.unitId != ''">
+				and unit_id = #{param.unitId}
+			</if>
+			<if test="param.goodsTime != null and param.goodsTime != ''">
+				and goods_time = #{param.goodsTime}
+			</if>
+			<if test="param.classify != null and param.classify != ''">
+				and classify = #{param.classify}
+			</if>
+			<if test="param.materialId != null and param.materialId != ''">
+				and material_id = #{param.materialId}
+			</if>
+			<if test="param.materialTypes != null and param.materialTypes != ''">
+				and material_types = #{param.materialTypes}
+			</if>
+			<if test="param.materialCt != null and param.materialCt != ''">
+				and material_ct = #{param.materialCt}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.saleStatus != null and param.saleStatus != ''">
+				and sale_status = #{param.saleStatus}
+			</if>
+			<if test="param.note != null and param.note != ''">
+				and note = #{param.note}
+			</if>
+			<if test="param.goodsImg != null and param.goodsImg != ''">
+				and goods_img = #{param.goodsImg}
+			</if>
+			<if test="param.isShow != null and param.isShow != ''">
+				and is_show = #{param.isShow}
+			</if>
+			<if test="param.canCancel != null and param.canCancel != ''">
+				and can_cancel = #{param.canCancel}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_goods_item">
-	goods_id, store_id, goods_name, price, unit_id, goods_time, classify, material_id, material_types, material_ct, status, sale_status, note, goods_img, is_show, can_cancel, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_goods_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="goods.goodsId != null">AND goods_id like concat(#{goods.goodsId}, '%') </if>
-		<if test="goods.storeId != null">AND store_id like concat(#{goods.storeId}, '%') </if>
-		<if test="goods.goodsName != null">AND goods_name like concat(#{goods.goodsName}, '%') </if>
-		<if test="goods.unitId != null">AND unit_id = #{goods.unitId} </if>
-		<if test="goods.goodsTime != null">AND goods_time = #{goods.goodsTime} </if>
-		<if test="goods.classify != null">AND classify = #{goods.classify} </if>
-		<if test="goods.materialId != null">AND material_id = #{goods.materialId} </if>
-		<if test="goods.materialTypes != null">AND material_types = #{goods.materialTypes} </if>
-		<if test="goods.materialCt != null">AND material_ct = #{goods.materialCt} </if>
-		<if test="goods.status != null">AND status = #{goods.status} </if>
-		<if test="goods.saleStatus != null">AND sale_status = #{goods.saleStatus} </if>
-		<if test="goods.note != null">AND note like concat(#{goods.note}, '%') </if>
-		<if test="goods.goodsImg != null">AND goods_img like concat(#{goods.goodsImg}, '%') </if>
-		<if test="goods.isShow != null">AND is_show = #{goods.isShow} </if>
-		<if test="goods.canCancel != null">AND can_cancel = #{goods.canCancel} </if>
-		<if test="goods.createdBy != null">AND created_by like concat(#{goods.createdBy}, '%') </if>
-		<if test="goods.updatedBy != null">AND updated_by like concat(#{goods.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 商品服务 -->
-<insert id="addGoods" parameterType="com.jing.settlement.model.entity.Goods" >
- 	INSERT INTO to_goods 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="goodsId != null"> goods_id,</if>
-		<if test="storeId != null"> store_id,</if>
-		<if test="goodsName != null"> goods_name,</if>
-		<if test="price != null"> price,</if>
-		<if test="unitId != null"> unit_id,</if>
-		<if test="goodsTime != null"> goods_time,</if>
-		<if test="classify != null"> classify,</if>
-		<if test="materialId != null"> material_id,</if>
-		<if test="materialTypes != null"> material_types,</if>
-		<if test="materialCt != null"> material_ct,</if>
-		<if test="status != null"> status,</if>
-		<if test="saleStatus != null"> sale_status,</if>
-		<if test="note != null"> note,</if>
-		<if test="goodsImg != null"> goods_img,</if>
-		<if test="isShow != null"> is_show,</if>
-		<if test="canCancel != null"> can_cancel,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="goodsId != null"> #{goodsId},</if>
-		<if test="storeId != null"> #{storeId},</if>
-		<if test="goodsName != null"> #{goodsName},</if>
-		<if test="price != null"> #{price},</if>
-		<if test="unitId != null"> #{unitId},</if>
-		<if test="goodsTime != null"> #{goodsTime},</if>
-		<if test="classify != null"> #{classify},</if>
-		<if test="materialId != null"> #{materialId},</if>
-		<if test="materialTypes != null"> #{materialTypes},</if>
-		<if test="materialCt != null"> #{materialCt},</if>
-		<if test="status != null"> #{status},</if>
-		<if test="saleStatus != null"> #{saleStatus},</if>
-		<if test="note != null"> #{note},</if>
-		<if test="goodsImg != null"> #{goodsImg},</if>
-		<if test="isShow != null"> #{isShow},</if>
-		<if test="canCancel != null"> #{canCancel},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 商品服务 -->
+	<insert id="addGoods" parameterType="com.jing.settlement.model.entity.Goods">
+		INSERT INTO to_goods (goods_id ,goods_name ,price ,unit_id ,goods_time ,classify ,material_id ,material_types ,material_ct ,status ,sale_status ,note ,goods_img ,is_show ,can_cancel ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{goodsId},#{goodsName},#{price},#{unitId},#{goodsTime},#{classify},#{materialId},#{materialTypes},#{materialCt},#{status},#{saleStatus},#{note},#{goodsImg},#{isShow},#{canCancel},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 商品服务 -->  
-<update id="modifyGoods" parameterType="com.jing.settlement.model.entity.Goods" >
-  	UPDATE to_goods SET
-	<trim suffixOverrides=",">
-		<if test="storeId != null"> store_id = #{storeId},</if>
-		<if test="goodsName != null"> goods_name = #{goodsName},</if>
-		<if test="price != null"> price = #{price},</if>
-		<if test="unitId != null"> unit_id = #{unitId},</if>
-		<if test="goodsTime != null"> goods_time = #{goodsTime},</if>
-		<if test="classify != null"> classify = #{classify},</if>
-		<if test="materialId != null"> material_id = #{materialId},</if>
-		<if test="materialTypes != null"> material_types = #{materialTypes},</if>
-		<if test="materialCt != null"> material_ct = #{materialCt},</if>
-		<if test="status != null"> status = #{status},</if>
-		<if test="saleStatus != null"> sale_status = #{saleStatus},</if>
-		<if test="note != null"> note = #{note},</if>
-		<if test="goodsImg != null"> goods_img = #{goodsImg},</if>
-		<if test="isShow != null"> is_show = #{isShow},</if>
-		<if test="canCancel != null"> can_cancel = #{canCancel},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE goods_id = #{goodsId}
-</update>
- 
-<!-- 删除 商品服务 -->
-<delete id="dropGoodsByGoodsId" parameterType="java.lang.String">
-	DELETE FROM to_goods WHERE goods_id = #{goodsId}
-</delete> 
-
-<!-- 根据标识查询 商品服务 -->
-<select id="queryGoodsByGoodsId"  resultMap="GoodsResultMap" parameterType="java.lang.String">
-	SELECT 
-	<include refid="sql_goods_item"/>
-	FROM to_goods WHERE goods_id = #{goodsId}
-</select>
-
-<!-- 根据属性查询商品服务 -->
-<select id="queryGoodsByProperty"  resultMap="GoodsResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_goods_item"/>
-	FROM to_goods 
-	<where>
-		<include refid="sql_goods_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据商品服务属性与分页信息分页查询商品服务信息 -->
-<select id="queryGoodsForPage"  resultMap="GoodsResultMap" > 
-	SELECT 
-	<include refid="sql_goods_item"/>
-	FROM to_goods 
-	<where>
-		<include refid="sql_goods_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改商品服务 -->
+	<update id="updateGoods" parameterType="com.jing.settlement.model.entity.Goods">
+		UPDATE to_goods
+		<set> 
+			<if test="goodsName != null" >
+				goods_name = #{goodsName},
+			</if>
+			<if test="price != null" >
+				price = #{price},
+			</if>
+			<if test="unitId != null" >
+				unit_id = #{unitId},
+			</if>
+			<if test="goodsTime != null" >
+				goods_time = #{goodsTime},
+			</if>
+			<if test="classify != null" >
+				classify = #{classify},
+			</if>
+			<if test="materialId != null" >
+				material_id = #{materialId},
+			</if>
+			<if test="materialTypes != null" >
+				material_types = #{materialTypes},
+			</if>
+			<if test="materialCt != null" >
+				material_ct = #{materialCt},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="saleStatus != null" >
+				sale_status = #{saleStatus},
+			</if>
+			<if test="note != null" >
+				note = #{note},
+			</if>
+			<if test="goodsImg != null" >
+				goods_img = #{goodsImg},
+			</if>
+			<if test="isShow != null" >
+				is_show = #{isShow},
+			</if>
+			<if test="canCancel != null" >
+				can_cancel = #{canCancel},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	goods_id = #{goodsId}
+	</update>
+	
+	<!-- 根据ID删除商品服务 -->
+	<delete id="deleteGoodsById"  parameterType="String">
+		DELETE FROM to_goods WHERE goods_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询商品服务 -->
+	<select id="getGoodsById" resultMap="GoodsResultMap" parameterType="String">
+		SELECT * FROM to_goods WHERE goods_id = #{value}
+	</select>
+	
+	<select id="findGoodsListPage" resultMap="GoodsResultMap">
+		SELECT * FROM to_goods
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findGoodsList" resultMap="GoodsResultMap">
+		SELECT * FROM to_goods
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

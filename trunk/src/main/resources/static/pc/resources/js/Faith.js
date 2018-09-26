@@ -865,7 +865,7 @@ Faith.getQueryStringByIndex = function(index) {
  * @returns
  */
 Faith.dictionaryToChinese = function(group, code) {
-	if(!code) {
+	if(!code && code!='0') {
 		return "";
 	}
 	var array = [];

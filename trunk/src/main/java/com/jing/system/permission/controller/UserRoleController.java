@@ -17,6 +17,9 @@ import com.jing.system.permission.entity.UserRole;
 import com.jing.system.permission.service.UserRoleService;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
+@Api("用户角色(授权)管理")
 @Controller
 @RequestMapping("/sys/permission/userRole")
 public class UserRoleController extends BaseController {
