@@ -22,6 +22,20 @@ import java.util.regex.Pattern;
  */
 public class DateUtil {
 
+	/** 
+	* @Title: getStringOnDateFormat 
+	* @Description: 按格式取日期数据
+	* @param date
+	* @param dateFormat
+	* @return  
+	* String    返回类型 
+	* @throws 
+	*/
+	public static final String getStringOnDateFormat(Date date, String dateFormat){
+		SimpleDateFormat format = new java.text.SimpleDateFormat(dateFormat); 
+		String currdate=format.format(date); 
+		return currdate;
+	}
 	/**
 	 * 
 	* @Title: getDateYyyyMM  

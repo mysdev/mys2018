@@ -3,6 +3,7 @@ package com.jing.attendance.service.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.jing.attendance.model.entity.AttendanceDetail;
 import com.jing.attendance.model.entity.AttendanceTime;
 import com.jing.attendance.service.AttendanceDetailService;
 import com.jing.attendance.service.AttendanceService;
+import com.jing.attendance.service.AttendanceTimeService;
 import com.jing.attendance.service.PublicAttendanceService;
 import com.jing.config.web.exception.CustomException;
 import com.jing.utils.Constant;
@@ -44,6 +46,9 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	
 	@Autowired
 	private AttendanceService attendanceService;
+	
+	@Autowired
+	AttendanceTimeService attendanceTimeService;
 	
 	@Autowired
 	private PublicAttendanceService publicAttendanceService;
@@ -77,16 +82,14 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public Integer modifyAttendanceDetail(AttendanceDetail attendanceDetail){
-		AttendanceDetail ad  = attendanceDetailMapper.queryAttendanceDetailByAttId(attendanceDetail.getAttId());
-		if(ad.getEditable().intValue()!=0) {
-			throw new CustomException(400, "参数错误", "attId", "规则已成历史，不允许修订。");
-		}
-		disableTodayBeforeDetail();//锁定用户当天及以前的考勤	
+	public Integer modifyAttendanceDetail(AttendanceDetail attendanceDetail){			
 		if(attendanceDetail.getTimeId().intValue()==0) {
-			attendanceDetail.setTimeId(null);
+			attendanceDetail.setTimeId(0);//休假
 			attendanceDetail.setSignTime(null);
 			attendanceDetail.setOutTime(null);
+		}else {
+			AttendanceTime at = attendanceTimeService.queryAttendanceTimeById(attendanceDetail.getTimeId());
+			processAttendanceDetailSignOutTime(attendanceDetail, at.getSignTime(), at.getOutTime()); 
 		}
 		attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
 		// 要求影响员工考勤
@@ -94,17 +97,38 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 		return 1;
 	}
 	
+	private void processAttendanceDetailSignOutTime(AttendanceDetail attendanceDetail, String signtime, String outtime) {		
+		try {
+			Date datas = DateUtil.String2DateTime("2018-09-01 "+signtime);		
+			Date datao = DateUtil.String2DateTime("2018-09-01 "+outtime);
+			String ymd = DateUtil.getStringOnDateFormat(attendanceDetail.getAttDate(), "yyyy-MM-dd");		
+			attendanceDetail.setSignTime(DateUtil.String2DateTime(ymd+" "+signtime));
+			attendanceDetail.setOutTime(DateUtil.String2DateTime(ymd+" "+outtime));
+			if(datas.getTime()>datao.getTime()) {
+				//结束时间  跨天处理
+				Calendar cala = Calendar.getInstance();
+				cala.setTime(attendanceDetail.getOutTime());
+				cala.set(Calendar.DATE, cala.get(Calendar.DATE)+1);
+				attendanceDetail.setOutTime(cala.getTime());
+			}			
+		} catch (ParseException e) {
+			throw new CustomException(400, "参数错误", "signtime,outtime", "时间("+outtime+","+outtime+")转换失败。");
+		}		
+	}
+	
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceDetailBatch(AttendanceDetail[] attendanceList) {
-		disableTodayBeforeDetail();//锁定用户当天及以前的考勤		
 		int ret = 0;
 		Integer attendanceId = attendanceList[0].getAttendanceId();
 		for(AttendanceDetail ad : attendanceList){
 			if(ad.getTimeId().intValue()==0) {
-				ad.setTimeId(null);
+				ad.setTimeId(0);//休假
 				ad.setSignTime(null);
 				ad.setOutTime(null);
+			}else {
+				AttendanceTime at = attendanceTimeService.queryAttendanceTimeById(ad.getTimeId());
+				processAttendanceDetailSignOutTime(ad, at.getSignTime(), at.getOutTime()); 
 			}
 			ret+=modifyAttendanceDetail(ad);//attendanceDetailMapper.modifyAttendanceDetail(attendanceDetail);
 		}

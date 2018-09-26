@@ -91,7 +91,7 @@ public class AttendanceDetailController{
 			@PathVariable Integer attId,
 			@RequestParam(value = "timeId", required = true) Integer timeId, @SessionAttr(Config.USER_INFO) User user
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		if(null==timeId && timeId.intValue()<0) {
+		if(null==timeId || timeId.intValue()<0) {
 			throw new CustomException(400, "参数错误", "timeId", "时段参数必传，休息时传0。");
 		}
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
@@ -105,19 +105,24 @@ public class AttendanceDetailController{
 		if(tempAttendanceDetail.getAttendanceId().intValue()!=attendanceId.intValue()){
 			throw new CustomException(400, "参数错误", "attId", "详情与规则不匹配。");
 		}
+		if(tempAttendanceDetail.getEditable().intValue()!=0) {
+			throw new CustomException(400, "参数错误", "attId", "规则已成历史，不允许修订。");
+		}	
 		
 		AttendanceDetail attendanceDetail = new AttendanceDetail();		
-		attendanceDetail.setAttendanceId(attendanceId);
+		//仅要求以下三个参数
 		attendanceDetail.setAttId(attId);
 		attendanceDetail.setTimeId(timeId);
 		attendanceDetail.setAttendance(timeId.intValue()==0?0:1);
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendanceDetail, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
+		attendanceDetail.setAttDate(tempAttendanceDetail.getAttDate());
+		//清空已经固定无无须修订的参数
+		attendanceDetail.setAttendanceId(null);		
+		attendanceDetail.setAttDay(null);
+		attendanceDetail.setAttMonth(null);
+		attendanceDetail.setWeekday(null);	
+		attendanceDetail.setCreatedBy(null);
 		attendanceDetail.setEditable(null);
-		attendanceDetail.setCreatedBy(user.getUserId());
-		attendanceDetail.setUpdatedBy(attendanceDetail.getCreatedBy());
+		attendanceDetail.setUpdatedBy(user.getUserId());
 		return attendanceDetailService.modifyAttendanceDetail(attendanceDetail);
 	}
 	
@@ -143,8 +148,9 @@ public class AttendanceDetailController{
 				e0.put("message", "标识与考勤时段(0为休息)为必传参数。");
 				errors.add(e0);
 				continue;
-			}			
-			if(attendanceId.intValue()!=attendanceId.intValue()){
+			}		
+			AttendanceDetail aaa = attendanceDetailService.queryAttendanceDetailByAttId(attendanceList[i].getAttId());
+			if(aaa.getAttendanceId()!=attendanceId.intValue()){
 				Map<String, String> e = new HashMap<String, String>();
 				e.put("index", ""+i);
 				e.put("filed", "attId");
@@ -152,9 +158,18 @@ public class AttendanceDetailController{
 				errors.add(e);
 				continue;
 			}
+			if(aaa.getEditable()!=0){
+				Map<String, String> e = new HashMap<String, String>();
+				e.put("index", ""+i);
+				e.put("filed", "attId");
+				e.put("message", "规则已成历史，不允许修订。");
+				errors.add(e);
+				continue;
+			}
 			attendanceList[i].setAttendanceId(attendanceId);
 			attendanceList[i].setTimeId(attendanceList[i].getTimeId());
 			attendanceList[i].setAttendance(attendanceList[i].getTimeId().intValue()==0?0:1);
+			attendanceList[i].setAttDate(aaa.getAttDate());
 			//清空已经固定无无须修订的参数
 			attendanceList[i].setAttDate(null);
 			attendanceList[i].setAttDay(null);
