@@ -78,6 +78,10 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer modifyAttendanceDetail(AttendanceDetail attendanceDetail){
+		AttendanceDetail ad  = attendanceDetailMapper.queryAttendanceDetailByAttId(attendanceDetail.getAttId());
+		if(ad.getEditable().intValue()!=0) {
+			throw new CustomException(400, "参数错误", "attId", "规则已成历史，不允许修订。");
+		}
 		disableTodayBeforeDetail();//锁定用户当天及以前的考勤	
 		if(attendanceDetail.getTimeId().intValue()==0) {
 			attendanceDetail.setTimeId(null);
@@ -196,7 +200,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	*/
 	@Override
 	@Transactional(readOnly = false)
-	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth){
+	public List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth, Integer userId){
 		//处理日期，如果为空取当月 如2018-09
 		if(yearMonth==null || yearMonth.length()!=7){
 			yearMonth = DateUtil.getDate();
@@ -210,7 +214,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 			return ret;//已有数据，不再生成
 		}
 		
-		ret = createAttendanceDetail(attendanceId, yearMonth);
+		ret = createAttendanceDetail(attendanceId, yearMonth, userId);
 		//执行员工末来考勤数据初始化
 		publicAttendanceService.doAndRedoPersonAttendanceByAttendanceId(attendanceId);
 		return ret;
@@ -226,7 +230,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 	* @throws 
 	*/
 	@Transactional(readOnly = false)
-	public List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth) {
+	public List<AttendanceDetail> createAttendanceDetail(Integer attendanceId, String yearMonth, Integer userId) {
 		AttendanceBo ab = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		AttendanceTime at = ab.getAttTime().get(0);
 		
@@ -236,7 +240,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 			int maxDay = cal.getActualMaximum(Calendar.DATE);
 			int week = cal.get(Calendar.DAY_OF_WEEK-1);
 			for(int i=0; i<maxDay; i++){
-				AttendanceDetail ad = new AttendanceDetail();
+				AttendanceDetail ad = new AttendanceDetail();	
 				ad.setTimeId(at.getId());
 				ad.setSignTime(DateUtil.String2DateTime(yearMonth+"-"+(i+1)+" "+at.getSignTime()));
 				ad.setOutTime(DateUtil.String2DateTime(yearMonth+"-"+(i+1)+" "+at.getOutTime()));
@@ -255,13 +259,19 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 					ad.setWeekday(7);
 				}
 				if(ad.getWeekday().intValue()<6){
-					ad.setAttendance(0);
+					ad.setAttendance(0);					
 				}else{
+					//周末处理
 					ad.setAttendance(1);
+					ad.setTimeId(0);
+					ad.setSignTime(null);
+					ad.setOutTime(null);
 				}	
 				ad.setAttDay(i+1);
 				ad.setAttDate(cal.getTime());
 				cal.add(Calendar.DATE, 1);
+				ad.setCreatedBy(userId);
+				ad.setUpdatedBy(ad.getCreatedBy());
 				attendanceDetailMapper.addAttendanceDetail(ad);
 				ret.add(ad);
 			}			
@@ -269,6 +279,7 @@ public class  AttendanceDetailServiceImpl implements AttendanceDetailService {
 			logger.error("(yyyy-MM)年月格式转换异常，参数："+yearMonth, e);
 			throw new CustomException(400, "参数错误", "yearMonth", "格式非七位(yyyy-MM)日期。");
 		}
+		this.disableTodayBeforeDetail();
 		return ret;
 	}
 

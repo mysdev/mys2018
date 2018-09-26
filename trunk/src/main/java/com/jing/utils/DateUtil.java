@@ -285,7 +285,7 @@ public class DateUtil {
 		* @throws 
 		*/
 		public static boolean is20yyMM(String ymd){
-			String regEx = "^20\\d\\d-(0\\d|11|12)$";
+			String regEx = "^20\\d\\d-(0\\d|10|11|12)$";
 			Pattern pattern = Pattern.compile(regEx);
 			return pattern.matcher(ymd).matches();
 		}

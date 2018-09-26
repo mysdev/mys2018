@@ -168,7 +168,14 @@
 
 <!-- 查询考勤规则历史 -->
 <select id="queryAttendanceDetailHistory" resultType="java.lang.String" parameterType="java.lang.Integer">
-	select DISTINCT(att_month) as attMonth from tw_attendance_detail where attendance_id=#{attendanceId} order by att_date desc
+select attMonth from (
+	select DISTINCT(att_month) as attMonth from tw_attendance_detail where attendance_id=#{attendanceId}
+	UNION all 
+	select DATE_FORMAT( CURDATE(), '%Y-%m' ) as attMonth
+	union all 
+	select DATE_FORMAT(date_add(curdate(),interval 1 month), '%Y-%m' ) as  attMonth
+) t order by attMonth desc
+	<!--select DISTINCT(att_month) as attMonth from tw_attendance_detail where attendance_id=#{attendanceId} order by att_date desc-->
 </select>
 
 </mapper>   

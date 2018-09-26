@@ -161,7 +161,16 @@ public class AttendanceController{
 	public Object queryAttendancePage(HttpServletResponse response,
 			@RequestParam(value = "pageNo", required = false) Integer pagenum,
 			@RequestParam(value = "pageSize", required = false) Integer pagesize,
-			@RequestParam(value = "sort", required = false) String sort, Attendance attendance) {				
+			@RequestParam(value = "sort", required = false) String sort, Attendance attendance) {	
+		if(attendance==null) {
+			attendance = new Attendance();
+		}
+		if(null==attendance.getStatus()) {
+			attendance.setStatus(0);
+		}
+		if(sort==null) {
+			sort = "{\\\"attendanceName\\\":\\\"asc\\\"}";
+		}
 		return attendanceService.queryAttendanceForPage(pagenum, pagesize, sort, attendance);
 	}	
 	

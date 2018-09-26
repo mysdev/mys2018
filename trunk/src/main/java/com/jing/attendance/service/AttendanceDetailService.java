@@ -17,7 +17,8 @@ import com.jing.attendance.model.entity.AttendanceTime;
 public interface AttendanceDetailService {
 	
 	
-	/** 
+	/**
+	 * @param userId  
 	* @Title: queryAttendanceDetail 
 	* @Description: 查询考勤详情
 	* @param attendanceId 考勤标识
@@ -25,7 +26,7 @@ public interface AttendanceDetailService {
 	* @return  List<AttendanceDetail>    返回类型 
 	* @throws 
 	*/
-	List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth);
+	List<AttendanceDetail> queryAttendanceDetail(Integer attendanceId, String yearMonth, Integer userId);
 
 //    /**
 //	 * @Title: addAttendanceDetail
