@@ -22,6 +22,9 @@ import com.jing.attendance.service.AttendanceTimeService;
 import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,7 +56,7 @@ public class AttendanceController{
 	@ApiOperation(value = "新增 添加考勤信息", notes = "添加考勤信息 暂时后台固定为type=2详情")
 	@RequestMapping(value = "/attendance", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendance(HttpServletResponse response,
-			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+			@ApiParam(value = "attendance") @RequestBody AttendanceBo attendance, @SessionAttr(Config.USER_INFO) User user) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		attendance.setTypes(2); //暂时只支持2     考勤方案方案 0休天数 1考勤天数 2详情
 		attendance.setStatus(0);
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, true);		
@@ -76,6 +79,8 @@ public class AttendanceController{
 		attendance.setAttendanceId(null);
 		attendance.setOutCt(null);//允许考勤提前时间
 		attendance.setSignCt(null);//允许考勤推迟时间
+		attendance.setCreatedBy(user.getUserId());
+		attendance.setUpdatedBy(attendance.getCreatedBy());
 		attendanceService.addAttendance(attendance);
 		return attendance;
 	}
@@ -85,7 +90,7 @@ public class AttendanceController{
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.PUT)
 	public Object modifyAttendanceById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
-			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance
+			@ApiParam(value = "attendance", required = true) @RequestBody AttendanceBo attendance, @SessionAttr(Config.USER_INFO) User user
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		List<Map<String, String>> errors = beanValidator.validateClassAuto(attendance, false);				
 		if(attendance.getAttTime()!=null && attendance.getAttTime().size()>MAX_TIME_PER_ATT.intValue()){
@@ -122,12 +127,13 @@ public class AttendanceController{
 		attendance.setAttendanceId(attendanceId);
 		attendance.setOutCt(null);//允许考勤提前时间
 		attendance.setSignCt(null);//允许考勤推迟时间
+		attendance.setUpdatedBy(attendance.getCreatedBy());
 		return attendanceService.modifyAttendance(attendance);
 	}
 
 	@ApiOperation(value = "删除 根据考勤标识删除考勤信息", notes = "根据考勤标识删除考勤信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}", method = RequestMethod.DELETE)
-	public Object dropAttendanceByAttendanceId(HttpServletResponse response, @PathVariable Integer attendanceId) {
+	public Object dropAttendanceByAttendanceId(HttpServletResponse response, @PathVariable Integer attendanceId, @SessionAttr(Config.USER_INFO) User user) {
 		Attendance attendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		if(null == attendance){
 			throw new NotFoundException("考勤");
@@ -135,6 +141,7 @@ public class AttendanceController{
 //		if(attendanceId.intValue()==1) {
 //			throw new ParameterException("attendanceId", "全局考勤规则不允许删除。");
 //		}
+		attendance.setUpdatedBy(attendance.getCreatedBy());
 		return attendanceService.dropAttendanceByAttendanceId(attendanceId);
 	}
 	

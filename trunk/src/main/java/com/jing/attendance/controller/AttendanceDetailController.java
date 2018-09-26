@@ -23,6 +23,9 @@ import com.jing.config.validation.BeanValidator;
 import com.jing.config.web.exception.CustomException;
 import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.utils.DateUtil;
 
 import io.swagger.annotations.Api;
@@ -86,7 +89,7 @@ public class AttendanceDetailController{
 	public Object modifyAttendanceDetailById(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
 			@PathVariable Integer attId,
-			@RequestParam(value = "timeId", required = true) Integer timeId
+			@RequestParam(value = "timeId", required = true) Integer timeId, @SessionAttr(Config.USER_INFO) User user
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		if(null==timeId && timeId.intValue()<0) {
 			throw new CustomException(400, "参数错误", "timeId", "时段参数必传，休息时传0。");
@@ -113,6 +116,8 @@ public class AttendanceDetailController{
 			throw new ParameterException(errors);
 		}
 		attendanceDetail.setEditable(null);
+		attendanceDetail.setCreatedBy(user.getUserId());
+		attendanceDetail.setUpdatedBy(attendanceDetail.getCreatedBy());
 		return attendanceDetailService.modifyAttendanceDetail(attendanceDetail);
 	}
 	
@@ -120,7 +125,7 @@ public class AttendanceDetailController{
 	@ApiOperation(value = "更新 批量根据门店考勤详情标识更新门店考勤详情信息", notes = "只接受同一规则里详情的批量修订")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/details", method = RequestMethod.PUT)
 	public Object modifyAttendanceDetailBatchById(HttpServletResponse response,
-			@PathVariable Integer attendanceId, @RequestBody AttendanceDetail[] attendanceList
+			@PathVariable Integer attendanceId, @RequestBody AttendanceDetail[] attendanceList, @SessionAttr(Config.USER_INFO) User user
 			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Attendance tempAttendance = attendanceService.queryAttendanceByAttendanceId(attendanceId);		
 		if(null == tempAttendance){
@@ -157,6 +162,7 @@ public class AttendanceDetailController{
 			attendanceList[i].setWeekday(null);	
 			attendanceList[i].setCreatedBy(null);
 			attendanceList[i].setEditable(null);
+			attendanceList[i].setUpdatedBy(user.getUserId());
 		}
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
