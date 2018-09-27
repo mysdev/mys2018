@@ -2,106 +2,104 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.settlement.model.dao.PackagesDetailMapper">
 
-<!-- Result Map-->
-<resultMap id="PackagesDetailResultMap" type="com.jing.settlement.model.entity.PackagesDetail">
-	<id column="detail_id" property="detailId"/>
-	<result column="package_id" property="packageId"/>
-	<result column="goods_id" property="goodsId"/>
-	<result column="goods_ct" property="goodsCt"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="PackagesDetailResultMap" type="com.jing.settlement.model.entity.PackagesDetail">
+		<id column="detail_id" property="detailId" />
+		<result column="package_id" property="packageId" />
+		<result column="goods_id" property="goodsId" />
+		<result column="goods_ct" property="goodsCt" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.detailId != null and param.detailId != ''">
+				and detail_id = #{param.detailId}
+			</if>
+			<if test="param.packageId != null and param.packageId != ''">
+				and package_id = #{param.packageId}
+			</if>
+			<if test="param.goodsId != null and param.goodsId != ''">
+				and goods_id = #{param.goodsId}
+			</if>
+			<if test="param.goodsCt != null and param.goodsCt != ''">
+				and goods_ct = #{param.goodsCt}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_packagesDetail_item">
-	detail_id, package_id, goods_id, goods_ct, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_packagesDetail_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="packagesDetail.detailId != null">AND detail_id = #{packagesDetail.detailId} </if>
-		<if test="packagesDetail.packageId != null">AND package_id like concat(#{packagesDetail.packageId}, '%') </if>
-		<if test="packagesDetail.goodsId != null">AND goods_id like concat(#{packagesDetail.goodsId}, '%') </if>
-		<if test="packagesDetail.goodsCt != null">AND goods_ct = #{packagesDetail.goodsCt} </if>
-		<if test="packagesDetail.createdBy != null">AND created_by like concat(#{packagesDetail.createdBy}, '%') </if>
-		<if test="packagesDetail.updatedBy != null">AND updated_by like concat(#{packagesDetail.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 消费套餐详情 -->
-<insert id="addPackagesDetail" parameterType="com.jing.settlement.model.entity.PackagesDetail" >
-	<selectKey keyProperty="detailId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO to_packages_detail 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="detailId != null"> detail_id,</if>
-		<if test="packageId != null"> package_id,</if>
-		<if test="goodsId != null"> goods_id,</if>
-		<if test="goodsCt != null"> goods_ct,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="detailId != null"> #{detailId},</if>
-		<if test="packageId != null"> #{packageId},</if>
-		<if test="goodsId != null"> #{goodsId},</if>
-		<if test="goodsCt != null"> #{goodsCt},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 消费套餐详情 -->
+	<insert id="addPackagesDetail" parameterType="com.jing.settlement.model.entity.PackagesDetail">
+		<selectKey keyProperty="detailId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO to_packages_detail (detail_id ,package_id ,goods_id ,goods_ct ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{detailId},#{packageId},#{goodsId},#{goodsCt},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 消费套餐详情 -->  
-<update id="modifyPackagesDetail" parameterType="com.jing.settlement.model.entity.PackagesDetail" >
-  	UPDATE to_packages_detail SET
-	<trim suffixOverrides=",">
-		<if test="packageId != null"> package_id = #{packageId},</if>
-		<if test="goodsId != null"> goods_id = #{goodsId},</if>
-		<if test="goodsCt != null"> goods_ct = #{goodsCt},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE detail_id = #{detailId}
-</update>
- 
-<!-- 删除 消费套餐详情 -->
-<delete id="dropPackagesDetailByDetailId" parameterType="java.lang.Integer">
-	DELETE FROM to_packages_detail WHERE detail_id = #{detailId}
-</delete> 
-
-<!-- 根据标识查询 消费套餐详情 -->
-<select id="queryPackagesDetailByDetailId"  resultMap="PackagesDetailResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_packagesDetail_item"/>
-	FROM to_packages_detail WHERE detail_id = #{detailId}
-</select>
-
-<!-- 根据属性查询消费套餐详情 -->
-<select id="queryPackagesDetailByProperty"  resultMap="PackagesDetailResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_packagesDetail_item"/>
-	FROM to_packages_detail 
-	<where>
-		<include refid="sql_packagesDetail_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据消费套餐详情属性与分页信息分页查询消费套餐详情信息 -->
-<select id="queryPackagesDetailForPage"  resultMap="PackagesDetailResultMap" > 
-	SELECT 
-	<include refid="sql_packagesDetail_item"/>
-	FROM to_packages_detail 
-	<where>
-		<include refid="sql_packagesDetail_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改消费套餐详情 -->
+	<update id="updatePackagesDetail" parameterType="com.jing.settlement.model.entity.PackagesDetail">
+		UPDATE to_packages_detail
+		<set> 
+			<if test="packageId != null" >
+				package_id = #{packageId},
+			</if>
+			<if test="goodsId != null" >
+				goods_id = #{goodsId},
+			</if>
+			<if test="goodsCt != null" >
+				goods_ct = #{goodsCt},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	detail_id = #{detailId}
+	</update>
+	
+	<!-- 根据ID删除消费套餐详情 -->
+	<delete id="deletePackagesDetailById"  parameterType="Integer">
+		DELETE FROM to_packages_detail WHERE detail_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询消费套餐详情 -->
+	<select id="getPackagesDetailById" resultMap="PackagesDetailResultMap" parameterType="Integer">
+		SELECT * FROM to_packages_detail WHERE detail_id = #{value}
+	</select>
+	
+	<select id="findPackagesDetailListPage" resultMap="PackagesDetailResultMap">
+		SELECT * FROM to_packages_detail
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findPackagesDetailList" resultMap="PackagesDetailResultMap">
+		SELECT * FROM to_packages_detail
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

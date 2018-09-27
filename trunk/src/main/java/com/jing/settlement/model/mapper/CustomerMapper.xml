@@ -2,105 +2,108 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.settlement.model.dao.CustomerMapper">
 
-<!-- Result Map-->
-<resultMap id="CustomerResultMap" type="com.jing.settlement.model.entity.Customer">
-	<id column="customer_id" property="customerId"/>
-	<result column="customer_name" property="customerName"/>
-	<result column="advance" property="advance"/>
-	<result column="note" property="note"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="CustomerResultMap" type="com.jing.settlement.model.entity.Customer">
+		<id column="customer_id" property="customerId" />
+		<result column="customer_name" property="customerName" />
+		<result column="advance" property="advance" />
+		<result column="note" property="note" />
+		<result column="status" property="status" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.customerId != null and param.customerId != ''">
+				and customer_id = #{param.customerId}
+			</if>
+			<if test="param.customerName != null and param.customerName != ''">
+				and customer_name = #{param.customerName}
+			</if>
+			<if test="param.advance != null and param.advance != ''">
+				and advance = #{param.advance}
+			</if>
+			<if test="param.note != null and param.note != ''">
+				and note = #{param.note}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_customer_item">
-	customer_id, customer_name, advance, note, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_customer_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="customer.customerId != null">AND customer_id = #{customer.customerId} </if>
-		<if test="customer.customerName != null">AND customer_name like concat(#{customer.customerName}, '%') </if>
-		<if test="customer.note != null">AND note like concat(#{customer.note}, '%') </if>
-		<if test="customer.createdBy != null">AND created_by like concat(#{customer.createdBy}, '%') </if>
-		<if test="customer.updatedBy != null">AND updated_by like concat(#{customer.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 客户 -->
-<insert id="addCustomer" parameterType="com.jing.settlement.model.entity.Customer" >
-	<selectKey keyProperty="customerId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO to_customer 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="customerId != null"> customer_id,</if>
-		<if test="customerName != null"> customer_name,</if>
-		<if test="advance != null"> advance,</if>
-		<if test="note != null"> note,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="customerId != null"> #{customerId},</if>
-		<if test="customerName != null"> #{customerName},</if>
-		<if test="advance != null"> #{advance},</if>
-		<if test="note != null"> #{note},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 客户 -->
+	<insert id="addCustomer" parameterType="com.jing.settlement.model.entity.Customer">
+		<selectKey keyProperty="customerId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO to_customer (customer_id ,customer_name ,advance ,note ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{customerId},#{customerName},#{advance},#{note},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 客户 -->  
-<update id="modifyCustomer" parameterType="com.jing.settlement.model.entity.Customer" >
-  	UPDATE to_customer SET
-	<trim suffixOverrides=",">
-		<if test="customerName != null"> customer_name = #{customerName},</if>
-		<if test="advance != null"> advance = #{advance},</if>
-		<if test="note != null"> note = #{note},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE customer_id = #{customerId}
-</update>
- 
-<!-- 删除 客户 -->
-<delete id="dropCustomerByCustomerId" parameterType="java.lang.Integer">
-	DELETE FROM to_customer WHERE customer_id = #{customerId}
-</delete> 
-
-<!-- 根据标识查询 客户 -->
-<select id="queryCustomerByCustomerId"  resultMap="CustomerResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_customer_item"/>
-	FROM to_customer WHERE customer_id = #{customerId}
-</select>
-
-<!-- 根据属性查询客户 -->
-<select id="queryCustomerByProperty"  resultMap="CustomerResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_customer_item"/>
-	FROM to_customer 
-	<where>
-		<include refid="sql_customer_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据客户属性与分页信息分页查询客户信息 -->
-<select id="queryCustomerForPage"  resultMap="CustomerResultMap" > 
-	SELECT 
-	<include refid="sql_customer_item"/>
-	FROM to_customer 
-	<where>
-		<include refid="sql_customer_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改客户 -->
+	<update id="updateCustomer" parameterType="com.jing.settlement.model.entity.Customer">
+		UPDATE to_customer
+		<set> 
+			<if test="customerName != null" >
+				customer_name = #{customerName},
+			</if>
+			<if test="advance != null" >
+				advance = #{advance},
+			</if>
+			<if test="note != null" >
+				note = #{note},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	customer_id = #{customerId}
+	</update>
+	
+	<!-- 根据ID删除客户 -->
+	<delete id="deleteCustomerById"  parameterType="Integer">
+		DELETE FROM to_customer WHERE customer_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询客户 -->
+	<select id="getCustomerById" resultMap="CustomerResultMap" parameterType="Integer">
+		SELECT * FROM to_customer WHERE customer_id = #{value}
+	</select>
+	
+	<select id="findCustomerListPage" resultMap="CustomerResultMap">
+		SELECT * FROM to_customer
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findCustomerList" resultMap="CustomerResultMap">
+		SELECT * FROM to_customer
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

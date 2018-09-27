@@ -12,6 +12,14 @@
 <script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
 <script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zui/css/zui.css" />
+<script type="text/javascript" src="../../../resources/js/plugins/zui/js/zui.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zui/lib/uploader/zui.uploader.css" />
+<script type="text/javascript" src="../../../resources/js/plugins/zui/lib/uploader/zui.uploader.js"></script>
+<!--   图片放大切换 -->
+<link rel="stylesheet" type="text/css" href="../../../resources/js/plugins/zoom/zoom.css" />
+<script type="text/javascript" src="../../../resources/js/plugins/zoom/zoom.min.js"></script>
 <script>
 	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
 
@@ -59,15 +67,6 @@
 			height : 34
 		});
 		
-		$('#materialTypes').combobox({
-			data : [{code:"0",value:"物品"},{code:"1",value:"服务"}],
-			valueField : 'code',
-			textField : 'value',
-			limitToList : true,
-			width : '100%',
-			height : 34
-		});
-		
 		Faith.initComboboxUrl({
 			type:'post',
 			id : 'unitId',
@@ -75,6 +74,11 @@
 			valueField : 'unitId',
 			textField : 'unitName',
 			height : 34
+		});
+		//初始化上传控件
+		Faith.initUpload({
+			wrapid : 'myUploader',
+			valuefield : 'goodsImg'
 		});
 		//提交按钮点击
 		Faith.doSave(options);
@@ -143,12 +147,15 @@
 	  	</div>
 	  	<div class="form-group col-sm-6">
 	  	 	<label for="tableName">商品说明</label>
-	  	 	<input type="text" class="form-control"  id="note" name="note"  placeholder="请输入商品说明">
+	  	 	<textarea rows="4" class="form-control" placeholder="请输入商品说明" id="note" name="note"></textarea>
 	  	</div>
-	  	<div class="form-group col-sm-6">
-	  	 	<label for="tableName">商品图例</label>
-	  	 	<input type="text" class="form-control"  id="goodsImg" name="goodsImg"  placeholder="请输入商品图例">
-	  	</div>
+	  	<div class="row">
+			<div class="form-group col-sm-12">
+				<label class="show_wrap_label">商品图例</label>
+				<div id='myUploader' class="uploader"></div>
+			</div>
+		</div>
+	  	
 		<div class="form-group col-sm-12 padding-4">
 			<div class="text-center">
 				<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>

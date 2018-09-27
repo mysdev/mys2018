@@ -24,9 +24,6 @@ public class Packages extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String packageId;	//to_packages:package_id  套餐标识  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer storeId;	//to_packages:store_id  归属门店  
-
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String packageName;	//to_packages:package_name  套餐名称  
@@ -46,6 +43,14 @@ public class Packages extends BaseEntity {
 	
 	private List<PackagesDetail> packagesDetails; //套餐详情
 
+	public List<PackagesDetail> getPackagesDetails() {
+		return packagesDetails;
+	}
+
+	public void setPackagesDetails(List<PackagesDetail> packagesDetails) {
+		this.packagesDetails = packagesDetails;
+	}
+
 	/**
 	* @DatabasetableColumnName: to_packages:package_id
 	* @Description: 获取属性        套餐标识
@@ -62,23 +67,6 @@ public class Packages extends BaseEntity {
 	*/
 	public void setPackageId(String packageId){
 		this.packageId = packageId;	
-	}	
-	/**
-	* @DatabasetableColumnName: to_packages:store_id
-	* @Description: 获取属性        归属门店
-	* @return: Integer
-	*/
-	public Integer getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: to_packages:store_id
-	* @Description: 设置属性        归属门店
-	* @return: Integer
-	*/
-	public void setStoreId(Integer storeId){
-		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: to_packages:package_name

@@ -12,12 +12,12 @@
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 <script>
 	var columns = [
-#foreach( $col in $!{columns} ) 
-			{field:'${col.filedName}', title:'${col.columnLabel}', width:${col.listWidth}, align:'center' #if($!col.isList == 0 ),hidden:true#end }#if($columns.size() > $velocityCount ),
-	#else 
-
-#end
-#end			
+				{field:'packageId', title:'套餐标识', hidden:true },
+				{field:'packageName', title:'套餐名称', width:300, align:'center'  },
+				{field:'pinyin', title:'套餐拼音', width:200, align:'center'  },
+				{field:'price', title:'售价', width:100, align:'center'  },
+				{field:'validDate', title:'有效日期', width:120, align:'center'  },
+				{field:'status', title:'套餐状态', width:120, align:'center'  }
 			];
 			
 	//接收 菜单id
@@ -26,33 +26,34 @@
 	//配置页面参数
 	$.extend(true, Faith, {
 		gridOptions : {
-			gridId : 'grid_${lowerName}', //表格容器id
-			tableKey : "${primaryKey.filedName}",
+			gridId : 'grid_packages', //表格容器id
+			tableKey : "packageId",
 			resId:resId,
 			pageButtonKey:'',
 			isToolBar:true,
-			url : Faith.projectName + '/${model}/${lowerName}/page', //列表接口
-			sortName : '${primaryKey.columnName}',
+			url : Faith.projectName + '/settlement/packages/page', //列表接口
+			sortName : 'package_id',
 			sortOrder : 'desc',
+			fitColumns:false,
 			columns : [ columns ],//数据列
 			onDblClickRow : function(rowIndex, rowData) {
 				Faith.doView();
 			}
 		},
 		addOptions : {
-			title : "添加${comment}",
-			addUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
+			title : "添加消费套餐",
+			addUrl : "/pc/webpage/settlement/packages/packages_form.html"
 		},
 		updateOptions : {
-			title : "修改${comment}",
-			updateUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_form.html"
+			title : "修改消费套餐",
+			updateUrl : "/pc/webpage/settlement/packages/packages_form.html"
 		},
 		deleteOptions : {
-			deleteAction : Faith.projectName + '/${model}/${lowerName}/delete/'
+			deleteAction : Faith.projectName + '/settlement/packages/delete/'
 		},
 		viewOptions : {
-			title:'查看${comment}',
-			viewUrl : "/pc/webpage/${model}/${lowerName}/${lowerName}_detail.html"
+			title:'查看消费套餐',
+			viewUrl : "/pc/webpage/settlement/packages/packages_detail.html"
 		}
 	});
 	$(function() {
@@ -66,19 +67,27 @@
 </head>
 <body>
 	<div id="search" class="search wrap_border">
-#foreach( $col in $!{columns} )
-#if($!col.isSearch == 1 )
 		<div class="search-wrap">
-			<input type="text" class="easyui-textbox" labelWidth="70" label="${col.columnLabel}" id="${col.filedName}" name="${col.filedName}" />
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐名称" id="packageName" name="packageName" />
 		</div>
-#end	
-#end
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐拼音" id="pinyin" name="pinyin" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="售价" id="price" name="price" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="有效日期" id="validDate" name="validDate" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐状态 0正常" id="status" name="status" />
+		</div>		
 		<div class="search-btn-wrap">
 			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
 		</div>
 	</div>
 	<div class="grid">
-		<table id="grid_${lowerName}" class="easyui-datagrid"></table>
+		<table id="grid_packages" class="easyui-datagrid"></table>
 	</div>
 </body>
 </html>

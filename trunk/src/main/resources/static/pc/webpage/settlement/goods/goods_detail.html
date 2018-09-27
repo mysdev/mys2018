@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
 <meta charset="utf-8" />
-<title>单位详情</title>
 <link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
 <link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 
 <script type="text/javascript">
@@ -68,12 +65,12 @@
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
 			<label class="column_t">商品小类:</label>
-			<div class="column_z column_title" id="classify" name="classify"></div>
+			<div class="column_z column_title" id="classify" name="classify" type="dictionary" code="2001"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">原料标识:</label>
+			<label class="column_t">库存:</label>
 			<div class="column_z column_title" id="materialId" name="materialId"></div>
 		</div>
 	</div>
@@ -91,7 +88,7 @@
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">状态 0正常:</label>
+			<label class="column_t">状态:</label>
 			<div class="column_z column_title" id="status" name="status"></div>
 		</div>
 	</div>
@@ -103,32 +100,20 @@
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">商品说明:</label>
-			<div class="column_z column_title" id="note" name="note"></div>
+			<label class="column_t">对客显示:</label>
+			<div class="column_z column_title" id="isShow" name="isShow" type="dictionary" code="1001"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
-			<label class="column_t">商品图例:</label>
-			<div class="column_z column_title" id="goodsImg" name="goodsImg"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">对客显示 0是:</label>
-			<div class="column_z column_title" id="isShow" name="isShow"></div>
-		</div>
-	</div>
-	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
-		<div class="border_tab padding_int">
-			<label class="column_t">可否撤消 0是1否:</label>
-			<div class="column_z column_title" id="canCancel" name="canCancel"></div>
+			<label class="column_t">可否撤消:</label>
+			<div class="column_z column_title" id="canCancel" name="canCancel" type="dictionary" code="1001"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
 			<label class="column_t">创建人员:</label>
-			<div class="column_z column_title" id="createdBy" name="createdBy"></div>
+			<div class="column_z column_title" id="createdByName" name="createdByName"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
@@ -140,13 +125,25 @@
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
 			<label class="column_t">修订人员:</label>
-			<div class="column_z column_title" id="updatedBy" name="updatedBy"></div>
+			<div class="column_z column_title" id="updatedByName" name="updatedByName"></div>
 		</div>
 	</div>
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
 			<label class="column_t">修订时间:</label>
 			<div class="column_z column_title" id="updatedDate" name="updatedDate"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品说明:</label>
+			<div class="column_z column_title" id="note" name="note"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品图例:</label>
+			<div class="column_z column_title" id="goodsImg" name="goodsImg" type="img"></div>
 		</div>
 	</div>
  </div>
