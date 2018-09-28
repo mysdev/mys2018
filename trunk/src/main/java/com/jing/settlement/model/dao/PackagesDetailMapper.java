@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.PackagesDetail;
+import com.jing.settlement.model.entity.PackagesDetailVo;
 
 @Mapper
 public interface PackagesDetailMapper {
@@ -35,7 +36,7 @@ public interface PackagesDetailMapper {
 	/**
 	* 分页查询
 	*/
-	List<PackagesDetail> findPackagesDetailListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
+	List<PackagesDetailVo> findPackagesDetailListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
 	
 	
 	/**
@@ -43,5 +44,5 @@ public interface PackagesDetailMapper {
 	 * @param param
 	 * @return
 	 */
-	List<PackagesDetail> findPackagesDetailList(@Param("param") Map<String, Object> param);	
+	List<PackagesDetailVo> findPackagesDetailList(@Param("param") Map<String, Object> param);	
 }

@@ -7,6 +7,12 @@ import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.Packages;
 
 public interface PackagesService {
+	
+	/**
+	 * 重置原价和优惠幅度
+	 * @param packageId
+	 */
+	void resetprice(String packageId);
 
 	/**
 	* 添加 消费套餐

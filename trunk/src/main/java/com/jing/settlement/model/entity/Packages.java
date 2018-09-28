@@ -31,9 +31,13 @@ public class Packages extends BaseEntity {
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String pinyin;	//to_packages:pinyin  套餐拼音  
+	
+	private String img;//图片
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.math.BigDecimal price;	//to_packages:price  售价  
+	private java.math.BigDecimal originalPrice;//原价
+	private java.math.BigDecimal preferentialPrice;//优惠幅度
 
 	private Date validDate;	//to_packages:valid_date  有效日期  
 
@@ -152,8 +156,31 @@ public class Packages extends BaseEntity {
 	*/
 	public void setStatus(Integer status){
 		this.status = status;	
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public java.math.BigDecimal getOriginalPrice() {
+		return originalPrice;
+	}
+
+	public void setOriginalPrice(java.math.BigDecimal originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+	public java.math.BigDecimal getPreferentialPrice() {
+		return preferentialPrice;
+	}
+
+	public void setPreferentialPrice(java.math.BigDecimal preferentialPrice) {
+		this.preferentialPrice = preferentialPrice;
 	}	
-	
 	
 	
 	

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.PackagesDetail;
+import com.jing.settlement.model.entity.PackagesDetailVo;
 
 public interface PackagesDetailService {
 
@@ -39,5 +40,5 @@ public interface PackagesDetailService {
 	 * @param param
 	 * @return
 	 */
-	List<PackagesDetail> findPackagesDetailList(Map<String, Object> param);
+	List<PackagesDetailVo> findPackagesDetailList(Map<String, Object> param);
 }

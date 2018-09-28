@@ -7,7 +7,10 @@
 		<id column="package_id" property="packageId" />
 		<result column="package_name" property="packageName" />
 		<result column="pinyin" property="pinyin" />
+		<result column="img" property="img" />
 		<result column="price" property="price" />
+		<result column="original_price" property="originalPrice" />
+		<result column="preferential_price" property="preferentialPrice" />
 		<result column="valid_date" property="validDate" />
 		<result column="status" property="status" />
 		<result column="created_by" property="createdBy" />
@@ -53,9 +56,9 @@
 
 	<!-- 添加 消费套餐 -->
 	<insert id="addPackages" parameterType="com.jing.settlement.model.entity.Packages">
-		INSERT INTO to_packages (package_id ,package_name ,pinyin ,price ,valid_date ,status ,created_by ,created_date ,updated_by ,updated_date ) 
+		INSERT INTO to_packages (package_id ,package_name ,pinyin ,img,price,original_price,preferential_price ,valid_date ,status ,created_by ,created_date ,updated_by ,updated_date ) 
 		values
-		(#{packageId},#{packageName},#{pinyin},#{price},#{validDate},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+		(#{packageId},#{packageName},#{pinyin},#{img},#{price},#{originalPrice},#{preferentialPrice},#{validDate},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
 	</insert>
 
 	<!-- 修改消费套餐 -->
@@ -67,6 +70,15 @@
 			</if>
 			<if test="pinyin != null" >
 				pinyin = #{pinyin},
+			</if>
+			<if test="img != null" >
+				img = #{img},
+			</if>
+			<if test="originalPrice != null" >
+				original_price = #{originalPrice},
+			</if>
+			<if test="preferentialPrice != null" >
+				preferential_price = #{preferentialPrice},
 			</if>
 			<if test="price != null" >
 				price = #{price},

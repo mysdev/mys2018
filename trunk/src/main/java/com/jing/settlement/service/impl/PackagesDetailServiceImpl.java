@@ -4,42 +4,54 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jing.config.web.page.PageInfo;
-
-import com.jing.settlement.model.entity.PackagesDetail;
 import com.jing.settlement.model.dao.PackagesDetailMapper;
+import com.jing.settlement.model.entity.PackagesDetail;
+import com.jing.settlement.model.entity.PackagesDetailVo;
 import com.jing.settlement.service.PackagesDetailService;
+import com.jing.settlement.service.PackagesService;
 
 @Service("packagesDetailService")
 public class PackagesDetailServiceImpl implements PackagesDetailService{
 
 	@Resource
 	private PackagesDetailMapper packagesDetailMapper;
+	@Autowired
+	private PackagesService packagesService;
 
 	/**
 	* 添加 消费套餐详情
 	*/
 	@Override
+	@Transactional
 	public void addPackagesDetail(PackagesDetail packagesDetail){
 		packagesDetailMapper.addPackagesDetail(packagesDetail);
+		packagesService.resetprice(packagesDetail.getPackageId());
 	}
 	
 	/**
 	* 修改 消费套餐详情
 	*/
 	@Override
+	@Transactional
 	public void updatePackagesDetail(PackagesDetail packagesDetail){
 		packagesDetailMapper.updatePackagesDetail(packagesDetail);
+		packagesService.resetprice(packagesDetail.getPackageId());
 	}
 	
 	/**
 	*根据ID删除记录
 	*/
 	@Override
+	@Transactional
 	public void deletePackagesDetailById(Integer id){
+		PackagesDetail d = this.getPackagesDetailById(id);
+		packagesService.resetprice(d.getPackageId());
 		packagesDetailMapper.deletePackagesDetailById(id);
 	}
 	
@@ -66,7 +78,7 @@ public class PackagesDetailServiceImpl implements PackagesDetailService{
 	 * @return
 	 */
 	 @Override
-	public List<PackagesDetail> findPackagesDetailList(Map<String, Object> param){
+	public List<PackagesDetailVo> findPackagesDetailList(Map<String, Object> param){
 		return packagesDetailMapper.findPackagesDetailList(param);
 	}
 	

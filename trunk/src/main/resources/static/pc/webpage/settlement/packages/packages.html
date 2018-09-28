@@ -16,6 +16,8 @@
 				{field:'packageName', title:'套餐名称', width:300, align:'center'  },
 				{field:'pinyin', title:'套餐拼音', width:200, align:'center'  },
 				{field:'price', title:'售价', width:100, align:'center'  },
+				{field:'originalPrice', title:'原价', width:100, align:'center'  },
+				{field:'preferentialPrice', title:'优惠幅度', width:100, align:'center'  },
 				{field:'validDate', title:'有效日期', width:120, align:'center'  },
 				{field:'status', title:'套餐状态', width:120, align:'center'  }
 			];
@@ -62,6 +64,17 @@
 		//初始化搜
 		Faith.doSearch("btn_search", "search");
 	});	
+	
+	
+	function packagesDetail(){
+		var row = $('#grid_packages').datagrid("getSelected");
+		if (row) {
+			var id = row.packageId;
+			top.addTab("套餐详情", "/pc/webpage/settlement/packages/packagesDetail.html?packageId=" + id);
+		} else {
+			$.messager.alert('操作错误', '请选择一条数据!', 'error');
+		}
+	}
 			
 </script>
 </head>
@@ -74,13 +87,13 @@
 			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐拼音" id="pinyin" name="pinyin" />
 		</div>
 		<div class="search-wrap">
-			<input type="text" class="easyui-textbox" labelWidth="70" label="售价" id="price" name="price" />
+			<input type="text" class="easyui-textbox" labelWidth="35" label="售价" id="price" name="price" />
 		</div>
 		<div class="search-wrap">
 			<input type="text" class="easyui-textbox" labelWidth="70" label="有效日期" id="validDate" name="validDate" />
 		</div>
 		<div class="search-wrap">
-			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐状态 0正常" id="status" name="status" />
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐状态 " id="status" name="status" />
 		</div>		
 		<div class="search-btn-wrap">
 			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'detailId', title:'详情标识', hidden:true  },
+				{field:'goodsId', title:'商品标识', hidden:true },
+				{field:'packageName', title:'归属套餐', width:100, align:'center'  },
+				{field:'goodsCt', title:'商品数量', width:52, align:'center'  },
+				
+				{field:'goodsName', title:'商品名称', width:120, align:'center'  },
+				{field:'price', title:'商品售价', width:52, align:'center'  },
+				{field:'unitId', title:'商品单位', width:52, align:'center'  },
+				{field:'goodsTime', title:'服务时长（分）', width:78, align:'center'  },
+				{field:'classify', title:'商品小类', width:52, align:'center'  ,
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('2001', row.classify);
+					}	
+				},
+				{field:'materialTypes', title:'原料类型', width:182, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.materialTypes!=null){
+							if(row.materialTypes=="0"){
+								return "物品";
+							}else{
+								return "服务";
+							}
+						}
+					}	
+				},
+				{field:'materialId', title:'库存', width:52, align:'center'  },
+				{field:'note', title:'商品说明', width:200, align:'center'  },
+				{field:'materialCt', title:'消耗原料数量', width:80, align:'center'  },
+				{field:'status', title:'状态', width:78, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.status!=null){
+							if(row.status=="0"){
+								return "正常";
+							}else if(row.status=="1"){
+								return "下架";
+							}else if(row.status=="2"){
+								return "售罄";
+							}
+						}
+					}
+				},
+				{field:'saleStatus', title:'销售状态', width:80, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.saleStatus!=null){
+							if(row.saleStatus=="0"){
+								return "推荐";
+							}else{
+								return "热销";
+							}
+						}
+					}
+				},
+				{field:'isShow', title:'对客显示', width:91, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.isShow);
+					}
+				},
+				{field:'canCancel', title:'可否撤消 ', width:100, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.canCancel);
+					}
+				}			
+				
+		
+			];
+			
+	var resId = 991;//当前页面id
+	var packageId = Faith.getQueryStringByName("packageId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_packagesDetail', //表格容器id
+			tableKey : "detailId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/packagesDetail/page', //列表接口
+			sortName : 'detail_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			queryParams:{
+				packageId:packageId
+  			},
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加消费套餐详情",
+			addUrl : "/pc/webpage/settlement/packages/packagesDetail_form.html?packageId="+packageId
+		},
+		updateOptions : {
+			title : "修改消费套餐详情",
+			updateUrl : "/pc/webpage/settlement/packages/packagesDetail_form.html?packageId="+packageId
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/packagesDetail/delete/'
+		},
+		viewOptions : {
+			title:'查看消费套餐详情',
+			viewUrl : "/pc/webpage/settlement/packages/packagesDetail_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+	});	
+			
+</script>
+</head>
+<body>
+	<div class="grid">
+		<table id="grid_packagesDetail" class="easyui-datagrid"></table>
+	</div>
+</body>
+</html>

@@ -14,33 +14,32 @@
 		<result column="updated_date" property="updatedDate" />
 	</resultMap>
 	
+	<resultMap id="PackagesDetailVoResultMap" type="com.jing.settlement.model.entity.PackagesDetailVo" extends="com.jing.settlement.model.dao.GoodsMapper.GoodsResultMap">
+		<id column="detail_id" property="detailId" />
+		<result column="goods_ct" property="goodsCt" />
+		<result column="package_name" property="packageName" />
+	</resultMap>
+	
+	
 	<sql id="query_tables_Property" >
 		<where>
-			<if test="param.detailId != null and param.detailId != ''">
-				and detail_id = #{param.detailId}
-			</if>
-			<if test="param.packageId != null and param.packageId != ''">
-				and package_id = #{param.packageId}
-			</if>
-			<if test="param.goodsId != null and param.goodsId != ''">
-				and goods_id = #{param.goodsId}
-			</if>
-			<if test="param.goodsCt != null and param.goodsCt != ''">
-				and goods_ct = #{param.goodsCt}
-			</if>
-			<if test="param.createdBy != null and param.createdBy != ''">
-				and created_by = #{param.createdBy}
-			</if>
-			<if test="param.createdDate != null and param.createdDate != ''">
-				and created_date = #{param.createdDate}
-			</if>
-			<if test="param.updatedBy != null and param.updatedBy != ''">
-				and updated_by = #{param.updatedBy}
-			</if>
-			<if test="param.updatedDate != null and param.updatedDate != ''">
-				and updated_date = #{param.updatedDate}
-			</if>
+			<include refid="query_no_where_Property" />
 		</where>
+	</sql>
+	
+	<sql id="query_no_where_Property" >
+		<if test="param.detailId != null and param.detailId != ''">
+			and p2.detail_id = #{param.detailId}
+		</if>
+		<if test="param.packageId != null and param.packageId != ''">
+			and p2.package_id = #{param.packageId}
+		</if>
+		<if test="param.goodsId != null and param.goodsId != ''">
+			and p2.goods_id = #{param.goodsId}
+		</if>
+		<if test="param.goodsCt != null and param.goodsCt != ''">
+			and p2.goods_ct = #{param.goodsCt}
+		</if>
 	</sql>
 
 	<!-- 添加 消费套餐详情 -->
@@ -92,14 +91,20 @@
 		SELECT * FROM to_packages_detail WHERE detail_id = #{value}
 	</select>
 	
-	<select id="findPackagesDetailListPage" resultMap="PackagesDetailResultMap">
-		SELECT * FROM to_packages_detail
-		<include refid="query_tables_Property" />
+	<select id="findPackagesDetailListPage" resultMap="PackagesDetailVoResultMap">
+		select p1.package_name,p2.detail_id, p2.goods_ct,p3.*
+		from  to_packages p1, to_packages_detail p2,to_goods p3
+		where p1.package_id = p2.package_id
+		and p2.goods_id = p3.goods_id
+		<include refid="query_no_where_Property" />
 	</select>
 	
-	<select id="findPackagesDetailList" resultMap="PackagesDetailResultMap">
-		SELECT * FROM to_packages_detail
-		<include refid="query_tables_Property" />
+	<select id="findPackagesDetailList" resultMap="PackagesDetailVoResultMap">
+		select p1.package_name,p2.detail_id, p2.goods_ct,p3.*
+		from  to_packages p1, to_packages_detail p2,to_goods p3
+		where p1.package_id = p2.package_id
+		and p2.goods_id = p3.goods_id
+		<include refid="query_no_where_Property" />
 	</select>
 	
 </mapper>
