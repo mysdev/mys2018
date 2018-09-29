@@ -2,106 +2,104 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.settlement.model.dao.GoodsUnitMapper">
 
-<!-- Result Map-->
-<resultMap id="GoodsUnitResultMap" type="com.jing.settlement.model.entity.GoodsUnit">
-	<id column="unit_id" property="unitId"/>
-	<result column="unit_name" property="unitName"/>
-	<result column="base_unit" property="baseUnit"/>
-	<result column="base_ct" property="baseCt"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="GoodsUnitResultMap" type="com.jing.settlement.model.entity.GoodsUnit">
+		<id column="unit_id" property="unitId" />
+		<result column="unit_name" property="unitName" />
+		<result column="base_unit" property="baseUnit" />
+		<result column="base_ct" property="baseCt" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.unitId != null and param.unitId != ''">
+				and unit_id = #{param.unitId}
+			</if>
+			<if test="param.unitName != null and param.unitName != ''">
+				and unit_name = #{param.unitName}
+			</if>
+			<if test="param.baseUnit != null and param.baseUnit != ''">
+				and base_unit = #{param.baseUnit}
+			</if>
+			<if test="param.baseCt != null and param.baseCt != ''">
+				and base_ct = #{param.baseCt}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_goodsUnit_item">
-	unit_id, unit_name, base_unit, base_ct, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_goodsUnit_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="goodsUnit.unitId != null">AND unit_id = #{goodsUnit.unitId} </if>
-		<if test="goodsUnit.unitName != null">AND unit_name like concat(#{goodsUnit.unitName}, '%') </if>
-		<if test="goodsUnit.baseUnit != null">AND base_unit = #{goodsUnit.baseUnit} </if>
-		<if test="goodsUnit.baseCt != null">AND base_ct = #{goodsUnit.baseCt} </if>
-		<if test="goodsUnit.createdBy != null">AND created_by like concat(#{goodsUnit.createdBy}, '%') </if>
-		<if test="goodsUnit.updatedBy != null">AND updated_by like concat(#{goodsUnit.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 商品单位 -->
-<insert id="addGoodsUnit" parameterType="com.jing.settlement.model.entity.GoodsUnit" >
-	<selectKey keyProperty="unitId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO to_goods_unit 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="unitId != null"> unit_id,</if>
-		<if test="unitName != null"> unit_name,</if>
-		<if test="baseUnit != null"> base_unit,</if>
-		<if test="baseCt != null"> base_ct,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="unitId != null"> #{unitId},</if>
-		<if test="unitName != null"> #{unitName},</if>
-		<if test="baseUnit != null"> #{baseUnit},</if>
-		<if test="baseCt != null"> #{baseCt},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 商品单位 -->
+	<insert id="addGoodsUnit" parameterType="com.jing.settlement.model.entity.GoodsUnit">
+		<selectKey keyProperty="unitId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO to_goods_unit (unit_id ,unit_name ,base_unit ,base_ct ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{unitId},#{unitName},#{baseUnit},#{baseCt},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 商品单位 -->  
-<update id="modifyGoodsUnit" parameterType="com.jing.settlement.model.entity.GoodsUnit" >
-  	UPDATE to_goods_unit SET
-	<trim suffixOverrides=",">
-		<if test="unitName != null"> unit_name = #{unitName},</if>
-		<if test="baseUnit != null"> base_unit = #{baseUnit},</if>
-		<if test="baseCt != null"> base_ct = #{baseCt},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE unit_id = #{unitId}
-</update>
- 
-<!-- 删除 商品单位 -->
-<delete id="dropGoodsUnitByUnitId" parameterType="java.lang.Integer">
-	DELETE FROM to_goods_unit WHERE unit_id = #{unitId}
-</delete> 
-
-<!-- 根据标识查询 商品单位 -->
-<select id="queryGoodsUnitByUnitId"  resultMap="GoodsUnitResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_goodsUnit_item"/>
-	FROM to_goods_unit WHERE unit_id = #{unitId}
-</select>
-
-<!-- 根据属性查询商品单位 -->
-<select id="queryGoodsUnitByProperty"  resultMap="GoodsUnitResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_goodsUnit_item"/>
-	FROM to_goods_unit 
-	<where>
-		<include refid="sql_goodsUnit_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据商品单位属性与分页信息分页查询商品单位信息 -->
-<select id="queryGoodsUnitForPage"  resultMap="GoodsUnitResultMap" > 
-	SELECT 
-	<include refid="sql_goodsUnit_item"/>
-	FROM to_goods_unit 
-	<where>
-		<include refid="sql_goodsUnit_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改商品单位 -->
+	<update id="updateGoodsUnit" parameterType="com.jing.settlement.model.entity.GoodsUnit">
+		UPDATE to_goods_unit
+		<set> 
+			<if test="unitName != null" >
+				unit_name = #{unitName},
+			</if>
+			<if test="baseUnit != null" >
+				base_unit = #{baseUnit},
+			</if>
+			<if test="baseCt != null" >
+				base_ct = #{baseCt},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	unit_id = #{unitId}
+	</update>
+	
+	<!-- 根据ID删除商品单位 -->
+	<delete id="deleteGoodsUnitById"  parameterType="Integer">
+		DELETE FROM to_goods_unit WHERE unit_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询商品单位 -->
+	<select id="getGoodsUnitById" resultMap="GoodsUnitResultMap" parameterType="Integer">
+		SELECT * FROM to_goods_unit WHERE unit_id = #{value}
+	</select>
+	
+	<select id="findGoodsUnitListPage" resultMap="GoodsUnitResultMap">
+		SELECT * FROM to_goods_unit
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findGoodsUnitList" resultMap="GoodsUnitResultMap">
+		SELECT * FROM to_goods_unit
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

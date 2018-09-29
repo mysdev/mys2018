@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'unitId', title:'单位标识', hidden:true},
+			{field:'unitName', title:'单位名称', width:120, align:'center'  },
+			{field:'baseUnit', title:'基准单位', width:52, align:'center'  },
+			{field:'baseCt', title:'换算比 与基准单位', width:117, align:'center'  }
+		];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_goodsUnit', //表格容器id
+			tableKey : "unitId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/goodsUnit/page', //列表接口
+			sortName : 'unit_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加商品单位",
+			addUrl : "/pc/webpage/settlement/goods/goodsUnit_form.html"
+		},
+		updateOptions : {
+			title : "修改商品单位",
+			updateUrl : "/pc/webpage/settlement/goods/goodsUnit_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/goodsUnit/delete/'
+		},
+		viewOptions : {
+			title:'查看商品单位',
+			viewUrl : "/pc/webpage/settlement/goods/goodsUnit_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
+				<form class="form-horizontal" style="width:100%">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<input id="unitId" name="unitId" class="search_input_imp" placeholder="请输入单位标识">
+					<input id="unitName" name="unitName" class="search_input_imp" placeholder="请输入单位名称">
+					<input id="baseUnit" name="baseUnit" class="search_input_imp" placeholder="请输入基准单位">
+					<input id="baseCt" name="baseCt" class="search_input_imp" placeholder="请输入换算比 与基准单位">
+				</div>
+				<div class="cl-1" style="margin-top:10px">
+					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
+					<span class="down_up" style="float:right"></span>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_goodsUnit" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

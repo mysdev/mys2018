@@ -28,12 +28,15 @@ import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * 数据字典
  * 
  * @author lifeng
  *
  */
+@Api("数据字典")
 @Controller
 @RequestMapping("/sys/dictionary")
 public class DictionaryController extends BaseController {

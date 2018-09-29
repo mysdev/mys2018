@@ -24,9 +24,6 @@ public class Packages extends BaseEntity {
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private String packageId;	//to_packages:package_id  套餐标识  
 
-	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private Integer storeId;	//to_packages:store_id  归属门店  
-
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String packageName;	//to_packages:package_name  套餐名称  
@@ -34,9 +31,13 @@ public class Packages extends BaseEntity {
 	@NotBlank(message = "{org.hibernate.validator.constraints.NotBlank.message}")
 	@Length(min=1, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String pinyin;	//to_packages:pinyin  套餐拼音  
+	
+	private String img;//图片
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
 	private java.math.BigDecimal price;	//to_packages:price  售价  
+	private java.math.BigDecimal originalPrice;//原价
+	private java.math.BigDecimal preferentialPrice;//优惠幅度
 
 	private Date validDate;	//to_packages:valid_date  有效日期  
 
@@ -45,6 +46,14 @@ public class Packages extends BaseEntity {
 	
 	
 	private List<PackagesDetail> packagesDetails; //套餐详情
+
+	public List<PackagesDetail> getPackagesDetails() {
+		return packagesDetails;
+	}
+
+	public void setPackagesDetails(List<PackagesDetail> packagesDetails) {
+		this.packagesDetails = packagesDetails;
+	}
 
 	/**
 	* @DatabasetableColumnName: to_packages:package_id
@@ -62,23 +71,6 @@ public class Packages extends BaseEntity {
 	*/
 	public void setPackageId(String packageId){
 		this.packageId = packageId;	
-	}	
-	/**
-	* @DatabasetableColumnName: to_packages:store_id
-	* @Description: 获取属性        归属门店
-	* @return: Integer
-	*/
-	public Integer getStoreId(){
-		return storeId;	
-	}
-	
-	/**
-	* @DatabasetableColumnName: to_packages:store_id
-	* @Description: 设置属性        归属门店
-	* @return: Integer
-	*/
-	public void setStoreId(Integer storeId){
-		this.storeId = storeId;	
 	}	
 	/**
 	* @DatabasetableColumnName: to_packages:package_name
@@ -164,8 +156,31 @@ public class Packages extends BaseEntity {
 	*/
 	public void setStatus(Integer status){
 		this.status = status;	
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public java.math.BigDecimal getOriginalPrice() {
+		return originalPrice;
+	}
+
+	public void setOriginalPrice(java.math.BigDecimal originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+	public java.math.BigDecimal getPreferentialPrice() {
+		return preferentialPrice;
+	}
+
+	public void setPreferentialPrice(java.math.BigDecimal preferentialPrice) {
+		this.preferentialPrice = preferentialPrice;
 	}	
-	
 	
 	
 	

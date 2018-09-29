@@ -1,115 +1,90 @@
 package com.jing.settlement.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.settlement.model.entity.Packages;
 import com.jing.settlement.service.PackagesService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: PackagesController
- * @Description: 消费套餐HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * <br>
+ * <b>功能：</b>消费套餐 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="消费套餐", tags={"SettlementPackages"})
-public class PackagesController{
+@Api("消费套餐")
+@Controller
+@RequestMapping("/settlement/packages")
+public class PackagesController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private PackagesService packagesService;
-
 	
-	@ApiOperation(value = "新增 添加消费套餐信息", notes = "添加消费套餐信息")
-	@RequestMapping(value = "/packages", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addPackages(HttpServletResponse response,
-			@ApiParam(value = "packages") @RequestBody Packages packages) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(packages, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		packages.setPackageId(null);
+	@ApiOperation(value = "新增消费套餐", notes = "添加消费套餐")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(Packages packages,@SessionAttr(Config.USER_INFO) User user) {
+		packages.setCreatedBy(user.getUserId());
+		packages.setCreatedDateNow();
+		packages.setUpdatedBy(user.getUserId());
+		packages.setUpdatedDateNow();
 		packagesService.addPackages(packages);
-		return packages;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据消费套餐标识更新消费套餐信息", notes = "根据消费套餐标识更新消费套餐信息")
-	@RequestMapping(value = "/packages/{packageId:.+}", method = RequestMethod.PUT)
-	public Object modifyPackagesById(HttpServletResponse response,
-			@PathVariable String packageId,
-			@ApiParam(value = "packages", required = true) @RequestBody Packages packages
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(packages, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改消费套餐", notes = "修改消费套餐")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(Packages packages,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(packages==null || packages.getPackageId()==null || "".equals(packages.getPackageId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		Packages tempPackages = packagesService.queryPackagesByPackageId(packageId);
-		packages.setPackageId(packageId);
-		if(null == tempPackages){
-			throw new NotFoundException("消费套餐");
-		}
-		return packagesService.modifyPackages(packages);
+		packages.setUpdatedBy(user.getUserId());
+		packages.setUpdatedDateNow();
+		packagesService.updatePackages(packages);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据消费套餐标识删除消费套餐信息", notes = "根据消费套餐标识删除消费套餐信息")
-	@RequestMapping(value = "/packages/{packageId:.+}", method = RequestMethod.DELETE)
-	public Object dropPackagesByPackageId(HttpServletResponse response, @PathVariable String packageId) {
-		Packages packages = packagesService.queryPackagesByPackageId(packageId);
-		if(null == packages){
-			throw new NotFoundException("消费套餐");
+	@ApiOperation(value = "删除 根据ID删除消费套餐", notes = "根据ID删除消费套餐")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return packagesService.dropPackagesByPackageId(packageId);
+		packagesService.deletePackagesById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据消费套餐标识查询消费套餐信息", notes = "根据消费套餐标识查询消费套餐信息")
-	@RequestMapping(value = "/packages/{packageId:.+}", method = RequestMethod.GET)
-	public Object queryPackagesById(HttpServletResponse response,
-			@PathVariable String packageId) {
-		Packages packages = packagesService.queryPackagesByPackageId(packageId);
-		if(null == packages){
-			throw new NotFoundException("消费套餐");
+	@ApiOperation(value = "根据ID查询消费套餐", notes = "根据ID查询消费套餐")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") String id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return packages;
+		return Result.getDefaultSuccMsgResult(packagesService.getPackagesById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据消费套餐属性查询消费套餐信息列表", notes = "根据消费套餐属性查询消费套餐信息列表")
-	@RequestMapping(value = "/packages", method = RequestMethod.GET)
-	public Object queryPackagesList(HttpServletResponse response,
-			Packages packages) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return packagesService.queryPackagesByProperty(ClassUtil.transBean2Map(packages, false));
+		
+	@ApiOperation(value = "分页查询消费套餐", notes = "分页查询消费套餐")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return packagesService.findPackagesListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询分页 根据消费套餐属性分页查询消费套餐信息列表", notes = "根据消费套餐属性分页查询消费套餐信息列表")
-	@RequestMapping(value = "/packagess", method = RequestMethod.GET)
-	public Object queryPackagesPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, Packages packages) {				
-		return packagesService.queryPackagesForPage(pagenum, pagesize, sort, packages);
-	}
-
 }

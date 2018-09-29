@@ -24,11 +24,14 @@ import com.jing.system.permission.service.PermissionService;
 import com.jing.system.user.entity.User;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>权限 WEB接口<br>
  * <br>
  */
+@Api("权限管理")
 @Controller
 @RequestMapping("/sys/permission")
 public class PermissionController extends BaseController {

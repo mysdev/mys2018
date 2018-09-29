@@ -30,6 +30,9 @@ import com.jing.system.user.service.UserDetailService;
 import com.jing.utils.BaseController;
 import com.jing.utils.VerifyCodeIcon;
 
+import io.swagger.annotations.Api;
+
+@Api("系统登录")
 @Controller
 public class LoginController extends BaseController {
 	@Autowired

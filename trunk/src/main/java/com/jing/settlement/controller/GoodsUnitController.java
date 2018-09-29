@@ -1,115 +1,97 @@
 package com.jing.settlement.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.settlement.model.entity.GoodsUnit;
 import com.jing.settlement.service.GoodsUnitService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: GoodsUnitController
- * @Description: 商品单位HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * <br>
+ * <b>功能：</b>商品单位 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="商品单位", tags={"SettlementUnit"})
-public class GoodsUnitController{
+@Api("商品单位")
+@Controller
+@RequestMapping("/settlement/goodsUnit")
+public class GoodsUnitController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private GoodsUnitService goodsUnitService;
-
 	
-	@ApiOperation(value = "新增 添加商品单位信息", notes = "添加商品单位信息")
-	@RequestMapping(value = "/goodsunit", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addGoodsUnit(HttpServletResponse response,
-			@ApiParam(value = "goodsUnit") @RequestBody GoodsUnit goodsUnit) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(goodsUnit, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		goodsUnit.setUnitId(null);
+	@ApiOperation(value = "新增商品单位", notes = "添加商品单位")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(GoodsUnit goodsUnit,@SessionAttr(Config.USER_INFO) User user) {
+		goodsUnit.setCreatedBy(user.getUserId());
+		goodsUnit.setCreatedDateNow();
+		goodsUnit.setUpdatedBy(user.getUserId());
+		goodsUnit.setUpdatedDateNow();
 		goodsUnitService.addGoodsUnit(goodsUnit);
-		return goodsUnit;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据商品单位标识更新商品单位信息", notes = "根据商品单位标识更新商品单位信息")
-	@RequestMapping(value = "/goodsunit/{unitId:.+}", method = RequestMethod.PUT)
-	public Object modifyGoodsUnitById(HttpServletResponse response,
-			@PathVariable Integer unitId,
-			@ApiParam(value = "goodsUnit", required = true) @RequestBody GoodsUnit goodsUnit
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(goodsUnit, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改商品单位", notes = "修改商品单位")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(GoodsUnit goodsUnit,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(goodsUnit==null || goodsUnit.getUnitId()==null || "".equals(goodsUnit.getUnitId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		GoodsUnit tempGoodsUnit = goodsUnitService.queryGoodsUnitByUnitId(unitId);
-		goodsUnit.setUnitId(unitId);
-		if(null == tempGoodsUnit){
-			throw new NotFoundException("商品单位");
-		}
-		return goodsUnitService.modifyGoodsUnit(goodsUnit);
+		goodsUnit.setUpdatedBy(user.getUserId());
+		goodsUnit.setUpdatedDateNow();
+		goodsUnitService.updateGoodsUnit(goodsUnit);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据商品单位标识删除商品单位信息", notes = "根据商品单位标识删除商品单位信息")
-	@RequestMapping(value = "/goodsunit/{unitId:.+}", method = RequestMethod.DELETE)
-	public Object dropGoodsUnitByUnitId(HttpServletResponse response, @PathVariable Integer unitId) {
-		GoodsUnit goodsUnit = goodsUnitService.queryGoodsUnitByUnitId(unitId);
-		if(null == goodsUnit){
-			throw new NotFoundException("商品单位");
+	@ApiOperation(value = "删除 根据ID删除商品单位", notes = "根据ID删除商品单位")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return goodsUnitService.dropGoodsUnitByUnitId(unitId);
+		goodsUnitService.deleteGoodsUnitById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据商品单位标识查询商品单位信息", notes = "根据商品单位标识查询商品单位信息")
-	@RequestMapping(value = "/goodsunit/{unitId:.+}", method = RequestMethod.GET)
-	public Object queryGoodsUnitById(HttpServletResponse response,
-			@PathVariable Integer unitId) {
-		GoodsUnit goodsUnit = goodsUnitService.queryGoodsUnitByUnitId(unitId);
-		if(null == goodsUnit){
-			throw new NotFoundException("商品单位");
+	@ApiOperation(value = "根据ID查询商品单位", notes = "根据ID查询商品单位")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return goodsUnit;
+		return Result.getDefaultSuccMsgResult(goodsUnitService.getGoodsUnitById(id));
+	}
+		
+	@ApiOperation(value = "分页查询商品单位", notes = "分页查询商品单位")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return goodsUnitService.findGoodsUnitListPage(PageRequestUtils.getPageBean(request), map);
 	}
 	
-	@ApiOperation(value = "查询 根据商品单位属性查询商品单位信息列表", notes = "根据商品单位属性查询商品单位信息列表")
-	@RequestMapping(value = "/goodsunit", method = RequestMethod.GET)
-	public Object queryGoodsUnitList(HttpServletResponse response,
-			GoodsUnit goodsUnit) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return goodsUnitService.queryGoodsUnitByProperty(ClassUtil.transBean2Map(goodsUnit, false));
+	@ApiOperation(value = "属性查询商品单位", notes = "属性查询商品单位")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public @ResponseBody Result list(HttpServletRequest request) {
+		Map<String,Object> param=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return Result.getDefaultSuccMsgResult(goodsUnitService.findGoodsUnitList(param));
 	}
-	
-	@ApiOperation(value = "查询分页 根据商品单位属性分页查询商品单位信息列表", notes = "根据商品单位属性分页查询商品单位信息列表")
-	@RequestMapping(value = "/goodsunits", method = RequestMethod.GET)
-	public Object queryGoodsUnitPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, GoodsUnit goodsUnit) {				
-		return goodsUnitService.queryGoodsUnitForPage(pagenum, pagesize, sort, goodsUnit);
-	}
-
 }

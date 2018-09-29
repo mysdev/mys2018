@@ -1,115 +1,151 @@
 package com.jing.settlement.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.settlement.model.entity.Customer;
 import com.jing.settlement.service.CustomerService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: CustomerController
- * @Description: 客户HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
+ * <br>
+ * <b>功能：</b>客户 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="客户", tags={"SettlementCustomer"})
-public class CustomerController{
+@Api("客户")
+@Controller
+@RequestMapping("/settlement/customer")
+public class CustomerController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private CustomerService customerService;
-
 	
-	@ApiOperation(value = "新增 添加客户信息", notes = "添加客户信息")
-	@RequestMapping(value = "/customer", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addCustomer(HttpServletResponse response,
-			@ApiParam(value = "customer") @RequestBody Customer customer) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(customer, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		customer.setCustomerId(null);
+	
+	//第一个接口： 接待
+	@ApiOperation(value = "新增客户", notes = "添加客户")
+	@RequestMapping(value = "/addSimple", method = RequestMethod.POST)
+	public @ResponseBody Result addSimple(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
+		
+		customer.setCreatedBy(user.getUserId());
+		customer.setCreatedDateNow();
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
 		customerService.addCustomer(customer);
-		return customer;
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	@ApiOperation(value = "新增客户[开房]", notes = "添加客户")
+	@RequestMapping(value = "/rentRoom", method = RequestMethod.POST)
+	public @ResponseBody Result rentRoom(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
+		customer.setCreatedBy(user.getUserId());
+		customer.setCreatedDateNow();
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
+		customerService.addCustomer(customer);
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	@ApiOperation(value = "新增客户【发手环】", notes = "添加客户")
+	@RequestMapping(value = "/rentStrap", method = RequestMethod.POST)
+	public @ResponseBody Result rentStrap(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
+		customer.setCreatedBy(user.getUserId());
+		customer.setCreatedDateNow();
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
+		customerService.addCustomer(customer);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
 	
-	@ApiOperation(value = "更新 根据客户标识更新客户信息", notes = "根据客户标识更新客户信息")
-	@RequestMapping(value = "/customer/{customerId:.+}", method = RequestMethod.PUT)
-	public Object modifyCustomerById(HttpServletResponse response,
-			@PathVariable Integer customerId,
-			@ApiParam(value = "customer", required = true) @RequestBody Customer customer
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(customer, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	//第二个接口：开客房卡 或者 手环序列号
+	@ApiOperation(value = "增加手环", notes = "给已有客户增发一个手环")
+	@RequestMapping(value = "/addStrap", method = RequestMethod.POST)
+	public @ResponseBody Result addStrap(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
+		customer.setCreatedBy(user.getUserId());
+		customer.setCreatedDateNow();
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
+		customerService.addCustomer(customer);
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	@ApiOperation(value = "增加客房", notes = "给已有客户增开一个客房")
+	@RequestMapping(value = "/addRoom", method = RequestMethod.POST)
+	public @ResponseBody Result addRoom(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
+		customer.setCreatedBy(user.getUserId());
+		customer.setCreatedDateNow();
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
+		customerService.addCustomer(customer);
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	
+	//第三个接口， 删除房间或手环
+	@ApiOperation(value = "取消授权码", notes = "在客户未使用时发起取消授权码")
+	@RequestMapping(value = "/authorization/delete/{authorizationId}", method = RequestMethod.POST)
+	public @ResponseBody Result delRoom(@PathVariable("authorizationId") String authorizationId,@SessionAttr(Config.USER_INFO) User user) {
+	
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	
+	
+	
+	@ApiOperation(value = "修改客户", notes = "修改客户")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(Customer customer,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(customer==null || customer.getCustomerId()==null || "".equals(customer.getCustomerId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		Customer tempCustomer = customerService.queryCustomerByCustomerId(customerId);
-		customer.setCustomerId(customerId);
-		if(null == tempCustomer){
-			throw new NotFoundException("客户");
-		}
-		return customerService.modifyCustomer(customer);
+		customer.setUpdatedBy(user.getUserId());
+		customer.setUpdatedDateNow();
+		customerService.updateCustomer(customer);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据客户标识删除客户信息", notes = "根据客户标识删除客户信息")
-	@RequestMapping(value = "/customer/{customerId:.+}", method = RequestMethod.DELETE)
-	public Object dropCustomerByCustomerId(HttpServletResponse response, @PathVariable Integer customerId) {
-		Customer customer = customerService.queryCustomerByCustomerId(customerId);
-		if(null == customer){
-			throw new NotFoundException("客户");
+	@ApiOperation(value = "删除 根据ID删除客户", notes = "根据ID删除客户")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return customerService.dropCustomerByCustomerId(customerId);
+		customerService.deleteCustomerById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据客户标识查询客户信息", notes = "根据客户标识查询客户信息")
-	@RequestMapping(value = "/customer/{customerId:.+}", method = RequestMethod.GET)
-	public Object queryCustomerById(HttpServletResponse response,
-			@PathVariable Integer customerId) {
-		Customer customer = customerService.queryCustomerByCustomerId(customerId);
-		if(null == customer){
-			throw new NotFoundException("客户");
+	@ApiOperation(value = "根据ID查询客户", notes = "根据ID查询客户")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return customer;
+		return Result.getDefaultSuccMsgResult(customerService.getCustomerById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据客户属性查询客户信息列表", notes = "根据客户属性查询客户信息列表")
-	@RequestMapping(value = "/customer", method = RequestMethod.GET)
-	public Object queryCustomerList(HttpServletResponse response,
-			Customer customer) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return customerService.queryCustomerByProperty(ClassUtil.transBean2Map(customer, false));
+		
+	@ApiOperation(value = "分页查询客户", notes = "分页查询客户")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return customerService.findCustomerListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询分页 根据客户属性分页查询客户信息列表", notes = "根据客户属性分页查询客户信息列表")
-	@RequestMapping(value = "/customers", method = RequestMethod.GET)
-	public Object queryCustomerPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, Customer customer) {				
-		return customerService.queryCustomerForPage(pagenum, pagesize, sort, customer);
-	}
-
 }

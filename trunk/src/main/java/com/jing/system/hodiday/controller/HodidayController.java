@@ -19,11 +19,14 @@ import com.jing.system.hodiday.entity.Hodiday;
 import com.jing.system.hodiday.service.HodidayService;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>节假日 WEB接口<br>
  * <br>
  */
+@Api("节假日管理")
 @Controller
 @RequestMapping("/sys/hodiday")
 public class HodidayController extends BaseController{

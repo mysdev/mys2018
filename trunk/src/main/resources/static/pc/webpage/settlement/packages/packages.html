@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+				{field:'packageId', title:'套餐标识', hidden:true },
+				{field:'packageName', title:'套餐名称', width:300, align:'center'  },
+				{field:'pinyin', title:'套餐拼音', width:200, align:'center'  },
+				{field:'price', title:'售价', width:100, align:'center'  },
+				{field:'originalPrice', title:'原价', width:100, align:'center'  },
+				{field:'preferentialPrice', title:'优惠幅度', width:100, align:'center'  },
+				{field:'validDate', title:'有效日期', width:120, align:'center'  },
+				{field:'status', title:'套餐状态', width:120, align:'center'  }
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_packages', //表格容器id
+			tableKey : "packageId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/packages/page', //列表接口
+			sortName : 'package_id',
+			sortOrder : 'desc',
+			fitColumns:false,
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加消费套餐",
+			addUrl : "/pc/webpage/settlement/packages/packages_form.html"
+		},
+		updateOptions : {
+			title : "修改消费套餐",
+			updateUrl : "/pc/webpage/settlement/packages/packages_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/packages/delete/'
+		},
+		viewOptions : {
+			title:'查看消费套餐',
+			viewUrl : "/pc/webpage/settlement/packages/packages_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+	
+	
+	function packagesDetail(){
+		var row = $('#grid_packages').datagrid("getSelected");
+		if (row) {
+			var id = row.packageId;
+			top.addTab("套餐详情", "/pc/webpage/settlement/packages/packagesDetail.html?packageId=" + id);
+		} else {
+			$.messager.alert('操作错误', '请选择一条数据!', 'error');
+		}
+	}
+			
+</script>
+</head>
+<body>
+	<div id="search" class="search wrap_border">
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐名称" id="packageName" name="packageName" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐拼音" id="pinyin" name="pinyin" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="35" label="售价" id="price" name="price" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="有效日期" id="validDate" name="validDate" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="套餐状态 " id="status" name="status" />
+		</div>		
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+	<div class="grid">
+		<table id="grid_packages" class="easyui-datagrid"></table>
+	</div>
+</body>
+</html>

@@ -26,11 +26,14 @@ import com.jing.system.user.entity.User;
 import com.jing.utils.BaseController;
 import com.jing.utils.FrameworkUtils;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>角色 WEB接口<br>
  * <br>
  */
+@Api("角色管理")
 @Controller
 @RequestMapping("/sys/permission/role")
 public class RoleController extends BaseController {

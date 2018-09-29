@@ -3,66 +3,41 @@ package com.jing.settlement.service;
 import java.util.List;
 import java.util.Map;
 
-
+import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.GoodsUnit;
 
-/**
- * @ClassName: GoodsUnit
- * @Description: 商品单位服务接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时03分
- */
 public interface GoodsUnitService {
 
-    /**
-	 * @Title: addGoodsUnit
-	 * @Description:添加商品单位
-	 * @param goodsUnit 实体
-	 * @return Integer
-	 */
-	GoodsUnit addGoodsUnit(GoodsUnit goodsUnit);
+	/**
+	* 添加 商品单位
+	*/
+	void addGoodsUnit(GoodsUnit goodsUnit);
 	
 	/**
-	 * @Title modifyGoodsUnit
-	 * @Description:修改商品单位
-	 * @param goodsUnit 实体
-	 * @return Integer
-	 */
-	Integer modifyGoodsUnit(GoodsUnit goodsUnit);
+	* 修改 商品单位
+	*/
+	void updateGoodsUnit(GoodsUnit goodsUnit);
 	
 	/**
-	 * @Title: dropGoodsUnitByUnitId
-	 * @Description:删除商品单位
-	 * @param unitId 实体标识
-	 * @return Integer
-	 */
-	Integer dropGoodsUnitByUnitId(Integer unitId);
+	*根据ID删除记录
+	*/
+	void deleteGoodsUnitById(Integer id);	
 	
 	/**
-	 * @Title: queryGoodsUnitByUnitId
-	 * @Description:根据实体标识查询商品单位
-	 * @param unitId 实体标识
-	 * @return GoodsUnit
-	 */
-	GoodsUnit queryGoodsUnitByUnitId(Integer unitId);
-	 
+	*根据ID查询记录
+	*/
+	GoodsUnit getGoodsUnitById(Integer id);
+	
 	/**
-	 * @Title: queryGoodsUnitForPage
-	 * @Description: 根据商品单位属性与分页信息分页查询商品单位信息
-	 * @param pagenum 页 
-	 * @param pagesize 页大小 
-	 * @param sort 排序
-	 * @param goodsUnit 实体
-	 * @return List<GoodsUnit>
+	* 分页查询
+	*/
+	PageInfo findGoodsUnitListPage(PageInfo page, Map<String, Object> param);
+	
+
+	/**
+	 * 根据属性查询商品单位
+	 * @param param
+	 * @return
 	 */
-	Map<String, Object> queryGoodsUnitForPage(Integer pagenum, Integer pagesize, String sort, GoodsUnit goodsUnit);
-	 
-	 /**
-	 * @Title: queryGoodsUnitByProperty
-	 * @Description:根据属性查询商品单位
-	 * @return List<GoodsUnit>
-	 */
-	 List<GoodsUnit> queryGoodsUnitByProperty(Map<String, Object> map);	 
-	 
+	List<GoodsUnit> findGoodsUnitList(Map<String, Object> param);
 }

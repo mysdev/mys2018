@@ -65,43 +65,20 @@
 </script>
 </head>
 <body>
-	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
-		<div class="easyui-layout layout easyui-fluid">
-   			<!-- 搜索容器 -->
-			<div id="search_wrap" class="search_wrap" style="border:1px solid #e0e0e0;overflow:hidden;" >
-				<form class="form-horizontal" style="width:100%">
-				<div class="cl-9 ">
-					<!-- 必要搜索条件 -->
-#foreach( $col in $!{columns} ) 
+	<div id="search" class="search wrap_border">
+#foreach( $col in $!{columns} )
 #if($!col.isSearch == 1 )
-#if($!col.formType == 1 )
-					<input id="${col.filedName}" name="${col.filedName}" class="search_input_imp" placeholder="请输入${col.columnLabel}">
-#end
-#if($!col.formType == 4 )
-					<select id="${col.filedName}" name="${col.filedName}" class="search_input_imp  select_sty">
-						<option value="-1">请选择${col.columnLabel}</option>
-					</select>
-#end
-#if($!col.formType == 5 )
-					<div class="search_input_imp">
-						<input type="" class="search_input dateinput" placeholder="请选择${col.columnLabel}开始时间" id="start${col.method}" name="start${col.method}" onfocus="WdatePicker({minDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
-						<input type="" class="search_input dateinput" placeholder="请选择${col.columnLabel}结束时间" id="end${col.method}" name="end${col.method}" onfocus="WdatePicker({minDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="margin-left:7%"/>
-					</div>
-#end
-#end
-#end
-				</div>
-				<div class="cl-1" style="margin-top:10px">
-					<a href="#" class="searchbox-but" plain="true" onclick="doSearch('search_wrap')">搜索</a>
-					<span class="down_up" style="float:right"></span>
-				</div>
-				</form>
-			</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="${col.columnLabel}" id="${col.filedName}" name="${col.filedName}" />
 		</div>
-		<div style="margin-top:5px;">
-			<table id="grid_${lowerName}" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
-			</table>
-        </div>  
-	</div> 	
+#end	
+#end
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+	<div class="grid">
+		<table id="grid_${lowerName}" class="easyui-datagrid"></table>
+	</div>
 </body>
 </html>

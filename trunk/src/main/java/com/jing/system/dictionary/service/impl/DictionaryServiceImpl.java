@@ -59,17 +59,12 @@ public class DictionaryServiceImpl implements DictionaryService {
 	@Override
 	public void updateDictionary(Map<String, Object> param) {
 		dictionaryDao.updateDictionary(param);
-		Dictionary dictionary = DictionaryMapper.getObj(param.get("").toString(), param.get("").toString());
-
-		if (param.get("value") != null) {
-			dictionary.setValue(param.get("value").toString());
-		}
-		if (param.get("flag") != null) {
-			dictionary.setFlag((Integer) param.get("flag"));
-		}
-		if (param.get("sort") != null) {
-			dictionary.setSort((Integer) param.get("sort"));
-		}
+		Dictionary dictionary =  new Dictionary();
+		dictionary.setCode(param.get("code").toString());
+		dictionary.setValue(param.get("value").toString());
+		dictionary.setFlag(Integer.parseInt(param.get("flag").toString()));
+		dictionary.setSort(Integer.parseInt(param.get("sort").toString()));
+		dictionary.setGroupCode((String)param.get("groupCode"));
 		DictionaryMapper.setValue(dictionary);
 	}
 

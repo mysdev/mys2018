@@ -29,7 +29,17 @@ public class Customer extends BaseEntity {
 
 	@Length(min=0, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String note;	//to_customer:note  备注  
+	
+	private Integer status;//状态
 
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 	/**
 	* @DatabasetableColumnName: to_customer:customer_id

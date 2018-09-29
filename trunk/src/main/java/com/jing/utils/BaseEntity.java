@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.jing.system.user.uitl.UserMapper;
+
 /**
  * @ClassName: BaseEntity
  * @Description: 数据用公共父类
@@ -21,11 +23,13 @@ public class BaseEntity implements Serializable {
 
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
 	private Integer createdBy;	//tt_coupon:created_by  创建人员  
+	private String createdByName;
 	
 	private Date createdDate;	//tt_coupon:created_date  创建时间  
 	
 	@Length(min=0, max=32, message="{org.hibernate.validator.constraints.Length.message}")
-	private Integer updatedBy;	//tt_coupon:updated_by  修订人员  
+	private Integer updatedBy;	//tt_coupon:updated_by  修订人员 
+	private String updatedByName;
 
 	private Date updatedDate;	//tt_coupon:updated_date  修订时间 
 	
@@ -108,4 +112,20 @@ public class BaseEntity implements Serializable {
 	public void setUpdatedDateNow(){
 		this.updatedDate = new Date();
 	}
+
+	public String getCreatedByName() {
+		if(getCreatedBy()!=null) {
+			return UserMapper.getValue(getCreatedBy());
+		}
+		return createdByName;
+	}
+
+	public String getUpdatedByName() {
+		if(getUpdatedBy()!=null) {
+			return UserMapper.getValue(getUpdatedBy());
+		}
+		return updatedByName;
+	}
+	
+	
 }

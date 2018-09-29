@@ -732,7 +732,7 @@ Faith.initSelectPerson = function(id, options) {
 }
 
 // 选择房屋 id:初始化容器id
-Faith.initSelectHouse = function(id, options) {
+Faith.initSelectGoods = function(id, options) {
 
 	var height = 34;
 	if(options && options.height) {
@@ -751,26 +751,26 @@ Faith.initSelectHouse = function(id, options) {
 			handler: function(e) {
 
 				var dialog_options = {
-					id: 'SelectHouseWrap',
-					title: '选择房屋',
+					id: 'SelectGoodsWrap',
+					title: '选择商品',
 					width: '980px',
-					formpage: Faith.projectName + '/webpage/common/selecthouse.html',
+					formpage: Faith.projectName + '/pc/webpage/settlement/goods/selectGoods.html',
 					buttons: [{
 						text: '确定',
 						handler: function() {
-							var rows = document.getElementById('SelectHouseWrap').contentWindow.returnvalues();
-							if(rows != null && rows != "" && rows.houseId && rows.houseId != "") {
-								$(e.data.target).textbox('setValue', rows.houseId);
-								$(e.data.target).textbox('setText', rows.address);
+							var rows = document.getElementById('SelectGoodsWrap').contentWindow.returnvalues();
+							if(rows != null && rows != "" && rows.goodsId) {
+								$(e.data.target).textbox('setValue', rows.goodsId);
+								$(e.data.target).textbox('setText', rows.goodsName);
 
 								if(options && options.callback) {
 									var cb = options.callback;
 									cb(rows);
 								}
 								// 关闭窗口
-								$('#SelectHouseWrap').dialog('destroy');
+								$('#SelectGoodsWrap').dialog('destroy');
 							} else {
-								$.messager.alert('提示', "请选择一个房间");
+								$.messager.alert('提示', "请选择一个商品");
 							}
 						}
 					}]
@@ -865,7 +865,7 @@ Faith.getQueryStringByIndex = function(index) {
  * @returns
  */
 Faith.dictionaryToChinese = function(group, code) {
-	if(!code) {
+	if(!code && code!='0') {
 		return "";
 	}
 	var array = [];

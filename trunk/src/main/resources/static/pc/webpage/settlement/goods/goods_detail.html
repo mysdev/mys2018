@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
+<script type="text/javascript">
+	var pkVal = Faith.getQueryStringByName("pkVal");
+
+	function initData(id) {
+		$.get(Faith.projectName + "/settlement/goods/index/" + id, {}, function(rs) {
+			if (rs.code == 1) { 
+				Faith.setTableData("detail_goods", rs.data); 
+ 				if(rs.data.point&&rs.data.point!=""){
+ 					Faith.addMarker(rs.data.point);
+ 				}
+			} else {
+				$.messager.alert("提示", rs.message);
+			}
+		}, 'json');
+	}
+
+	$(function() {
+		initData(pkVal);
+	});
+</script>
+</head>
+<body>
+<div id="detail_goods" class="fromstyle">
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品标识:</label>
+			<div class="column_z column_title" id="goodsId" name="goodsId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品名称:</label>
+			<div class="column_z column_title" id="goodsName" name="goodsName"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品售价:</label>
+			<div class="column_z column_title" id="price" name="price"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品单位:</label>
+			<div class="column_z column_title" id="unitId" name="unitId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">服务时长 分:</label>
+			<div class="column_z column_title" id="goodsTime" name="goodsTime"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品小类:</label>
+			<div class="column_z column_title" id="classify" name="classify" type="dictionary" code="2001"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">库存:</label>
+			<div class="column_z column_title" id="materialId" name="materialId"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">原料类型(冗) 0物品1服务:</label>
+			<div class="column_z column_title" id="materialTypes" name="materialTypes"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">消耗原料数量 0不减库存:</label>
+			<div class="column_z column_title" id="materialCt" name="materialCt"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">状态:</label>
+			<div class="column_z column_title" id="status" name="status"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">销售状态 推荐热销:</label>
+			<div class="column_z column_title" id="saleStatus" name="saleStatus"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">对客显示:</label>
+			<div class="column_z column_title" id="isShow" name="isShow" type="dictionary" code="1001"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">可否撤消:</label>
+			<div class="column_z column_title" id="canCancel" name="canCancel" type="dictionary" code="1001"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">创建人员:</label>
+			<div class="column_z column_title" id="createdByName" name="createdByName"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">创建时间:</label>
+			<div class="column_z column_title" id="createdDate" name="createdDate"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">修订人员:</label>
+			<div class="column_z column_title" id="updatedByName" name="updatedByName"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">修订时间:</label>
+			<div class="column_z column_title" id="updatedDate" name="updatedDate"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品说明:</label>
+			<div class="column_z column_title" id="note" name="note"></div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
+		<div class="border_tab padding_int">
+			<label class="column_t">商品图例:</label>
+			<div class="column_z column_title" id="goodsImg" name="goodsImg" type="img"></div>
+		</div>
+	</div>
+ </div>
+ </body>
+</html>

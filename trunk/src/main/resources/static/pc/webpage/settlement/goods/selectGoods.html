@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'goodsId', title:'商品标识',hidden:true  },
+				{field:'goodsName', title:'商品名称', width:120, align:'center'  },
+				{field:'price', title:'商品售价', width:52, align:'center'  },
+				{field:'unitId', title:'商品单位', width:52, align:'center'  },
+				{field:'goodsTime', title:'服务时长（分）', width:78, align:'center'  },
+				{field:'classify', title:'商品小类', width:52, align:'center'  ,
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('2001', row.classify);
+					}	
+				},
+				{field:'materialTypes', title:'原料类型', width:182, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.materialTypes!=null){
+							if(row.materialTypes=="0"){
+								return "物品";
+							}else{
+								return "服务";
+							}
+						}
+					}	
+				},
+				{field:'materialId', title:'库存', width:52, align:'center'  },
+				{field:'note', title:'商品说明', width:200, align:'center'  },
+				{field:'materialCt', title:'消耗原料数量', width:80, align:'center'  },
+				{field:'status', title:'状态', width:78, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.status!=null){
+							if(row.status=="0"){
+								return "正常";
+							}else if(row.status=="1"){
+								return "下架";
+							}else if(row.status=="2"){
+								return "售罄";
+							}
+						}
+					}
+				},
+				{field:'saleStatus', title:'销售状态', width:80, align:'center' ,
+					formatter:function(value,row,index){
+						if(row.saleStatus!=null){
+							if(row.saleStatus=="0"){
+								return "推荐";
+							}else{
+								return "热销";
+							}
+						}
+					}
+				},
+				{field:'isShow', title:'对客显示', width:91, align:'center',
+					formatter: function(value, row, index) {
+						return Faith.dictionaryToChinese('1001', row.isShow);
+					}
+				}
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_goods', //表格容器id
+			tableKey : "goodsId",
+			url : Faith.projectName + '/settlement/goods/page', //列表接口
+			sortName : 'goods_id',
+			sortOrder : 'desc',
+			queryParams:{materialTypes:0},
+			columns : [ columns ],//数据列
+			delayLoad : true
+		}
+	});
+	
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+		
+		$('#materialTypes').combobox({
+			data : [{code:"0",value:"物品"},{code:"1",value:"服务"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
+			height : 34
+		});
+		
+		Faith.initCombobox('isShow', '1001');//是否
+		Faith.initCombobox('classify', '2001');//是否
+		$('#status').combobox({
+			data : [{code:"0",value:"正常"},{code:"1",value:"下架"},{code:"1",value:"售罄"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
+			height : 34
+		});
+		$('#saleStatus').combobox({
+			data : [{code:"0",value:"推荐"},{code:"1",value:"热销"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
+			height : 34
+		});
+	});	
+		
+	function returnvalues() {
+		var row = $('#grid_goods').datagrid('getSelected');
+		return row;
+	}
+</script>
+</head>
+<body>
+	<div id="search" class="search wrap_border">
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="商品名称" id="goodsName" name="goodsName" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox"  label="商品小类" labelWidth="70"  id="classify" name="classify"/>
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox"  label="原料类型" labelWidth="70"  id="materialTypes" name="materialTypes"/>
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox"  label="对客显示" labelWidth="70"  id="isShow" name="isShow"/>
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox"  label="销售状态" labelWidth="70"  id="saleStatus" name="saleStatus"/>
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox"  label="商品状态" labelWidth="70"  id="status" name="status"/>
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" label="库存" labelWidth="70"  id="materialId" name="materialId"/>
+		</div>
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+	<div class="grid">
+		<table id="grid_goods" class="easyui-datagrid">
+		</table>
+       </div>  
+</body>
+</html>

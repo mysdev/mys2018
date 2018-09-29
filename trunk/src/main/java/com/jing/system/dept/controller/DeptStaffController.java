@@ -22,11 +22,14 @@ import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
 import com.jing.utils.BaseController;
 
+import io.swagger.annotations.Api;
+
 /**
  * <br>
  * <b>功能：</b>部门职工 WEB接口<br>
  * <br>
  */
+@Api("职员")
 @Controller
 @RequestMapping("/sys/dept/staff")
 public class DeptStaffController extends BaseController {

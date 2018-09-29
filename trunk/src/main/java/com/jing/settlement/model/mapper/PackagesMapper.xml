@@ -2,116 +2,127 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.settlement.model.dao.PackagesMapper">
 
-<!-- Result Map-->
-<resultMap id="PackagesResultMap" type="com.jing.settlement.model.entity.Packages">
-	<id column="package_id" property="packageId"/>
-	<result column="store_id" property="storeId"/>
-	<result column="package_name" property="packageName"/>
-	<result column="pinyin" property="pinyin"/>
-	<result column="price" property="price"/>
-	<result column="valid_date" property="validDate"/>
-	<result column="status" property="status"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="PackagesResultMap" type="com.jing.settlement.model.entity.Packages">
+		<id column="package_id" property="packageId" />
+		<result column="package_name" property="packageName" />
+		<result column="pinyin" property="pinyin" />
+		<result column="img" property="img" />
+		<result column="price" property="price" />
+		<result column="original_price" property="originalPrice" />
+		<result column="preferential_price" property="preferentialPrice" />
+		<result column="valid_date" property="validDate" />
+		<result column="status" property="status" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.packageId != null and param.packageId != ''">
+				and package_id = #{param.packageId}
+			</if>
+			<if test="param.packageName != null and param.packageName != ''">
+				and package_name = #{param.packageName}
+			</if>
+			<if test="param.pinyin != null and param.pinyin != ''">
+				and pinyin = #{param.pinyin}
+			</if>
+			<if test="param.price != null and param.price != ''">
+				and price = #{param.price}
+			</if>
+			<if test="param.validDate != null and param.validDate != ''">
+				and valid_date = #{param.validDate}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_packages_item">
-	package_id, store_id, package_name, pinyin, price, valid_date, status, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_packages_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="packages.packageId != null">AND package_id like concat(#{packages.packageId}, '%') </if>
-		<if test="packages.storeId != null">AND store_id = #{packages.storeId} </if>
-		<if test="packages.packageName != null">AND package_name like concat(#{packages.packageName}, '%') </if>
-		<if test="packages.pinyin != null">AND pinyin like concat(#{packages.pinyin}, '%') </if>
-		<if test="packages.status != null">AND status = #{packages.status} </if>
-		<if test="packages.createdBy != null">AND created_by like concat(#{packages.createdBy}, '%') </if>
-		<if test="packages.updatedBy != null">AND updated_by like concat(#{packages.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 消费套餐 -->
-<insert id="addPackages" parameterType="com.jing.settlement.model.entity.Packages" >
- 	INSERT INTO to_packages 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="packageId != null"> package_id,</if>
-		<if test="storeId != null"> store_id,</if>
-		<if test="packageName != null"> package_name,</if>
-		<if test="pinyin != null"> pinyin,</if>
-		<if test="price != null"> price,</if>
-		<if test="validDate != null"> valid_date,</if>
-		<if test="status != null"> status,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="packageId != null"> #{packageId},</if>
-		<if test="storeId != null"> #{storeId},</if>
-		<if test="packageName != null"> #{packageName},</if>
-		<if test="pinyin != null"> #{pinyin},</if>
-		<if test="price != null"> #{price},</if>
-		<if test="validDate != null"> #{validDate},</if>
-		<if test="status != null"> #{status},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 消费套餐 -->
+	<insert id="addPackages" parameterType="com.jing.settlement.model.entity.Packages">
+		INSERT INTO to_packages (package_id ,package_name ,pinyin ,img,price,original_price,preferential_price ,valid_date ,status ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{packageId},#{packageName},#{pinyin},#{img},#{price},#{originalPrice},#{preferentialPrice},#{validDate},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 消费套餐 -->  
-<update id="modifyPackages" parameterType="com.jing.settlement.model.entity.Packages" >
-  	UPDATE to_packages SET
-	<trim suffixOverrides=",">
-		<if test="storeId != null"> store_id = #{storeId},</if>
-		<if test="packageName != null"> package_name = #{packageName},</if>
-		<if test="pinyin != null"> pinyin = #{pinyin},</if>
-		<if test="price != null"> price = #{price},</if>
-		<if test="validDate != null"> valid_date = #{validDate},</if>
-		<if test="status != null"> status = #{status},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE package_id = #{packageId}
-</update>
- 
-<!-- 删除 消费套餐 -->
-<delete id="dropPackagesByPackageId" parameterType="java.lang.String">
-	DELETE FROM to_packages WHERE package_id = #{packageId}
-</delete> 
-
-<!-- 根据标识查询 消费套餐 -->
-<select id="queryPackagesByPackageId"  resultMap="PackagesResultMap" parameterType="java.lang.String">
-	SELECT 
-	<include refid="sql_packages_item"/>
-	FROM to_packages WHERE package_id = #{packageId}
-</select>
-
-<!-- 根据属性查询消费套餐 -->
-<select id="queryPackagesByProperty"  resultMap="PackagesResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_packages_item"/>
-	FROM to_packages 
-	<where>
-		<include refid="sql_packages_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据消费套餐属性与分页信息分页查询消费套餐信息 -->
-<select id="queryPackagesForPage"  resultMap="PackagesResultMap" > 
-	SELECT 
-	<include refid="sql_packages_item"/>
-	FROM to_packages 
-	<where>
-		<include refid="sql_packages_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改消费套餐 -->
+	<update id="updatePackages" parameterType="com.jing.settlement.model.entity.Packages">
+		UPDATE to_packages
+		<set> 
+			<if test="packageName != null" >
+				package_name = #{packageName},
+			</if>
+			<if test="pinyin != null" >
+				pinyin = #{pinyin},
+			</if>
+			<if test="img != null" >
+				img = #{img},
+			</if>
+			<if test="originalPrice != null" >
+				original_price = #{originalPrice},
+			</if>
+			<if test="preferentialPrice != null" >
+				preferential_price = #{preferentialPrice},
+			</if>
+			<if test="price != null" >
+				price = #{price},
+			</if>
+			<if test="validDate != null" >
+				valid_date = #{validDate},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	package_id = #{packageId}
+	</update>
+	
+	<!-- 根据ID删除消费套餐 -->
+	<delete id="deletePackagesById"  parameterType="String">
+		DELETE FROM to_packages WHERE package_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询消费套餐 -->
+	<select id="getPackagesById" resultMap="PackagesResultMap" parameterType="String">
+		SELECT * FROM to_packages WHERE package_id = #{value}
+	</select>
+	
+	<select id="findPackagesListPage" resultMap="PackagesResultMap">
+		SELECT * FROM to_packages
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findPackagesList" resultMap="PackagesResultMap">
+		SELECT * FROM to_packages
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>
