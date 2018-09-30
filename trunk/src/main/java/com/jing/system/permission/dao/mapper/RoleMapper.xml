@@ -95,7 +95,7 @@
 		select DISTINCT r1.* from sys_role r1 , sys_resource r2 ,sys_permission p 
 		where r2.resId=p.resId
 		and r1.roleId=p.roleId
-		and r2.resURL=#{url}
+		and CONCAT('^',#{url},'$') REGEXP r2.resURL
 	</select>
 	
 	<select id="findRoleLisRemoveRole0tByUserId" resultMap="RoleResultMap"  parameterType="Integer">
