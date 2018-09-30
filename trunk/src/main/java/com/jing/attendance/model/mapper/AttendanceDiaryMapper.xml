@@ -215,7 +215,7 @@ RIGHT OUTER JOIN
 <insert id="insertFutureDiaryRecordByEmployeeId" parameterType="java.lang.String">
 	insert into tw_attendance_diary (employee_id, attendance, att_time, sys_sign, sys_out, created_date, created_by, updated_date)
 	select #{empId}, attendance, att_date, sign_time, out_time, now(), 'system', NOW() from tw_attendance_detail 
-	where attendance_id=8 and att_date>DATE_FORMAT(now(),'%Y-%m-%d') ORDER BY att_date asc	
+	where attendance_id=(select attendance_id from tw_attendance_employee where emp_id=#{empId}) and att_date>DATE_FORMAT(now(),'%Y-%m-%d') ORDER BY att_date asc	
 </insert>
 
 <!-- 重建规则下所有员工末来考勤数据 -->

@@ -91,14 +91,14 @@
 </select>
 
 <!-- 根据属性查询员工考勤关系 -->
-<select id="queryAttendanceEmployeeByProperty"  resultMap="AttendanceEmployeeResultMap" parameterType="java.lang.Integer">
+<select id="queryAttendanceEmployeeByProperty"  resultType="java.util.Map" parameterType="java.lang.Integer">
 	select t.*, e.emp_name as empName, e.emp_no as empNo, e.pinyin from (
 		SELECT link_id as linkId, emp_id as empId from tw_attendance_employee where attendance_id=#{attendanceId}) t
 	left OUTER join tb_employee e on t.empId=e.emp_id ORDER BY e.pinyin asc
 </select>
-<select id="queryAttendanceEmployeeFree"  resultMap="AttendanceEmployeeResultMap">
+<select id="queryAttendanceEmployeeFree"  resultType="java.util.Map">
 	select * from (
-		select e.emp_id as empId, e.emp_name, e.emp_no, e.pinyin, t.link_id as linkId from tb_employee e
+		select e.emp_id as empId, e.emp_name empName, e.emp_no empNo, e.pinyin, t.link_id as linkId from tb_employee e
 		left outer join tw_attendance_employee t on e.emp_id = t.emp_id
 	) l where linkId is null ORDER BY pinyin asc
 </select>

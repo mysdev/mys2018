@@ -166,6 +166,7 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 			if(ae==null){
 				ae = new AttendanceEmployee();
 				ae.setCreatedBy(userId);
+				ae.setUpdatedBy(userId);
 				ae.setAttendanceId(attendanceId);
 				ae.setEmpId(empId);
 				employeeAttendanceMapper.addAttendanceEmployee(ae);
@@ -177,6 +178,44 @@ public class  AttendanceEmployeeServiceImpl implements AttendanceEmployeeService
 			publicAttendanceService.doAndRedoPersonAttendanceByEmpId(empId); //初始化末来考勤数据
 		}		
 		return empList.size();
+	}
+
+	/*
+	 * @Title: manageAttendanceEmployee
+	 * @Description: 
+	 * @param @param userId
+	 * @param @param attendanceId
+	 * @param @param empList
+	 * @param @return    参数  
+	 * @author Jinlong He
+	 * @param userId
+	 * @param attendanceId
+	 * @param empList
+	 * @return
+	 * @see com.jing.attendance.service.AttendanceEmployeeService#manageAttendanceEmployee(java.lang.Integer, java.lang.Integer, java.util.List)
+	 */ 
+	@Override
+	@Transactional(readOnly = false)
+	public Integer manageAttendanceEmployee(Integer userId, Integer attendanceId, List<String> empList) {
+		//查询所有，清除未在清单中的
+		List<Map<String, String>> temp = employeeAttendanceMapper.queryAttendanceEmployeeByProperty(attendanceId);
+		for(int i=temp.size()-1; i>=0; i--) {
+			Map<String, String> tempA = temp.get(i);
+			if(tempA!=null) {
+				boolean yn = true;
+				for(String ename: empList) {
+					if(tempA.get("empId")!=null && tempA.get("empId").equals(ename)){	
+						yn=false;
+						continue;
+					}
+				}
+				if(yn) {
+					dropAttendanceEmployeeByEmpId(tempA.get("empId"));	
+				}
+			}
+		}
+		//新增或修订
+		return bindAttendanceEmployee(userId, attendanceId, empList);
 	}
 
 

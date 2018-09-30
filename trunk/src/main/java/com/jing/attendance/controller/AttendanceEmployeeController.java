@@ -25,6 +25,9 @@ import com.jing.config.web.exception.NotFoundException;
 import com.jing.config.web.exception.ParameterException;
 import com.jing.core.model.entity.Employee;
 import com.jing.core.service.EmployeeService;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,11 +57,11 @@ public class AttendanceEmployeeController{
 	private EmployeeService employeeService;
 
 	
-	@ApiOperation(value = "绑定 绑定员工考勤关系信息", notes = "考勤规则下添加员工时调用-非全量操作接口")
+	@ApiOperation(value = "绑定 绑定员工考勤关系信息-增量", notes = "考勤规则下添加员工时调用-非全量操作接口")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public Object addAttendanceEmployee(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
-			@ApiParam(value = "attendanceEmployee") @RequestBody String[] employeeIds) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+			@ApiParam(value = "attendanceEmployee") @RequestBody String[] employeeIds, @SessionAttr(Config.USER_INFO) User user) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		List<Map<String, String>> errors = new ArrayList<Map<String, String>>();
 		Attendance att = attendanceService.queryAttendanceByAttendanceId(attendanceId);
 		if(att==null){
@@ -84,14 +87,47 @@ public class AttendanceEmployeeController{
 		if(!errors.isEmpty()){
 			throw new ParameterException(errors);
 		}		
-		return attendanceEmployeeService.bindAttendanceEmployee(0, attendanceId, empList);
+		return attendanceEmployeeService.bindAttendanceEmployee(user.getUserId(), attendanceId, empList);
+	}
+	
+	@ApiOperation(value = "绑定 绑定员工考勤关系信息-全量", notes = "考勤规则下添加员工时调用-全量操作接口")
+	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee", method = RequestMethod.PUT, produces = "application/json; charset=utf-8")
+	public Object managentAttendanceEmployee(HttpServletResponse response,
+			@PathVariable Integer attendanceId,
+			@ApiParam(value = "attendanceEmployee") @RequestBody String[] employeeIds, @SessionAttr(Config.USER_INFO) User user) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		List<Map<String, String>> errors = new ArrayList<Map<String, String>>();
+		Attendance att = attendanceService.queryAttendanceByAttendanceId(attendanceId);
+		if(att==null){
+			throw new NotFoundException("考勤方案找不到");
+		}
+		if(att.getStatus().intValue()!=0){
+			throw new CustomException(400, att.getAttendanceName()+" 已失效,不允许再使用。");
+		}
+		int i=1;
+		List<String> empList = new ArrayList<String>();
+		for(String empId : employeeIds){
+			Employee emp = employeeService.getEmployeeById(empId);
+			if(emp==null){
+				Map<String, String> e0 = new HashMap<String, String>();
+				e0.put("index", ""+i);
+				e0.put("filed", "employeeId");
+				e0.put("message", "员工不存在。");
+				errors.add(e0);
+			}	
+			empList.add(empId);
+			i++;
+		}			
+		if(!errors.isEmpty()){
+			throw new ParameterException(errors);
+		}		
+		return attendanceEmployeeService.manageAttendanceEmployee(user.getUserId(), attendanceId, empList);
 	}
 
 	@ApiOperation(value = "删除 根据员工标识删除员工考勤关系信息", notes = "根据员工标识删除员工考勤关系信息")
 	@RequestMapping(value = "/attendance/{attendanceId:.+}/employee/{empId:.+}", method = RequestMethod.DELETE)
 	public Object dropAttendanceEmployeeByLinkId(HttpServletResponse response,
 			@PathVariable Integer attendanceId,
-			@PathVariable String empId) {
+			@PathVariable String empId, @SessionAttr(Config.USER_INFO) User user) {
 		AttendanceEmployee attendanceEmployee = attendanceEmployeeService.queryAttendanceEmployeeByEmpId(empId);
 		if(null == attendanceEmployee){
 			throw new NotFoundException("员工考勤关系");
@@ -121,7 +157,7 @@ public class AttendanceEmployeeController{
 			@RequestParam(value = "sort", required = false) String sort, 
 			@RequestParam(value = "namePYJob", required = false) String namePYJob,
 			@RequestParam(value = "dptId", required = false) Integer dptId,
-			@RequestParam(value = "showAll", required = false) Integer showAll) {	
+			@RequestParam(value = "showAll", required = false) Integer showAll) {
 		Map<String, Object> query = new HashMap<String, Object>();
 		if(namePYJob!=null && namePYJob.trim().length()>0){
 			query.put("namePYJob", namePYJob.trim());
@@ -132,7 +168,7 @@ public class AttendanceEmployeeController{
 		if(dptId!=null && dptId.intValue()>0){
 			query.put("dptId", dptId);
 		}
-		if(showAll!=null && (showAll.intValue()==0 || showAll.intValue()==0)) {
+		if(showAll!=null && (showAll.intValue()==0 || showAll.intValue()==1)) {
 			//0匹配 1未匹配
 			query.put("showAll", showAll);
 		}

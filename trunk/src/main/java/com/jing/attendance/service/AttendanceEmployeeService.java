@@ -84,12 +84,24 @@ public interface AttendanceEmployeeService {
 
 	/** 
 	* @Title: bindAttendanceEmployee 
-	* @Description: 员工考勤关系绑定
+	* @Description: 员工考勤关系绑定-增量
 	* @param attendanceId
 	* @param empList
 	* @return  Integer    返回类型 
 	* @throws 
 	*/
-	Integer bindAttendanceEmployee(int userId, Integer attendanceId, List<String> empList);	 
+	Integer bindAttendanceEmployee(int userId, Integer attendanceId, List<String> empList);
+
+	/** 
+	* @Title: manageAttendanceEmployee 
+	* @Description: 员工考勤关系绑定-全量
+	* @param userId
+	* @param attendanceId
+	* @param empList
+	* @return  
+	* Object    返回类型 
+	* @throws 
+	*/
+	Integer manageAttendanceEmployee(Integer userId, Integer attendanceId, List<String> empList);	 
 	 
 }
