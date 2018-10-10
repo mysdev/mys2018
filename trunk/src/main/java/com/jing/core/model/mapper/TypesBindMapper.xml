@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.TypesBindMapper">
+
+	<!-- Result Map -->
+	<resultMap id="TypesBindResultMap" type="com.jing.core.model.entity.TypesBind">
+		<id column="bind_id" property="bindId" />
+		<result column="type_id" property="typeId" />
+		<result column="object_id" property="objectId" />
+		<result column="object_ct" property="objectCt" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.bindId != null and param.bindId != ''">
+				and bind_id = #{param.bindId}
+			</if>
+			<if test="param.typeId != null and param.typeId != ''">
+				and type_id = #{param.typeId}
+			</if>
+			<if test="param.objectId != null and param.objectId != ''">
+				and object_id = #{param.objectId}
+			</if>
+			<if test="param.objectCt != null and param.objectCt != ''">
+				and object_ct = #{param.objectCt}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 类型消费绑定 -->
+	<insert id="addTypesBind" parameterType="com.jing.core.model.entity.TypesBind">
+		<selectKey keyProperty="bindId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tb_types_bind (bind_id ,type_id ,object_id ,object_ct ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{bindId},#{typeId},#{objectId},#{objectCt},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
+
+	<!-- 修改类型消费绑定 -->
+	<update id="updateTypesBind" parameterType="com.jing.core.model.entity.TypesBind">
+		UPDATE tb_types_bind
+		<set> 
+			<if test="typeId != null" >
+				type_id = #{typeId},
+			</if>
+			<if test="objectId != null" >
+				object_id = #{objectId},
+			</if>
+			<if test="objectCt != null" >
+				object_ct = #{objectCt},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	bind_id = #{bindId}
+	</update>
+	
+	<!-- 根据ID删除类型消费绑定 -->
+	<delete id="deleteTypesBindById"  parameterType="Integer">
+		DELETE FROM tb_types_bind WHERE bind_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询类型消费绑定 -->
+	<select id="getTypesBindById" resultMap="TypesBindResultMap" parameterType="Integer">
+		SELECT * FROM tb_types_bind WHERE bind_id = #{value}
+	</select>
+	
+	<select id="findTypesBindListPage" resultMap="TypesBindResultMap">
+		SELECT * FROM tb_types_bind
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findTypesBindList" resultMap="TypesBindResultMap">
+		SELECT * FROM tb_types_bind
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

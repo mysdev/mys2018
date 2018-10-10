@@ -16,24 +16,36 @@
 	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
 
 	var options = {
-		formid : "form_strap",
-		tableKey : "strapId",
-		addAction : Faith.projectName + "/core/strap/add",
-		updateAction : Faith.projectName + "/core/strap/update",
-		viewAction : Faith.projectName + "/core/strap/index/" + pkVal,
+		formid : "form_types",
+		tableKey : "typeId",
+		addAction : Faith.projectName + "/core/types/add",
+		updateAction : Faith.projectName + "/core/types/update",
+		viewAction : Faith.projectName + "/core/types/index/" + pkVal,
 		pkVal : pkVal,
 		saveButtonId : 'btn_save',
 		cancelButtonId : 'btn_cancel'
 	};
 
 	$(function() {
-		Faith.initComboboxUrl({
-			id : 'types',
-			url : '/core/types/all',
-			valueField : 'typeId',
-			textField : 'typeName',
+		$('#status').combobox({
+			data : [{code:"0",value:"正常"},{code:"1",value:"失效"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
 			height : 34
 		});
+		
+		$('#isCircle').combobox({
+			data : [{code:"0",value:"否"},{code:"1",value:"时长"},{code:"2",value:"时间点"}],
+			valueField : 'code',
+			textField : 'value',
+			limitToList : true,
+			width : '100%',
+			height : 34
+		});
+		
+		
 		//提交按钮点击
 		Faith.doSave(options);
 		//如果是修改  则填充数据
@@ -50,18 +62,30 @@
 </script>
 </head>
 <body>
-	<form id="form_strap" class="fromstyle">
+	<form id="form_types" class="fromstyle">
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌号码<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="strapSerial" name="strapSerial"  placeholder="请输入手牌号码">
+	  	 	<label for="tableName">类型名称<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="typeName" name="typeName"  placeholder="请输入类型名称">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌编号</label>
-	  	 	<input type="text" class="form-control"  id="strapNo" name="strapNo"  placeholder="请输入手牌编号">
+	  	 	<label for="tableName">最低消费</label>
+	  	 	<input type="text" class="form-control"  id="lowConsumption" name="lowConsumption"  placeholder="请输入最低消费">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌类型<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="types" name="types"  placeholder="请输入手牌类型">
+	  	 	<label for="tableName">类型状态<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="status" name="status"  placeholder="请输入类型状态 0正常">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">重复计费<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="isCircle" name="isCircle"  placeholder="请输入重复计费 0否1时长2时间点">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">周期步长(时)</label>
+	  	 	<input type="text" class="form-control"  id="circleStep" name="circleStep"  placeholder="请输入周期步长 时">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">计费时间点</label>
+	  	 	<input type="text" class="form-control"  id="circleTime" name="circleTime"  placeholder="请输入计费时间点">
 	  	</div>
 		<div class="form-group col-sm-12 padding-4">
 			<div class="text-center">

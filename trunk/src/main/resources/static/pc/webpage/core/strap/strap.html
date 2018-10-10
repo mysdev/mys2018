@@ -18,7 +18,8 @@
 				{field:'strapNo', title:'手牌编号', width:120, align:'center'  },
 				{field:'types', title:'手牌类型', width:120, align:'center',
 					formatter: function(value, row, index) {
-						return Faith.dictionaryToChinese('0001', row.types);
+						//return Faith.dictionaryToChinese('0001', row.types);
+						return row.types;
 					}
 				},
 				{field:'status', title:'手牌状态', width:160, align:'center'  ,formatter: function(value,row,index){

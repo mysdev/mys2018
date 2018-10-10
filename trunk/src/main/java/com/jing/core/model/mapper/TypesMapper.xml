@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.TypesMapper">
+
+	<!-- Result Map -->
+	<resultMap id="TypesResultMap" type="com.jing.core.model.entity.Types">
+		<id column="type_id" property="typeId" />
+		<result column="type_name" property="typeName" />
+		<result column="low_consumption" property="lowConsumption" />
+		<result column="status" property="status" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+		<result column="is_circle" property="isCircle" />
+		<result column="circle_step" property="circleStep" />
+		<result column="circle_time" property="circleTime" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.typeId != null and param.typeId != ''">
+				and type_id = #{param.typeId}
+			</if>
+			<if test="param.typeName != null and param.typeName != ''">
+				and type_name = #{param.typeName}
+			</if>
+			<if test="param.lowConsumption != null and param.lowConsumption != ''">
+				and low_consumption = #{param.lowConsumption}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+			<if test="param.isCircle != null and param.isCircle != ''">
+				and is_circle = #{param.isCircle}
+			</if>
+			<if test="param.circleStep != null and param.circleStep != ''">
+				and circle_step = #{param.circleStep}
+			</if>
+			<if test="param.circleTime != null and param.circleTime != ''">
+				and circle_time = #{param.circleTime}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 类型配置 -->
+	<insert id="addTypes" parameterType="com.jing.core.model.entity.Types">
+		<selectKey keyProperty="typeId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tb_types (type_id ,type_name ,low_consumption ,status ,created_by ,created_date ,updated_by ,updated_date ,is_circle ,circle_step ,circle_time ) 
+		values
+		(#{typeId},#{typeName},#{lowConsumption},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate},#{isCircle},#{circleStep},#{circleTime})
+	</insert>
+
+	<!-- 修改类型配置 -->
+	<update id="updateTypes" parameterType="com.jing.core.model.entity.Types">
+		UPDATE tb_types
+		<set> 
+			<if test="typeName != null" >
+				type_name = #{typeName},
+			</if>
+			<if test="lowConsumption != null" >
+				low_consumption = #{lowConsumption},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+			<if test="isCircle != null" >
+				is_circle = #{isCircle},
+			</if>
+			<if test="circleStep != null" >
+				circle_step = #{circleStep},
+			</if>
+			<if test="circleTime != null" >
+				circle_time = #{circleTime},
+			</if>
+		</set>
+		WHERE	type_id = #{typeId}
+	</update>
+	
+	<!-- 根据ID删除类型配置 -->
+	<delete id="deleteTypesById"  parameterType="Integer">
+		DELETE FROM tb_types WHERE type_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询类型配置 -->
+	<select id="getTypesById" resultMap="TypesResultMap" parameterType="Integer">
+		SELECT * FROM tb_types WHERE type_id = #{value}
+	</select>
+	
+	<select id="findTypesListPage" resultMap="TypesResultMap">
+		SELECT * FROM tb_types
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findTypesList" resultMap="TypesResultMap">
+		SELECT * FROM tb_types
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

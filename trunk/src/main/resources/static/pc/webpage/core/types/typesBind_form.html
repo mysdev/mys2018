@@ -16,11 +16,11 @@
 	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
 
 	var options = {
-		formid : "form_strap",
-		tableKey : "strapId",
-		addAction : Faith.projectName + "/core/strap/add",
-		updateAction : Faith.projectName + "/core/strap/update",
-		viewAction : Faith.projectName + "/core/strap/index/" + pkVal,
+		formid : "form_typesBind",
+		tableKey : "bindId",
+		addAction : Faith.projectName + "/core/types/bind/add",
+		updateAction : Faith.projectName + "/core/types/bind/update",
+		viewAction : Faith.projectName + "/core/types/bind/index/" + pkVal,
 		pkVal : pkVal,
 		saveButtonId : 'btn_save',
 		cancelButtonId : 'btn_cancel'
@@ -28,12 +28,15 @@
 
 	$(function() {
 		Faith.initComboboxUrl({
-			id : 'types',
+			id : 'typeId',
 			url : '/core/types/all',
 			valueField : 'typeId',
 			textField : 'typeName',
 			height : 34
 		});
+		
+		Faith.initSelectGoods('objectId',{});
+		
 		//提交按钮点击
 		Faith.doSave(options);
 		//如果是修改  则填充数据
@@ -50,18 +53,18 @@
 </script>
 </head>
 <body>
-	<form id="form_strap" class="fromstyle">
+	<form id="form_typesBind" class="fromstyle">
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌号码<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="strapSerial" name="strapSerial"  placeholder="请输入手牌号码">
+	  	 	<label for="tableName">类型标识<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="typeId" name="typeId"  placeholder="请输入类型标识 ">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌编号</label>
-	  	 	<input type="text" class="form-control"  id="strapNo" name="strapNo"  placeholder="请输入手牌编号">
+	  	 	<label for="tableName">物品标识<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="objectId" name="objectId"  placeholder="请输入物品标识 ">
 	  	</div>
 		<div class="form-group col-sm-6">
-	  	 	<label for="tableName">手牌类型<span style="color:red">*</span></label>
-	  	 	<input type="text" class="form-control"  id="types" name="types"  placeholder="请输入手牌类型">
+	  	 	<label for="tableName">物品数量<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="objectCt" name="objectCt"  placeholder="请输入物品数量">
 	  	</div>
 		<div class="form-group col-sm-12 padding-4">
 			<div class="text-center">
