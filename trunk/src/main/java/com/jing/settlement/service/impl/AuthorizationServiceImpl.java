@@ -12,6 +12,7 @@ import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.Authorization;
 import com.jing.settlement.model.dao.AuthorizationMapper;
 import com.jing.settlement.service.AuthorizationService;
+import com.jing.utils.PrimaryKey;
 
 @Service("authorizationService")
 public class AuthorizationServiceImpl implements AuthorizationService{
@@ -24,6 +25,7 @@ public class AuthorizationServiceImpl implements AuthorizationService{
 	*/
 	@Override
 	public void addAuthorization(Authorization authorization){
+		authorization.setAuthorizationId(PrimaryKey.getUUID());
 		authorizationMapper.addAuthorization(authorization);
 	}
 	

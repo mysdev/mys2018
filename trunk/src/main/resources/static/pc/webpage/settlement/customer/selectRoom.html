@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'roomId', title:'房间标识', hidden:true },
+				{field:'types', title:'房间类型', width:52, align:'center'  },
+				{field:'area', title:'归属区域', width:104, align:'center'  },
+				{field:'roomNo', title:'房间编号', width:104, align:'center'  },
+				{field:'roomName', title:'房间名称', width:180, align:'center'  },
+				{field:'status', title:'状态', width:80, align:'center'  ,formatter: function(value,row,index){
+					if(row.status == 0){
+						return '正常';
+					} else if(row.status == 1){
+						return '无效';
+					}
+				}},
+				{field:'roomStatus', title:'自身状态', width:52, align:'center'  },
+				{field:'chair', title:'椅子数量', width:52, align:'center'  },
+				{field:'bed', title:'床数量', width:39, align:'center'  },
+				{field:'mark', title:'标记', width:120, align:'center'  },
+				{field:'phone', title:'房间分机', width:108, align:'center'  }
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_room', //表格容器id
+			tableKey : "roomId",
+			url : Faith.projectName + '/core/room/page', //列表接口
+			sortName : 'room_id',
+			sortOrder : 'desc',
+			queryParams:{
+  				status:0
+  			},
+			queryParams:{materialTypes:0},
+			columns : [ columns ]//数据列
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+		
+		Faith.initCombobox('isConsumption', '1001',28);//是否
+	});	
+	
+	function getSelectRoom(){
+		var row = $('#grid_room').datagrid("getSelected");
+		if(row) {
+			return row.roomId;
+		}else {
+			$.messager.alert('操作错误', '请选择一条数据!', 'error');
+			return null;
+		}
+	}
+			
+</script>
+</head>
+<body>
+	<div region="center" title="" href="" style="padding: 5px; border-top: 1px solid #e0e0e0;" class="panel-body layout-body panel-noscroll">
+		<div class="easyui-layout layout easyui-fluid">
+   			<!-- 搜索容器 -->
+			<div id="search" class="search wrap_border">
+				<div class="cl-9 ">
+					<!-- 必要搜索条件 -->
+					<div class="search-wrap"><input id="types" name="types" class="easyui-textbox" label="房间类型" placeholder="请输入房间类型"></div>
+					<div class="search-wrap"><input id="area" name="area" class="easyui-textbox" label="归属区域" placeholder="请输入归属区域"></div>
+					<div class="search-wrap"><input id="roomNo" name="roomNo" class="easyui-textbox" label="房间编号" placeholder="请输入房间编号"></div>
+					<div class="search-wrap"><input id="roomName" name="roomName" class="easyui-textbox" label="房间名称" placeholder="请输入房间名称"></div>
+					<div class="search-wrap"><input id="status" name="status"  class="easyui-textbox" label="状态 " placeholder="请输入状态 0正常"></div>
+					<div class="search-wrap">
+						<input id="isConsumption" class="easyui-textbox" name="isConsumption" label="是否包含基础消费" labelWidth="120">
+					</div>
+					<div class="search-btn-wrap">
+						<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="margin-top:5px;">
+			<table id="grid_room" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,pagePosition:'bottom',autoRowHeight:false,pagination:true" style="width:800px" >
+			</table>
+        </div>  
+	</div> 	
+</body>
+</html>

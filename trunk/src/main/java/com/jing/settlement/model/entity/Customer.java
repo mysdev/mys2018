@@ -1,5 +1,7 @@
 package com.jing.settlement.model.entity;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -25,7 +27,7 @@ public class Customer extends BaseEntity {
 	private String customerName;	//to_customer:customer_name  客户名称  
 
 	@NotNull(message="{javax.validation.constraints.NotNull.message}")
-	private java.math.BigDecimal advance;	//to_customer:advance  押金  
+	private java.math.BigDecimal advance = new BigDecimal(0);	//to_customer:advance  押金  
 
 	@Length(min=0, max=64, message="{org.hibernate.validator.constraints.Length.message}")
 	private String note;	//to_customer:note  备注  

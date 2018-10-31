@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'customerId', title:'客户标识', width:52, align:'center'  },
+				{field:'customerName', title:'客户名称', width:120, align:'center'  },
+				{field:'advance', title:'押金', width:86, align:'center'  },
+				{field:'note', title:'备注', width:200, align:'center'  },
+				{field:'createdByName', title:'录入人员', width:100, align:'center'  },
+				{field:'createdDate', title:'进店时间', width:52, align:'center'  }
+			];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_customer', //表格容器id
+			tableKey : "customerId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/customer/page', //列表接口
+			sortName : 'customer_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加客户",
+			addUrl : "/pc/webpage/settlement/customer/customer_form.html"
+		},
+		updateOptions : {
+			title : "修改客户",
+			updateUrl : "/pc/webpage/settlement/customer/customer_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/customer/delete/'
+		},
+		viewOptions : {
+			title:'查看客户',
+			viewUrl : "/pc/webpage/settlement/customer/customer_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+	
+	function rentRoom(){		
+		
+		var dialog = $('<iframe src="selectRoom.html" id="selectRoom" style="height:700px;margin-top:2px;width:100%;border:0;" ></iframe>');
+		$('body').append(dialog);
+		
+		var d = dialog.dialog({
+			title: '选择客房',
+			width: 700,
+			height: 500,
+			closed: false,
+			cache: false,
+			modal: true,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					var childWindow = dialog[0].contentWindow;					
+					var fn = childWindow.getSelectRoom;
+					var res = fn();
+					if(res){
+						$.ajax({
+							type: "post",
+							url: Faith.projectName +'/settlement/customer/rentRoom',
+							data: {
+								roomId : res
+							},
+							dataType: 'json',
+							success: function(rs) {
+								if(rs.code == "1") {
+									$.messager.alert('提示', '操作成功');
+									dialog.dialog('destroy');
+									$('#' + Faith.gridOptions.gridId).datagrid('reload');
+								} else {
+									$.messager.alert('提示', rs.message);
+								}
+							}
+						});
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					
+				}
+			}]
+		});
+
+		
+	}
+	
+	function rollback(id){
+		
+	}
+			
+</script>
+</head>
+<body>
+	<div id="search" class="search wrap_border">
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="客户名称" id="customerName" name="customerName" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="押金" id="advance" name="advance" />
+		</div>
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+	<div class="grid">
+		<table id="grid_customer" class="easyui-datagrid"></table>
+	</div>
+</body>
+</html>

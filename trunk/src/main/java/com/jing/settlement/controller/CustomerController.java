@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jing.utils.BaseController;
@@ -20,7 +21,9 @@ import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
 import com.jing.settlement.model.entity.Customer;
+import com.jing.settlement.service.AuthorizationService;
 import com.jing.settlement.service.CustomerService;
+import com.jing.settlement.service.MyCustomerService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +41,10 @@ public class CustomerController extends BaseController{
 
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	private MyCustomerService myCustomerService;
+	@Autowired
+	private AuthorizationService authorizationService;
 	
 	
 	//第一个接口： 接待
@@ -55,23 +62,15 @@ public class CustomerController extends BaseController{
 	
 	@ApiOperation(value = "新增客户[开房]", notes = "添加客户")
 	@RequestMapping(value = "/rentRoom", method = RequestMethod.POST)
-	public @ResponseBody Result rentRoom(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
-		customer.setCreatedBy(user.getUserId());
-		customer.setCreatedDateNow();
-		customer.setUpdatedBy(user.getUserId());
-		customer.setUpdatedDateNow();
-		customerService.addCustomer(customer);
+	public @ResponseBody Result rentRoom(String roomId,@SessionAttr(Config.USER_INFO) User user) {		
+		myCustomerService.rentRoom(roomId, user);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
 	@ApiOperation(value = "新增客户【发手环】", notes = "添加客户")
 	@RequestMapping(value = "/rentStrap", method = RequestMethod.POST)
-	public @ResponseBody Result rentStrap(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
-		customer.setCreatedBy(user.getUserId());
-		customer.setCreatedDateNow();
-		customer.setUpdatedBy(user.getUserId());
-		customer.setUpdatedDateNow();
-		customerService.addCustomer(customer);
+	public @ResponseBody Result rentStrap(String strapId,@SessionAttr(Config.USER_INFO) User user) {
+		myCustomerService.rentStrap(strapId, user);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
@@ -79,23 +78,15 @@ public class CustomerController extends BaseController{
 	//第二个接口：开客房卡 或者 手环序列号
 	@ApiOperation(value = "增加手环", notes = "给已有客户增发一个手环")
 	@RequestMapping(value = "/addStrap", method = RequestMethod.POST)
-	public @ResponseBody Result addStrap(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
-		customer.setCreatedBy(user.getUserId());
-		customer.setCreatedDateNow();
-		customer.setUpdatedBy(user.getUserId());
-		customer.setUpdatedDateNow();
-		customerService.addCustomer(customer);
+	public @ResponseBody Result addStrap(@RequestParam int customerId,@RequestParam String strapId,@SessionAttr(Config.USER_INFO) User user) {
+		myCustomerService.rentStrap(customerId, strapId, user);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
 	@ApiOperation(value = "增加客房", notes = "给已有客户增开一个客房")
 	@RequestMapping(value = "/addRoom", method = RequestMethod.POST)
-	public @ResponseBody Result addRoom(Customer customer,@SessionAttr(Config.USER_INFO) User user) {
-		customer.setCreatedBy(user.getUserId());
-		customer.setCreatedDateNow();
-		customer.setUpdatedBy(user.getUserId());
-		customer.setUpdatedDateNow();
-		customerService.addCustomer(customer);
+	public @ResponseBody Result addRoom(@RequestParam int customerId,@RequestParam String roomId,@SessionAttr(Config.USER_INFO) User user) {
+		myCustomerService.rentRoom(customerId, roomId, user);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
@@ -104,10 +95,17 @@ public class CustomerController extends BaseController{
 	@ApiOperation(value = "取消授权码", notes = "在客户未使用时发起取消授权码")
 	@RequestMapping(value = "/authorization/delete/{authorizationId}", method = RequestMethod.POST)
 	public @ResponseBody Result delRoom(@PathVariable("authorizationId") String authorizationId,@SessionAttr(Config.USER_INFO) User user) {
-	
+		myCustomerService.cancelAuthorization(authorizationId, user);
 		return Result.getDefaultSuccMsgResult();
 	}
 	
+	
+	@ApiOperation(value = "分页查询客户", notes = "分页查询客户")
+	@RequestMapping(value = "/authorization/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findAuthorizationPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return authorizationService.findAuthorizationListPage(PageRequestUtils.getPageBean(request), map);
+	}
 	
 	
 	
