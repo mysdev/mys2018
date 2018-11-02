@@ -15,6 +15,12 @@
 		<result column="updated_date" property="updatedDate" />
 	</resultMap>
 	
+	<resultMap id="AuthorizationVoResultMap" type="com.jing.settlement.model.entity.AuthorizationVo" extends="AuthorizationResultMap">
+		<result column="customerName" property="customName" />
+		<result column="typesName" property="typesName" />
+		<result column="deviceName" property="deviceName" />
+	</resultMap>
+	
 	<sql id="query_tables_Property" >
 		<where>
 			<if test="param.authorizationId != null and param.authorizationId != ''">
@@ -99,6 +105,20 @@
 	<select id="findAuthorizationListPage" resultMap="AuthorizationResultMap">
 		SELECT * FROM to_authorization
 		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findAuthorizationVoListPage" resultMap="AuthorizationVoResultMap">
+		select a.*, c.customer_name as customerName, t.type_name as typesName,
+		IFNULL((select room_name from tb_room where room_id = a.device_id) ,CONCAT('手牌-',(select strap_no from tb_strap where strap_id = a.device_id)) ) as deviceName
+		from to_authorization a ,to_customer c , tb_types t
+		where a.customer_id = c.customer_id
+		and a.types = t.type_id
+		<if test="param.customerId != null and param.customerId != ''">
+			and a.customer_id = #{param.customerId}
+		</if>
+		<if test="param.status != null and param.status != ''">
+			and a.status = #{param.status}
+		</if>
 	</select>
 	
 	<select id="findAuthorizationList" resultMap="AuthorizationResultMap">

@@ -63,10 +63,8 @@
 	});	
 	
 	function rentRoom(){		
-		
 		var dialog = $('<iframe src="selectRoom.html" id="selectRoom" style="height:700px;margin-top:2px;width:100%;border:0;" ></iframe>');
-		$('body').append(dialog);
-		
+		$('body').append(dialog);		
 		var d = dialog.dialog({
 			title: '选择客房',
 			width: 700,
@@ -103,17 +101,59 @@
 			},{
 				text:'关闭',
 				handler:function(){
-					
+					dialog.dialog('destroy');
 				}
 			}]
 		});
-
-		
 	}
 	
-	function rollback(id){
-		
+	function rentStrap(){		
+		var dialog = $('<iframe src="selectStrap.html" id="selectRoom" style="height:700px;margin-top:2px;width:100%;border:0;" ></iframe>');
+		$('body').append(dialog);		
+		var d = dialog.dialog({
+			title: '选择手牌',
+			width: 700,
+			height: 500,
+			closed: false,
+			cache: false,
+			modal: true,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					var childWindow = dialog[0].contentWindow;					
+					var fn = childWindow.getSelectStrap;
+					var res = fn();
+					if(res){
+						$.ajax({
+							type: "post",
+							url: Faith.projectName +'/settlement/customer/rentStrap',
+							data: {
+								strapId : res
+							},
+							dataType: 'json',
+							success: function(rs) {
+								if(rs.code == "1") {
+									$.messager.alert('提示', '操作成功');
+									dialog.dialog('destroy');
+									$('#' + Faith.gridOptions.gridId).datagrid('reload');
+								} else {
+									$.messager.alert('提示', rs.message);
+								}
+							},error:function(){
+								$.messager.alert('错误', rs.message);
+							}
+						});
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					dialog.dialog('destroy');
+				}
+			}]
+		});
 	}
+	
 			
 </script>
 </head>

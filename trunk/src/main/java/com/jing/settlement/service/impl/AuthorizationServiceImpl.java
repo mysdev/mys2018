@@ -61,6 +61,11 @@ public class AuthorizationServiceImpl implements AuthorizationService{
 		return page.setRows(authorizationMapper.findAuthorizationListPage(page,param));
 	}
 	
+	@Override
+	public PageInfo findAuthorizationVoListPage(PageInfo page, Map<String, Object> param) {
+		return  page.setRows(authorizationMapper.findAuthorizationVoListPage(page,param));
+	}
+	
 	
 	/**
 	 * 根据属性查询消费授权

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jing.config.web.page.PageInfo;
 import com.jing.settlement.model.entity.Authorization;
+import com.jing.settlement.model.entity.AuthorizationVo;
 
 @Mapper
 public interface AuthorizationMapper {
@@ -36,6 +37,7 @@ public interface AuthorizationMapper {
 	* 分页查询
 	*/
 	List<Authorization> findAuthorizationListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
+	List<AuthorizationVo> findAuthorizationVoListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
 	
 	
 	/**

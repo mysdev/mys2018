@@ -104,7 +104,7 @@ public class CustomerController extends BaseController{
 	@RequestMapping(value = "/authorization/page", method = RequestMethod.POST)
 	public @ResponseBody PageInfo findAuthorizationPage(HttpServletRequest request)throws Exception {
 		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
-		return authorizationService.findAuthorizationListPage(PageRequestUtils.getPageBean(request), map);
+		return authorizationService.findAuthorizationVoListPage(PageRequestUtils.getPageBean(request), map);
 	}
 	
 	

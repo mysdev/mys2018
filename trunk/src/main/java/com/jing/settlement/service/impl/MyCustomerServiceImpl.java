@@ -63,7 +63,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 创建授权码
 		Authorization authorization = new Authorization();
 		authorization.setCustomerId(customer.getCustomerId());// 客户ID
-		authorization.setTypes(0);
+		authorization.setTypes(room.getTypes());
 		authorization.setDeviceId(room.getRoomId());// 终端标识
 		authorization.setStatus(0);
 		authorization.setCreatedBy(user.getUserId());
@@ -93,7 +93,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 创建授权码
 		Authorization authorization = new Authorization();
 		authorization.setCustomerId(customer.getCustomerId());// 客户ID
-		authorization.setTypes(0);
+		authorization.setTypes(room.getTypes());
 		authorization.setDeviceId(room.getRoomId());// 终端标识
 		authorization.setStatus(0);
 		authorization.setCreatedBy(user.getUserId());
@@ -125,8 +125,8 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		}
 		// 创建客户
 		Customer customer = new Customer();
-		customer.setCustomerName(strap.getStrapNo());
-		customer.setNote(strap.getStrapNo() + "客人");
+		customer.setCustomerName("客"+strap.getStrapNo());
+		customer.setNote(strap.getStrapNo());
 		customer.setCreatedBy(user.getUserId());
 		customer.setCreatedDateNow();
 		customer.setUpdatedBy(user.getUserId());
@@ -136,7 +136,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 创建授权码
 		Authorization authorization = new Authorization();
 		authorization.setCustomerId(customer.getCustomerId());// 客户ID
-		authorization.setTypes(0);
+		authorization.setTypes(strap.getTypes());
 		authorization.setDeviceId(strapId);// 终端标识
 		authorization.setStatus(0);
 		authorization.setCreatedBy(user.getUserId());
@@ -166,7 +166,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 创建授权码
 		Authorization authorization = new Authorization();
 		authorization.setCustomerId(customer.getCustomerId());// 客户ID
-		authorization.setTypes(0);
+		authorization.setTypes(strap.getTypes());
 		authorization.setDeviceId(strapId);// 终端标识
 		authorization.setStatus(0);
 		authorization.setCreatedBy(user.getUserId());
@@ -245,6 +245,9 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 	public void consumption(String authorizationId ,int typeId) {
 		// 查询types
 		Types types = typesService.getTypesById(typeId);
+		if(types ==null) {
+			throw new CustomException("错误的消费类型");
+		}
 		List<TypesBind> binds = types.getBinds();
 		if (binds != null && binds.size() > 0) {
 			// 添加消费记录

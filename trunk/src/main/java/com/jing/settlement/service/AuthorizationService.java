@@ -32,6 +32,7 @@ public interface AuthorizationService {
 	* 分页查询
 	*/
 	PageInfo findAuthorizationListPage(PageInfo page, Map<String, Object> param);
+	PageInfo findAuthorizationVoListPage(PageInfo page, Map<String, Object> param);
 	
 
 	/**

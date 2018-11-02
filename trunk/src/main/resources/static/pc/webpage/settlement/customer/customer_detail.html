@@ -4,17 +4,57 @@
 
 <head>
 <meta charset="utf-8" />
-<title>单位详情</title>
+<title>客户详情</title>
+
 <link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
 <link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="../../../resources/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 
 <script type="text/javascript">
 	var pkVal = Faith.getQueryStringByName("pkVal");
-
+	
+	var columns = [
+		{field:'authorizationId', title:'授权码标识', width:340, align:'center'  },
+		{field:'customName', title:'客户名称', width:340, align:'center'  },
+		{field:'typesName', title:'类型', width:160, align:'center'  },
+		{field:'deviceName', title:'终端名称', width:340, align:'center'  },
+		{field:'status', title:'状态', width:120, align:'center'  },
+		{field:'createdDate', title:'开立时间', width:120, align:'center'  }
+	];
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_authorization', //表格容器id
+			tableKey : "authorizationId",
+			resId:1009,
+			pageButtonKey:'authorization',
+			fitColumns:false,
+			isToolBar:true,
+			url : Faith.projectName + '/settlement/customer/authorization/page?customerId='+pkVal, //列表接口
+			sortName : 'customer_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/settlement/customer/authorization/delete/'
+		},
+		viewOptions : {
+			title:'查看客户',
+			viewUrl : "/pc/webpage/settlement/customer/authorization_detail.html"
+		}
+	});
+	
+	
+	
 	function initData(id) {
 		$.get(Faith.projectName + "/settlement/customer/index/" + id, {}, function(rs) {
 			if (rs.code == 1) { 
@@ -30,7 +70,113 @@
 
 	$(function() {
 		initData(pkVal);
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
 	});
+	
+	
+	
+	function addRoom(){
+		var dialog = $('<iframe src="selectRoom.html" id="selectRoom" style="height:700px;margin-top:2px;width:100%;border:0;" ></iframe>');
+		$('body').append(dialog);		
+		var d = dialog.dialog({
+			title: '选择客房',
+			width: 700,
+			height: 500,
+			closed: false,
+			cache: false,
+			modal: true,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					var childWindow = dialog[0].contentWindow;					
+					var fn = childWindow.getSelectRoom;
+					var res = fn();
+					alert(res);
+					if(res){
+						$.ajax({
+							type: "post",
+							url: Faith.projectName +'/settlement/customer/addRoom',
+							data: {
+								customerId: pkVal,
+								roomId : res
+							},
+							dataType: 'json',
+							success: function(rs) {
+								if(rs.code > 0) {
+									$.messager.alert('提示', '操作成功');
+									dialog.dialog('destroy');
+									$('#' + Faith.gridOptions.gridId).datagrid('reload');
+								} else {
+									console.log(rs);
+									$.messager.alert('提示', rs.message);
+								}
+							}
+						});
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					dialog.dialog('destroy');
+				}
+			}]
+		});
+		
+	}
+	
+	function addStrap(){
+		var dialog = $('<iframe src="selectStrap.html" id="selectRoom" style="height:700px;margin-top:2px;width:100%;border:0;" ></iframe>');
+		$('body').append(dialog);		
+		var d = dialog.dialog({
+			title: '选择手牌',
+			width: 700,
+			height: 500,
+			closed: false,
+			cache: false,
+			modal: true,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					var childWindow = dialog[0].contentWindow;					
+					var fn = childWindow.getSelectStrap;
+					var res = fn();
+					if(res){
+						$.ajax({
+							type: "post",
+							url: Faith.projectName +'/settlement/customer/addStrap',
+							data: {
+								customerId: pkVal,
+								strapId : res
+							},
+							dataType: 'json',
+							success: function(rs) {
+								if(rs.code == "1") {
+									$.messager.alert('提示', '操作成功');
+									dialog.dialog('destroy');
+									$('#' + Faith.gridOptions.gridId).datagrid('reload');
+								} else {
+									$.messager.alert('提示', rs.message);
+								}
+							},error:function(){
+								$.messager.alert('错误', rs.message);
+							}
+						});
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					dialog.dialog('destroy');
+				}
+			}]
+		});
+	}
+	
+	
+	function cancelAuthorization(){
+		
+	}
 </script>
 </head>
 <body>
@@ -87,7 +233,7 @@
 	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 nopadding">
 		<div class="border_tab padding_int">
 			<label class="column_t">状态:</label>
-			<div class="column_z column_title" id="updatedByName" name="updatedByName"></div>
+			<div class="column_z column_title" id="status" name="status"></div>
 		</div>
 	</div>
  </div>
@@ -98,7 +244,7 @@
  </div>
  
  <div class="grid">
-		<table id="grid_customer" class="easyui-datagrid"></table>
+	<table id="grid_authorization" class="easyui-datagrid"></table>
 </div>
 	
  </body>
