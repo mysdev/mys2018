@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jing.core.model.dao.MemberPlusMapper">
+
+	<!-- Result Map -->
+	<resultMap id="MemberPlusResultMap" type="com.jing.core.model.entity.MemberPlus">
+		<id column="plus_id" property="plusId" />
+		<result column="plus_name" property="plusName" />
+		<result column="plus_money" property="plusMoney" />
+		<result column="gift_money" property="giftMoney" />
+		<result column="money" property="money" />
+		<result column="status" property="status" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.plusId != null and param.plusId != ''">
+				and plus_id = #{param.plusId}
+			</if>
+			<if test="param.plusName != null and param.plusName != ''">
+				and plus_name = #{param.plusName}
+			</if>
+			<if test="param.plusMoney != null and param.plusMoney != ''">
+				and plus_money = #{param.plusMoney}
+			</if>
+			<if test="param.giftMoney != null and param.giftMoney != ''">
+				and gift_money = #{param.giftMoney}
+			</if>
+			<if test="param.money != null and param.money != ''">
+				and money = #{param.money}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 添加 会员充值活动 -->
+	<insert id="addMemberPlus" parameterType="com.jing.core.model.entity.MemberPlus">
+		<selectKey keyProperty="plusId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tb_member_plus (plus_id ,plus_name ,plus_money ,gift_money ,money ,status ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{plusId},#{plusName},#{plusMoney},#{giftMoney},#{money},#{status},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
+
+	<!-- 修改会员充值活动 -->
+	<update id="updateMemberPlus" parameterType="com.jing.core.model.entity.MemberPlus">
+		UPDATE tb_member_plus
+		<set> 
+			<if test="plusName != null" >
+				plus_name = #{plusName},
+			</if>
+			<if test="plusMoney != null" >
+				plus_money = #{plusMoney},
+			</if>
+			<if test="giftMoney != null" >
+				gift_money = #{giftMoney},
+			</if>
+			<if test="money != null" >
+				money = #{money},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	plus_id = #{plusId}
+	</update>
+	
+	<!-- 根据ID删除会员充值活动 -->
+	<delete id="deleteMemberPlusById"  parameterType="Integer">
+		DELETE FROM tb_member_plus WHERE plus_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询会员充值活动 -->
+	<select id="getMemberPlusById" resultMap="MemberPlusResultMap" parameterType="Integer">
+		SELECT * FROM tb_member_plus WHERE plus_id = #{value}
+	</select>
+	
+	<select id="findMemberPlusListPage" resultMap="MemberPlusResultMap">
+		SELECT * FROM tb_member_plus
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findMemberPlusList" resultMap="MemberPlusResultMap">
+		SELECT * FROM tb_member_plus
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

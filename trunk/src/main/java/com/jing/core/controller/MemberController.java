@@ -21,6 +21,7 @@ import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
 import com.jing.core.model.entity.Member;
 import com.jing.core.service.MemberService;
+import com.jing.core.service.MyMemberService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -35,6 +36,8 @@ public class MemberController extends BaseController{
 
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private MyMemberService myMemberService;
 	
 	@ApiOperation(value = "新增会员", notes = "添加会员")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -83,5 +86,13 @@ public class MemberController extends BaseController{
 	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
 		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
 		return memberService.findMemberListPage(PageRequestUtils.getPageBean(request), map);
+	}
+	
+	@ApiOperation(value = "会员充值", notes = "会员充值")
+	@RequestMapping(value = "/recharge", method = RequestMethod.POST)
+	public @ResponseBody Result recharge(String memberId,float amount,String remark,
+			@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		myMemberService.recharge(memberId, amount,remark,user);
+		return Result.getDefaultSuccMsgResult();
 	}
 }

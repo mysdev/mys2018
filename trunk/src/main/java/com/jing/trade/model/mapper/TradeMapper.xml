@@ -2,153 +2,174 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.trade.model.dao.TradeMapper">
 
-<!-- Result Map-->
-<resultMap id="TradeResultMap" type="com.jing.trade.model.entity.Trade">
-	<id column="trade_id" property="tradeId"/>
-	<result column="serial_number" property="serialNumber"/>
-	<result column="customer_id" property="customerId"/>
-	<result column="customer_ct" property="customerCt"/>
-	<result column="authorization_id" property="authorizationId"/>
-	<result column="object_type" property="objectType"/>
-	<result column="object_id" property="objectId"/>
-	<result column="object_ct" property="objectCt"/>
-	<result column="status" property="status"/>
-	<result column="note" property="note"/>
-	<result column="marked_price" property="markedPrice"/>
-	<result column="discount_price" property="discountPrice"/>
-	<result column="deal_price" property="dealPrice"/>
-	<result column="coupon_id" property="couponId"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="TradeResultMap" type="com.jing.trade.model.entity.Trade">
+		<id column="trade_id" property="tradeId" />
+		<result column="serial_number" property="serialNumber" />
+		<result column="customer_id" property="customerId" />
+		<result column="customer_ct" property="customerCt" />
+		<result column="authorization_id" property="authorizationId" />
+		<result column="object_type" property="objectType" />
+		<result column="object_id" property="objectId" />
+		<result column="object_ct" property="objectCt" />
+		<result column="status" property="status" />
+		<result column="note" property="note" />
+		<result column="marked_price" property="markedPrice" />
+		<result column="discount_price" property="discountPrice" />
+		<result column="deal_price" property="dealPrice" />
+		<result column="coupon_id" property="couponId" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.tradeId != null and param.tradeId != ''">
+				and trade_id = #{param.tradeId}
+			</if>
+			<if test="param.serialNumber != null and param.serialNumber != ''">
+				and serial_number = #{param.serialNumber}
+			</if>
+			<if test="param.customerId != null and param.customerId != ''">
+				and customer_id = #{param.customerId}
+			</if>
+			<if test="param.customerCt != null and param.customerCt != ''">
+				and customer_ct = #{param.customerCt}
+			</if>
+			<if test="param.authorizationId != null and param.authorizationId != ''">
+				and authorization_id = #{param.authorizationId}
+			</if>
+			<if test="param.objectType != null and param.objectType != ''">
+				and object_type = #{param.objectType}
+			</if>
+			<if test="param.objectId != null and param.objectId != ''">
+				and object_id = #{param.objectId}
+			</if>
+			<if test="param.objectCt != null and param.objectCt != ''">
+				and object_ct = #{param.objectCt}
+			</if>
+			<if test="param.status != null and param.status != ''">
+				and status = #{param.status}
+			</if>
+			<if test="param.note != null and param.note != ''">
+				and note = #{param.note}
+			</if>
+			<if test="param.markedPrice != null and param.markedPrice != ''">
+				and marked_price = #{param.markedPrice}
+			</if>
+			<if test="param.discountPrice != null and param.discountPrice != ''">
+				and discount_price = #{param.discountPrice}
+			</if>
+			<if test="param.dealPrice != null and param.dealPrice != ''">
+				and deal_price = #{param.dealPrice}
+			</if>
+			<if test="param.couponId != null and param.couponId != ''">
+				and coupon_id = #{param.couponId}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_trade_item">
-	trade_id, serial_number, customer_id, customer_ct, authorization_id, object_type, object_id, object_ct, status, note, marked_price, discount_price, deal_price, coupon_id, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_trade_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="trade.tradeId != null">AND trade_id = #{trade.tradeId} </if>
-		<if test="trade.serialNumber != null">AND serial_number like concat(#{trade.serialNumber}, '%') </if>
-		<if test="trade.customerId != null">AND customer_id = #{trade.customerId} </if>
-		<if test="trade.customerCt != null">AND customer_ct = #{trade.customerCt} </if>
-		<if test="trade.authorizationId != null">AND authorization_id like concat(#{trade.authorizationId}, '%') </if>
-		<if test="trade.objectType != null">AND object_type = #{trade.objectType} </if>
-		<if test="trade.objectId != null">AND object_id like concat(#{trade.objectId}, '%') </if>
-		<if test="trade.objectCt != null">AND object_ct = #{trade.objectCt} </if>
-		<if test="trade.status != null">AND status = #{trade.status} </if>
-		<if test="trade.note != null">AND note like concat(#{trade.note}, '%') </if>
-		<if test="trade.couponId != null">AND coupon_id = #{trade.couponId} </if>
-		<if test="trade.createdBy != null">AND created_by like concat(#{trade.createdBy}, '%') </if>
-		<if test="trade.updatedBy != null">AND updated_by like concat(#{trade.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 消费清单 -->
-<insert id="addTrade" parameterType="com.jing.trade.model.entity.Trade" >
-	<selectKey keyProperty="tradeId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO tt_trade 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="tradeId != null"> trade_id,</if>
-		<if test="serialNumber != null"> serial_number,</if>
-		<if test="customerId != null"> customer_id,</if>
-		<if test="customerCt != null"> customer_ct,</if>
-		<if test="authorizationId != null"> authorization_id,</if>
-		<if test="objectType != null"> object_type,</if>
-		<if test="objectId != null"> object_id,</if>
-		<if test="objectCt != null"> object_ct,</if>
-		<if test="status != null"> status,</if>
-		<if test="note != null"> note,</if>
-		<if test="markedPrice != null"> marked_price,</if>
-		<if test="discountPrice != null"> discount_price,</if>
-		<if test="dealPrice != null"> deal_price,</if>
-		<if test="couponId != null"> coupon_id,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="tradeId != null"> #{tradeId},</if>
-		<if test="serialNumber != null"> #{serialNumber},</if>
-		<if test="customerId != null"> #{customerId},</if>
-		<if test="customerCt != null"> #{customerCt},</if>
-		<if test="authorizationId != null"> #{authorizationId},</if>
-		<if test="objectType != null"> #{objectType},</if>
-		<if test="objectId != null"> #{objectId},</if>
-		<if test="objectCt != null"> #{objectCt},</if>
-		<if test="status != null"> #{status},</if>
-		<if test="note != null"> #{note},</if>
-		<if test="markedPrice != null"> #{markedPrice},</if>
-		<if test="discountPrice != null"> #{discountPrice},</if>
-		<if test="dealPrice != null"> #{dealPrice},</if>
-		<if test="couponId != null"> #{couponId},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 消费清单 -->
+	<insert id="addTrade" parameterType="com.jing.trade.model.entity.Trade">
+		<selectKey keyProperty="tradeId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tt_trade (trade_id ,serial_number ,customer_id ,customer_ct ,authorization_id ,object_type ,object_id ,object_ct ,status ,note ,marked_price ,discount_price ,deal_price ,coupon_id ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{tradeId},#{serialNumber},#{customerId},#{customerCt},#{authorizationId},#{objectType},#{objectId},#{objectCt},#{status},#{note},#{markedPrice},#{discountPrice},#{dealPrice},#{couponId},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 消费清单 -->  
-<update id="modifyTrade" parameterType="com.jing.trade.model.entity.Trade" >
-  	UPDATE tt_trade SET
-	<trim suffixOverrides=",">
-		<if test="serialNumber != null"> serial_number = #{serialNumber},</if>
-		<if test="customerId != null"> customer_id = #{customerId},</if>
-		<if test="customerCt != null"> customer_ct = #{customerCt},</if>
-		<if test="authorizationId != null"> authorization_id = #{authorizationId},</if>
-		<if test="objectType != null"> object_type = #{objectType},</if>
-		<if test="objectId != null"> object_id = #{objectId},</if>
-		<if test="objectCt != null"> object_ct = #{objectCt},</if>
-		<if test="status != null"> status = #{status},</if>
-		<if test="note != null"> note = #{note},</if>
-		<if test="markedPrice != null"> marked_price = #{markedPrice},</if>
-		<if test="discountPrice != null"> discount_price = #{discountPrice},</if>
-		<if test="dealPrice != null"> deal_price = #{dealPrice},</if>
-		<if test="couponId != null"> coupon_id = #{couponId},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE trade_id = #{tradeId}
-</update>
- 
-<!-- 删除 消费清单 -->
-<delete id="dropTradeByTradeId" parameterType="java.lang.Integer">
-	DELETE FROM tt_trade WHERE trade_id = #{tradeId}
-</delete> 
-
-<!-- 根据标识查询 消费清单 -->
-<select id="queryTradeByTradeId"  resultMap="TradeResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_trade_item"/>
-	FROM tt_trade WHERE trade_id = #{tradeId}
-</select>
-
-<!-- 根据属性查询消费清单 -->
-<select id="queryTradeByProperty"  resultMap="TradeResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_trade_item"/>
-	FROM tt_trade 
-	<where>
-		<include refid="sql_trade_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据消费清单属性与分页信息分页查询消费清单信息 -->
-<select id="queryTradeForPage"  resultMap="TradeResultMap" > 
-	SELECT 
-	<include refid="sql_trade_item"/>
-	FROM tt_trade 
-	<where>
-		<include refid="sql_trade_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改消费清单 -->
+	<update id="updateTrade" parameterType="com.jing.trade.model.entity.Trade">
+		UPDATE tt_trade
+		<set> 
+			<if test="serialNumber != null" >
+				serial_number = #{serialNumber},
+			</if>
+			<if test="customerId != null" >
+				customer_id = #{customerId},
+			</if>
+			<if test="customerCt != null" >
+				customer_ct = #{customerCt},
+			</if>
+			<if test="authorizationId != null" >
+				authorization_id = #{authorizationId},
+			</if>
+			<if test="objectType != null" >
+				object_type = #{objectType},
+			</if>
+			<if test="objectId != null" >
+				object_id = #{objectId},
+			</if>
+			<if test="objectCt != null" >
+				object_ct = #{objectCt},
+			</if>
+			<if test="status != null" >
+				status = #{status},
+			</if>
+			<if test="note != null" >
+				note = #{note},
+			</if>
+			<if test="markedPrice != null" >
+				marked_price = #{markedPrice},
+			</if>
+			<if test="discountPrice != null" >
+				discount_price = #{discountPrice},
+			</if>
+			<if test="dealPrice != null" >
+				deal_price = #{dealPrice},
+			</if>
+			<if test="couponId != null" >
+				coupon_id = #{couponId},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	trade_id = #{tradeId}
+	</update>
+	
+	<!-- 根据ID删除消费清单 -->
+	<delete id="deleteTradeById"  parameterType="Integer">
+		DELETE FROM tt_trade WHERE trade_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询消费清单 -->
+	<select id="getTradeById" resultMap="TradeResultMap" parameterType="Integer">
+		SELECT * FROM tt_trade WHERE trade_id = #{value}
+	</select>
+	
+	<select id="findTradeListPage" resultMap="TradeResultMap">
+		SELECT * FROM tt_trade
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findTradeList" resultMap="TradeResultMap">
+		SELECT * FROM tt_trade
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

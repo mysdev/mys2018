@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" /> 
+<link href="../../../resources/js/plugins/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var columns = [
+			{field:'plusId', title:'活动标识', width:52, align:'center'  },
+			{field:'plusName', title:'活动名称', width:200, align:'center'  },
+			{field:'plusMoney', title:'充值金额', width:52, align:'center'  },
+			{field:'giftMoney', title:'赠送金额', width:52, align:'center'  },
+			{field:'money', title:'提成金额', width:52, align:'center'  },
+			{field:'status', title:'活动状态', width:104, align:'center'  }
+	];
+			
+	//接收 菜单id
+	var resId = Faith.getQueryStringByName("resId");//当前页面id
+	
+	//配置页面参数
+	$.extend(true, Faith, {
+		gridOptions : {
+			gridId : 'grid_memberPlus', //表格容器id
+			tableKey : "plusId",
+			resId:resId,
+			pageButtonKey:'',
+			isToolBar:true,
+			url : Faith.projectName + '/core/memberPlus/page', //列表接口
+			sortName : 'plus_id',
+			sortOrder : 'desc',
+			columns : [ columns ],//数据列
+			onDblClickRow : function(rowIndex, rowData) {
+				Faith.doView();
+			}
+		},
+		addOptions : {
+			title : "添加会员充值活动",
+			addUrl : "/pc/webpage/core/member/memberPlus_form.html"
+		},
+		updateOptions : {
+			title : "修改会员充值活动",
+			updateUrl : "/pc/webpage/core/member/memberPlus_form.html"
+		},
+		deleteOptions : {
+			deleteAction : Faith.projectName + '/core/memberPlus/delete/'
+		},
+		viewOptions : {
+			title:'查看会员充值活动',
+			viewUrl : "/pc/webpage/core/memberPlus/memberPlus_detail.html"
+		}
+	});
+	$(function() {
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+		//初始化搜
+		Faith.doSearch("btn_search", "search");
+	});	
+			
+</script>
+</head>
+<body>
+	<div id="search" class="search wrap_border">
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="活动标识" id="plusId" name="plusId" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="活动名称" id="plusName" name="plusName" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="充值金额" id="plusMoney" name="plusMoney" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="赠送金额" id="giftMoney" name="giftMoney" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="提成金额" id="money" name="money" />
+		</div>
+		<div class="search-wrap">
+			<input type="text" class="easyui-textbox" labelWidth="70" label="活动状态 0正常" id="status" name="status" />
+		</div>
+		<div class="search-btn-wrap">
+			<button type="button" data-loading-text="正在搜索" class="btn btn-primary btn-search"  id="btn_search">搜索</button>
+		</div>
+	</div>
+	<div class="grid">
+		<table id="grid_memberPlus" class="easyui-datagrid"></table>
+	</div>
+</body>
+</html>

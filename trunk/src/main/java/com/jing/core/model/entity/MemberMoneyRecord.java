@@ -11,7 +11,7 @@ public class MemberMoneyRecord extends BaseEntity{
 
 	private Integer recordId;   // 记录标识
 	private String memberId;   // 会员标识
-	private Integer rtype;   // 收支
+	private Integer rtype;   // 收支(1=收，2=支)
 	private java.math.BigDecimal money;   // 金额
 	private java.math.BigDecimal balance;   // 余额
 	private String remark;   // 备注

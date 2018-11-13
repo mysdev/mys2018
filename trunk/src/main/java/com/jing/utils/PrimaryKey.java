@@ -141,7 +141,7 @@ public class PrimaryKey {
             smsSeq++;
         }
 
-        return "CG"+sb.toString().replaceFirst(" ", "");
+        return "T"+sb.toString().replaceFirst(" ", "");
     }
 
     public static void main(String[] args) {

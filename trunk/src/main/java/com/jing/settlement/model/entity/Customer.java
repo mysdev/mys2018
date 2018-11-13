@@ -33,6 +33,8 @@ public class Customer extends BaseEntity {
 	private String note;	//to_customer:note  备注  
 	
 	private Integer status;//状态
+	
+	private int ct ;//人数
 
 
 	public Integer getStatus() {
@@ -110,9 +112,15 @@ public class Customer extends BaseEntity {
 	*/
 	public void setNote(String note){
 		this.note = note;	
+	}
+
+	public int getCt() {
+		return ct;
+	}
+
+	public void setCt(int ct) {
+		this.ct = ct;
 	}	
-	
-	
 	
 	
 }
