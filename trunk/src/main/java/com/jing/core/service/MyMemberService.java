@@ -14,5 +14,5 @@ public interface MyMemberService {
 	/**
 	 * 充值
 	 */
-	void recharge(String memberId,float amount,String remark,User user);
+	void recharge(String memberId,int amount,String remark,User user,String employeeId);
 }

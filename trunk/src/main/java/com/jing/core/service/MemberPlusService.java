@@ -40,4 +40,11 @@ public interface MemberPlusService {
 	 * @return
 	 */
 	List<MemberPlus> findMemberPlusList(Map<String, Object> param);
+	
+	/**
+	 * 根据充值金额查找对应的充值活动
+	 * @param amount
+	 * @return
+	 */
+	MemberPlus findMemberPlus(int amount);
 }
