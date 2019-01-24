@@ -1,115 +1,90 @@
 package com.jing.trade.controller;
 
 import java.util.Map;
-import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jing.config.web.exception.NotFoundException;
-import com.jing.config.web.exception.ParameterException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import com.jing.config.validation.BeanValidator;
+import com.jing.utils.BaseController;
+import com.jing.config.web.Result;
+import com.jing.config.web.exception.CustomException;
+import com.jing.config.web.page.PageInfo;
+import com.jing.config.web.page.PageRequestUtils;
+import com.jing.system.login.session.Config;
+import com.jing.system.login.session.SessionAttr;
+import com.jing.system.user.entity.User;
 import com.jing.trade.model.entity.Settlement;
 import com.jing.trade.service.SettlementService;
-import com.jing.utils.ClassUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * @ClassName: SettlementController
- * @Description: 消费结算HTTP接口
- * @author: Jinlong He
- * @email: mailto:jinlong_he@126.com
- * @date: 2018年01月11日 15时04分
+ * <br>
+ * <b>功能：</b>消费结算 WEB接口<br>
+ * <br>
  */
-@RestController
-@Api(description="消费结算", tags={"TradeSettlement"})
-public class SettlementController{
+@Api("消费结算")
+@Controller
+@RequestMapping("/trade/settlement")
+public class SettlementController extends BaseController{
 
-	@Autowired
-	BeanValidator beanValidator;
-	
 	@Autowired
 	private SettlementService settlementService;
-
 	
-	@ApiOperation(value = "新增 添加消费结算信息", notes = "添加消费结算信息")
-	@RequestMapping(value = "/settlement", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public Object addSettlement(HttpServletResponse response,
-			@ApiParam(value = "settlement") @RequestBody Settlement settlement) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(settlement, true);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
-		}
-		settlement.setSettlementId(null);
+	@ApiOperation(value = "新增消费结算", notes = "添加消费结算")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result add(Settlement settlement,@SessionAttr(Config.USER_INFO) User user) {
+		settlement.setCreatedBy(user.getUserId());
+		settlement.setCreatedDateNow();
+		settlement.setUpdatedBy(user.getUserId());
+		settlement.setUpdatedDateNow();
 		settlementService.addSettlement(settlement);
-		return settlement;
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	
-	@ApiOperation(value = "更新 根据消费结算标识更新消费结算信息", notes = "根据消费结算标识更新消费结算信息")
-	@RequestMapping(value = "/settlement/{settlementId:.+}", method = RequestMethod.PUT)
-	public Object modifySettlementById(HttpServletResponse response,
-			@PathVariable Integer settlementId,
-			@ApiParam(value = "settlement", required = true) @RequestBody Settlement settlement
-			) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		List<Map<String, String>> errors = beanValidator.validateClassAuto(settlement, false);
-		if(!errors.isEmpty()){
-			throw new ParameterException(errors);
+	@ApiOperation(value = "修改消费结算", notes = "修改消费结算")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody Result update(Settlement settlement,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		if(settlement==null || settlement.getSettlementId()==null || "".equals(settlement.getSettlementId())){
+			throw new CustomException("缺失修改参数.");
 		}
-		Settlement tempSettlement = settlementService.querySettlementBySettlementId(settlementId);
-		settlement.setSettlementId(settlementId);
-		if(null == tempSettlement){
-			throw new NotFoundException("消费结算");
-		}
-		return settlementService.modifySettlement(settlement);
+		settlement.setUpdatedBy(user.getUserId());
+		settlement.setUpdatedDateNow();
+		settlementService.updateSettlement(settlement);
+		return Result.getDefaultSuccMsgResult();
 	}
 
-	@ApiOperation(value = "删除 根据消费结算标识删除消费结算信息", notes = "根据消费结算标识删除消费结算信息")
-	@RequestMapping(value = "/settlement/{settlementId:.+}", method = RequestMethod.DELETE)
-	public Object dropSettlementBySettlementId(HttpServletResponse response, @PathVariable Integer settlementId) {
-		Settlement settlement = settlementService.querySettlementBySettlementId(settlementId);
-		if(null == settlement){
-			throw new NotFoundException("消费结算");
+	@ApiOperation(value = "删除 根据ID删除消费结算", notes = "根据ID删除消费结算")
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result delete(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失删除参数.");
 		}
-		return settlementService.dropSettlementBySettlementId(settlementId);
+		settlementService.deleteSettlementById(id);
+		return Result.getDefaultSuccMsgResult();
 	}
 	
-	@ApiOperation(value = "查询 根据消费结算标识查询消费结算信息", notes = "根据消费结算标识查询消费结算信息")
-	@RequestMapping(value = "/settlement/{settlementId:.+}", method = RequestMethod.GET)
-	public Object querySettlementById(HttpServletResponse response,
-			@PathVariable Integer settlementId) {
-		Settlement settlement = settlementService.querySettlementBySettlementId(settlementId);
-		if(null == settlement){
-			throw new NotFoundException("消费结算");
+	@ApiOperation(value = "根据ID查询消费结算", notes = "根据ID查询消费结算")
+	@RequestMapping(value = "/index/{id}", method = RequestMethod.GET)
+	public @ResponseBody Result get(@ApiParam("id") @PathVariable("id") Integer id){
+		if(id==null || "".equals(id)){
+			throw new CustomException("缺失查询参数.");
 		}
-		return settlement;
+		return Result.getDefaultSuccMsgResult(settlementService.getSettlementById(id));
 	}
-	
-	@ApiOperation(value = "查询 根据消费结算属性查询消费结算信息列表", notes = "根据消费结算属性查询消费结算信息列表")
-	@RequestMapping(value = "/settlement", method = RequestMethod.GET)
-	public Object querySettlementList(HttpServletResponse response,
-			Settlement settlement) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {		
-		return settlementService.querySettlementByProperty(ClassUtil.transBean2Map(settlement, false));
+		
+	@ApiOperation(value = "分页查询消费结算", notes = "分页查询消费结算")
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
+		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
+		return settlementService.findSettlementListPage(PageRequestUtils.getPageBean(request), map);
 	}
-	
-	@ApiOperation(value = "查询分页 根据消费结算属性分页查询消费结算信息列表", notes = "根据消费结算属性分页查询消费结算信息列表")
-	@RequestMapping(value = "/settlements", method = RequestMethod.GET)
-	public Object querySettlementPage(HttpServletResponse response,
-			@RequestParam(value = "pageNo", required = false) Integer pagenum,
-			@RequestParam(value = "pageSize", required = false) Integer pagesize, 
-			@RequestParam(value = "sort", required = false) String sort, Settlement settlement) {				
-		return settlementService.querySettlementForPage(pagenum, pagesize, sort, settlement);
-	}
-
 }

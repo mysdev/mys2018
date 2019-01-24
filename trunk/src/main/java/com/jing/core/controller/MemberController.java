@@ -88,11 +88,11 @@ public class MemberController extends BaseController{
 		return memberService.findMemberListPage(PageRequestUtils.getPageBean(request), map);
 	}
 	
-	@ApiOperation(value = "会员充值", notes = "会员充值")
+	@ApiOperation(value = "会员充值", notes = "会员充值，可带参数employeeId作为员工提成。")
 	@RequestMapping(value = "/recharge", method = RequestMethod.POST)
-	public @ResponseBody Result recharge(String memberId,float amount,String remark,
-			@SessionAttr(Config.USER_INFO) User user)throws CustomException{
-		myMemberService.recharge(memberId, amount,remark,user);
+	public @ResponseBody Result recharge(String memberId,int amount,String remark,
+			@SessionAttr(Config.USER_INFO) User user,HttpServletRequest request)throws CustomException{
+		myMemberService.recharge(memberId, amount,remark,user,request.getParameter("employeeId"));
 		return Result.getDefaultSuccMsgResult();
 	}
 }

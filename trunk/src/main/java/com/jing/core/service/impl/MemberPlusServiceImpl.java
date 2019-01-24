@@ -1,5 +1,6 @@
 package com.jing.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,22 @@ public class MemberPlusServiceImpl implements MemberPlusService{
 	 @Override
 	public List<MemberPlus> findMemberPlusList(Map<String, Object> param){
 		return memberPlusMapper.findMemberPlusList(param);
+	}
+
+	@Override
+	public MemberPlus findMemberPlus(int amount) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("status", "0");
+		List<MemberPlus> list = this.findMemberPlusList(param);
+		if(list==null || list.size()==0) {
+			return null;
+		}
+		for (MemberPlus memberPlus : list) {
+			if(amount> memberPlus.getPlusMoney().intValue()) {
+				return memberPlus;
+			}
+		}
+		return null;
 	}
 	
 }

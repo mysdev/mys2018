@@ -109,6 +109,7 @@
 	<select id="findMemberPlusListPage" resultMap="MemberPlusResultMap">
 		SELECT * FROM tb_member_plus
 		<include refid="query_tables_Property" />
+		order by plus_money desc
 	</select>
 	
 	<select id="findMemberPlusList" resultMap="MemberPlusResultMap">

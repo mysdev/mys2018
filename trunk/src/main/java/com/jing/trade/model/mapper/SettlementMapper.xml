@@ -2,135 +2,153 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jing.trade.model.dao.SettlementMapper">
 
-<!-- Result Map-->
-<resultMap id="SettlementResultMap" type="com.jing.trade.model.entity.Settlement">
-	<id column="settlement_id" property="settlementId"/>
-	<result column="serial_number" property="serialNumber"/>
-	<result column="settlement_time" property="settlementTime"/>
-	<result column="marked_price" property="markedPrice"/>
-	<result column="discount_price" property="discountPrice"/>
-	<result column="reduction_price" property="reductionPrice"/>
-	<result column="deal_price" property="dealPrice"/>
-	<result column="exchange_id" property="exchangeId"/>
-	<result column="pay_price" property="payPrice"/>
-	<result column="emp_id" property="empId"/>
-	<result column="member_id" property="memberId"/>
-	<result column="created_by" property="createdBy"/>
-	<result column="created_date" property="createdDate"/>
-	<result column="updated_by" property="updatedBy"/>
-	<result column="updated_date" property="updatedDate"/>
-</resultMap>
+	<!-- Result Map -->
+	<resultMap id="SettlementResultMap" type="com.jing.trade.model.entity.Settlement">
+		<id column="settlement_id" property="settlementId" />
+		<result column="serial_number" property="serialNumber" />
+		<result column="settlement_time" property="settlementTime" />
+		<result column="marked_price" property="markedPrice" />
+		<result column="discount_price" property="discountPrice" />
+		<result column="reduction_price" property="reductionPrice" />
+		<result column="deal_price" property="dealPrice" />
+		<result column="exchange_id" property="exchangeId" />
+		<result column="pay_price" property="payPrice" />
+		<result column="emp_id" property="empId" />
+		<result column="member_id" property="memberId" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="query_tables_Property" >
+		<where>
+			<if test="param.settlementId != null and param.settlementId != ''">
+				and settlement_id = #{param.settlementId}
+			</if>
+			<if test="param.serialNumber != null and param.serialNumber != ''">
+				and serial_number = #{param.serialNumber}
+			</if>
+			<if test="param.settlementTime != null and param.settlementTime != ''">
+				and settlement_time = #{param.settlementTime}
+			</if>
+			<if test="param.markedPrice != null and param.markedPrice != ''">
+				and marked_price = #{param.markedPrice}
+			</if>
+			<if test="param.discountPrice != null and param.discountPrice != ''">
+				and discount_price = #{param.discountPrice}
+			</if>
+			<if test="param.reductionPrice != null and param.reductionPrice != ''">
+				and reduction_price = #{param.reductionPrice}
+			</if>
+			<if test="param.dealPrice != null and param.dealPrice != ''">
+				and deal_price = #{param.dealPrice}
+			</if>
+			<if test="param.exchangeId != null and param.exchangeId != ''">
+				and exchange_id = #{param.exchangeId}
+			</if>
+			<if test="param.payPrice != null and param.payPrice != ''">
+				and pay_price = #{param.payPrice}
+			</if>
+			<if test="param.empId != null and param.empId != ''">
+				and emp_id = #{param.empId}
+			</if>
+			<if test="param.memberId != null and param.memberId != ''">
+				and member_id = #{param.memberId}
+			</if>
+			<if test="param.createdBy != null and param.createdBy != ''">
+				and created_by = #{param.createdBy}
+			</if>
+			<if test="param.createdDate != null and param.createdDate != ''">
+				and created_date = #{param.createdDate}
+			</if>
+			<if test="param.updatedBy != null and param.updatedBy != ''">
+				and updated_by = #{param.updatedBy}
+			</if>
+			<if test="param.updatedDate != null and param.updatedDate != ''">
+				and updated_date = #{param.updatedDate}
+			</if>
+		</where>
+	</sql>
 
-<sql id="sql_settlement_item">
-	settlement_id, serial_number, settlement_time, marked_price, discount_price, reduction_price, deal_price, exchange_id, pay_price, emp_id, member_id, created_by, created_date, updated_by, updated_date
-</sql>
-       
-<!-- 查询条件 无WHERE -->
-<sql id="sql_settlement_query_nowhere">
-	<trim prefix=" " prefixOverrides="AND|OR">
-		<if test="settlement.settlementId != null">AND settlement_id = #{settlement.settlementId} </if>
-		<if test="settlement.serialNumber != null">AND serial_number like concat(#{settlement.serialNumber}, '%') </if>
-		<if test="settlement.exchangeId != null">AND exchange_id = #{settlement.exchangeId} </if>
-		<if test="settlement.empId != null">AND emp_id like concat(#{settlement.empId}, '%') </if>
-		<if test="settlement.memberId != null">AND member_id like concat(#{settlement.memberId}, '%') </if>
-		<if test="settlement.createdBy != null">AND created_by like concat(#{settlement.createdBy}, '%') </if>
-		<if test="settlement.updatedBy != null">AND updated_by like concat(#{settlement.updatedBy}, '%') </if>
-	</trim>
-</sql>
-   
-<!-- 插入 消费结算 -->
-<insert id="addSettlement" parameterType="com.jing.trade.model.entity.Settlement" >
-	<selectKey keyProperty="settlementId" order="AFTER" resultType="java.lang.Integer">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
- 	INSERT INTO tt_settlement 
-	<trim prefix=" (" suffix=")" suffixOverrides=",">
-		<if test="settlementId != null"> settlement_id,</if>
-		<if test="serialNumber != null"> serial_number,</if>
-		<if test="settlementTime != null"> settlement_time,</if>
-		<if test="markedPrice != null"> marked_price,</if>
-		<if test="discountPrice != null"> discount_price,</if>
-		<if test="reductionPrice != null"> reduction_price,</if>
-		<if test="dealPrice != null"> deal_price,</if>
-		<if test="exchangeId != null"> exchange_id,</if>
-		<if test="payPrice != null"> pay_price,</if>
-		<if test="empId != null"> emp_id,</if>
-		<if test="memberId != null"> member_id,</if>
-		<if test="createdBy != null"> created_by,</if>
-		created_date,
-		<if test="updatedBy != null"> updated_by,</if>
-		updated_date,
-	</trim>	 	
-	<trim prefix="values (" suffix=")" suffixOverrides=",">
-		<if test="settlementId != null"> #{settlementId},</if>
-		<if test="serialNumber != null"> #{serialNumber},</if>
-		<if test="settlementTime != null"> #{settlementTime},</if>
-		<if test="markedPrice != null"> #{markedPrice},</if>
-		<if test="discountPrice != null"> #{discountPrice},</if>
-		<if test="reductionPrice != null"> #{reductionPrice},</if>
-		<if test="dealPrice != null"> #{dealPrice},</if>
-		<if test="exchangeId != null"> #{exchangeId},</if>
-		<if test="payPrice != null"> #{payPrice},</if>
-		<if test="empId != null"> #{empId},</if>
-		<if test="memberId != null"> #{memberId},</if>
-		<if test="createdBy != null"> #{createdBy},</if>
-		now(),
-		<if test="updatedBy != null"> #{updatedBy},</if>
-		now(),
-	</trim>
-</insert>
+	<!-- 添加 消费结算 -->
+	<insert id="addSettlement" parameterType="com.jing.trade.model.entity.Settlement">
+		<selectKey keyProperty="settlementId" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO tt_settlement (settlement_id ,serial_number ,settlement_time ,marked_price ,discount_price ,reduction_price ,deal_price ,exchange_id ,pay_price ,emp_id ,member_id ,created_by ,created_date ,updated_by ,updated_date ) 
+		values
+		(#{settlementId},#{serialNumber},#{settlementTime},#{markedPrice},#{discountPrice},#{reductionPrice},#{dealPrice},#{exchangeId},#{payPrice},#{empId},#{memberId},#{createdBy},#{createdDate},#{updatedBy},#{updatedDate})
+	</insert>
 
-<!-- 根据标识，修改 消费结算 -->  
-<update id="modifySettlement" parameterType="com.jing.trade.model.entity.Settlement" >
-  	UPDATE tt_settlement SET
-	<trim suffixOverrides=",">
-		<if test="serialNumber != null"> serial_number = #{serialNumber},</if>
-		<if test="settlementTime != null"> settlement_time = #{settlementTime},</if>
-		<if test="markedPrice != null"> marked_price = #{markedPrice},</if>
-		<if test="discountPrice != null"> discount_price = #{discountPrice},</if>
-		<if test="reductionPrice != null"> reduction_price = #{reductionPrice},</if>
-		<if test="dealPrice != null"> deal_price = #{dealPrice},</if>
-		<if test="exchangeId != null"> exchange_id = #{exchangeId},</if>
-		<if test="payPrice != null"> pay_price = #{payPrice},</if>
-		<if test="empId != null"> emp_id = #{empId},</if>
-		<if test="memberId != null"> member_id = #{memberId},</if>
-		<if test="createdBy != null"> created_by = #{createdBy},</if>
-		<if test="updatedBy != null"> updated_by = #{updatedBy},</if>
-		updated_date = now(),
-	</trim>
-	WHERE settlement_id = #{settlementId}
-</update>
- 
-<!-- 删除 消费结算 -->
-<delete id="dropSettlementBySettlementId" parameterType="java.lang.Integer">
-	DELETE FROM tt_settlement WHERE settlement_id = #{settlementId}
-</delete> 
-
-<!-- 根据标识查询 消费结算 -->
-<select id="querySettlementBySettlementId"  resultMap="SettlementResultMap" parameterType="java.lang.Integer">
-	SELECT 
-	<include refid="sql_settlement_item"/>
-	FROM tt_settlement WHERE settlement_id = #{settlementId}
-</select>
-
-<!-- 根据属性查询消费结算 -->
-<select id="querySettlementByProperty"  resultMap="SettlementResultMap" parameterType="java.util.Map">
-	SELECT 
-	<include refid="sql_settlement_item"/>
-	FROM tt_settlement 
-	<where>
-		<include refid="sql_settlement_query_nowhere"/>
-	</where>
-</select>
-
-<!-- 根据消费结算属性与分页信息分页查询消费结算信息 -->
-<select id="querySettlementForPage"  resultMap="SettlementResultMap" > 
-	SELECT 
-	<include refid="sql_settlement_item"/>
-	FROM tt_settlement 
-	<where>
-		<include refid="sql_settlement_query_nowhere"/>
-	</where>
-</select>
-
-</mapper>   
+	<!-- 修改消费结算 -->
+	<update id="updateSettlement" parameterType="com.jing.trade.model.entity.Settlement">
+		UPDATE tt_settlement
+		<set> 
+			<if test="serialNumber != null" >
+				serial_number = #{serialNumber},
+			</if>
+			<if test="settlementTime != null" >
+				settlement_time = #{settlementTime},
+			</if>
+			<if test="markedPrice != null" >
+				marked_price = #{markedPrice},
+			</if>
+			<if test="discountPrice != null" >
+				discount_price = #{discountPrice},
+			</if>
+			<if test="reductionPrice != null" >
+				reduction_price = #{reductionPrice},
+			</if>
+			<if test="dealPrice != null" >
+				deal_price = #{dealPrice},
+			</if>
+			<if test="exchangeId != null" >
+				exchange_id = #{exchangeId},
+			</if>
+			<if test="payPrice != null" >
+				pay_price = #{payPrice},
+			</if>
+			<if test="empId != null" >
+				emp_id = #{empId},
+			</if>
+			<if test="memberId != null" >
+				member_id = #{memberId},
+			</if>
+			<if test="createdBy != null" >
+				created_by = #{createdBy},
+			</if>
+			<if test="createdDate != null" >
+				created_date = #{createdDate},
+			</if>
+			<if test="updatedBy != null" >
+				updated_by = #{updatedBy},
+			</if>
+			<if test="updatedDate != null" >
+				updated_date = #{updatedDate},
+			</if>
+		</set>
+		WHERE	settlement_id = #{settlementId}
+	</update>
+	
+	<!-- 根据ID删除消费结算 -->
+	<delete id="deleteSettlementById"  parameterType="Integer">
+		DELETE FROM tt_settlement WHERE settlement_id = #{value}
+	</delete>
+	
+	<!-- 根据ID查询消费结算 -->
+	<select id="getSettlementById" resultMap="SettlementResultMap" parameterType="Integer">
+		SELECT * FROM tt_settlement WHERE settlement_id = #{value}
+	</select>
+	
+	<select id="findSettlementListPage" resultMap="SettlementResultMap">
+		SELECT * FROM tt_settlement
+		<include refid="query_tables_Property" />
+	</select>
+	
+	<select id="findSettlementList" resultMap="SettlementResultMap">
+		SELECT * FROM tt_settlement
+		<include refid="query_tables_Property" />
+	</select>
+	
+</mapper>

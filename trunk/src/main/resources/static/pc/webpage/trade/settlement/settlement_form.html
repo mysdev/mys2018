@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/css/public_style.css" />
+<link rel="stylesheet" type="text/css" href="../../../resources/js/easyui/easyui_add.css" />
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../resources/js/easyui/validatebox.js"></script>
+<script type="text/javascript" src="../../../resources/js/dictionary.js"></script>
+<script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+<script>
+	var pkVal = Faith.getQueryStringByName("pkVal");//  如果有值 就是修改  没有值就是添加
+
+	var options = {
+		formid : "form_settlement",
+		tableKey : "settlementId",
+		addAction : Faith.projectName + "/trade/settlement/add",
+		updateAction : Faith.projectName + "/trade/settlement/update",
+		viewAction : Faith.projectName + "/trade/settlement/index/" + pkVal,
+		pkVal : pkVal,
+		saveButtonId : 'btn_save',
+		cancelButtonId : 'btn_cancel'
+	};
+
+	$(function() {
+		//提交按钮点击
+		Faith.doSave(options);
+		//如果是修改  则填充数据
+		if (pkVal != null && pkVal != "") {
+			$.get(options.viewAction, {}, function(rs) {
+				if (rs.code == 1) {
+					Faith.setFormData(options.formid, rs.data);
+				} else {
+					$.messager.alert("提示", rs.message);
+				}
+			}, 'json');
+		}
+	});
+</script>
+</head>
+<body>
+	<form id="form_settlement" class="fromstyle">
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">结算标识<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="settlementId" name="settlementId"  placeholder="请输入结算标识">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">流水号<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="serialNumber" name="serialNumber"  placeholder="请输入流水号">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">结算时间<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="settlementTime" name="settlementTime"  placeholder="请输入结算时间">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">原价<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="markedPrice" name="markedPrice"  placeholder="请输入原价">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">优惠总计</label>
+	  	 	<input type="text" class="form-control"  id="discountPrice" name="discountPrice"  placeholder="请输入优惠总计">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">折扣</label>
+	  	 	<input type="text" class="form-control"  id="reductionPrice" name="reductionPrice"  placeholder="请输入折扣">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">成交价<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="dealPrice" name="dealPrice"  placeholder="请输入成交价">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">支付方式 0本币<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="exchangeId" name="exchangeId"  placeholder="请输入支付方式 0本币">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">支付数量<span style="color:red">*</span></label>
+	  	 	<input type="text" class="form-control"  id="payPrice" name="payPrice"  placeholder="请输入支付数量">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">折扣授权员工</label>
+	  	 	<input type="text" class="form-control"  id="empId" name="empId"  placeholder="请输入折扣授权员工">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">会员</label>
+	  	 	<input type="text" class="form-control"  id="memberId" name="memberId"  placeholder="请输入会员">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">创建人员</label>
+	  	 	<input type="text" class="form-control"  id="createdBy" name="createdBy"  placeholder="请输入创建人员">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">创建时间</label>
+	  	 	<input type="text" class="form-control"  id="createdDate" name="createdDate"  placeholder="请输入创建时间">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">修订人员</label>
+	  	 	<input type="text" class="form-control"  id="updatedBy" name="updatedBy"  placeholder="请输入修订人员">
+	  	</div>
+		<div class="form-group col-sm-6">
+	  	 	<label for="tableName">修订时间</label>
+	  	 	<input type="text" class="form-control"  id="updatedDate" name="updatedDate"  placeholder="请输入修订时间">
+	  	</div>
+		<div class="form-group col-sm-12 padding-4">
+			<div class="text-center">
+				<button type="button" class="btn btn-primary btn_w" id="btn_cancel">取消</button>
+				<button type="button" data-loading-text="正在提交" class="btn btn-danger  btn_w" id="btn_save">保存</button>
+			</div>
+		</div>	
+	</form>
+</body>
