@@ -18,43 +18,99 @@
 <script type="text/javascript"
 	src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
+
+ <script src="../../../resources/js/bootstrap/bootstrap-contextmenu.js"></script>
 <script>
+$(function() {
+	loadRoom();
+});	
+
+function loadRoom(){
+	var url = Faith.projectName + '/core/room/page';
+	$.ajax({
+		type: 'post',
+		dataType: 'json',
+		url: url,
+		data: {
+			pageSize:50
+		},
+		async: false,
+		success: function(rs) {
+			console.log(rs);
+			var array  = rs.rows;
+			var htmlstr = '';
+			for(var i=0;i<array.length;i++){
+				htmlstr += '<div class="col-xs-6 col-md-2" style="background-color: #009900;"  data-toggle="context" data-target="#context-menu">';
+				htmlstr += '<a href="#" class="thumbnail" onclick="clickRoom(\''+array[i].roomId+'\');">';
+				htmlstr += '<div class="caption">';
+				htmlstr += '<h3>'+array[i].roomName+'</h3>';
+				htmlstr += '</div>';
+				htmlstr += '</a>';
+				htmlstr += '</div>';
+			}
+			$("#roomBox").html(htmlstr);
+			$('.context').contextmenu();
+		}
+	});
+}
+
+function clickRoom(rid){
+	$.ajax({
+		type: 'get',
+		dataType: 'json',
+		url: Faith.projectName + '/core/room/index/'+rid,
+		async: false,
+		success: function(rs) {
+			if(rs.code == 1) {
+				//【0=正常，1=繁忙，2=打扫卫生，3=预约，4=维修】
+				if(rs.status==0 || rs.status==2){
+					//显示开房和上一单的按钮
+				}
+				else if(rs.status==1){
+					//加载消费情况和买单按钮
+				}
+				else if(rs.status==3){
+					//显示开房及预约客户信息
+				}
+				else if(rs.status==4){
+					//加载投入使用按钮
+				}
+			} else {
+				$.messager.alert('操作失败', rs.message);
+			}
+		}
+	});
 	
+}
+
+
+/**
+ * 开房
+ */
+function createRoom(){
+	
+}
+
+/**
+ * 加载消费记录
+ */
+function loadTrade(){
+	
+}
+
 </script>
 </head>
 <body>
 	<!-- 开房、开卡、开会员、结算、续房。。。。 -->
-
-	<div class="col-md-10" style="border: 1px solid #000; height: 800px;">
-		<div class="row" style="height: 500px;">
+	<div class="col-md-10" style="border: 1px solid #000; height: 700px;" >
+		<div class="row" style="height: 500px;" id="roomBox">
 			<div class="col-xs-6 col-md-2" style="background-color: #009900;">
 				<a href="#" class="thumbnail">
 					<div class="caption">
 						<h3>101</h3>
 					</div>
 				</a>
-			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #009900;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>201</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #cc9900;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>301</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #cc6600;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>401</h3>
-					</div>
-				</a>
-			</div>
+			</div>			
 			<div class="col-xs-6 col-md-2" style="background-color: red;">
 				<a href="#" class="thumbnail">
 					<div class="caption">
@@ -62,40 +118,18 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #009900;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>601</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #009900;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>702</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-6 col-md-2" style="background-color: #cc6600;">
-				<a href="#" class="thumbnail">
-					<div class="caption">
-						<h3>703</h3>
-					</div>
-				</a>
-			</div>
+
 		</div>
 
-
-
-		<div class="row" style="border: 1px solid #000; height: 300px;">
+		<div class="row" style="border: 1px solid #000; height: 200px;">
 			<div class="col-md-12"></div>
 		</div>
 
 		<div class="row" style="border: 1px solid #000; height: 50px;">
 			<button type="button" class="btn btn-info">撤销</button>
 			<button type="button" class="btn btn-info">加单</button>
-			<button type="button" class="btn btn-info">撤销</button>
-			<button type="button" class="btn btn-info">撤销</button>
+			<button type="button" class="btn btn-info">上一单</button>
+			<button type="button" class="btn btn-info">结算</button>
 
 		</div>
 	</div>
@@ -103,8 +137,6 @@
 
 	<div class="col-md-2" style="border: 1px solid #000;">
 		<div class="row"></div>
-
-
 		<div class="row">
 			<div class="btn-group" role="group" aria-label="...">
 				<button type="button" class="btn btn-default">开通会员</button>
@@ -117,6 +149,15 @@
 	</div>
 
 
+	<div id="context-menu">
+	      	<ul class="dropdown-menu" role="menu">
+               <li><a tabindex="-1">开房</a></li>
+	           <li><a tabindex="-1">打扫卫生</a></li>
+	           <li><a tabindex="-1">预约</a></li>
+	           <li class="divider"></li>
+	           <li><a tabindex="-1">续房</a></li>
+	      	</ul>
+	      </div>
 
 </body>
 </html>
