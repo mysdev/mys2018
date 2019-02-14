@@ -59,6 +59,10 @@ public class TradeServiceImpl implements TradeService{
 		return page.setRows(tradeMapper.findTradeListPage(page,param));
 	}
 	
+	@Override
+	public PageInfo findTradeByRidListPage(PageInfo page, Map<String, Object> param) {
+		return page.setRows(tradeMapper.findTradeByRidListPage(page,param));
+	}
 	
 	/**
 	 * 根据属性查询消费清单

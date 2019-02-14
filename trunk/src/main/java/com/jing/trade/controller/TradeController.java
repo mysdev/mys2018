@@ -85,6 +85,10 @@ public class TradeController extends BaseController{
 	@RequestMapping(value = "/page", method = RequestMethod.POST)
 	public @ResponseBody PageInfo findPage(HttpServletRequest request)throws Exception {
 		Map<String,Object> map=PageRequestUtils.getStringMapFromStringsMap(request.getParameterMap());
-		return tradeService.findTradeListPage(PageRequestUtils.getPageBean(request), map);
+		if(map.get("rid") !=null) {
+			return tradeService.findTradeByRidListPage(PageRequestUtils.getPageBean(request), map);
+		}else {
+			return tradeService.findTradeListPage(PageRequestUtils.getPageBean(request), map);
+		}
 	}
 }

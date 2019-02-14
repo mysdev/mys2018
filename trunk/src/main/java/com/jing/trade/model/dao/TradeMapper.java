@@ -39,6 +39,12 @@ public interface TradeMapper {
 	
 	
 	/**
+	* 分页查询
+	*/
+	List<Trade> findTradeByRidListPage(@Param("page") PageInfo page, @Param("param") Map<String, Object> param);
+	
+	
+	/**
 	 * 根据属性查询消费清单
 	 * @param param
 	 * @return

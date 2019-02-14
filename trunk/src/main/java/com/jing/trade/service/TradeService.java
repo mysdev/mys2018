@@ -33,6 +33,14 @@ public interface TradeService {
 	*/
 	PageInfo findTradeListPage(PageInfo page, Map<String, Object> param);
 	
+	/**
+	 * 根据客房查找消费记录
+	 * @param page
+	 * @param param
+	 * @return
+	 */
+	PageInfo findTradeByRidListPage(PageInfo page, Map<String, Object> param);
+	
 
 	/**
 	 * 根据属性查询消费清单

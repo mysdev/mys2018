@@ -14,8 +14,8 @@ public class Room extends BaseEntity{
 	private String area;   // 归属区域
 	private String roomNo;   // 房间编号
 	private String roomName;   // 房间名称
-	private Integer status;   // 状态 0正常【0=正常，1=繁忙，2=打扫卫生，3=预约，4=维修】
-	private Integer roomStatus;   // 自身状态
+	private Integer status;   // 状态 0正常【0=正常，1=删除】
+	private Integer roomStatus;   // 自身状态【0=空闲，1=繁忙，2=打扫卫生，3=预约，4=维修】
 	private Integer chair;   // 椅子数量
 	private Integer bed;   // 床数量
 	private String mark;   // 标记

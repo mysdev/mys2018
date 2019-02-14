@@ -167,6 +167,12 @@
 		<include refid="query_tables_Property" />
 	</select>
 	
+	<select id="findTradeByRidListPage" resultMap="TradeResultMap">
+		select * from tt_trade  t where t.customer_id=(
+			select customer_id from to_authorization where device_id=#{param.rid}
+		)
+	</select>
+	
 	<select id="findTradeList" resultMap="TradeResultMap">
 		SELECT * FROM tt_trade
 		<include refid="query_tables_Property" />
