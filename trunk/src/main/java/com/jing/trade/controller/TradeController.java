@@ -1,5 +1,7 @@
 package com.jing.trade.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jing.utils.BaseController;
@@ -16,6 +19,8 @@ import com.jing.config.web.Result;
 import com.jing.config.web.exception.CustomException;
 import com.jing.config.web.page.PageInfo;
 import com.jing.config.web.page.PageRequestUtils;
+import com.jing.settlement.model.entity.Authorization;
+import com.jing.settlement.service.AuthorizationService;
 import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
@@ -38,6 +43,8 @@ public class TradeController extends BaseController{
 
 	@Autowired
 	private TradeService tradeService;
+	@Autowired
+	private AuthorizationService authorizationService;
 	
 	@ApiOperation(value = "新增消费清单", notes = "添加消费清单")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -49,6 +56,30 @@ public class TradeController extends BaseController{
 		tradeService.addTrade(trade);
 		return Result.getDefaultSuccMsgResult();
 	}
+	
+	@ApiOperation(value = "新增消费清单", notes = "添加消费清单")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public @ResponseBody Result doTrade(@RequestParam String did,Trade trade,@SessionAttr(Config.USER_INFO) User user) {
+		//根据did找到授权码
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deviceId", did);
+		map.put("status", "0");
+		List<Authorization> list = authorizationService.findAuthorizationList(map);
+		if(list==null || list.size()==0) {
+			throw new CustomException("授权码不存在，无法消费.");
+		}
+		Authorization authorization = list.get(0);
+		trade.setAuthorizationId(authorization.getAuthorizationId());
+		trade.setCustomerId(authorization.getCustomerId());
+		trade.setCreatedBy(user.getUserId());
+		trade.setCreatedDateNow();
+		trade.setUpdatedBy(user.getUserId());
+		trade.setUpdatedDateNow();
+		tradeService.addTrade(trade);
+		return Result.getDefaultSuccMsgResult();
+	}
+	
+	
 	
 	@ApiOperation(value = "修改消费清单", notes = "修改消费清单")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

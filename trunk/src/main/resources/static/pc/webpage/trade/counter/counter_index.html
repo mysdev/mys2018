@@ -19,100 +19,269 @@
 	src="../../../resources/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../../../resources/js/Faith.js"></script>
 
- <script src="../../../resources/js/bootstrap/bootstrap-contextmenu.js"></script>
+<script src="../../../resources/js/bootstrap/bootstrap-contextmenu.js"></script>
+<link
+	href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
+	rel="stylesheet">
 <script>
-var selected = '';
-$(function() {
-	loadRoom();
-});	
-
-function loadRoom(){
-	var url = Faith.projectName + '/core/room/page';
-	$.ajax({
-		type: 'post',
-		dataType: 'json',
-		url: url,
-		data: {
-			pageSize:50,
-			status:0
-		},
-		async: false,
-		success: function(rs) {
-			console.log(rs);
-			var array  = rs.rows;
-			var htmlstr = '';
-			for(var i=0;i<array.length;i++){
-				htmlstr += '<div class="col-xs-6 col-md-2" style="background-color: #009900;"  data-toggle="context" data-target="#context-menu">';
-				htmlstr += '<a href="#" class="thumbnail" onclick="clickRoom(\''+array[i].roomId+'\');">';
-				htmlstr += '<div class="caption">';
-				htmlstr += '<h3>'+array[i].roomName+'</h3>';
-				htmlstr += '</div>';
-				htmlstr += '</a>';
-				htmlstr += '</div>';
-			}
-			$("#roomBox").html(htmlstr);
-			$('.context').contextmenu();
-		}
+	var selected = '';
+	$(function() {
+		loadRoom();
 	});
-}
+	
+	function loadRoom() {
+		var url = Faith.projectName + '/core/room/page';
+		$.ajax({
+					type : 'post',
+					dataType : 'json',
+					url : url,
+					data : {
+						pageSize : 50,
+						status : 0
+					},
+					async : false,
+					success : function(rs) {
+						console.log(rs);
+						var array = rs.rows;
+						var htmlstr = '';
+						for (var i = 0; i < array.length; i++) {
+							var color = '#009900';
+							if(array[i].roomStatus ==1){
+								color = '#99cc00';
+							}else if(array[i].roomStatus==2){
+								color = '#cccc00';
+							}
+							htmlstr += '<div class="col-xs-6 col-md-2 contextmenu" id="'+array[i].roomId+'">';
+							htmlstr += '<a href="#" class="thumbnail" onclick="clickRoom(\''
+									+ array[i].roomId + '\');">';
+							htmlstr += '<div class="caption" style="background-color: '+color+';">';
+							htmlstr += '<h3>' + array[i].roomName + '</h3>';
+							htmlstr += '</div>';
+							htmlstr += '</a>';
+							htmlstr += '</div>';
+						}
+						$("#roomBox").html(htmlstr);
+					}
+				});
+		menu();
+	}
 
-function clickRoom(rid){
-	$.ajax({
-		type: 'get',
-		dataType: 'json',
-		url: Faith.projectName + '/core/room/index/'+rid,
-		async: false,
-		success: function(rs) {
-			if(rs.code == 1) {
-				//【0=空闲，1=繁忙，2=打扫卫生，3=预约，4=维修】
-				if(rs.roomStatus==0 || rs.roomStatus==2){
-					//显示开房和上一单的按钮
+	function clickRoom(rid) {
+		selected = rid;
+		$.ajax({
+			type : 'get',
+			dataType : 'json',
+			url : Faith.projectName + '/core/room/index/' + rid,
+			async : false,
+			success : function(rs) {
+				if (rs.code == 1) {
+					console.log(rs.data.roomStatus);
+					//【0=空闲，1=繁忙，2=打扫卫生，3=预约，4=维修】
+					if (rs.data.roomStatus == 0 ) {
+						//显示开房和上一单的按钮
+					} else if (rs.data.roomStatus == 1 || rs.data.roomStatus == 2) {
+						//加载消费情况和买单按钮
+						loadTrade(rid);
+					} else if (rs.data.roomStatus == 3) {
+						//显示开房及预约客户信息
+					} else if (rs.data.roomStatus == 4) {
+						//加载投入使用按钮
+					}
+				} else {
+					$.messager.alert('操作失败', rs.message);
 				}
-				else if(rs.roomStatus==1){
-					//加载消费情况和买单按钮
+			}
+		});
+
+	}
+
+	/**
+	 * 开房
+	 */
+	function rentRoom(rid) {
+		$.ajax({
+			type : "post",
+			url : Faith.projectName + '/settlement/customer/rentRoom',
+			data : {
+				roomId : rid
+			},
+			dataType : 'json',
+			success : function(rs) {
+				if (rs.code == "1") {
+					$.messager.alert('提示', '操作成功');
+					loadRoom();
+				} else {
+					$.messager.alert('提示', rs.message);
 				}
-				else if(rs.roomStatus==3){
-					//显示开房及预约客户信息
-				}
-				else if(rs.roomStatus==4){
-					//加载投入使用按钮
-				}
+			}
+		});
+	}
+
+	/**
+	 * 加载消费记录
+	 */
+	function loadTrade(rid) {
+		var deviceId = rid;
+		var columns = [ {
+			field : 'serialNumber',
+			title : '交易流水号',
+			width : 340,
+			align : 'center'
+		}, {
+			field : 'authorizationId',
+			title : '授权码标识',
+			width : 340,
+			align : 'center'
+		}, {
+			field : 'objectId',
+			title : '商品服务标识',
+			width : 160,
+			align : 'center'
+		}, {
+			field : 'objectCt',
+			title : '交易数量',
+			width : 340,
+			align : 'center'
+		}, {
+			field : 'note',
+			title : '备注',
+			width : 120,
+			align : 'center'
+		}, {
+			field : 'createdDate',
+			title : '交易时间',
+			width : 120,
+			align : 'center'
+		} ];
+
+		//配置页面参数
+		$.extend(
+					true,
+					Faith,
+					{
+						gridOptions : {
+							gridId : 'tradeTable', //表格容器id
+							tableKey : "tradeId",
+							//resId:1009,
+							pageButtonKey : 'authorization',
+							fitColumns : false,
+							isToolBar : false,
+							url : Faith.projectName
+									+ '/trade/trade/page?deviceId='
+									+ deviceId, //列表接口
+							sortName : 'created_date',
+							sortOrder : 'desc',
+							columns : [ columns ],//数据列
+							onDblClickRow : function(rowIndex, rowData) {
+								Faith.doView();
+							}
+						},
+						deleteOptions : {
+							deleteAction : Faith.projectName
+									+ '/settlement/customer/authorization/delete/'
+						},
+						viewOptions : {
+							title : '查看交易详情',
+							viewUrl : "/pc/webpage/settlement/customer/authorization_detail.html"
+						}
+					});
+		// 加载表格
+		Faith.initGrid(Faith.gridOptions);
+	}
+	
+	/*
+	结算
+	*/
+	function bill(){
+		if(!selected){
+			alert('未知客户');
+		}else{
+			alert(selected);
+			//弹出该客户关联授权码
+		}
+	}
+	
+	/*
+	加单
+	*/
+	function trade(){
+		if(!selected){
+			alert('未知客户');
+		}else{
+			alert(selected);
+			//弹出该客户关联授权码
+			var listTitle = top.$('#maintab').tabs('getSelected').panel('options').title;
+			var url = '/pc/webpage/trade/trade.html?rid='+selected;
+			if(url.indexOf('?') > 0) {
+				url = url + "&listTitle=" + encodeURI(listTitle);
 			} else {
-				$.messager.alert('操作失败', rs.message);
+				url = url + "?listTitle=" + encodeURI(listTitle);
 			}
+			top.addTab('加单', url);
 		}
-	});
+	}
 	
-}
-
-
-/**
- * 开房
- */
-function createRoom(){
+	function clean(rid){
+		if(!rid){
+			alert('未知客房');
+		}else{
+			$.ajax({
+				type : "get",
+				url : Faith.projectName + '/core/room/clean/'+rid,
+				dataType : 'json',
+				success : function(rs) {
+					if (rs.code == "1") {
+						$.messager.alert('提示', '操作成功');
+						loadRoom();
+					} else {
+						$.messager.alert('提示', rs.message);
+					}
+				}
+			});
+			
+		}
+	}
 	
-}
-
-/**
- * 加载消费记录
- */
-function loadTrade(){
-	
-}
-
+	/*
+	右键菜单
+	*/
+	function menu(){
+		$('.contextmenu').contextmenu({
+			target : '#context-menu',
+			onItem : function(context, e) {
+				console.log(context.attr("id"));
+				var rid = context.attr("id");
+				var t = $(e.target).text();
+				if(t=='开房'){
+					rentRoom(rid);
+				}else if(t == '打扫卫生'){
+					clean(rid);
+				}
+			}
+		});
+	}
 </script>
 </head>
 <body>
+	<div id="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a tabindex="1">开房</a></li>
+			<li><a tabindex="2">打扫卫生</a></li>
+			<li><a tabindex="3">预约</a></li>
+			<li class="divider"></li>
+			<li><a tabindex="4">续房</a></li>
+		</ul>
+	</div>
 	<!-- 开房、开卡、开会员、结算、续房。。。。 -->
-	<div class="col-md-10" style="border: 1px solid #000; height: 700px;" >
+	<div class="col-md-10" style="border: 1px solid #000; height: 700px;">
 		<div class="row" style="height: 500px;" id="roomBox">
 			<div class="col-xs-6 col-md-2" style="background-color: #009900;">
 				<a href="#" class="thumbnail">
-					<div class="caption">
+					<div class="caption" >
 						<h3>101</h3>
 					</div>
 				</a>
-			</div>			
+			</div>
 			<div class="col-xs-6 col-md-2" style="background-color: red;">
 				<a href="#" class="thumbnail">
 					<div class="caption">
@@ -124,14 +293,16 @@ function loadTrade(){
 		</div>
 
 		<div class="row" style="border: 1px solid #000; height: 200px;">
-			<div class="col-md-12"></div>
+			<div class="col-md-12">
+				<table id="tradeTable" class="easyui-datagrid"></table>
+			</div>
 		</div>
 
 		<div class="row" style="border: 1px solid #000; height: 50px;">
 			<button type="button" class="btn btn-info">撤销</button>
-			<button type="button" class="btn btn-info">加单</button>
+			<button type="button" class="btn btn-info" onclick="trade();">加单</button>
 			<button type="button" class="btn btn-info">上一单</button>
-			<button type="button" class="btn btn-info">结算</button>
+			<button type="button" class="btn btn-info" onclick="bill();">结算</button>
 
 		</div>
 	</div>
@@ -144,22 +315,11 @@ function loadTrade(){
 				<button type="button" class="btn btn-default">开通会员</button>
 				<button type="button" class="btn btn-default">会员充值</button>
 				<button type="button" class="btn btn-default">续房</button>
-				<button type="button" class="btn btn-default">结算</button>
+				<button type="button" class="btn btn-default" >结算</button>
 			</div>
 		</div>
 
 	</div>
-
-
-	<div id="context-menu">
-	      	<ul class="dropdown-menu" role="menu">
-               <li><a tabindex="1">开房</a></li>
-	           <li><a tabindex="2">打扫卫生</a></li>
-	           <li><a tabindex="3">预约</a></li>
-	           <li class="divider"></li>
-	           <li><a tabindex="4">续房</a></li>
-	      	</ul>
-	      </div>
 
 </body>
 </html>

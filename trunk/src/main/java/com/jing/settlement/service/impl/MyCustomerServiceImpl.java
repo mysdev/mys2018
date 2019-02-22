@@ -74,7 +74,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 基础消费
 		this.consumption(authorization.getAuthorizationId(),room.getTypes());
 		// 更新房间状态
-		room.setStatus(1);
+		room.setRoomStatus(1);
 		roomService.updateRoom(room);
 	}
 
@@ -104,7 +104,7 @@ public class MyCustomerServiceImpl implements MyCustomerService {
 		// 基础消费
 		this.consumption(authorization.getAuthorizationId(),room.getTypes());
 		// 更新房间状态
-		room.setStatus(1);
+		room.setRoomStatus(1);
 		roomService.updateRoom(room);
 	}
 

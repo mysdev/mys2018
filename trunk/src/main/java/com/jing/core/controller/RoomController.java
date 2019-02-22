@@ -61,6 +61,15 @@ public class RoomController extends BaseController{
 		roomService.updateRoom(room);
 		return Result.getDefaultSuccMsgResult();
 	}
+	
+	@ApiOperation(value = "打扫房间", notes = "修改房间")
+	@RequestMapping(value = "/clean/{rid}", method = RequestMethod.GET)
+	public @ResponseBody Result clean( @ApiParam("rid") @PathVariable("rid") String rid,@SessionAttr(Config.USER_INFO) User user)throws CustomException{
+		Room room = roomService.getRoomById(rid);
+		room.setRoomStatus(2);
+		roomService.updateRoom(room);
+		return Result.getDefaultSuccMsgResult();
+	}
 
 	@ApiOperation(value = "删除 根据ID删除房间", notes = "根据ID删除房间")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)

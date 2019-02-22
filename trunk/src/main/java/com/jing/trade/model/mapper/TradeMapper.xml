@@ -80,6 +80,11 @@
 			<if test="param.updatedDate != null and param.updatedDate != ''">
 				and updated_date = #{param.updatedDate}
 			</if>
+			<if test="param.deviceId != null and param.deviceId != ''">
+				and customer_id = (
+					select customer_id from to_authorization where device_id=#{param.deviceId}
+				)
+			</if>
 		</where>
 	</sql>
 
