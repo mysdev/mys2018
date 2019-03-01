@@ -12,6 +12,7 @@ import com.jing.config.web.page.PageInfo;
 import com.jing.trade.model.entity.Settlement;
 import com.jing.trade.model.dao.SettlementMapper;
 import com.jing.trade.service.SettlementService;
+import com.jing.utils.PrimaryKey;
 
 @Service("settlementService")
 public class SettlementServiceImpl implements SettlementService{
@@ -24,6 +25,7 @@ public class SettlementServiceImpl implements SettlementService{
 	*/
 	@Override
 	public void addSettlement(Settlement settlement){
+		settlement.setSerialNumber(PrimaryKey.getCustNo());//流水号
 		settlementMapper.addSettlement(settlement);
 	}
 	

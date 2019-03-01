@@ -211,7 +211,7 @@
 			alert(selected);
 			//弹出该客户关联授权码
 			var listTitle = top.$('#maintab').tabs('getSelected').panel('options').title;
-			var url = '/pc/webpage/trade/trade.html?rid='+selected;
+			var url = '/pc/webpage/trade/trade.html?did='+selected;
 			if(url.indexOf('?') > 0) {
 				url = url + "&listTitle=" + encodeURI(listTitle);
 			} else {

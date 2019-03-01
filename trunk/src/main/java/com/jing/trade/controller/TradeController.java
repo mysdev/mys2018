@@ -1,5 +1,6 @@
 package com.jing.trade.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ import com.jing.config.web.exception.CustomException;
 import com.jing.config.web.page.PageInfo;
 import com.jing.config.web.page.PageRequestUtils;
 import com.jing.settlement.model.entity.Authorization;
+import com.jing.settlement.model.entity.Goods;
 import com.jing.settlement.service.AuthorizationService;
+import com.jing.settlement.service.GoodsService;
 import com.jing.system.login.session.Config;
 import com.jing.system.login.session.SessionAttr;
 import com.jing.system.user.entity.User;
@@ -45,6 +48,8 @@ public class TradeController extends BaseController{
 	private TradeService tradeService;
 	@Autowired
 	private AuthorizationService authorizationService;
+	@Autowired
+	private GoodsService goodsService;
 	
 	@ApiOperation(value = "新增消费清单", notes = "添加消费清单")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -58,7 +63,7 @@ public class TradeController extends BaseController{
 	}
 	
 	@ApiOperation(value = "新增消费清单", notes = "添加消费清单")
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/doTrade", method = RequestMethod.POST)
 	public @ResponseBody Result doTrade(@RequestParam String did,Trade trade,@SessionAttr(Config.USER_INFO) User user) {
 		//根据did找到授权码
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -68,6 +73,13 @@ public class TradeController extends BaseController{
 		if(list==null || list.size()==0) {
 			throw new CustomException("授权码不存在，无法消费.");
 		}
+		
+		Goods goods = goodsService.getGoodsById(trade.getObjectId());
+		if(goods==null) {
+			throw new CustomException("商品或服务已下架，无法消费.");
+		}
+		trade.setObjectType(goods.getMaterialTypes());
+		trade.setMarkedPrice(goods.getPrice().multiply(new BigDecimal(trade.getObjectCt())));
 		Authorization authorization = list.get(0);
 		trade.setAuthorizationId(authorization.getAuthorizationId());
 		trade.setCustomerId(authorization.getCustomerId());

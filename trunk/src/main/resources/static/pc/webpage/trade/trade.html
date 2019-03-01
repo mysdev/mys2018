@@ -13,14 +13,12 @@
 <script type="text/javascript" src="../../resources/js/dictionary.js"></script>
 <script type="text/javascript" src="../../resources/js/Faith.js"></script>
 <script>
-	var rid = Faith.getQueryStringByName("rid");//  如果有值 就是修改  没有值就是添加
-
+	var did = Faith.getQueryStringByName("did");//  如果有值 就是修改  没有值就是添加
+	$("#did").val(did);
 	var options = {
 		formid : "form_typesBind",
 		tableKey : "bindId",
-		addAction : Faith.projectName + "/core/types/bind/add",
-		updateAction : Faith.projectName + "/core/types/bind/update",
-		pkVal : pkVal,
+		addAction : Faith.projectName + "/trade/trade/doTrade",
 		saveButtonId : 'btn_save',
 		cancelButtonId : 'btn_cancel'
 	};
@@ -38,6 +36,8 @@
 </head>
 <body>
 	<form id="form_typesBind" class="fromstyle">
+		<input type="hidden" id="did" name="did" value=""/>
+		<input type="hidden" name="customerCt" value="1"/>
 		<div class="form-group col-sm-6">
 	  	 	<label for="tableName">物品标识<span style="color:red">*</span></label>
 	  	 	<input type="text" class="form-control"  id="objectId" name="objectId"  placeholder="请输入物品标识 ">

@@ -18,7 +18,7 @@ public class Trade extends BaseEntity {
 	private Integer objectType; // 商品服务类型
 	private String objectId; // 商品服务标识
 	private Integer objectCt; // 交易数量
-	private Integer status; // 清单状态 0正常
+	private Integer status=0; // 清单状态 0正常
 	private String note; // 交易说明
 	private java.math.BigDecimal markedPrice; // 原价
 	private java.math.BigDecimal discountPrice; // 优惠金额

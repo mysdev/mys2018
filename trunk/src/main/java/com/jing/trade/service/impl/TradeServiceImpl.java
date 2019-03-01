@@ -12,6 +12,7 @@ import com.jing.config.web.page.PageInfo;
 import com.jing.trade.model.entity.Trade;
 import com.jing.trade.model.dao.TradeMapper;
 import com.jing.trade.service.TradeService;
+import com.jing.utils.PrimaryKey;
 
 @Service("tradeService")
 public class TradeServiceImpl implements TradeService{
@@ -24,6 +25,7 @@ public class TradeServiceImpl implements TradeService{
 	*/
 	@Override
 	public void addTrade(Trade trade){
+		trade.setSerialNumber(PrimaryKey.getEventNo());
 		tradeMapper.addTrade(trade);
 	}
 	

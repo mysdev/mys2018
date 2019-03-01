@@ -64,7 +64,6 @@ public class MyTradeServiceImpl implements MyTradeService{
 			throw new CustomException("商品/服务不存在.");
 		}
 		Trade trade = new Trade();
-		trade.setSerialNumber(PrimaryKey.getEventNo());
 		trade.setCustomerId(authorization.getCustomerId());//客户ID
 		trade.setCustomerCt(customer.getCt());
 		trade.setAuthorizationId(authorizationId);//授权码
@@ -241,7 +240,6 @@ public class MyTradeServiceImpl implements MyTradeService{
 		settlement.setMemberId(memberId);
 		settlement.setDealPrice(sAmount);//实付金额
 		settlement.setSettlementTime(new Date());
-		settlement.setSerialNumber(PrimaryKey.getCustNo());//流水号
 		settlement.setMarkedPrice(bill.getOriginal());
 		settlement.setDiscountPrice(bill.getPreferential());
 //		settlement.setReductionPrice(reductionPrice);//折扣
